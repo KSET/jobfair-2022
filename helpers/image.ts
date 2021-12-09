@@ -1,4 +1,6 @@
-import isObject from "lodash/fp/isObject";
+import {
+ type,
+} from "rambda";
 import {
   dotGet,
 } from "@/helpers/data";
@@ -14,7 +16,7 @@ type Image = {
 }
 
 export const getSrcSet = (imageList: ImageVariation[]) => {
-  if (!isObject(imageList)) {
+  if ("Object" !== type(imageList)) {
     return imageList;
   }
 

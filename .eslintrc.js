@@ -9,14 +9,10 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     requireConfigFile: false,
   },
-  plugins: [
-    "lodash-fp",
-  ],
   extends: [
     "plugin:@typescript-eslint/recommended",
     "@nuxtjs",
     "plugin:nuxt/recommended",
-    "plugin:lodash-fp/recommended",
   ],
   // add your custom rules here
   rules: {
@@ -32,7 +28,6 @@ module.exports = {
         caughtErrors: "none",
       },
     ],
-    "lodash-fp/prefer-constant": "warn",
     "no-dupe-class-members": "off",
     "@typescript-eslint/no-var-requires": "off",
     "vue/comment-directive": "off",

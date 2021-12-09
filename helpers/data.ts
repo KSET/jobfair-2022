@@ -1,5 +1,7 @@
-import get from "lodash/fp/get";
-import isFunction from "lodash/fp/isFunction";
+import {
+  type,
+  path,
+} from "rambda/immutable";
 
 export const ensureArray =
   <T>(val: unknown | T[]): T[] =>
@@ -16,18 +18,18 @@ export const limitLength =
 
 export const dotGet =
   <T>(
-    object: Record<string, unknown>,
+    object: Record<string, unknown> | undefined,
     key: string,
     defaultValue: T | (() => T),
   ): T => {
-    const v = get(key, object) as T;
+    const v = path<typeof object, T>(key, object);
 
     if (v !== undefined) {
       return v;
-    } else if (!isFunction(defaultValue)) {
-      return defaultValue;
+    } else if ("Function" !== type(defaultValue)) {
+      return defaultValue as T;
     } else {
-      return defaultValue();
+      return (defaultValue as (() => T))();
     }
   }
 ;

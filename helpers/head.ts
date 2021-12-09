@@ -40,7 +40,7 @@ const getKeyWithAliases =
 ;
 
 export const generateMetadata =
-  (pageData: Record<string, string>): unknown =>
+  (pageData: Record<string, string>) =>
     Object
       .entries(pageData)
       .map(

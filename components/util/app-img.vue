@@ -39,11 +39,13 @@
     ref,
     toRefs,
   } from "vue";
-  import constant from "lodash/fp/constant";
   import {
     until,
     useIntersectionObserver,
   } from "@vueuse/core";
+  import {
+    always,
+  } from "rambda/immutable";
 
   type Props = {
     aspectRatio: string | number,
@@ -78,7 +80,7 @@
       aspectRatio: {
         required: false,
         type: [ Number, String ],
-        default: constant(Infinity),
+        default: always(Infinity),
       },
 
       src: {
@@ -89,7 +91,7 @@
       lazySrc: {
         required: false,
         type: String,
-        default: constant(null),
+        default: always(null),
       },
 
       alt: {
@@ -100,7 +102,7 @@
       contain: {
         required: false,
         type: Boolean,
-        default: constant(false),
+        default: always(false),
       },
     },
 

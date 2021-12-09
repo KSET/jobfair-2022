@@ -20,8 +20,9 @@
         <div
           :class="$style.text"
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid asperiores, aut beatae eaque est hic impedit in ipsa laudantium libero non numquam perspiciatis quia soluta temporibus tenetur!
-          Labore, quae!
+          <translated-text
+            trans-key="cookieConsent.text"
+          />
           <a
             :class="$style.moreInfo"
             href="#"

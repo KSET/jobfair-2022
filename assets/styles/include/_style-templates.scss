@@ -1,0 +1,150 @@
+@import "variables";
+@import "functions";
+@import "mixins";
+
+%blog-styles {
+
+  :global {
+
+    * {
+      line-height: 150%;
+
+      // text-align: justify;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: bold;
+      margin-bottom: .8em;
+      color: $fer-dark-blue;
+    }
+
+    h1,
+    h2 {
+      font-size: 125%;
+    }
+
+    h3 {
+      font-size: 100%;
+    }
+
+    h4 {
+      font-size: 100%;
+      font-weight: normal;
+    }
+
+    p {
+      font-weight: normal;
+      margin-bottom: 1em;
+    }
+
+    ul {
+      padding: .8em 0 1.2em 2em;
+      list-style: none;
+
+      li {
+        margin-bottom: .8em;
+
+        &::before {
+          $width: .6em;
+
+          font-size: 2.5em;
+          font-weight: bold;
+          position: relative;
+          top: .2em;
+          display: inline-block;
+          width: $width;
+          margin-left: -$width;
+          content: "\2022";
+          color: $fer-yellow;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    p + h3,
+    p + h2,
+    p + h1 {
+      margin-top: 3em;
+    }
+
+    p + ul {
+      margin-top: -1em;
+    }
+
+    a {
+      font-weight: bold;
+      text-decoration: underline;
+      opacity: .8;
+      color: $fer-dark-blue;
+
+      &:hover {
+        text-decoration: none;
+        opacity: 1;
+      }
+    }
+
+    .image {
+      display: table;
+      clear: both;
+      width: 100%;
+      margin: 2.5em auto;
+      text-align: center;
+
+      &.image-style-side {
+        margin: 0 1em;
+      }
+
+      > img {
+        display: block;
+        width: 100%;
+        min-width: 50px;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+
+      > figcaption {
+        font-size: .75em;
+        font-style: italic;
+        display: table-caption;
+        padding: .3em 0 .6em 1em;
+        caption-side: bottom;
+        word-break: break-word;
+        opacity: .8;
+        color: $fer-black;
+        outline-offset: -1px;
+      }
+    }
+
+    blockquote {
+      font-size: 125%;
+      margin: 1.5em auto;
+      padding-left: 1.5em;
+      border-left: 4px solid #{$fer-yellow};
+
+      p {
+        margin: 0;
+      }
+
+      p + * {
+        margin-top: 1em;
+      }
+    }
+  }
+
+  > :global(*) {
+
+    &:first-child {
+      margin-top: 0 !important;
+    }
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+}

@@ -1,0 +1,171 @@
+<template>
+  <span
+    v-if="isEditable"
+    ref="$el"
+    :class="{
+      [$style.translatedText]: true,
+      [$style.editing]: isEditable,
+    }"
+    :contenteditable="isEditable"
+    @blur="handleBlur"
+    @click="handleClick"
+    @input="text = $event.target.innerText"
+  >
+    {{ translatedText }}
+  </span>
+  <span
+    v-else
+    v-text="translatedText"
+  />
+</template>
+
+<script lang="ts">
+  import type {
+    Ref,
+    } from "vue";
+  import {
+    computed,
+    defineComponent,
+    onMounted,
+    ref,
+    toRefs,
+    unref,
+  } from "vue";
+  import {
+    useTranslationsStore,
+  } from "~/store/translations";
+
+  type Props = {
+    transKey: string,
+  };
+
+  export default defineComponent({
+    name: "TranslatedText",
+
+    props: {
+      transKey: {
+        required: true,
+        type: String,
+      },
+    },
+
+    setup(
+      props: Props,
+    ): unknown {
+      const el = ref<HTMLElement | null>(null);
+
+      const text = ref<string>("");
+
+      const translation = computed(() => {
+        if (null === el.value) {
+          return cleanText.value;
+        }
+
+        return cleanText.value || cleanUpText(ref(el.value.innerHTML));
+      });
+
+      onMounted(() => {
+        text.value = translation.value;
+      });
+
+      function cleanUpText(textRef: Ref<string>): string {
+        const text = textRef.value;
+
+        const brKey = `|${ Math.random().toString(36).slice(3) }|`;
+        const html = String(text).trim().replace(/<br>/gi, `${ brKey }br${ brKey }`);
+        const div = document.createElement("div");
+        div.innerHTML = html;
+
+        const eBrKey = brKey.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+
+        return div.textContent?.replace(RegExp(`${ eBrKey }br${ eBrKey }`, "gi"), "<br>") || "";
+      }
+
+      const translationsStore = useTranslationsStore();
+
+      const cleanText = computed(() => cleanUpText(text));
+      const { transKey } = toRefs(props);
+      const updateTranslation = (params: any) => translationsStore.updateTranslation(params);
+
+      async function handleBlur() {
+        const key = transKey;
+        const value = cleanText;
+
+        if (!value) {
+          return;
+        }
+
+        const {
+          error,
+          errorData,
+        } = await updateTranslation({
+          key,
+          value,
+        });
+
+        if (error) {
+          const message =
+            errorData
+              ? errorData.join("\n")
+              : "Something went wrong"
+          ;
+
+          return alert(message);
+        }
+
+        text.value = "";
+      }
+
+      const isEditable = computed<boolean>(() => translationsStore.isEditable);
+
+      function handleClick(event: Event) {
+        if (isEditable) {
+          event.preventDefault();
+          event.stopPropagation();
+          return false;
+        }
+      }
+
+      const translate = computed(() => translationsStore.translation);
+      const translatedText = computed(() => translate.value(unref(transKey)));
+
+      return {
+        isEditable,
+        text,
+        translatedText,
+        handleBlur,
+        handleClick,
+        el,
+      };
+    },
+  });
+</script>
+
+<style lang="scss" module>
+  @import "assets/styles/include/all";
+
+  .translatedText {
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .editing {
+    position: relative !important;
+    display: inline-flex;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: 1em !important;
+    border: 1px dashed $fer-dark-blue !important;
+    border-radius: 4px !important;
+    box-shadow: 0 0 3px 1px $fer-black, 0 0 1px 1px $fer-white !important;
+
+    &:empty,
+    *[data-empty] {
+
+      &::after {
+        content: attr(data-placeholder);
+        opacity: .5;
+      }
+    }
+  }
+</style>

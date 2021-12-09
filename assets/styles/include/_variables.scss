@@ -1,0 +1,25 @@
+/* stylelint-disable-next-line at-rule-no-unknown */
+@use "sass:map";
+
+/* stylelint-disable-next-line max-line-length */
+$font-stack: "Raleway", "Frutiger", "Frutiger Linotype", "Univers", "Calibri", "Gill Sans", "Gill Sans MT", "Myriad Pro", "Myriad", "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", "Tahoma", "Geneva", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$fer-yellow: #ecb000;
+$fer-dark-blue: #00003f;
+$fer-white: #ffffff;
+$fer-gray: #ebeae8;
+$fer-black: #02000d;
+$fer-error: #f44336;
+$transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+$transition-bounce-function: cubic-bezier(.35, 1.55, .65, 1);
+$breakpoints: (
+  "sm": 576px,
+  "md": 768px,
+  "lg": 992px,
+  "xl": 1200px
+) !default;
+$nav-height: 64px;
+$content-max-width: 1200px;
+$content-max-width-mobile: 100vw;
+$company-max-width: 92.5vw;
+$company-max-width-mobile: 100vw;
+$page-max-width: 1905px;

@@ -1,0 +1,56 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "nuxi dev",
+        "build": "nuxi build",
+        "start": "node .output/server/index.mjs",
+        "lint:js": "eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore",
+        "lint:style": "stylelint \"**/*.{scss,css}\" --ignore-path .gitignore",
+        "prepare": "husky install",
+        "lint": "yarn lint:js . && yarn lint:style"
+    },
+    "dependencies": {
+        "@nuxtjs/composition-api": "^0.31.0",
+        "@pinia/nuxt": "^0.1.6",
+        "@vueuse/core": "^7.1.2",
+        "lodash-es": "^4.17.21",
+        "normalize.css": "^8.0.1",
+        "pinia": "^2.0.5",
+        "postcss": "^8.4.4",
+        "primeicons": "^5.0.0",
+        "primevue": "^3.9.1",
+        "vue": "^3.2.23"
+    },
+    "lint-staged": {
+        "*.{ts,js,vue}": "eslint --cache",
+        "*.{scss,css}": "stylelint"
+    },
+    "devDependencies": {
+        "@fontsource/raleway": "^4.5.0",
+        "@frsource/vite-plugin-stylelint": "^0.0.7",
+        "@mdi/font": "^6.5.95",
+        "@nuxtjs/eslint-config-typescript": "^8.0.0",
+        "@nuxtjs/eslint-module": "^3.0.2",
+        "@nuxtjs/stylelint-module": "^4.0.0",
+        "@types/js-cookie": "^3.0.1",
+        "@types/lodash": "^4.14.177",
+        "@types/lodash-es": "^4.17.5",
+        "@vue/compiler-sfc": "^3.2.23",
+        "eslint": "^8.3.0",
+        "eslint-plugin-lodash-fp": "^2.2.0-a1",
+        "eslint-plugin-nuxt": "^3.1.0",
+        "husky": "^7.0.4",
+        "js-cookie": "^3.0.1",
+        "lint-staged": ">=10",
+        "nuxt3": "^3.0.0-27307420.6a25d3e",
+        "postcss-scss": "^4.0.2",
+        "primeflex": "^3.1.0",
+        "sass": "^1.43.5",
+        "stylelint": "^14.1.0",
+        "stylelint-config-standard": "^24.0.0",
+        "stylelint-config-standard-scss": "^3.0.0",
+        "stylelint-scss": "^4.0.0",
+        "typescript": "^4.5.2",
+        "vue-gtag-next": "^1.14.0"
+    }
+}

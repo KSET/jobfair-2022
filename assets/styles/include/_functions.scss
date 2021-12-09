@@ -1,0 +1,9 @@
+@function fer-hover($color) {
+  @return adjust-color($color, $saturation: -13%, $lightness: 22%);
+
+}
+
+@function fer-active($color) {
+  @return adjust-color($color, $saturation: -1%, $lightness: -2%);
+
+}

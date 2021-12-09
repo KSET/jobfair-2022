@@ -1,0 +1,23 @@
+@import "./variables";
+
+@mixin media($breakpoint) {
+  @media screen and (max-width: map-get($breakpoints, $breakpoint)) {
+    @content;
+
+  }
+
+}
+
+@mixin media-up($breakpoint) {
+  @media screen and (min-width: map-get($breakpoints, $breakpoint)) {
+    @content;
+
+  }
+
+}
+
+// Fake definition to satisfy scss compiler
+@mixin style-class($prop, $map, $responsive: false) {
+  // Fake
+
+}

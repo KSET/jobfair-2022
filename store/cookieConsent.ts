@@ -39,7 +39,6 @@ export const useCookieConsentStore = defineStore(
       },
 
       processConsent(status: ConsentState) {
-        console.log(this.consent, status);
         this.consent = status;
 
         const cookieValue = Cookies.get(COOKIE_NAME);
@@ -48,8 +47,6 @@ export const useCookieConsentStore = defineStore(
         if (!cookieValue || !cookieValueMatches) {
           const nextMonth = new Date();
           nextMonth.setMonth(nextMonth.getMonth() + 1);
-
-          console.log("|> CONSENT", { status, cookieValue, cookieValueMatches, nextMonth });
 
           Cookies.set(
             COOKIE_NAME,

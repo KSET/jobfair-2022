@@ -1,6 +1,8 @@
 const aliasMap: Map<string, string[]> = new Map(Object.entries({
   "og:title": [ "apple-mobile-web-app-title" ],
+  "og:image": [ "og:image:secure_url" ],
   locale: [ "og:locale" ],
+  "locale:alternative": [ "og:locale:alternative" ],
 }));
 
 const renameMap: Map<string, string> = new Map(Object.entries({
@@ -12,19 +14,12 @@ const renameMap: Map<string, string> = new Map(Object.entries({
 
 const mappedContent: Map<string, (param: string) => string> = new Map(Object.entries({
   "og:title": (title: string): string => `${ title } | Job Fair Meetup`,
-  "og:image": (imageUrl: string): string => {
-    if (!imageUrl.startsWith(process.env.BASE_URL || "/")) {
-      imageUrl = process.env.BASE_URL + imageUrl;
-    }
-
-    return imageUrl;
-  },
 }));
 
 const hid = ({ name, content }: { name: string, content: string }) =>
   name.startsWith("og:")
-    ? ({ hid: name, property: name, content })
-    : ({ hid: name, name, content })
+    ? ({ property: name, content })
+    : ({ name, content })
 ;
 
 const getMappedContent = (key: string, content: string) => (mappedContent.get(key) || ((x) => x))(content);

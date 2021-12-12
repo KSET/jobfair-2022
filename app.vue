@@ -1,13 +1,15 @@
 <template>
-  <NuxtPage
-    v-bind="$attrs"
-  />
+  <div>
+    <NuxtPage
+      v-bind="$attrs"
+    />
 
-  <client-only>
-    <p-toast />
-  </client-only>
+    <client-only>
+      <p-toast />
+    </client-only>
 
-  <cookie-consent />
+    <cookie-consent />
+  </div>
 </template>
 
 <script lang="ts">

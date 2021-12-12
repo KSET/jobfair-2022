@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   build: {
     transpile: [
       "rambda",
+      "primevue",
     ],
   },
 

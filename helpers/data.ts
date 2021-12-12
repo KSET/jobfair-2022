@@ -1,7 +1,7 @@
 import {
   type,
   path,
-} from "rambda/immutable";
+} from "rambda";
 
 export const ensureArray =
   <T>(val: unknown | T[]): T[] =>

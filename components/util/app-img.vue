@@ -20,7 +20,7 @@
           : $style.cover
         ,
       ]"
-      :style="`background-image: url('${ imgSrc }');`"
+      :style="{ backgroundImage: imgSrc }"
     />
   </div>
   <img
@@ -45,7 +45,7 @@
   } from "@vueuse/core";
   import {
     always,
-  } from "rambda/immutable";
+  } from "rambda";
 
   type Props = {
     aspectRatio: string | number,

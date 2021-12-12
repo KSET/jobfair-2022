@@ -7,7 +7,8 @@
         "lint:js": "eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore",
         "lint:style": "stylelint \"**/*.{scss,css}\" --ignore-path .gitignore",
         "prepare": "husky install",
-        "lint": "yarn lint:js . && yarn lint:style"
+        "lint": "yarn lint:js . && yarn lint:style",
+        "cache:clear": "rimraf .nuxt/ .output/ node_modules/.cache/"
     },
     "dependencies": {
         "@nuxtjs/composition-api": "^0.31.0",
@@ -41,6 +42,7 @@
         "nuxt3": "^3.0.0-27307420.6a25d3e",
         "postcss-scss": "^4.0.2",
         "primeflex": "^3.1.0",
+        "rimraf": "^3.0.2",
         "sass": "^1.43.5",
         "stylelint": "^14.1.0",
         "stylelint-config-standard": "^24.0.0",

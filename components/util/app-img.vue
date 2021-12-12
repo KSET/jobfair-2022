@@ -20,7 +20,7 @@
           : $style.cover
         ,
       ]"
-      :style="{ backgroundImage: imgSrc }"
+      :style="{ backgroundImage: `url('${imgSrc}')` }"
     />
   </div>
   <img

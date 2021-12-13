@@ -1,48 +1,54 @@
 <template>
   <nuxt-link
-    :class="$style.container"
+    :class="{
+      [$style.container]: true,
+      [$style.boxShadow]: !noBoxShadow,
+    }"
     :to="{ name: 'news-slug', params: { slug: newsItem.slug } }"
   >
-    <div
-      :class="{
-        [$style.card]: true,
-        [$style.boxShadow]: !noBoxShadow,
-        [$style.noBackground]: noBackground,
-      }"
-      class="p-card p-component"
+    <p-button
+      class="flex text-left align-self-stretch p-0 p-button-secondary p-button-text"
     >
       <div
-        v-if="newsItem.images"
-        class="p-card-header"
+        :class="{
+          [$style.card]: true,
+          [$style.noBackground]: noBackground,
+        }"
+        class="p-card p-component"
       >
-        <app-img
-          :alt="newsItem.title"
-          :lazy-src="newsItem.images.thumb.url"
-          :src="newsItem.images.default.url"
-          aspect-ratio="1.85"
-        />
+        <div
+          v-if="newsItem.images"
+          class="p-card-header"
+        >
+          <app-img
+            :alt="newsItem.title"
+            :lazy-src="newsItem.images.thumb.url"
+            :src="newsItem.images.default.url"
+            aspect-ratio="1.85"
+          />
+        </div>
+
+        <div class="p-card-body">
+          <time
+            :class="$style.date"
+            :datetime="new Date(newsItem.date).toISOString()"
+            v-text="newsItem.formattedDate"
+          />
+
+          <h2
+            :class="$style.title"
+            class="p-card-title"
+            v-text="newsItem.title"
+          />
+
+          <p
+            :class="$style.description"
+            class="p-card-content"
+            v-text="newsItem.description"
+          />
+        </div>
       </div>
-
-      <div class="p-card-body">
-        <time
-          :class="$style.date"
-          :datetime="new Date(newsItem.date).toISOString()"
-          v-text="newsItem.formattedDate"
-        />
-
-        <h2
-          :class="$style.title"
-          class="p-card-title"
-          v-text="newsItem.title"
-        />
-
-        <p
-          :class="$style.description"
-          class="p-card-content"
-          v-text="newsItem.description"
-        />
-      </div>
-    </div>
+    </p-button>
   </nuxt-link>
 </template>
 
@@ -79,25 +85,29 @@
 <style lang="scss" module>
   @import "assets/styles/include/all";
 
+  .boxShadow {
+    transition-timing-function: $transition-timing-function;
+    transition-duration: .4s;
+    transition-property: box-shadow;
+    box-shadow: #{map-get($shadows, "shadow-3")};
+    will-change: box-shadow;
+
+    &:hover {
+      transition-duration: .2s;
+      box-shadow: #{map-get($shadows, "shadow-4")};
+    }
+  }
+
   .container {
     display: flex;
+    overflow: hidden;
+    padding: 0;
+    border-radius: 4px;
 
     .card {
       overflow: hidden;
+      height: 100%;
       box-shadow: none;
-
-      &.boxShadow {
-        transition-timing-function: $transition-timing-function;
-        transition-duration: .4s;
-        transition-property: box-shadow;
-        box-shadow: #{map-get($shadows, "shadow-3")};
-        will-change: box-shadow;
-
-        &:hover {
-          transition-duration: .2s;
-          box-shadow: #{map-get($shadows, "shadow-4")};
-        }
-      }
 
       &.noBackground {
         background: transparent;

@@ -179,6 +179,8 @@
     display: flex;
     overflow: hidden;
     flex: 1 0 auto;
+    max-width: 100%;
+    max-height: 100%;
 
     .image {
       position: absolute;

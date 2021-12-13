@@ -4,7 +4,11 @@
     :to="{ name: 'news-slug', params: { slug: newsItem.slug } }"
   >
     <div
-      :class="$style.card"
+      :class="{
+        [$style.card]: true,
+        [$style.boxShadow]: !noBoxShadow,
+        [$style.noBackground]: noBackground,
+      }"
       class="p-card p-component"
     >
       <div
@@ -56,6 +60,18 @@
         required: true,
         type: Object,
       },
+
+      noBoxShadow: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+
+      noBackground: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
     },
   });
 </script>
@@ -66,21 +82,26 @@
   .container {
     display: flex;
 
-    &:hover {
-
-      .card {
-        transition-duration: .2s;
-        box-shadow: #{map-get($shadows, "shadow-4")};
-      }
-    }
-
     .card {
       overflow: hidden;
-      transition-timing-function: $transition-timing-function;
-      transition-duration: .4s;
-      transition-property: box-shadow;
-      box-shadow: #{map-get($shadows, "shadow-3")};
-      will-change: box-shadow;
+      box-shadow: none;
+
+      &.boxShadow {
+        transition-timing-function: $transition-timing-function;
+        transition-duration: .4s;
+        transition-property: box-shadow;
+        box-shadow: #{map-get($shadows, "shadow-3")};
+        will-change: box-shadow;
+
+        &:hover {
+          transition-duration: .2s;
+          box-shadow: #{map-get($shadows, "shadow-4")};
+        }
+      }
+
+      &.noBackground {
+        background: transparent;
+      }
     }
 
     :global(.p-card-content) {

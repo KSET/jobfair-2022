@@ -13,7 +13,7 @@ export const usePagesStore = defineStore(
         },
         {
           name: "page.name.blog",
-          to: { name: "blog" },
+          to: { name: "news" },
         },
         {
           name: "page.name.about",

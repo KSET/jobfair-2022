@@ -7,23 +7,32 @@
       :class="$style.card"
       class="p-card p-component"
     >
-      <div class="p-card-header">
+      <div
+        v-if="newsItem.images"
+        class="p-card-header"
+      >
         <app-img
           :alt="newsItem.title"
-          :src="newsItem.images.default.url"
           :lazy-src="newsItem.images.thumb.url"
+          :src="newsItem.images.default.url"
           aspect-ratio="1.85"
         />
       </div>
 
       <div class="p-card-body">
-        <div
+        <time
+          :class="$style.date"
+          :datetime="new Date(newsItem.date).toISOString()"
+          v-text="newsItem.formattedDate"
+        />
+
+        <h2
           :class="$style.title"
           class="p-card-title"
           v-text="newsItem.title"
         />
 
-        <div
+        <p
           :class="$style.description"
           class="p-card-content"
           v-text="newsItem.description"
@@ -78,13 +87,40 @@
       padding-top: 0;
     }
 
+    :global(.p-card-body) {
+      padding: 0.75rem 1rem 1rem;
+    }
+
+    .date {
+      font-size: 0.875rem;
+      font-weight: normal;
+      display: block;
+      margin: 0 0 .5rem;
+      opacity: .5;
+      color: $fer-black;
+    }
+
     .title {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
+      font-weight: bold;
+      line-height: 1.625rem;
+      margin-bottom: .5rem;
       color: $fer-dark-blue;
     }
 
+    .date + .title {
+      margin-top: 0;
+    }
+
     .description {
+      line-height: 1.5rem;
+      margin-bottom: .5rem;
+      padding-bottom: 0;
       opacity: .7;
+    }
+
+    .title + .description {
+      margin-top: 0;
     }
   }
 </style>

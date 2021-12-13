@@ -1,5 +1,9 @@
 <template>
   <div>
+    <client-only>
+      <app-progress-bar />
+    </client-only>
+
     <NuxtPage
       v-bind="$attrs"
     />
@@ -33,9 +37,11 @@
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
   import FacebookShareImage from "~/assets/images/share/facebook.png";
+  import AppProgressBar from "~/components/nav/AppProgressBar.vue";
 
   export default defineComponent({
     components: {
+      AppProgressBar,
       CookieConsent,
       PToast: Toast,
     },

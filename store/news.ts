@@ -4,6 +4,12 @@ import {
 import {
   defineStore,
 } from "pinia";
+import type {
+  News,
+} from "~/helpers/news";
+import {
+  processNewsItem,
+} from "~/helpers/news";
 
 export const useNewsStore = defineStore(
   "news",
@@ -14,9 +20,12 @@ export const useNewsStore = defineStore(
 
     actions: {
       async fetchNews() {
-        await Promise.resolve();
+        await Promise.all([
+          Promise.resolve(),
+          // new Promise((resolve) => setTimeout(resolve, 3000)),
+        ]);
 
-        return [
+        const news = [
           {
             date: new Date("09-04-2020"),
             title: "Ostajemo doma: Otkazan ovogodišnji Job Fair",
@@ -45,7 +54,9 @@ export const useNewsStore = defineStore(
               width: 720 + i,
             },
           },
-        }));
+        }) as News);
+
+        return Array.from({ length: 12 }, (_, i) => news[i % news.length]).map(processNewsItem);
       },
     },
   },

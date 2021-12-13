@@ -1,30 +1,19 @@
 import {
   formatDate,
 } from "@/helpers/date";
-import {
-  limitLength,
-} from "@/helpers/data";
 
-export type News = Record<string, unknown> & { date: string };
+export type News = Record<string, unknown> & { date: string | Date, formattedDate?: string };
 
 export const processNewsItem =
-  (
-    {
-      date = "",
-      ...newsItem
-    }: News,
-  ): News =>
+  (newsItem: News): News =>
     ({
       ...newsItem,
-      date: formatDate(date),
+      formattedDate: formatDate(newsItem.date),
     })
 ;
 
 export const processNews =
   (news: News[]): News[] =>
-    limitLength(3)(
-      news
-        .map(processNewsItem)
-      ,
-    )
+    news
+      .map(processNewsItem)
 ;

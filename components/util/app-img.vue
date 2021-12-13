@@ -22,6 +22,11 @@
       ]"
       :style="{ backgroundImage: `url('${imgSrc}')` }"
     />
+    <div
+      :class="$style.contentContainer"
+    >
+      <slot />
+    </div>
   </div>
   <img
     v-else
@@ -217,5 +222,20 @@
     display: block;
     max-width: 100%;
     max-height: 100%;
+  }
+
+  .contentContainer {
+    position: absolute;
+    z-index: 1;
+    right: 2.125rem;
+    bottom: 2.125rem;
+    padding: 1.15rem;
+    border-radius: 10px;
+    background: rgba($fer-white, .85);
+    backdrop-filter: blur(10px);
+
+    &:empty {
+      display: none;
+    }
   }
 </style>

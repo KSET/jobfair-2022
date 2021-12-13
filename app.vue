@@ -8,7 +8,9 @@
       <p-toast />
     </client-only>
 
-    <cookie-consent />
+    <client-only>
+      <cookie-consent />
+    </client-only>
   </div>
 </template>
 

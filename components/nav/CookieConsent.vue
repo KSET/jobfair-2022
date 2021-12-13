@@ -197,7 +197,7 @@
   import AppImg from "~/components/util/app-img.vue";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
-  import IconCookie from "~/assets/images/icons/footer/icon-cookie.svg";
+  import IconCookie from "~/assets/images/component/CookieConsent/icon-cookie.svg";
   import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";

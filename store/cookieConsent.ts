@@ -18,7 +18,7 @@ export const useCookieConsentStore = defineStore(
   "cookieConsent",
   {
     state: () => ({
-      consent: ConsentState.Undecided,
+      consent: ConsentState.Denied,
     }),
 
     getters: {

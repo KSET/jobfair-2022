@@ -136,7 +136,7 @@
   .container {
     font-size: .85rem;
     position: fixed;
-    z-index: 999;
+    z-index: 9;
     top: 0;
     right: 0;
     left: 0;

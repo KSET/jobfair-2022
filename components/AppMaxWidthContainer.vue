@@ -32,5 +32,14 @@
     @include media(md) {
       max-width: $content-max-width-mobile;
     }
+
+    > h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.875rem;
+      margin: 4rem 0;
+      text-align: center;
+      color: $fer-dark-blue;
+    }
   }
 </style>

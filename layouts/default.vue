@@ -9,7 +9,7 @@
     >
       <slot />
     </main>
-    <app-footer />
+    <app-footer :show-logos="$route.name === 'index'" />
   </div>
 </template>
 

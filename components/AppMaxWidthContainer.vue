@@ -16,7 +16,7 @@
     transition-property: padding;
 
     @media screen and (max-width: #{$content-max-width + 2 * $font-size}) {
-      padding: 0 2rem;
+      padding: 0 1rem;
     }
 
     @include media(md) {

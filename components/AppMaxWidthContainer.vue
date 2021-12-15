@@ -1,18 +1,8 @@
 <template>
   <div :class="$style.pageContainer">
-    <slot v-bind="$attrs" />
+    <slot />
   </div>
 </template>
-
-<script lang="ts">
-  import {
-    defineComponent,
-  } from "vue";
-
-  export default defineComponent({
-    inheritAttrs: false,
-  });
-</script>
 
 <style lang="scss" module>
   @import "assets/styles/include/all";

@@ -58,6 +58,12 @@ export const useNewsStore = defineStore(
 
         return Array.from({ length: 12 }, (_, i) => news[i % news.length]).map(processNewsItem);
       },
+
+      async fetchNewsItem(slug: string): Promise<News | undefined> {
+        const allNews = await this.fetchNews();
+
+        return allNews.find((n) => n.slug === slug);
+      },
     },
   },
 );

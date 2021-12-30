@@ -125,11 +125,17 @@
       const actualAspectRatio = ref(0.5);
 
       function calculateActualAspectRatio() {
-        actualAspectRatio.value =
-          0 === imgEl.value?.naturalHeight
-            ? 0.5
-            : imgEl.value!.naturalWidth / imgEl.value!.naturalHeight
-        ;
+        if (null === imgEl.value) {
+          actualAspectRatio.value = 0.5;
+          return;
+        }
+
+        if (0 === imgEl.value.naturalHeight) {
+          actualAspectRatio.value = 0.5;
+          return;
+        }
+
+        actualAspectRatio.value = imgEl.value!.naturalWidth / imgEl.value!.naturalHeight;
       }
 
       onMounted(() => {

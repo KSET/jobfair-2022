@@ -1,7 +1,5 @@
 <template>
   <div
-    v-if="hasAspectRatio"
-    ref="imgEl"
     :aria-label="alt"
     :class="{
       [$style.aspectContainer]: true,
@@ -10,37 +8,40 @@
     role="img"
   >
     <div
-      :style="`padding-bottom: ${ aspectRatioRounded * 100 }%;`"
+      :style="{
+        paddingBottom: `${ aspectRatioRounded * 100 }%`,
+      }"
     />
-    <div
-      :class="[
-        $style.image,
-        contain
-          ? $style.contain
-          : $style.cover
-        ,
-      ]"
-      :style="{ backgroundImage: `url('${imgSrc}')` }"
-    />
+    <div :class="$style.imgElContainer">
+      <img
+        ref="imgEl"
+        :alt="alt"
+        :class="[
+          $style.image,
+          contain
+            ? $style.contain
+            : $style.cover
+          ,
+        ]"
+        :src="imgSrc"
+        aria-hidden="true"
+        draggable="false"
+        loading="lazy"
+      >
+    </div>
     <div
       :class="$style.contentContainer"
     >
       <slot />
     </div>
   </div>
-  <img
-    v-else
-    :alt="alt"
-    :class="$style.imgContainer"
-    :src="imgSrc"
-    loading="lazy"
-  >
 </template>
 
 <script lang="ts">
   import {
     computed,
     defineComponent,
+    onMounted,
     ref,
     toRefs,
   } from "vue";
@@ -116,8 +117,28 @@
     ) {
       const props = toRefs(propValues);
 
+      const imgEl = ref<HTMLImageElement | null>(null);
+
       const isVisible = ref(false);
-      const imgEl = ref<HTMLElement | null>(null);
+      const isPreview = ref(null !== props.lazySrc.value);
+      const imgSrc = ref(props.lazySrc.value || props.src.value);
+      const actualAspectRatio = ref(0.5);
+
+      function calculateActualAspectRatio() {
+        actualAspectRatio.value =
+          0 === imgEl.value?.naturalHeight
+            ? 0.5
+            : imgEl.value!.naturalWidth / imgEl.value!.naturalHeight
+        ;
+      }
+
+      onMounted(() => {
+        calculateActualAspectRatio();
+        imgEl.value!.addEventListener("load", () => {
+          calculateActualAspectRatio();
+        });
+      });
+
       if (props.lazySrc.value) {
         const { stop } = useIntersectionObserver(
           imgEl,
@@ -128,10 +149,24 @@
             }
           },
         );
+
+        until(isVisible)
+          .toBeTruthy()
+          .then(() => preloadImage(props.src.value))
+          .then((src) => {
+            imgSrc.value = src;
+            isPreview.value = false;
+          })
+          .catch(() => null)
+        ;
       }
 
       const aspectRatio = computed(() => {
         const ratio = props.aspectRatio.value;
+
+        if (ratio === Infinity) {
+          return actualAspectRatio.value;
+        }
 
         if (
           "number" === typeof ratio ||
@@ -145,27 +180,10 @@
         return b / a;
       });
 
-      const aspectRatioRounded = computed(() => Math.round(aspectRatio.value * 1_000) / 1_000);
-
-      const isPreview = ref(null !== props.lazySrc.value);
-      const imgSrc = ref(props.lazySrc.value || props.src.value);
-
-      until(isVisible)
-        .toBeTruthy()
-        .then(() => preloadImage(props.src.value))
-        .then((src) => {
-          imgSrc.value = src;
-          isPreview.value = false;
-        })
-        .catch(() => null)
-      ;
-
-      const hasAspectRatio = computed(() => 0 < aspectRatio.value);
-
       return {
-        aspectRatioRounded,
+        aspectRatioRounded: computed(() => Math.round(aspectRatio.value * 1_000) / 1_000),
         imgSrc,
-        hasAspectRatio,
+        hasAspectRatio: computed(() => 0 < aspectRatio.value),
         imgEl,
         isPreview,
       };
@@ -187,29 +205,6 @@
     max-width: 100%;
     max-height: 100%;
 
-    .image {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      transition-timing-function: $transition-timing-function;
-      transition-duration: .5s;
-      transition-property: background, background-image, filter;
-      background-repeat: no-repeat;
-      background-position: center center;
-      will-change: background-image;
-
-      &.contain {
-        background-size: contain;
-      }
-
-      &.cover {
-        background-size: cover;
-      }
-    }
-
     &.isPreview {
 
       .image {
@@ -218,15 +213,38 @@
     }
   }
 
-  .imgContainer {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
+  .imgElContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+  }
+
+  .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition-timing-function: $transition-timing-function;
+    transition-duration: .5s;
+    transition-property: filter;
+    will-change: filter;
+    object-position: 50% 50%;
+
+    &.contain {
+      object-fit: contain;
+    }
+
+    &.cover {
+      object-fit: cover;
+    }
   }
 
   .contentContainer {
     position: absolute;
-    z-index: 1;
     right: 2.125rem;
     bottom: 2.125rem;
     padding: 1.15rem;

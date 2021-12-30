@@ -30,6 +30,11 @@
       margin: 4rem 0;
       text-align: center;
       color: $fer-dark-blue;
+
+      @include media(md) {
+        font-size: 1.625rem;
+        margin: 2.25rem 0;
+      }
     }
   }
 </style>

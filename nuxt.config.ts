@@ -17,7 +17,6 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "@nuxtjs/stylelint-module",
     "@pinia/nuxt",
-    "@vueuse/core/nuxt",
   ],
 
   build: {

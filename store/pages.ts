@@ -12,16 +12,12 @@ export const usePagesStore = defineStore(
           to: { name: "index" },
         },
         {
-          name: "page.name.blog",
+          name: "page.name.news",
           to: { name: "news" },
         },
         {
-          name: "page.name.about",
-          to: { name: "about" },
-        },
-        {
-          name: "page.name.participants",
-          to: { name: "participants" },
+          name: "page.name.schedule",
+          to: { name: "schedule" },
         },
         {
           name: "page.name.contact",

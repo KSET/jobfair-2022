@@ -241,145 +241,145 @@
     width: 100%;
     margin-top: auto;
     background-color: $fer-dark-blue;
-  }
 
-  .header {
-    font-size: 2.5rem;
-    margin-bottom: 3.125rem;
-    text-align: center;
-    color: $fer-yellow;
+    .header {
+      font-size: 2.5rem;
+      margin-bottom: 3.125rem;
+      text-align: center;
+      color: $fer-yellow;
 
-    @include media($breakpoint) {
-      font-size: 1.625rem;
-    }
-  }
-
-  .logoRow {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    width: 60%;
-    margin: 0 auto;
-    padding: 0;
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .3s;
-    transition-property: padding, width;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-column-gap: 3rem;
-    grid-row-gap: 2.5rem;
-
-    @include media($breakpoint) {
-      width: 100%;
-      padding: 0 .75rem;
-      grid-template-columns: 1fr 1fr;
+      @include media($breakpoint) {
+        font-size: 1.625rem;
+      }
     }
 
-    .logoCol {
-      align-self: center;
-      width: 100%;
+    .logoRow {
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      width: 60%;
+      margin: 0 auto;
       padding: 0;
-      justify-self: center;
+      transition-timing-function: $transition-timing-function;
+      transition-duration: .3s;
+      transition-property: padding, width;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-column-gap: 3rem;
+      grid-row-gap: 2.5rem;
 
-      .logo {
-        height: 3rem;
+      @include media($breakpoint) {
+        width: 100%;
+        padding: 0 .75rem;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .logoCol {
+        align-self: center;
+        width: 100%;
+        padding: 0;
+        justify-self: center;
+
+        .logo {
+          height: 3rem;
+          transition-timing-function: $transition-timing-function;
+          transition-duration: .3s;
+          transition-property: opacity;
+
+          &:hover {
+            opacity: .8;
+          }
+        }
+
+        .ssferLogo {
+          height: 9rem;
+
+          @include media($breakpoint) {
+            height: 5rem;
+          }
+        }
+      }
+    }
+
+    .spacer {
+
+      &::before {
+        border-color: rgba(255, 255, 255, .42) !important;
+      }
+    }
+
+    .content {
+      width: calc(100% - 2rem);
+      max-width: $content-max-width;
+      margin: 0 auto;
+      padding: 2rem 0;
+      transition-timing-function: $transition-timing-function;
+      transition-duration: .3s;
+      transition-property: padding;
+      color: $fer-white;
+      will-change: padding;
+
+      a {
+        text-decoration: none;
+        color: $fer-white;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .jobfairLogo {
+      $height: 3em;
+      $aspect-ratio: math.div(110, 40);
+
+      width: $height * $aspect-ratio;
+      height: $height;
+      margin-bottom: 1em;
+    }
+
+    .afterJobfairText {
+      font-size: 90%;
+      opacity: .7;
+    }
+
+    .bottomPart {
+      font-size: 87.5%;
+      margin-top: 1.5rem;
+
+      @include media($breakpoint) {
+        margin-top: 0;
+      }
+
+      strong {
+        display: block;
+        margin-bottom: .5rem;
+      }
+    }
+
+    .socialIconContainer {
+      display: flex;
+
+      .socialIcon {
+        width: auto;
+        height: 1.3125rem;
+        margin-right: .8rem;
+        padding: 0;
         transition-timing-function: $transition-timing-function;
         transition-duration: .3s;
         transition-property: opacity;
 
+        .socialIconLink {
+          width: 100%;
+          height: 100%;
+        }
+
         &:hover {
           opacity: .8;
         }
-      }
 
-      .ssferLogo {
-        height: 9rem;
-
-        @include media($breakpoint) {
-          height: 5rem;
+        &:last-child {
+          margin-right: initial;
         }
-      }
-    }
-  }
-
-  .spacer {
-
-    &::before {
-      border-color: rgba(255, 255, 255, .42) !important;
-    }
-  }
-
-  .content {
-    width: calc(100% - 2rem);
-    max-width: $content-max-width;
-    margin: 0 auto;
-    padding: 2rem 0;
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .3s;
-    transition-property: padding;
-    color: $fer-white;
-    will-change: padding;
-
-    a {
-      text-decoration: none;
-      color: $fer-white;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .jobfairLogo {
-    $height: 3em;
-    $aspect-ratio: math.div(110, 40);
-
-    width: $height * $aspect-ratio;
-    height: $height;
-    margin-bottom: 1em;
-  }
-
-  .afterJobfairText {
-    font-size: 90%;
-    opacity: .7;
-  }
-
-  .bottomPart {
-    font-size: 87.5%;
-    margin-top: 1.5rem;
-
-    @include media($breakpoint) {
-      margin-top: 0;
-    }
-
-    strong {
-      display: block;
-      margin-bottom: .5rem;
-    }
-  }
-
-  .socialIconContainer {
-    display: flex;
-
-    .socialIcon {
-      width: auto;
-      height: 1.3125rem;
-      margin-right: .8rem;
-      padding: 0;
-      transition-timing-function: $transition-timing-function;
-      transition-duration: .3s;
-      transition-property: opacity;
-
-      .socialIconLink {
-        width: 100%;
-        height: 100%;
-      }
-
-      &:hover {
-        opacity: .8;
-      }
-
-      &:last-child {
-        margin-right: initial;
       }
     }
   }

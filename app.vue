@@ -58,6 +58,7 @@
         charset: "utf-8",
         meta: [
           ...generateMetadata({
+            title: "Job Fair",
             type: "website",
             image: FacebookShareImage,
             viewport: "width=device-width, initial-scale=1, maximum-scale=3.0, minimum-scale=1, minimal-ui",
@@ -65,6 +66,7 @@
             "background-color": "#00003F",
             locale: "hr_HR",
             "locale:alternative": "en_US",
+            siteName: "Job Fair",
           }),
         ],
       });

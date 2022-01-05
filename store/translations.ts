@@ -1,6 +1,21 @@
 import {
   defineStore,
 } from "pinia";
+import {
+  join,
+  map,
+  pipe,
+  split,
+} from "rambda";
+import {
+  capitalize,
+} from "lodash-es";
+import {
+  unref,
+} from "vue";
+import {
+ MaybeRef,
+} from "@vueuse/shared";
 
 export type Translations = Record<string, string>;
 
@@ -15,6 +30,16 @@ export const useTranslationsStore = defineStore(
     getters: {
       translation(state) {
         return (key: string) => state.translations[key] || key;
+      },
+
+      capitalizedTranslation(): (key: MaybeRef<string>) => string {
+        return pipe(
+          unref,
+          (key: string) => this.translation(key),
+          split(" "),
+          map(capitalize),
+          join(" "),
+        );
       },
     },
 

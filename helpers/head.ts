@@ -1,3 +1,8 @@
+export const generateTitle =
+  (title: string): string =>
+    `${ title } | Job Fair`
+;
+
 const aliasMap: Map<string, string[]> = new Map(Object.entries({
   "og:title": [ "apple-mobile-web-app-title" ],
   "og:image": [ "og:image:secure_url" ],
@@ -10,15 +15,16 @@ const renameMap: Map<string, string> = new Map(Object.entries({
   description: "og:description",
   image: "og:image",
   type: "og:type",
+  siteName: "og:site_name",
 }));
 
 const mappedContent: Map<string, (param: string) => string> = new Map(Object.entries({
-  "og:title": (title: string): string => `${ title } | Job Fair Meetup`,
+  "og:title": generateTitle,
 }));
 
 const hid = ({ name, content }: { name: string, content: string }) =>
   name.startsWith("og:")
-    ? ({ property: name, content })
+    ? ({ name, property: name, content })
     : ({ name, content })
 ;
 
@@ -32,6 +38,17 @@ const getKeyWithAliases =
       ...getKeyAliases(key),
     ]
       .map((name) => hid({ name, content }))
+;
+
+export const generateMetadataFor =
+  (
+    key: string,
+    content: string,
+  ) =>
+    getMappedContent(
+      getRenamedKey(key),
+      content,
+    )
 ;
 
 export const generateMetadata =

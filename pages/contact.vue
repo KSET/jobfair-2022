@@ -166,6 +166,7 @@
   import {
     useSettingsStore,
   } from "~/store/settings";
+  import useTitle from "~/composables/useTitle";
 
   export default defineComponent({
     name: "PageContact",
@@ -177,6 +178,8 @@
     },
 
     setup() {
+      useTitle("contact.header");
+
       const Icons =
         pipe(
           mapKeys(replace(/^(\.\.\/)*/, "@/")),

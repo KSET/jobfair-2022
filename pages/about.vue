@@ -256,6 +256,7 @@
   import Divider from "primevue/divider";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppImg from "~/components/util/app-img.vue";
+  import useTitle from "~/composables/useTitle";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
   const IllustrationImages = import.meta.globEager("../assets/images/page/about/illustrations/*.png");
@@ -276,6 +277,8 @@
     },
 
     setup() {
+      useTitle("about-meetup.header");
+
       return {
         img: {
           illustrations: Object.fromEntries(

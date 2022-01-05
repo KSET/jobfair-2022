@@ -25,12 +25,15 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
+    reactive,
+    ref,
   } from "vue";
+  import Divider from "primevue/divider";
   import {
     useRoute,
-  } from "vue-router";
-  import Divider from "primevue/divider";
+  } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useNewsStore,
@@ -40,6 +43,13 @@
     limitLength,
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
+  import {
+    useMeta,
+  } from "#meta";
+  import {
+    generateMetadata,
+  } from "~/helpers/head";
+  import useTitle from "~/composables/useTitle";
 
   export default defineComponent({
     name: "NewsPage",
@@ -54,6 +64,21 @@
       const newsStore = useNewsStore();
       const $route = useRoute();
 
+      const metaData = reactive({
+        image: "",
+        description: "",
+      });
+      const title = ref("");
+      useMeta({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        meta: computed(() => generateMetadata({
+          image: metaData.image,
+          description: metaData.description,
+        })),
+      });
+      useTitle(title);
+
       const [
         newsItem,
         last3News,
@@ -61,6 +86,13 @@
         newsStore.fetchNewsItem($route.params.slug as string),
         newsStore.fetchNews().then(ensureArray).then(limitLength(3)),
       ]);
+
+      if (newsItem) {
+        title.value = newsItem.title;
+
+        metaData.image = newsItem.images.default.url;
+        metaData.description = newsItem.description;
+      }
 
       return {
         newsItem,

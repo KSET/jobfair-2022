@@ -78,6 +78,7 @@
     ensureArray,
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
+  import useTitle from "~/composables/useTitle";
 
   export default defineComponent({
     name: "PageBlog",
@@ -89,6 +90,7 @@
     },
 
     async setup() {
+      useTitle("news.header");
       const newsStore = useNewsStore();
 
       const [

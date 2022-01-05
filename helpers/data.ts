@@ -4,7 +4,7 @@ import {
 } from "rambda";
 
 export const ensureArray =
-  <T>(val: unknown | T[]): T[] =>
+  <T>(val: T[]): T[] =>
     Array.isArray(val)
       ? val
       : []

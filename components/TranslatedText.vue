@@ -30,6 +30,7 @@
     ref,
     toRefs,
     unref,
+    watch,
   } from "vue";
   import {
     useTranslationsStore,
@@ -49,27 +50,32 @@
       },
     },
 
+    emits: [
+      "update:modelValue",
+    ],
+
     setup(
       props: Props,
+      { emit },
     ): unknown {
       const el = ref<HTMLElement | null>(null);
 
       const text = ref<string>("");
 
       const translation = computed(() => {
-        if (null === el.value) {
-          return cleanText.value;
+        if (null === unref(el)) {
+          return unref(cleanText);
         }
 
-        return cleanText.value || cleanUpText(ref(el.value.innerHTML));
+        return unref(cleanText) || cleanUpText(ref(unref(el)!.innerHTML));
       });
 
       onMounted(() => {
-        text.value = translation.value;
+        text.value = unref(translation);
       });
 
       function cleanUpText(textRef: Ref<string>): string {
-        const text = textRef.value;
+        const text = unref(textRef);
 
         const brKey = `|${ Math.random().toString(36).slice(3) }|`;
         const html = String(text).trim().replace(/<br>/gi, `${ brKey }br${ brKey }`);
@@ -127,7 +133,17 @@
       }
 
       const translate = computed(() => translationsStore.translation);
-      const translatedText = computed(() => translate.value(unref(transKey)));
+      const translatedText = computed(() => unref(translate)(unref(transKey)));
+
+      watch(
+        text,
+        () => {
+          emit("update:modelValue", unref(translatedText));
+        },
+        {
+          immediate: true,
+        },
+      );
 
       return {
         isEditable,

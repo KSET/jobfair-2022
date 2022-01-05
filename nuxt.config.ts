@@ -13,7 +13,7 @@ const isProd = "production" === process.env.NODE_ENV;
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
   buildModules: [
-    "@vueuse/core/nuxt",
+    "@vueuse/nuxt",
     "@nuxtjs/eslint-module",
     "@nuxtjs/stylelint-module",
     "@pinia/nuxt",
@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   build: {
     transpile: [
       "rambda",
+      "rambdax",
       "primevue",
     ],
     publicPath: "/assets/",
@@ -65,7 +66,7 @@ export default defineNuxtConfig({
           return cssesc(
             isProd
               ? className
-              : `$${ relativeFilePath }:${ name }__${ className }`
+              : `$${ relativeFilePath }::${ name }::${ className }`
             ,
             {
               isIdentifier: true,

@@ -13,7 +13,6 @@
     "dependencies": {
         "@nuxtjs/composition-api": "^0.31.0",
         "@pinia/nuxt": "^0.1.6",
-        "@vueuse/core": "^7.1.2",
         "normalize.css": "^8.0.1",
         "pinia": "^2.0.5",
         "postcss": "^8.4.4",
@@ -35,6 +34,7 @@
         "@types/js-cookie": "^3.0.1",
         "@types/lodash-es": "^4.17.5",
         "@vue/compiler-sfc": "^3.2.23",
+        "@vueuse/nuxt": "^7.5.1",
         "cssesc": "^3.0.0",
         "eslint": "^8.3.0",
         "eslint-plugin-nuxt": "^3.1.0",

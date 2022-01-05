@@ -72,7 +72,7 @@
   @import "assets/styles/include/all";
 
   .progress {
-    position: fixed;
+    position: fixed !important;
     z-index: 999;
     top: 0;
     right: 0;

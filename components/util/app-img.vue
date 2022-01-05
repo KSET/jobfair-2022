@@ -8,6 +8,7 @@
     role="img"
   >
     <div
+      :class="$style.responsiveSizer"
       :style="{
         paddingBottom: `${ aspectRatioRounded * 100 }%`,
       }"
@@ -217,6 +218,13 @@
         filter: blur($blur-radius);
       }
     }
+  }
+
+  .responsiveSizer {
+    flex: 1 0 0;
+    transition-timing-function: $transition-timing-function;
+    transition-duration: .2s;
+    transition-property: padding-bottom;
   }
 
   .imgElContainer {

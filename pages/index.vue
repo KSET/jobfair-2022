@@ -49,7 +49,8 @@
 
         <div class="col-12 text-center">
           <p-button class="p-button-outlined p-button-secondary">
-            Saznaj više <i class="pi pi-angle-right" style="font-size: 1.2em; margin-left: .2em;" />
+            Saznaj više
+            <icon-chevron-right />
           </p-button>
         </div>
       </div>
@@ -83,7 +84,7 @@
 
         <div class="col-12 text-center">
           <p-button class="p-button-outlined">
-            Pogledaj više <i class="pi pi-angle-right" style="font-size: 1.2em; margin-left: .2em;" />
+            Pogledaj više <icon-chevron-right />
           </p-button>
         </div>
       </div>
@@ -208,6 +209,7 @@
     useSettingsStore,
   } from "~/store/settings";
   import AppImg from "~/components/util/app-img.vue";
+  import IconChevronRight from "~icons/ep/arrow-right";
 
   export default defineComponent({
     name: "PageIndex",
@@ -215,6 +217,7 @@
     components: {
       AppImg,
       NewsCard,
+      IconChevronRight,
     },
 
     setup() {

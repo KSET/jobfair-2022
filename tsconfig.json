@@ -5,7 +5,10 @@
         "sourceMap": true,
         "strict": true,
         "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "types": [
+            "unplugin-icons/types/vue"
+        ]
     },
     "types": [
         "node",

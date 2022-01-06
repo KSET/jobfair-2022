@@ -1,3 +1,4 @@
+import Icons from "unplugin-icons/vite";
 import ShortUniqueId from "short-unique-id";
 import cssesc from "cssesc";
 import {
@@ -36,7 +37,6 @@ export default defineNuxtConfig({
     "@/node_modules/@fontsource/raleway/latin-700-italic.css",
     "@/node_modules/@fontsource/raleway/latin-ext-700-italic.css",
     "@/node_modules/normalize.css/normalize.css",
-    "@/node_modules/primeicons/primeicons.css",
     "@/node_modules/primeflex/primeflex.css",
     "@/node_modules/primevue/resources/primevue.css",
     "@/assets/styles/theme/primevue/theme.scss",
@@ -75,5 +75,13 @@ export default defineNuxtConfig({
         },
       },
     },
+
+    plugins: [
+      Icons({
+        compiler: "vue3",
+        defaultStyle: "",
+        defaultClass: "",
+      }),
+    ],
   },
 });

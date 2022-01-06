@@ -49,7 +49,9 @@
           class="p-button-rounded p-button-text p-button-secondary"
           @click="denyConsent"
         >
-          <i class="pi pi-times" />
+          <icon-close
+            :class="$style.closeIcon"
+          />
         </p-button>
       </div>
 
@@ -201,11 +203,13 @@
   import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
+  import IconClose from "~icons/ep/close-bold";
 
   export default defineComponent({
     components: {
       AppImg,
       Dialog,
+      IconClose,
     },
 
     setup() {
@@ -244,6 +248,7 @@
 <style lang="scss" module>
   /* stylelint-disable-next-line at-rule-no-unknown */
   @use "sass:map";
+  @use "sass:math";
   @import "assets/styles/include/all";
 
   $breakpoint: lg;
@@ -301,6 +306,7 @@
     .text {
       display: inline-block;
       order: 1;
+      word-break: break-word;
       color: $fer-black;
       grid-area: text;
     }
@@ -331,6 +337,14 @@
       padding-left: 0;
       grid-area: close;
 
+      .closeIcon {
+        $enlarge-by: .5rem;
+
+        width: #{1rem + $enlarge-by};
+        height: #{1rem + $enlarge-by};
+        margin: #{-1 * math.div($enlarge-by, 2)};
+      }
+
       @include media($breakpoint) {
         $dimension: 4rem;
 
@@ -339,8 +353,12 @@
         height: $dimension;
         margin-left: $gap;
 
-        > i {
-          font-size: 1.5rem;
+        .closeIcon {
+          $enlarge-by: 1.25rem;
+
+          width: #{1rem + $enlarge-by};
+          height: #{1rem + $enlarge-by};
+          margin: #{-1 * math.div($enlarge-by, 2)};
         }
       }
     }

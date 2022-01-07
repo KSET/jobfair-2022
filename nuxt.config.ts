@@ -83,7 +83,9 @@ export default defineNuxtConfig({
         defaultStyle: "",
         defaultClass: "",
       }),
-      StylelintPlugin(),
+      StylelintPlugin({
+        fix: true,
+      }),
     ],
   },
 });

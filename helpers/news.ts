@@ -2,7 +2,22 @@ import {
   formatDate,
 } from "@/helpers/date";
 
-export type News = Record<string, unknown> & { date: string | Date, formattedDate?: string };
+type Image = {
+  url: string,
+  width: number,
+}
+
+export type News = Record<string, unknown> & {
+  slug: string,
+  title: string,
+  description: string,
+  date: string | Date,
+  images: {
+    thumb: Image,
+    default: Image,
+  },
+  formattedDate?: string,
+};
 
 export const processNewsItem =
   (newsItem: News): News =>

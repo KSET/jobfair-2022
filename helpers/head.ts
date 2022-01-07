@@ -52,7 +52,7 @@ export const generateMetadataFor =
 ;
 
 export const generateMetadata =
-  (pageData: Record<string, string>) =>
+  (pageData: Record<string, string>): Record<string, string>[] =>
     Object
       .entries(pageData)
       .map(
@@ -70,5 +70,5 @@ export const generateMetadata =
         ([ key, content ]) =>
           getKeyWithAliases(key, content)
         ,
-      )
+      ) as unknown as Record<string, string>[]
 ;

@@ -265,7 +265,7 @@
   const IllustrationIcons = import.meta.globEager("../assets/images/page/about/icons/*.png");
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
-  const EventIcons = import.meta.globEager("../assets/images/page/about/event-icons/*.png");
+  const EventIcons = import.meta.globEager("../assets/images/icon/event-icons/*.png");
 
   export default defineComponent({
     name: "PageAbout",

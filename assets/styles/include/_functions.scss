@@ -1,3 +1,6 @@
+@use "sass:math";
+@use "sass:color";
+
 @function fer-hover($color) {
   @return adjust-color($color, $saturation: -13%, $lightness: 22%);
 
@@ -6,4 +9,32 @@
 @function fer-active($color) {
   @return adjust-color($color, $saturation: -1%, $lightness: -2%);
 
+}
+
+/*
+ * https://en.wikipedia.org/wiki/Relative_luminance
+ */
+@function luma($c) {
+  $-local-red: color.red(rgba($c, 1));
+  $-local-green: color.green(rgba($c, 1));
+  $-local-blue: color.blue(rgba($c, 1));
+  $-total: (.2126 * $-local-red + .7152 * $-local-green + .0722 * $-local-blue);
+
+  @return math.div($-total, 255);
+}
+
+@function pick-visible-color($bg, $c1, $c2) {
+  $bg-luma: luma($bg);
+  $c1-luma: luma($c1);
+  $c2-luma: luma($c2);
+  $c1-diff: math.abs($bg-luma - $c1-luma);
+  $c2-diff: math.abs($bg-luma - $c2-luma);
+
+  @if $c1-diff > $c2-diff {
+    @return $c1;
+
+  } @else {
+    @return $c2;
+
+  }
 }

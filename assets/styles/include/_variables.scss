@@ -20,6 +20,8 @@ $breakpoints: (
   "xl": 1200px
 ) !default;
 $nav-height: 64px;
+$content-padding: 2 * $font-size;
+$content-padding-mobile: $font-size;
 $content-max-width: 1200px;
 $content-max-width-mobile: 100vw;
 $company-max-width: 92.5vw;

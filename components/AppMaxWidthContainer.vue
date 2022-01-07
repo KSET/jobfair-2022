@@ -9,14 +9,14 @@
 
   .pageContainer {
     max-width: $content-max-width;
-    margin: 0 auto 2rem;
+    margin: 0 auto #{$content-padding};
     padding: 0;
     transition-timing-function: $transition-timing-function;
     transition-duration: .3s;
     transition-property: padding;
 
-    @media screen and (max-width: #{$content-max-width + 2 * $font-size}) {
-      padding: 0 1rem;
+    @media screen and (max-width: #{$content-max-width + $content-padding * 2}) {
+      padding: 0 #{$content-padding-mobile};
     }
 
     @include media(md) {

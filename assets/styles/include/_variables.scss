@@ -11,6 +11,20 @@ $fer-gray: #ebeae8;
 $fer-off-gray: #e7e7e7;
 $fer-black: #02000d;
 $fer-error: #f44336;
+$event-colors: (
+  "panel": #33658a,
+  "talk": #54c6eb,
+  "workshop": #57cc99,
+  "hot-talk": #fe7f2d,
+);
+$event-icons: (
+  "hot-talk": url("@/assets/images/icon/event-icons/hotTalk.svg"),
+  "networking": url("@/assets/images/icon/event-icons/networking.svg"),
+  "panel": url("@/assets/images/icon/event-icons/panel.svg"),
+  "loosen-up": url("@/assets/images/icon/event-icons/party.svg"),
+  "talk": url("@/assets/images/icon/event-icons/talks.svg"),
+  "workshop": url("@/assets/images/icon/event-icons/workshops.svg"),
+);
 $transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 $transition-bounce-function: cubic-bezier(.35, 1.55, .65, 1);
 $breakpoints: (

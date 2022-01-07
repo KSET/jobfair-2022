@@ -2,6 +2,7 @@ module.exports = {
   "root": true,
   "extends": [
     "stylelint-config-standard-scss",
+    "stylelint-config-recommended-vue/scss",
   ],
   "plugins": [
     "stylelint-scss",
@@ -11,6 +12,10 @@ module.exports = {
   ],
   "rules": {
     "number-leading-zero": "never",
+    "selector-class-pattern": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "no-invalid-position-at-import-rule": null,
+    "no-descending-specificity": null,
     "rule-empty-line-before": [
       "always",
       {

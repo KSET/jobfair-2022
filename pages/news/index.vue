@@ -122,7 +122,7 @@
     max-width: 365px;
 
     .date {
-      font-size: 0.875rem;
+      font-size: .875rem;
       font-weight: normal;
       margin: 0;
       opacity: .5;
@@ -147,6 +147,7 @@
   }
 
   .carousel {
+
     :global(.p-carousel-container) > button {
       display: none;
     }
@@ -165,8 +166,8 @@
         }
 
         > button {
-          width: 0.625rem;
-          height: 0.625rem;
+          width: .625rem;
+          height: .625rem;
           border-radius: 50%;
           background-color: rgba($fer-white, .6);
 
@@ -176,6 +177,7 @@
         }
 
         &:global(.p-highlight) {
+
           > button {
             background: rgba($fer-yellow, .6);
 

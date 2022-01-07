@@ -303,7 +303,7 @@
     .spacer {
 
       &::before {
-        border-color: rgba(255, 255, 255, .42) !important;
+        border-color: rgb(255 255 255 / 42%) !important;
       }
     }
 

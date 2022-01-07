@@ -50,6 +50,7 @@
 
 <style lang="scss">
   .top-progress-transition {
+
     &-enter-active,
     &-leave-active {
       transform: translateY(0);

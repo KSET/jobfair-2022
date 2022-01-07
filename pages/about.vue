@@ -376,6 +376,7 @@
     }
 
     .divider {
+
       &::before {
         border-top: 1px dashed #{rgba($fer-black, .5)};
       }

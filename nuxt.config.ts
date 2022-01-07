@@ -4,6 +4,7 @@ import cssesc from "cssesc";
 import {
   defineNuxtConfig,
 } from "nuxt3";
+import StylelintPlugin from "@frsource/vite-plugin-stylelint";
 
 const uid = new ShortUniqueId();
 
@@ -82,6 +83,7 @@ export default defineNuxtConfig({
         defaultStyle: "",
         defaultClass: "",
       }),
+      StylelintPlugin(),
     ],
   },
 });

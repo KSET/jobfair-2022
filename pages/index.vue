@@ -84,7 +84,8 @@
 
         <div class="col-12 text-center">
           <p-button class="p-button-outlined">
-            Pogledaj više <icon-chevron-right />
+            Pogledaj više
+            <icon-chevron-right />
           </p-button>
         </div>
       </div>
@@ -209,6 +210,7 @@
     useSettingsStore,
   } from "~/store/settings";
   import AppImg from "~/components/util/app-img.vue";
+  // noinspection TypeScriptCheckImport
   import IconChevronRight from "~icons/ep/arrow-right";
 
   export default defineComponent({
@@ -319,12 +321,14 @@
 
 <style lang="scss" module>
   @use "sass:math";
+  @use "sass:color";
   @import "assets/styles/include/all";
 
   $section-spacing: 2rem;
   $width-padding: 1rem;
 
   .container {
+
     .secondary {
       color: $fer-black;
 
@@ -347,7 +351,7 @@
       }
 
       .heroImage {
-        $filter: transparentize($fer-dark-blue, .4);
+        $filter: color.adjust($fer-dark-blue, $alpha: -.4);
 
         position: absolute;
         z-index: 1;
@@ -355,6 +359,8 @@
         left: 0;
         width: 100%;
         height: 100%;
+
+        // noinspection CssUnknownTarget
         background-image: linear-gradient(0deg, $filter, $filter), url("@/assets/images/page/index/bg.png");
         background-repeat: no-repeat;
         background-position: center center;
@@ -404,9 +410,11 @@
     .sectionContainer {
       padding: 0 #{$width-padding} $section-spacing;
 
-      > * {
-        max-width: $content-max-width;
-        margin: 0 auto;
+      .header {
+        font-size: 2.5rem;
+        margin: 2rem;
+        text-align: center;
+        color: $fer-dark-blue;
       }
 
       &.dark {
@@ -418,13 +426,6 @@
         }
       }
 
-      .header {
-        font-size: 2.5rem;
-        margin: 2rem;
-        text-align: center;
-        color: $fer-dark-blue;
-      }
-
       .subHeader {
         font-size: 1.25rem;
         font-weight: normal;
@@ -433,7 +434,12 @@
       }
 
       .header + .subHeader {
-        margin-top: -0.5rem;
+        margin-top: -.5rem;
+      }
+
+      > * {
+        max-width: $content-max-width;
+        margin: 0 auto;
       }
     }
 
@@ -447,6 +453,7 @@
           &:not(:first-child) {
             display: none;
           }
+
         }
       }
     }

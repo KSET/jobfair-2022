@@ -129,6 +129,7 @@
 </script>
 
 <style lang="scss" module>
+  @use "sass:map";
   @import "assets/styles/include/all";
 
   $item-spacing: 1.5rem;
@@ -148,7 +149,7 @@
     will-change: box-shadow;
 
     &.withShadow {
-      box-shadow: #{map-get($shadows, "shadow-4")};
+      box-shadow: #{map.get($shadows, "shadow-4")};
     }
   }
 
@@ -178,6 +179,8 @@
           width: 100%;
           height: 62.5%;
           content: "";
+
+          // noinspection CssUnknownTarget
           background-image: url("~/assets/images/logo/jobfair.svg");
           background-repeat: no-repeat;
           background-position: left center;
@@ -215,7 +218,7 @@
 
           > button {
             font-size: 1rem;
-            margin-top: 0.5rem;
+            margin-top: .5rem;
           }
         }
       }
@@ -262,10 +265,6 @@
         margin: 0;
         padding: 0;
 
-        li + li {
-          margin-left: $item-spacing;
-        }
-
         li {
           display: flex;
           align-items: center;
@@ -300,22 +299,30 @@
             }
           }
         }
+
+        li + li {
+          margin-left: $item-spacing;
+        }
       }
     }
   }
 
   @include media(md) {
+
     .layout-topbar {
       padding: 0 1rem;
 
       .layout-topbar-left {
+
         > a {
           display: none;
         }
       }
 
       .layout-topbar-right {
+
         > ul {
+
           li:not(:last-child) {
             display: none !important;
           }
@@ -336,5 +343,6 @@
         }
       }
     }
+
   }
 </style>

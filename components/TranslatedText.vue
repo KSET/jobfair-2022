@@ -33,6 +33,9 @@
     watch,
   } from "vue";
   import {
+    MaybeRef,
+  } from "@vueuse/shared";
+  import {
     useTranslationsStore,
   } from "~/store/translations";
 
@@ -63,11 +66,13 @@
       const text = ref<string>("");
 
       const translation = computed(() => {
-        if (null === unref(el)) {
+        const el$ = unref(el);
+
+        if (null === el$) {
           return unref(cleanText);
         }
 
-        return unref(cleanText) || cleanUpText(ref(unref(el)!.innerHTML));
+        return unref(cleanText) || cleanUpText(ref(el$.innerHTML));
       });
 
       onMounted(() => {
@@ -91,7 +96,22 @@
 
       const cleanText = computed(() => cleanUpText(text));
       const { transKey } = toRefs(props);
-      const updateTranslation = (params: any) => translationsStore.updateTranslation(params);
+      const updateTranslation =
+        (
+          {
+            key,
+            value,
+          }: {
+            key: MaybeRef<string>,
+            value: MaybeRef<string>
+          },
+        ) =>
+          translationsStore
+            .updateTranslation({
+              key: unref(key),
+              value: unref(value),
+            })
+      ;
 
       async function handleBlur() {
         const key = transKey;

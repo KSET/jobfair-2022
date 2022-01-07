@@ -83,18 +83,19 @@
 </script>
 
 <style lang="scss" module>
+  @use "sass:map";
   @import "assets/styles/include/all";
 
   .boxShadow {
     transition-timing-function: $transition-timing-function;
     transition-duration: .4s;
     transition-property: box-shadow;
-    box-shadow: #{map-get($shadows, "shadow-3")};
+    box-shadow: #{map.get($shadows, "shadow-3")};
     will-change: box-shadow;
 
     &:hover {
       transition-duration: .2s;
-      box-shadow: #{map-get($shadows, "shadow-4")};
+      box-shadow: #{map.get($shadows, "shadow-4")};
     }
   }
 
@@ -119,11 +120,11 @@
     }
 
     :global(.p-card-body) {
-      padding: 0.75rem 1rem 1rem;
+      padding: .75rem 1rem 1rem;
     }
 
     .date {
-      font-size: 0.875rem;
+      font-size: .875rem;
       font-weight: normal;
       display: block;
       margin: 0 0 .5rem;

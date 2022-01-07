@@ -246,9 +246,9 @@
 </style>
 
 <style lang="scss" module>
-  /* stylelint-disable-next-line at-rule-no-unknown */
   @use "sass:map";
   @use "sass:math";
+  @use "sass:color";
   @import "assets/styles/include/all";
 
   $breakpoint: lg;
@@ -256,7 +256,7 @@
   $max-width: map.get($breakpoints, $breakpoint);
 
   .container {
-    font-size: 0.875rem;
+    font-size: .875rem;
     position: fixed;
     z-index: 99;
     right: 0;
@@ -268,7 +268,7 @@
     transition-timing-function: $transition-timing-function;
     transition-duration: .3s;
     transition-property: bottom, max-width;
-    background-color: transparentize($fer-white, .1);
+    background-color: color.adjust($fer-white, $alpha: -.1);
     will-change: bottom, max-width, transform, opacity;
     backdrop-filter: blur(10px);
 

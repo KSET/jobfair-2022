@@ -267,7 +267,7 @@
       bottom: auto;
       width: 100%;
 
-      > {
+      > * {
         position: relative;
 
         ::before,
@@ -289,7 +289,7 @@
 
       &.withArrow {
 
-        > {
+        > * {
 
           ::before,
           ::after {
@@ -305,7 +305,7 @@
         top: auto;
         bottom: calc(100% + #{$container-offset});
 
-        > {
+        > * {
 
           ::before,
           ::after {
@@ -340,7 +340,7 @@
         top: 0;
         left: calc(100% + #{$container-offset});
 
-        > {
+        > * {
 
           ::before,
           ::after {
@@ -375,7 +375,7 @@
         top: calc(100% + #{$container-offset});
         bottom: auto;
 
-        > {
+        > * {
 
           ::before,
           ::after {
@@ -410,7 +410,7 @@
         top: 0;
         right: calc(100% + #{$container-offset});
 
-        > {
+        > * {
 
           ::before,
           ::after {

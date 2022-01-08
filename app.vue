@@ -64,8 +64,8 @@
             type: "website",
             image: FacebookShareImage,
             viewport: "width=device-width, initial-scale=1, maximum-scale=3.0, minimum-scale=1, minimal-ui",
-            "theme-color": "#00003F",
-            "background-color": "#00003F",
+            "theme-color": "#00003f",
+            "background-color": "#00003f",
             locale: "hr_HR",
             "locale:alternative": "en_US",
             siteName: "Job Fair",
@@ -75,3 +75,16 @@
     },
   });
 </script>
+
+<style lang="scss" module>
+  @import "assets/styles/include";
+
+  :global {
+
+    * {
+      transition-timing-function: $transition-timing-function;
+      transition-duration: .3s;
+      transition-property: none;
+    }
+  }
+</style>

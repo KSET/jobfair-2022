@@ -142,8 +142,6 @@
     right: 0;
     left: 0;
     padding: 0 #{$item-spacing};
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .3s;
     transition-property: box-shadow;
     background: $fer-dark-blue;
     will-change: box-shadow;
@@ -278,7 +276,6 @@
             justify-content: center;
             height: 100%;
             transition: border-color .2s;
-            transition-timing-function: $transition-timing-function;
             transition-duration: .15s;
             transition-property: color;
             text-decoration: none;

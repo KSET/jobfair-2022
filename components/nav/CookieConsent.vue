@@ -265,8 +265,6 @@
     max-width: $max-width;
     margin: 0 auto;
     padding: $gap;
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .3s;
     transition-property: bottom, max-width;
     background-color: color.adjust($fer-white, $alpha: -.1);
     will-change: bottom, max-width, transform, opacity;

@@ -222,8 +222,6 @@
 
   .responsiveSizer {
     flex: 1 0 0;
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .2s;
     transition-property: padding-bottom;
   }
 
@@ -239,7 +237,6 @@
   .image {
     width: 100%;
     height: 100%;
-    transition-timing-function: $transition-timing-function;
     transition-duration: .5s;
     transition-property: filter;
     will-change: filter;

@@ -34,17 +34,15 @@
       </nuxt-link>
     </app-img>
 
-    <div :class="$style.newsContainer" class="grid">
-      <div
+    <div :class="$style.newsContainer">
+      <news-card
         v-for="item in news"
         :key="item.slug"
-        class="col-12 sm:col-6 lg:col-4 flex"
-      >
-        <news-card
-          :news-item="item"
-          no-box-shadow
-        />
-      </div>
+        :class="$style.newsItemContainer"
+        :news-item="item"
+        no-box-shadow
+        square
+      />
     </div>
 
     <!--    <p-carousel
@@ -125,7 +123,7 @@
       font-size: .875rem;
       font-weight: normal;
       margin: 0;
-      opacity: .5;
+      opacity: .6;
       color: $fer-black;
     }
 
@@ -191,6 +189,19 @@
   }
 
   .newsContainer {
+    display: grid;
     margin-top: 4rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 2.375rem;
+    grid-row-gap: 3rem;
+
+    @include media(md) {
+      grid-row-gap: 2.45rem;
+      grid-template-columns: 1fr;
+    }
+
+    .newsItemContainer {
+      padding: 0;
+    }
   }
 </style>

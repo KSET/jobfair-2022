@@ -79,7 +79,6 @@
     right: 0;
     left: 0;
     height: .5rem;
-    transition-timing-function: $transition-timing-function;
     transition-property: transform, opacity;
   }
 </style>

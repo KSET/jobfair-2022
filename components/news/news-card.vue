@@ -87,8 +87,6 @@
   @import "assets/styles/include/all";
 
   .boxShadow {
-    transition-timing-function: $transition-timing-function;
-    transition-duration: .4s;
     transition-property: box-shadow;
     box-shadow: #{map.get($shadows, "shadow-3")};
     will-change: box-shadow;

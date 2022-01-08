@@ -260,8 +260,6 @@
       width: 60%;
       margin: 0 auto;
       padding: 0;
-      transition-timing-function: $transition-timing-function;
-      transition-duration: .3s;
       transition-property: padding, width;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       grid-column-gap: 3rem;
@@ -281,8 +279,6 @@
 
         .logo {
           height: 3rem;
-          transition-timing-function: $transition-timing-function;
-          transition-duration: .3s;
           transition-property: opacity;
 
           &:hover {
@@ -312,8 +308,6 @@
       max-width: $content-max-width;
       margin: 0 auto;
       padding: 2rem 0;
-      transition-timing-function: $transition-timing-function;
-      transition-duration: .3s;
       transition-property: padding;
       color: $fer-white;
       will-change: padding;
@@ -364,8 +358,6 @@
         height: 1.3125rem;
         margin-right: .8rem;
         padding: 0;
-        transition-timing-function: $transition-timing-function;
-        transition-duration: .3s;
         transition-property: opacity;
 
         .socialIconLink {

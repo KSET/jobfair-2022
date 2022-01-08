@@ -88,11 +88,10 @@
         <div
           class="col-6 lg:col-2 flex-order-4 lg:flex-order-4"
         >
-          <div>
-            <strong>
-              <translated-text trans-key="footer.followUs" />
-            </strong>
-          </div>
+          <strong>
+            <translated-text trans-key="footer.followUs" />
+          </strong>
+
           <div :class="$style.socialIconContainer">
             <p-button
               v-for="social in socialIcons"
@@ -109,6 +108,7 @@
                 <app-img
                   :alt="social.name"
                   :src="social.icon"
+                  contain
                 />
               </a>
             </p-button>
@@ -354,6 +354,7 @@
       display: flex;
 
       .socialIcon {
+        flex: 1;
         width: auto;
         height: 1.3125rem;
         margin-right: .8rem;

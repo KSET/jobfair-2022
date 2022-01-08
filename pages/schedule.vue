@@ -23,6 +23,7 @@
         <template #event="{ event, isLastDay }">
           <dropdown-menu
             :direction="isLastDay ? 'left' : 'right'"
+            arrow-border-color="var(--event-border-color)"
             arrow-color="var(--calendar-event-color-background)"
             hover
             with-arrow
@@ -129,98 +130,73 @@
           start: "2018-10-30 10:30",
           end: "2018-10-30 11:30",
           title: "Doctor appointment",
-          content: "<i class=\"pi pi-building\"></i>",
           class: "talk",
-          split: 1,
         },
         {
           start: "2018-11-16 10:30",
           end: "2018-11-16 11:30",
           title: "Doctor appointment",
-          content: "<i class=\"pi pi-building\"></i>",
           class: "talk",
-          split: 1,
         },
         {
           start: "2018-11-19 10:35",
           end: "2018-11-19 11:30",
           title: "Doctor appointment",
-          content: "<i class=\"pi pi-building\"></i>",
           class: "talk",
-          split: 1,
         },
         {
           start: "2018-11-19 18:30",
           end: "2018-11-19 19:15",
           title: "Dentist appointment",
-          content: "<i class=\"pi pi-building\"></i>",
           class: "talk",
-          split: 2,
         },
         {
           start: "2018-11-20 18:30",
           end: "2018-11-20 20:30",
           title: "Crossfit",
-          content: "<i class=\"v-icon material-icons\">fitness_center</i>",
           class: "hot-talk",
-          split: 2,
         },
         {
           start: "2018-11-21 11:00",
           end: "2018-11-21 13:00",
           title: "Brunch with Jane",
-          content: "<i class=\"v-icon material-icons\">local_cafe</i>",
           class: "panel",
-          split: 1,
-          background: false,
         },
         {
           start: "2018-11-21 16:30",
           end: "2018-11-21 17:40",
           title: "Swimming lesson",
-          content: "<i class=\"v-icon material-icons\">pool</i>",
           class: "workshop",
-          split: 2,
         },
         {
           start: "2018-11-23 12:30",
           end: "2018-11-23 13:00",
           title: "Macca's with Mark",
-          content: "<i class=\"v-icon material-icons\">fastfood</i>",
           class: "panel",
-          split: 2,
         },
         {
           start: "2018-11-24 12:30",
           end: "2018-11-24 13:00",
           title: "Macca's with Mark",
-          content: "<i class=\"v-icon material-icons\">fastfood</i>",
           class: "workshop",
-          split: 2,
         },
         {
           start: "2018-11-25 12:30",
           end: "2018-11-25 13:00",
           title: "Macca's with Mark",
-          content: "<i class=\"v-icon material-icons\">fastfood</i>",
           class: "workshop",
-          split: 2,
         },
         {
           start: "2018-11-23 16:00",
           end: "2018-11-23 18:30",
           title: "Movie time",
-          content: "<i class=\"v-icon material-icons\">local_play</i>",
           class: "workshop",
-          split: 1,
         },
         {
           start: "2018-11-30 16:00",
           end: "2018-11-30 18:30",
           title: "Another movie tonight",
-          content: "<i class=\"v-icon material-icons\">local_play</i>",
           class: "workshop",
-          split: 1,
         },
       ].map((event) => Object.assign(event, { selected: 0.5 < Math.random() }));
       const eventTimeFormatter = new Intl.DateTimeFormat(
@@ -246,6 +222,7 @@
   @import "assets/styles/include";
 
   .container {
+    $off-black: #8f9296;
 
     .calendarContainer {
       $cell-shrink-by: 10px;
@@ -260,6 +237,7 @@
       :global {
         --calendar-event-color-background: #{$fer-yellow};
         --calendar-event-color-text: #{pick-visible-color($fer-yellow, $fer-black, $fer-white)};
+        --event-border-color: #{$off-black};
 
         @each $event, $color in $event-colors {
           .vuecal__event.#{$event} {
@@ -349,10 +327,7 @@
     }
 
     .eventDropdownContainer {
-      $off-black: #8f9296;
-
       // Container
-      $border-color: $off-black;
       $border-radius: .8rem;
 
       // Header
@@ -365,7 +340,7 @@
       $content-text-color: $fer-black;
 
       position: relative;
-      border: 1px solid #{$border-color};
+      border: 1px solid var(--event-border-color);
       border-radius: $border-radius;
 
       .eventDropdown {

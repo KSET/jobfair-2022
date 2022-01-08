@@ -34,6 +34,7 @@
           :style="{
             'z-index': menu.containerZIndex,
             '--arrow-color': menu.arrowColor,
+            '--arrow-border-color': menu.arrowBorderColor,
             '--arrow-offset': menu.arrowOffset,
           }"
           @mouseover.prevent="menu.hover && show()"
@@ -132,6 +133,11 @@
         type: String,
         required: false,
         default: "transparent",
+      },
+      arrowBorderColor: {
+        type: String,
+        required: false,
+        default: "inherit",
       },
       arrowOffset: {
         type: String,
@@ -250,11 +256,11 @@
 
     // Container
     $container-offset: .5rem;
-    $border-color: inherit;
 
     // Arrow
     $arrow-size: $container-offset;
     $arrow-color: var(--arrow-color);
+    $arrow-border-color: var(--arrow-border-color, inherit);
     $arrow-offset: var(--arrow-offset);
     $arrow-position-inset: 1px;
 
@@ -315,7 +321,7 @@
 
           ::before {
             transform: translate(-50%, 1px);
-            border-top-color: $border-color;
+            border-top-color: $arrow-border-color;
           }
 
           ::after {
@@ -350,7 +356,7 @@
 
           ::before {
             transform: translate(-100%, calc(-1 * #{$arrow-position-inset}));
-            border-right-color: $border-color;
+            border-right-color: $arrow-border-color;
           }
 
           ::after {
@@ -385,7 +391,7 @@
 
           ::before {
             transform: translate(calc(-100% + #{$arrow-position-inset}), -100%);
-            border-bottom-color: $border-color;
+            border-bottom-color: $arrow-border-color;
           }
 
           ::after {
@@ -420,7 +426,7 @@
 
           ::before {
             transform: translate(100%, calc(-1 * #{$arrow-position-inset}));
-            border-left-color: $border-color;
+            border-left-color: $arrow-border-color;
           }
 
           ::after {

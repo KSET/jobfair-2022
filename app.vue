@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Html lang="hr-HR" />
+
     <client-only>
       <app-progress-bar />
     </client-only>

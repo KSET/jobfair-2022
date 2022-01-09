@@ -7,14 +7,16 @@ export const fixedEncodeURIComponent =
       )
 ;
 
+export const encodeBase64 =
+  (string: string) =>
+    ("undefined" !== typeof Buffer)
+      ? Buffer.from(string, "binary").toString("base64")
+      : btoa(string)
+;
+
 export const encodeRedirectParam =
   ({ name, params }: { name: string, params: unknown }) =>
-    Buffer
-      .from(
-        JSON.stringify({ name, params }),
-        "binary",
-      )
-      .toString("base64")
+    encodeBase64(JSON.stringify({ name, params }))
 ;
 
 export const decodeRedirectParam =

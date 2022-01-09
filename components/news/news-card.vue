@@ -16,19 +16,15 @@
           [$style.noBackground]: noBackground,
         }"
       >
-        <div
+        <app-img
           v-if="newsItem.images"
-          class="p-card-header"
-        >
-          <app-img
-            :alt="newsItem.title"
-            :lazy-src="newsItem.images.thumb.url"
-            :src="newsItem.images.default.url"
-            aspect-ratio="1.85"
-          />
-        </div>
+          :alt="newsItem.title"
+          :lazy-src="newsItem.images.thumb.url"
+          :src="newsItem.images.default.url"
+          aspect-ratio="1.85"
+        />
 
-        <div class="p-card-body">
+        <div :class="$style.body">
           <time
             :class="$style.date"
             :datetime="new Date(newsItem.date).toISOString()"
@@ -37,13 +33,11 @@
 
           <h2
             :class="$style.title"
-            class="p-card-title"
             v-text="newsItem.title"
           />
 
           <p
             :class="$style.description"
-            class="p-card-content"
             v-text="newsItem.description"
           />
         </div>
@@ -124,11 +118,7 @@
       }
     }
 
-    :global(.p-card-content) {
-      padding-top: 0;
-    }
-
-    :global(.p-card-body) {
+    .body {
       padding: .75rem 1rem 1rem;
     }
 
@@ -137,7 +127,7 @@
       font-weight: normal;
       display: block;
       margin: 0 0 .5rem;
-      opacity: .5;
+      opacity: .6;
       color: $fer-black;
     }
 
@@ -156,6 +146,7 @@
     .description {
       line-height: 1.5rem;
       margin-bottom: .5rem;
+      padding-top: 0;
       padding-bottom: 0;
       opacity: .7;
     }

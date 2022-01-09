@@ -1497,7 +1497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vue/compiler-sfc@npm:3.2.26, @vue/compiler-sfc@npm:^3.2.23":
+"@vue/compiler-sfc@npm:3.2.26, @vue/compiler-sfc@npm:^3.2.20, @vue/compiler-sfc@npm:^3.2.23":
   version: 3.2.26
   resolution: "@vue/compiler-sfc@npm:3.2.26"
   dependencies:
@@ -8521,6 +8521,7 @@ __metadata:
     type-fest: ^2.9.0
     typescript: ^4.5.2
     unplugin-icons: ^0.13.0
+    vite-svg-loader: ^3.1.1
     vue: ^3.2.23
     vue-cal: ^4.2.0
     vue-gtag-next: ^1.14.0
@@ -10004,6 +10005,16 @@ __metadata:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 35703ac889d419cf2aceef63daeadbe4e77227c39ab6287eeb6c1b36a746b364f50ba22e88591f5d017bc54685d8137bc2d328d0a896e4d3fd22093c0f32a9ad
+  languageName: node
+  linkType: hard
+
+"vite-svg-loader@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "vite-svg-loader@npm:3.1.1"
+  dependencies:
+    "@vue/compiler-sfc": ^3.2.20
+    svgo: ^2.7.0
+  checksum: ca875cbf59a1aee52ea6e5be222ca6b206540a36d5e0b803dce0ae55b2b505ad3fdd40c716adf857cf8464913dbee314b862ecbfede9de29e48bc4312ddfce38
   languageName: node
   linkType: hard
 

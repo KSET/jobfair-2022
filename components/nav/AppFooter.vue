@@ -38,7 +38,7 @@
           <img
             :class="$style.jobfairLogo"
             alt="Job Fair logo"
-            src="~/assets/images/logo/jobfair-mono.svg"
+            src="~/assets/images/logo/jobfair-mono.svg?url"
           >
           <div :class="$style.afterJobfairText">
             <translated-text trans-key="footer.legal.kset" /> &copy; {{ (new Date).getFullYear() }}

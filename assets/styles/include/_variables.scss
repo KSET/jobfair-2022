@@ -18,12 +18,12 @@ $event-colors: (
   "hot-talk": #fe7f2d,
 );
 $event-icons: (
-  "hot-talk": url("@/assets/images/icon/event-icons/hotTalk.svg"),
-  "networking": url("@/assets/images/icon/event-icons/networking.svg"),
-  "panel": url("@/assets/images/icon/event-icons/panel.svg"),
-  "loosen-up": url("@/assets/images/icon/event-icons/party.svg"),
-  "talk": url("@/assets/images/icon/event-icons/talks.svg"),
-  "workshop": url("@/assets/images/icon/event-icons/workshops.svg"),
+  "hot-talk": url("@/assets/images/icon/event-icons/hotTalk.svg?url"),
+  "networking": url("@/assets/images/icon/event-icons/networking.svg?url"),
+  "panel": url("@/assets/images/icon/event-icons/panel.svg?url"),
+  "loosen-up": url("@/assets/images/icon/event-icons/party.svg?url"),
+  "talk": url("@/assets/images/icon/event-icons/talks.svg?url"),
+  "workshop": url("@/assets/images/icon/event-icons/workshops.svg?url"),
 );
 $transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 $transition-bounce-function: cubic-bezier(.35, 1.55, .65, 1);

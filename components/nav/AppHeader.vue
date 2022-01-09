@@ -19,7 +19,7 @@
           <img
             :class="$style.logoImage"
             alt="Job Fair logo"
-            src="~/assets/images/logo/jobfair.svg"
+            src="~/assets/images/logo/jobfair.svg?url"
           >
         </nuxt-link>
       </div>
@@ -53,7 +53,7 @@
           type="button"
           @click="sidebarOpen = true"
         >
-          <img alt="Open menu" src="~/assets/images/component/AppHeader/menu.svg">
+          <img alt="Open menu" src="~/assets/images/component/AppHeader/menu.svg?url">
         </p-button>
         <client-only>
           <Sidebar
@@ -180,7 +180,7 @@
           content: "";
 
           // noinspection CssUnknownTarget
-          background-image: url("~/assets/images/logo/jobfair.svg");
+          background-image: url("~/assets/images/logo/jobfair.svg?url");
           background-repeat: no-repeat;
           background-position: left center;
           background-size: contain;

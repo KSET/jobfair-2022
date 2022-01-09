@@ -5,6 +5,7 @@ import {
   defineNuxtConfig,
 } from "nuxt3";
 import StylelintPlugin from "@frsource/vite-plugin-stylelint";
+import SvgLoader from "vite-svg-loader";
 
 const uid = new ShortUniqueId();
 
@@ -83,6 +84,7 @@ export default defineNuxtConfig({
         defaultStyle: "",
         defaultClass: "",
       }),
+      SvgLoader(),
       StylelintPlugin({
         fix: true,
       }),

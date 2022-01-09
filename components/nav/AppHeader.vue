@@ -40,7 +40,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :class="$style.button" :to="{ name: 'about' }">
+            <nuxt-link :class="$style.button" :to="{ name: 'login' }">
               <p-button class="p-button-outlined">
                 Prijavi se
               </p-button>
@@ -74,7 +74,11 @@
                 </nuxt-link>
               </li>
               <li>
-                <nuxt-link :class="$style.button" :to="{ name: 'about' }">
+                <nuxt-link
+                  :class="$style.button"
+                  :to="{ name: 'about' }"
+                  @click="sidebarOpen = false"
+                >
                   <p-button class="p-button-outlined">
                     Prijavi se
                   </p-button>

@@ -1,19 +1,22 @@
 <template>
   <div
-    :aria-label="alt"
     :class="{
       [$style.aspectContainer]: true,
       [$style.isPreview]: isPreview,
     }"
-    role="img"
   >
     <div
       :class="$style.responsiveSizer"
       :style="{
         paddingBottom: `${ aspectRatioRounded * 100 }%`,
       }"
+      aria-hidden="true"
     />
-    <div :class="$style.imgElContainer">
+    <picture :class="$style.imgElContainer">
+      <slot
+        name="sources"
+      />
+
       <img
         ref="imgEl"
         :alt="alt"
@@ -29,8 +32,9 @@
         draggable="false"
         loading="lazy"
       >
-    </div>
+    </picture>
     <div
+      v-if="$slots.default"
       :class="$style.contentContainer"
     >
       <slot />

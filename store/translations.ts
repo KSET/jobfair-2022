@@ -9,7 +9,7 @@ import {
 } from "rambda";
 import {
   capitalize,
-} from "lodash-es";
+} from "~/helpers/string";
 
 export type Translations = Record<string, string>;
 

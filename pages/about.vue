@@ -338,7 +338,7 @@
       color: $fer-dark-blue;
     }
 
-    :global([role="img"]) + .header {
+    .eventIcon + .header {
       margin-top: .8125rem;
     }
 

@@ -15,6 +15,7 @@
   </span>
   <span
     v-else
+    :class="$style.translatedText"
     v-text="translatedText"
   />
 </template>
@@ -183,6 +184,7 @@
   .translatedText {
     max-width: 100%;
     word-break: break-word;
+    display: contents;
   }
 
   .editing {

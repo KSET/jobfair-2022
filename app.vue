@@ -63,7 +63,7 @@
             title: "Job Fair",
             type: "website",
             image: FacebookShareImage,
-            viewport: "width=device-width, initial-scale=1, maximum-scale=3.0, minimum-scale=1, minimal-ui",
+            viewport: "width=device-width, initial-scale=1, maximum-scale=5.0, minimum-scale=1, minimal-ui",
             "theme-color": "#00003f",
             "background-color": "#00003f",
             locale: "hr_HR",

@@ -52,6 +52,12 @@
         required: true,
         type: String,
       },
+
+      modelValue: {
+        required: false,
+        type: String,
+        default: "",
+      },
     },
 
     emits: [

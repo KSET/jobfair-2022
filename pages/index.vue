@@ -14,7 +14,7 @@
           Meetup
         </h2>
         <nuxt-link
-          :to="{ name: 'index' }"
+          :to="joinNowRoute"
           style="font-size: .9rem;"
         >
           <p-button :class="$style.secondary">
@@ -186,13 +186,9 @@
 
 <script lang="ts">
   import {
-    computed,
     defineComponent,
     ref,
   } from "vue";
-  import {
-    useRoute,
-  } from "vue-router";
   import NewsCard from "~/components/news/news-card.vue";
   import {
     useNewsStore,
@@ -202,16 +198,11 @@
     ensureArray,
     limitLength,
   } from "~/helpers/data";
-  import {
-    encodeRedirectParam,
-  } from "~/helpers/url";
-  import {
-    useSettingsStore,
-  } from "~/store/settings";
   import AppImg from "~/components/util/app-img.vue";
   // noinspection TypeScriptCheckImport
   import IconChevronRight from "~icons/ep/arrow-right";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import useJoinNowRoute from "~/composables/useJoinNowRoute";
 
   export default defineComponent({
     name: "PageIndex",
@@ -224,10 +215,8 @@
     },
 
     async setup() {
-      const $route = useRoute();
-
       const newsStore = useNewsStore();
-      const settingsStore = useSettingsStore();
+      const joinNowRoute = useJoinNowRoute();
 
       const [
         news,
@@ -276,22 +265,6 @@
         url: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/people`,
         thumb: `https://placeimg.com/${ 128 + i }/${ 72 + i }/people`,
       })));
-
-      const getSetting = computed(() => settingsStore.getSetting);
-
-      const joinNowRoute = computed(() => {
-        const name = getSetting.value("Join Now route", "login");
-
-        return {
-          name,
-          query: {
-            r: encodeRedirectParam({
-              name: String($route.name ?? "index"),
-              params: $route.params,
-            }),
-          },
-        };
-      });
 
       function getParticipantTitleText({
         name,

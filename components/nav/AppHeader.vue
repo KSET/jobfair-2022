@@ -40,7 +40,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :class="$style.button" :to="{ name: 'login' }">
+            <nuxt-link :class="$style.button" :to="joinNowRoute">
               <p-button class="p-button-outlined">
                 Prijavi se
               </p-button>
@@ -76,7 +76,7 @@
               <li>
                 <nuxt-link
                   :class="$style.button"
-                  :to="{ name: 'about' }"
+                  :to="joinNowRoute"
                   @click="sidebarOpen = false"
                 >
                   <p-button class="p-button-outlined">
@@ -107,6 +107,7 @@
   } from "~/store/pages";
   import TranslatedText from "~/components/TranslatedText.vue";
   import IconMenuOpen from "~/assets/images/component/AppHeader/menu.svg?component";
+  import useJoinNowRoute from "~/composables/useJoinNowRoute";
 
   export default defineComponent({
     components: {
@@ -117,18 +118,20 @@
 
     setup() {
       const { y } = useWindowScroll();
+      const pagesStore = usePagesStore();
+      const joinNowRoute = useJoinNowRoute();
 
       const isAtTop = computed(() => 0 === y.value);
 
       const sidebarOpen = ref(false);
 
-      const pagesStore = usePagesStore();
       const pages = computed(() => pagesStore.pages);
 
       return {
         isAtTop,
         sidebarOpen,
         pages,
+        joinNowRoute,
       };
     },
   });

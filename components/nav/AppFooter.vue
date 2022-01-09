@@ -93,11 +93,10 @@
           </strong>
 
           <div :class="$style.socialIconContainer">
-            <p-button
+            <div
               v-for="social in socialIcons"
               :key="social.icon"
               :class="$style.socialIcon"
-              class="p-button-icon-only p-button-text"
             >
               <a
                 :class="$style.socialIconLink"
@@ -111,7 +110,7 @@
                   contain
                 />
               </a>
-            </p-button>
+            </div>
           </div>
         </div>
       </div>
@@ -352,12 +351,12 @@
 
     .socialIconContainer {
       display: flex;
+      gap: .875rem;
 
       .socialIcon {
         flex: 1;
         width: auto;
         height: 1.3125rem;
-        margin-right: .8rem;
         padding: 0;
         transition-property: opacity;
 
@@ -368,10 +367,6 @@
 
         &:hover {
           opacity: .8;
-        }
-
-        &:last-child {
-          margin-right: initial;
         }
       }
     }

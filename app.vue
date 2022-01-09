@@ -36,8 +36,6 @@
   import {
     generateMetadata,
   } from "~/helpers/head";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
   import FacebookShareImage from "~/assets/images/share/facebook.png";
   import AppProgressBar from "~/components/nav/AppProgressBar.vue";
 

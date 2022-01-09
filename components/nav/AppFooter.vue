@@ -159,7 +159,7 @@
     setup() {
       const cookieConsentStore = useCookieConsentStore();
 
-      const socialIcons =
+      const socialIcons: Record<string, string> =
         Object.fromEntries(
           Object
             .entries(SocialIconLogos)
@@ -168,7 +168,7 @@
         )
       ;
 
-      const logos =
+      const logos: Record<string, string> =
         Object.fromEntries(
           Object
             .entries(LogoImages)
@@ -184,7 +184,7 @@
       const style = useCssModule();
 
       return {
-        clearConsent: cookieConsentStore.clearConsent,
+        clearConsent: () => cookieConsentStore.clearConsent(),
         showConsent: computed(() => cookieConsentStore.showConsent),
         socialIcons: [
           {

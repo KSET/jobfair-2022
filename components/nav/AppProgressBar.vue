@@ -35,10 +35,9 @@
         isLoading.value = true;
       });
 
-      nuxt.hook("page:finish", () => {
-        nextTick(() => {
-          isLoading.value = false;
-        });
+      nuxt.hook("page:finish", async () => {
+        await nextTick();
+        isLoading.value = false;
       });
 
       return {

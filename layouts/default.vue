@@ -15,8 +15,8 @@
 </template>
 
 <script>
-  import AppFooter from "../components/nav/AppFooter";
-  import AppHeader from "../components/nav/AppHeader";
+  import AppFooter from "~/components/nav/AppFooter.vue";
+  import AppHeader from "~/components/nav/AppHeader.vue";
 
   export default {
     name: "LayoutDefault",

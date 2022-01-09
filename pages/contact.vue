@@ -160,8 +160,6 @@
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppImg from "~/components/util/app-img.vue";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
   import ImageContact from "~/assets/images/page/contact/contact.png";
   import {
     useSettingsStore,
@@ -182,8 +180,10 @@
 
       const Icons =
         pipe(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore: Some advanced spooky stuff went wrong here type-wise
           mapKeys(replace(/^(\.\.\/)*/, "@/")),
-          map(path<{ default: string }>("default")),
+          map(path("default")),
         )(
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore: Type declaration stuff

@@ -190,11 +190,10 @@
     defineComponent,
     ref,
   } from "vue";
-  import NewsCard from "~/components/news/news-card.vue";
   import {
-    useAsyncData,
-    useNuxtApp,
-  } from "#app";
+    useRoute,
+  } from "vue-router";
+  import NewsCard from "~/components/news/news-card.vue";
   import {
     useNewsStore,
   } from "~/store/news";
@@ -224,23 +223,20 @@
       IconChevronRight,
     },
 
-    setup() {
-      const $app = useNuxtApp();
-      const {
-        $route,
-      } = $app;
+    async setup() {
+      const $route = useRoute();
 
       const newsStore = useNewsStore();
+      const settingsStore = useSettingsStore();
 
-      const { data: news } = useAsyncData(
-        "news",
-        () =>
-          newsStore
-            .fetchNews()
-            .then(ensureArray)
-            .then(limitLength(3))
-        ,
-      );
+      const [
+        news,
+      ] = await Promise.all([
+        newsStore
+          .fetchNews()
+          .then(ensureArray)
+          .then(limitLength(3)),
+      ]);
 
       const participants = ref(new Array(10).fill(0).map((_, i) => ({
         id: `participant-${ i }`,
@@ -281,7 +277,6 @@
         thumb: `https://placeimg.com/${ 128 + i }/${ 72 + i }/people`,
       })));
 
-      const settingsStore = useSettingsStore();
       const getSetting = computed(() => settingsStore.getSetting);
 
       const joinNowRoute = computed(() => {
@@ -290,7 +285,10 @@
         return {
           name,
           query: {
-            r: encodeRedirectParam($route),
+            r: encodeRedirectParam({
+              name: String($route.name ?? "index"),
+              params: $route.params,
+            }),
           },
         };
       });

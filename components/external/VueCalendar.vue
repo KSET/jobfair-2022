@@ -26,12 +26,16 @@
     defineAsyncComponent,
     defineComponent,
   } from "vue";
+  import {
+    Component,
+  } from "@nuxt/schema";
 
+  // noinspection TypeScriptCheckImport
   export default defineComponent({
     components: {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: No type definitions available
-      VueCal: defineAsyncComponent(() => import("vue-cal")),
+      VueCal: defineAsyncComponent(() => import("vue-cal") as Component),
     },
 
     inheritAttrs: false,

@@ -32,7 +32,7 @@ export const decodeRedirectParam =
               )
               .toString("binary")
             ,
-          )
+          ) as string
       );
     } catch {
       return fallback;

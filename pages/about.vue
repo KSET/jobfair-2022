@@ -281,19 +281,19 @@
           illustrations: Object.fromEntries(
             Object
               .entries(IllustrationImages)
-              .map(([ k, v ]) => [ k.split("/").pop()!.replace(/\.[^.]*/, ""), v.default ])
+              .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),
           icons: Object.fromEntries(
             Object
               .entries(IllustrationIcons)
-              .map(([ k, v ]) => [ k.split("/").pop()!.replace(/\.[^.]*/, ""), v.default ])
+              .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),
           eventIcons: Object.fromEntries(
             Object
               .entries(EventIcons)
-              .map(([ k, v ]) => [ k.split("/").pop()!.replace(/\.[^.]*/, ""), v.default ])
+              .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),
         },

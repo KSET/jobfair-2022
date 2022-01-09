@@ -203,10 +203,13 @@
   import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
+  // noinspection TypeScriptCheckImport
   import IconClose from "~icons/ep/close-bold";
+  import TranslatedText from "~/components/TranslatedText.vue";
 
   export default defineComponent({
     components: {
+      TranslatedText,
       AppImg,
       Dialog,
       IconClose,
@@ -218,8 +221,8 @@
       const dialog = ref(false);
 
       return {
-        acceptConsent: cookieConsentStore.acceptConsent,
-        denyConsent: cookieConsentStore.denyConsent,
+        acceptConsent: () => cookieConsentStore.acceptConsent(),
+        denyConsent: () => cookieConsentStore.denyConsent(),
         showConsent: computed(() => cookieConsentStore.showConsent),
         img: {
           iconCookie: IconCookie,

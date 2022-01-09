@@ -70,13 +70,13 @@
     return new Promise((resolve, reject) => {
       const img = new Image();
 
-      img.addEventListener("load", async () => {
-        try {
-          await img.decode();
-        } catch {
-        }
-
-        resolve(url);
+      img.addEventListener("load", () => {
+        // eslint-disable-next-line no-void
+        void img
+          .decode()
+          .then(() => resolve(url))
+          .catch()
+        ;
       });
       img.addEventListener("error", reject);
 
@@ -140,12 +140,12 @@
           return;
         }
 
-        actualAspectRatio.value = imgEl.value!.naturalWidth / imgEl.value!.naturalHeight;
+        actualAspectRatio.value = imgEl.value.naturalWidth / imgEl.value.naturalHeight;
       }
 
       onMounted(() => {
         calculateActualAspectRatio();
-        imgEl.value!.addEventListener("load", () => {
+        imgEl.value?.addEventListener("load", () => {
           calculateActualAspectRatio();
         });
       });

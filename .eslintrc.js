@@ -8,9 +8,20 @@ module.exports = {
   parserOptions: {
     parser: "@typescript-eslint/parser",
     requireConfigFile: false,
+    tsconfigRootDir: __dirname,
+    project: [
+      "./tsconfig.json",
+    ],
+    extraFileExtensions: [
+      ".vue",
+    ],
   },
+  ignorePatterns: [
+    ".eslintrc.js",
+  ],
   extends: [
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "@nuxtjs",
     "plugin:nuxt/recommended",
   ],

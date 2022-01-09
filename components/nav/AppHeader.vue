@@ -53,7 +53,7 @@
           type="button"
           @click="sidebarOpen = true"
         >
-          <img alt="Open menu" src="~/assets/images/component/AppHeader/menu.svg?url">
+          <icon-menu-open />
         </p-button>
         <client-only>
           <Sidebar
@@ -102,11 +102,13 @@
     usePagesStore,
   } from "~/store/pages";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import IconMenuOpen from "~/assets/images/component/AppHeader/menu.svg?component";
 
   export default defineComponent({
     components: {
       Sidebar,
       TranslatedText,
+      IconMenuOpen,
     },
 
     setup() {
@@ -157,6 +159,7 @@
     width: 2.5rem;
     height: 2.5rem;
     padding: 0;
+    color: $fer-white !important;
   }
 
   .sidebar {
@@ -167,6 +170,17 @@
 
       :global(.p-sidebar-icon) {
         color: $fer-white;
+
+        :global(.p-sidebar-close-icon) {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin-right: -.65rem;
+          background-image: url("@/assets/images/component/AppHeader/close.svg?url");
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: contain;
+          filter: invert(1);
+        }
       }
 
       :global(.p-sidebar-header) {

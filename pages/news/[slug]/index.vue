@@ -50,11 +50,13 @@
     generateMetadata,
   } from "~/helpers/head";
   import useTitle from "~/composables/useTitle";
+  import TranslatedText from "~/components/TranslatedText.vue";
 
   export default defineComponent({
     name: "NewsPage",
 
     components: {
+      TranslatedText,
       NewsCard,
       AppMaxWidthContainer,
       PDivider: Divider,

@@ -212,11 +212,13 @@
   import AppImg from "~/components/util/app-img.vue";
   // noinspection TypeScriptCheckImport
   import IconChevronRight from "~icons/ep/arrow-right";
+  import TranslatedText from "~/components/TranslatedText.vue";
 
   export default defineComponent({
     name: "PageIndex",
 
     components: {
+      TranslatedText,
       AppImg,
       NewsCard,
       IconChevronRight,

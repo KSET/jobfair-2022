@@ -257,6 +257,7 @@
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppImg from "~/components/util/app-img.vue";
   import useTitle from "~/composables/useTitle";
+  import TranslatedText from "~/components/TranslatedText.vue";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
   const IllustrationImages = import.meta.globEager("../assets/images/page/about/illustrations/*.png");
@@ -271,6 +272,7 @@
     name: "PageAbout",
 
     components: {
+      TranslatedText,
       AppImg,
       AppMaxWidthContainer,
       PDivider: Divider,

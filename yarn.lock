@@ -1046,6 +1046,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/http-status-codes@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@types/http-status-codes@npm:1.2.0"
+  dependencies:
+    http-status-codes: "*"
+  checksum: 5923b85f2fc58f39f44c0e620b05113b3c3644039cbe8063a19575a55a3e6364a82ee1f8b08c312bdaa7bf651509b3e1a11f3a59ff8bbaa38d37f4e191c3d076
+  languageName: node
+  linkType: hard
+
 "@types/js-cookie@npm:^3.0.1":
   version: 3.0.1
   resolution: "@types/js-cookie@npm:3.0.1"
@@ -5266,6 +5275,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"http-status-codes@npm:*, http-status-codes@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "http-status-codes@npm:2.2.0"
+  checksum: 31e1d730856210445da0907d9b484629e69e4fe92ac032478a7aa4d89e5b215e2b4e75d7ebce40d0537b6850bd281b2f65c7cc36cc2677e5de056d6cea1045ce
+  languageName: node
+  linkType: hard
+
 "https-proxy-agent@npm:^5.0.0":
   version: 5.0.0
   resolution: "https-proxy-agent@npm:5.0.0"
@@ -8489,6 +8505,7 @@ __metadata:
     "@nuxtjs/stylelint-module": ^4.0.0
     "@pinia/nuxt": ^0.1.6
     "@types/cssesc": ^3.0.0
+    "@types/http-status-codes": ^1.2.0
     "@types/js-cookie": ^3.0.1
     "@types/lodash-es": ^4.17.5
     "@vue/compiler-sfc": ^3.2.23
@@ -8496,6 +8513,7 @@ __metadata:
     cssesc: ^3.0.0
     eslint: ^8.3.0
     eslint-plugin-nuxt: ^3.1.0
+    http-status-codes: ^2.2.0
     husky: ^7.0.4
     js-cookie: ^3.0.1
     lint-staged: ">=10"

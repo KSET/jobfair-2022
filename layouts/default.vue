@@ -5,6 +5,7 @@
     <app-header :class="$style.header" />
     <main
       :class="$style.main"
+      role="main"
       v-bind="$attrs"
     >
       <slot />

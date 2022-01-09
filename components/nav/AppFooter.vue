@@ -1,6 +1,7 @@
 <template>
   <footer
     :class="$style.container"
+    role="contentinfo"
   >
     <div
       :class="$style.content"
@@ -132,6 +133,7 @@
     useSettingsStore,
   } from "~/store/settings";
   import AppImg from "~/components/util/app-img.vue";
+  import TranslatedText from "~/components/TranslatedText.vue";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
   const SocialIconLogos = import.meta.globEager("../../assets/images/component/AppFooter/icons/socials/*.png");
@@ -141,6 +143,7 @@
 
   export default defineComponent({
     components: {
+      TranslatedText,
       AppImg,
       PDivider: Divider,
     },

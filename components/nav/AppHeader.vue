@@ -4,6 +4,7 @@
       [$style.container]: true,
       [$style.withShadow]: !isAtTop
     }"
+    role="navigation"
   >
     <div
       :class="$style.layoutTopbar"

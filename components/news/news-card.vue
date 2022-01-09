@@ -3,18 +3,18 @@
     :class="{
       [$style.container]: true,
       [$style.boxShadow]: !noBoxShadow,
+      [$style.rounded]: !square,
     }"
     :to="{ name: 'news-slug', params: { slug: newsItem.slug } }"
   >
     <p-button
-      class="flex text-left align-self-stretch p-0 p-button-secondary p-button-text"
+      class="flex border-noround text-left align-self-stretch p-0 p-button-secondary p-button-text"
     >
       <div
         :class="{
           [$style.card]: true,
           [$style.noBackground]: noBackground,
         }"
-        class="p-card p-component"
       >
         <div
           v-if="newsItem.images"
@@ -60,7 +60,9 @@
 
   export default defineComponent({
     name: "NewsCard",
+
     components: { AppImg },
+
     props: {
       newsItem: {
         required: true,
@@ -74,6 +76,12 @@
       },
 
       noBackground: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+
+      square: {
         required: false,
         type: Boolean,
         default: () => false,
@@ -101,7 +109,10 @@
     display: flex;
     overflow: hidden;
     padding: 0;
-    border-radius: 4px;
+
+    &.rounded {
+      border-radius: 4px;
+    }
 
     .card {
       overflow: hidden;

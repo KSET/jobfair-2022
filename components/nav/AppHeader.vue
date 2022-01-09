@@ -7,7 +7,6 @@
   >
     <div
       :class="$style.layoutTopbar"
-      class="layout-topbar flex align-items-center justify-content-between"
     >
       <div
         :class="$style.layoutTopbarLeft"
@@ -49,7 +48,7 @@
         </ul>
         <p-button
           :class="$style.sidebarBtn"
-          class="flex md:hidden p-button-text"
+          class="md:hidden p-button-text"
           type="button"
           @click="sidebarOpen = true"
         >
@@ -152,6 +151,7 @@
   }
 
   .sidebarBtn {
+    display: flex;
     justify-content: right;
     width: 2.5rem;
     height: 2.5rem;

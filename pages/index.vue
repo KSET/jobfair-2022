@@ -359,6 +359,7 @@
         left: 0;
         width: 100%;
         height: 100%;
+        background-color: $fer-dark-blue;
 
         // noinspection CssUnknownTarget
         background-image: linear-gradient(0deg, $filter, $filter), url("@/assets/images/page/index/bg.png");

@@ -1,3 +1,8 @@
+import {
+  base64Decode,
+  base64Encode,
+} from "~/helpers/string";
+
 export const fixedEncodeURIComponent =
   (str: string) =>
     encodeURIComponent(str)
@@ -7,33 +12,15 @@ export const fixedEncodeURIComponent =
       )
 ;
 
-export const encodeBase64 =
-  (string: string) =>
-    ("undefined" !== typeof Buffer)
-      ? Buffer.from(string, "binary").toString("base64")
-      : btoa(string)
-;
-
 export const encodeRedirectParam =
   ({ name, params }: { name: string, params: unknown }) =>
-    encodeBase64(JSON.stringify({ name, params }))
+    base64Encode(JSON.stringify({ name, params }))
 ;
 
 export const decodeRedirectParam =
   (redirectParam: string, fallback: string | null = null): string | null => {
     try {
-      return (
-        JSON
-          .parse(
-            Buffer
-              .from(
-                redirectParam,
-                "base64",
-              )
-              .toString("binary")
-            ,
-          ) as string
-      );
+      return JSON.parse(base64Decode(redirectParam)) as string;
     } catch {
       return fallback;
     }

@@ -24,18 +24,18 @@
       </p>
     </div>
 
-    <div :class="[ $style.section, $style.locationSection]" class="grid justify-content-center align-items-center">
+    <div :class="[ $style.section, $style.locationSection]" class="grid">
       <div class="col-12 md:col-10">
-        <h2 class="text-center mb-3">
+        <h2 :class="$style.locationHeader">
           <translated-text trans-key="about-meetup.location.header" />
         </h2>
 
-        <h4 class="text-center m-0">
+        <h3 :class="$style.locationSubHeader">
           <translated-text trans-key="about-meetup.location.text" />
-        </h4>
+        </h3>
 
         <div class="grid mt-7 justify-content-center">
-          <div class="col-8 md:col-6">
+          <div class="col-12 md:col-6">
             <app-img
               :src="img.icons.kset"
               alt="KSET publika"
@@ -44,11 +44,11 @@
               contain
             />
 
-            <p :class="$style.locationName" class="mt-4 mb-3 text-center">
+            <p :class="$style.locationName">
               <translated-text trans-key="about-meetup.location.kset" />
             </p>
           </div>
-          <div class="col-8 md:col-6">
+          <div class="col-12 md:col-6">
             <app-img
               :src="img.icons.fer"
               alt="FER"
@@ -57,7 +57,7 @@
               contain
             />
 
-            <p :class="$style.locationName" class="mt-4 mb-3 text-center">
+            <p :class="$style.locationName">
               <translated-text trans-key="about-meetup.location.fer" />
             </p>
           </div>
@@ -91,7 +91,7 @@
         :src="img.eventIcons.talks"
         alt="Talks"
         aspect-ratio="1"
-        class="md:-ml-3 md:ml-0 ml-auto -mb-4 md:mb-0"
+        class="md:-ml-3"
         contain
       />
 
@@ -130,7 +130,6 @@
         :src="img.eventIcons.workshops"
         alt="Workshops"
         aspect-ratio="1"
-        class="md:-ml-1 md:ml-0 ml-auto -mb-4 md:mb-0"
         contain
       />
 
@@ -148,7 +147,6 @@
         :src="img.eventIcons.panel"
         alt="Panel"
         aspect-ratio="1"
-        class="md:-ml-1 md:ml-0 ml-auto -mb-4 md:mb-0"
         contain
       />
 
@@ -166,7 +164,6 @@
         :src="img.eventIcons.hotTalk"
         alt="Hot Talk"
         aspect-ratio="1"
-        class="md:-ml-1 md:ml-0 ml-auto -mb-4 md:mb-0"
         contain
       />
 
@@ -184,7 +181,6 @@
         :src="img.eventIcons.networking"
         alt="Networking"
         aspect-ratio="1"
-        class="md:-ml-1 md:ml-0 ml-auto -mb-4 md:mb-0"
         contain
       />
 
@@ -202,7 +198,6 @@
         :src="img.eventIcons.party"
         alt="Loosen Up party"
         aspect-ratio="1"
-        class="md:-ml-1 md:ml-0 ml-auto -mb-4 md:mb-0"
         contain
       />
 
@@ -328,6 +323,12 @@
 
       .eventIcon {
         width: 100px;
+        margin-left: -.25rem;
+
+        @include media(md) {
+          margin-bottom: -1.5rem;
+          margin-left: auto;
+        }
       }
     }
 
@@ -360,6 +361,8 @@
     }
 
     .locationSection {
+      align-items: center;
+      justify-content: center;
       margin-right: -#{$padding};
       margin-left: -#{$padding};
       background-color: rgba($fer-off-gray, .5);
@@ -369,9 +372,25 @@
         margin-left: 0;
       }
 
+      .locationHeader {
+        margin-bottom: 1rem;
+        text-align: center;
+        color: $fer-dark-blue;
+      }
+
+      .locationSubHeader {
+        margin: 0;
+        text-align: center;
+        opacity: .7;
+        color: $fer-black;
+      }
+
       .locationName {
         font-size: 1.625rem;
         font-weight: bold;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
         opacity: .7;
         color: $fer-black;
       }

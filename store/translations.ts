@@ -10,12 +10,6 @@ import {
 import {
   capitalize,
 } from "lodash-es";
-import {
-  unref,
-} from "vue";
-import {
- MaybeRef,
-} from "@vueuse/shared";
 
 export type Translations = Record<string, string>;
 
@@ -32,9 +26,8 @@ export const useTranslationsStore = defineStore(
         return (key: string) => state.translations[key] || key;
       },
 
-      capitalizedTranslation(): (key: MaybeRef<string>) => string {
+      capitalizedTranslation(): (key: string) => string {
         return pipe(
-          unref,
           (key: string) => this.translation(key),
           split(" "),
           map(capitalize),

@@ -57,8 +57,8 @@
       opacity: 1;
     }
 
-    &-leave-active {
-      transition-duration: .3s;
+    &-enter-active {
+      transition-duration: .1s;
     }
 
     &-enter-from,

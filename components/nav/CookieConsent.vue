@@ -233,8 +233,6 @@
 <style scoped>
   .cookie-consent-enter-active,
   .cookie-consent-leave-active {
-    transition-timing-function: ease-in-out;
-    transition-duration: .3s;
     transition-property: opacity, transform;
   }
 

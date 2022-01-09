@@ -92,9 +92,10 @@
     transition-property: box-shadow;
     box-shadow: #{map.get($shadows, "shadow-3")};
     will-change: box-shadow;
+    transition-duration: .4s;
 
     &:hover {
-      transition-duration: .2s;
+      transition-duration: 0s;
       box-shadow: #{map.get($shadows, "shadow-4")};
     }
   }

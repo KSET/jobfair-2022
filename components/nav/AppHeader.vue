@@ -275,19 +275,19 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            transition: border-color .2s;
-            transition-duration: .15s;
-            transition-property: color;
+            transition-property: color, border-color;
             text-decoration: none;
             color: $fer-white;
             border-bottom: 4px solid transparent;
             will-change: color;
 
             &:global(.router-link-exact-active) {
+              transition-duration: 0s;
               border-color: $fer-yellow;
             }
 
             &:hover {
+              transition-duration: 0s;
               color: $fer-yellow;
             }
 

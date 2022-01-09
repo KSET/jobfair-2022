@@ -448,11 +448,12 @@
     :global {
       // Default Transition
       .default-enter-active {
-        transition: all .3s ease;
+        transition-property: all;
       }
 
       .default-leave-active {
-        transition: all .3s cubic-bezier(1, .5, .8, 1);
+        transition-property: all;
+        transition-duration: .5s;
       }
 
       .default-enter,
@@ -467,7 +468,7 @@
 
         .default-enter,
         .default-leave-active {
-          transition-delay: .4s;
+          transition-delay: .5s;
         }
       }
     }

@@ -83,7 +83,7 @@
 
     * {
       transition-timing-function: $transition-timing-function;
-      transition-duration: .3s;
+      transition-duration: .25s;
       transition-property: none;
     }
   }

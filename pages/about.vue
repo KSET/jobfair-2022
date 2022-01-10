@@ -309,8 +309,8 @@
   $padding: 3.125rem;
 
   .container {
-    max-width: $max-width;
-    padding: 0 #{$padding};
+    max-width: $max-width !important;
+    padding: 0 #{$padding} !important;
 
     @include media(md) {
       padding: 0 1rem;

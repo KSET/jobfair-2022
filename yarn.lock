@@ -5031,6 +5031,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "graphql@npm:16.2.0"
+  checksum: 204b5c9991b82561651a28b13dbb2e0e67514171a6a8c045ca4a527b944087344a14519d0426d661b49f2305584b390591abadc82b942f7b65e64e05cb31a584
+  languageName: node
+  linkType: hard
+
 "gzip-size@npm:^6.0.0":
   version: 6.0.0
   resolution: "gzip-size@npm:6.0.0"
@@ -8513,6 +8520,7 @@ __metadata:
     cssesc: ^3.0.0
     eslint: ^8.3.0
     eslint-plugin-nuxt: ^3.1.0
+    graphql: ^16.2.0
     http-status-codes: ^2.2.0
     husky: ^7.0.4
     js-cookie: ^3.0.1
@@ -8539,6 +8547,7 @@ __metadata:
     type-fest: ^2.9.0
     typescript: ^4.5.2
     unplugin-icons: ^0.13.0
+    villus: ^1.0.1
     vite-svg-loader: ^3.1.1
     vue: ^3.2.23
     vue-cal: ^4.2.0
@@ -10023,6 +10032,16 @@ __metadata:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 35703ac889d419cf2aceef63daeadbe4e77227c39ab6287eeb6c1b36a746b364f50ba22e88591f5d017bc54685d8137bc2d328d0a896e4d3fd22093c0f32a9ad
+  languageName: node
+  linkType: hard
+
+"villus@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "villus@npm:1.0.1"
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    vue: ^3.0.0
+  checksum: fede725651735697f9bb2c8f9928fcda59c9e0109e7eeb1d6051bab613e017abbf6bf93c379a4f15ab2b9f20fc973e19f6bf25912e175fba8a44cd9b2e2981ce
   languageName: node
   linkType: hard
 

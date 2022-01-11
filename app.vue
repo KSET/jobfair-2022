@@ -27,6 +27,9 @@
   } from "vue";
   import Toast from "primevue/toast";
   import {
+    useClient,
+  } from "villus";
+  import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
   import CookieConsent from "~/components/nav/CookieConsent.vue";
@@ -38,6 +41,9 @@
   } from "~/helpers/head";
   import FacebookShareImage from "~/assets/images/share/facebook.png";
   import AppProgressBar from "~/components/nav/AppProgressBar.vue";
+  import {
+    useRuntimeConfig,
+  } from "#app";
 
   export default defineComponent({
     components: {
@@ -49,6 +55,13 @@
     inheritAttrs: false,
 
     setup() {
+      const config = useRuntimeConfig();
+
+      useClient({
+        url: `${ config.API_BASE as string }/graphql`,
+        cachePolicy: "network-only",
+      });
+
       onMounted(() => {
         useCookieConsentStore().fetchConsent();
       });

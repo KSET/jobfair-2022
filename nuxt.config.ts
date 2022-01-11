@@ -90,4 +90,8 @@ export default defineNuxtConfig({
       }),
     ],
   },
+
+  publicRuntimeConfig: {
+    API_BASE: process.env.API_URL,
+  },
 });

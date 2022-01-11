@@ -27,6 +27,22 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    "@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
+    "@typescript-eslint/prefer-return-this-type": [ "warn" ],
+    "@typescript-eslint/prefer-optional-chain": [ "warn" ],
+    "@typescript-eslint/member-delimiter-style": [
+      "warn",
+      {
+        "multiline": {
+          "delimiter": "comma",
+          "requireLast": true,
+        },
+        "singleline": {
+          "delimiter": "comma",
+          "requireLast": true,
+        },
+      },
+    ],
     "no-lone-blocks": "off",
     "no-redeclare": "off",
     "@typescript-eslint/no-redeclare": [ "error" ],
@@ -110,7 +126,8 @@ module.exports = {
     "no-script-url": "error",
     "no-self-compare": "error",
     "no-sequences": "error",
-    "no-useless-constructor": "error",
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": [ "error" ],
     "object-curly-newline": [
       "error", {
         ImportDeclaration: "always",
@@ -140,7 +157,8 @@ module.exports = {
         avoidEscape: true,
       },
     ],
-    semi: [ "error", "always" ],
+    "semi": "off",
+    "@typescript-eslint/semi": [ "error", "always" ],
     "space-before-blocks": [ "warn", "always" ],
     "space-infix-ops": "error",
     "template-curly-spacing": [ "error", "always" ],

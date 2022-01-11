@@ -200,7 +200,11 @@
       }
 
       function closeDropdownOnPopState() {
-        window && window.addEventListener("popstate", () => {
+        if (!window) {
+          return;
+        }
+
+        window.addEventListener("popstate", () => {
           if (!menu.isOpen) {
             return;
           }

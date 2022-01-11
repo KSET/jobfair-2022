@@ -5,7 +5,7 @@ import {
 type Image = {
   url: string,
   width: number,
-}
+};
 
 export type News = Record<string, unknown> & {
   slug: string,

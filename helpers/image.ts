@@ -13,7 +13,7 @@ type ImageVariation = {
 type Image = {
   original: ImageVariation,
   [size: string]: ImageVariation,
-}
+};
 
 export const getSrcSet = (imageList: ImageVariation[]) => {
   if ("Object" !== type(imageList)) {

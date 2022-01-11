@@ -110,7 +110,7 @@
             value,
           }: {
             key: MaybeRef<string>,
-            value: MaybeRef<string>
+            value: MaybeRef<string>,
           },
         ) =>
           translationsStore

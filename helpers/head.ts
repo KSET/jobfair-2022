@@ -22,7 +22,7 @@ const mappedContent: Map<string, (param: string) => string> = new Map(Object.ent
   "og:title": generateTitle,
 }));
 
-const hid = ({ name, content }: { name: string, content: string }) =>
+const hid = ({ name, content }: { name: string, content: string, }) =>
   name.startsWith("og:")
     ? ({ name, property: name, content })
     : ({ name, content })

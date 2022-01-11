@@ -13,7 +13,7 @@ export const fixedEncodeURIComponent =
 ;
 
 export const encodeRedirectParam =
-  ({ name, params }: { name: string, params: unknown }) =>
+  ({ name, params }: { name: string, params: unknown, }) =>
     base64Encode(JSON.stringify({ name, params }))
 ;
 

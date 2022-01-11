@@ -42,7 +42,7 @@
           <li>
             <nuxt-link :class="$style.button" :to="joinNowRoute">
               <p-button class="p-button-outlined">
-                Prijavi se
+                <translated-text trans-key="button.joinNow" />
               </p-button>
             </nuxt-link>
           </li>
@@ -80,7 +80,7 @@
                   @click="sidebarOpen = false"
                 >
                   <p-button class="p-button-outlined">
-                    Prijavi se
+                    <translated-text trans-key="button.joinNow" />
                   </p-button>
                 </nuxt-link>
               </li>

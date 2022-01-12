@@ -729,15 +729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/reflect-metadata@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "@types/reflect-metadata@npm:0.1.0"
-  dependencies:
-    reflect-metadata: "*"
-  checksum: 9325a43186aafdf72f14977bdaed95b4a40005a919c8a96622de14bb2f2dbf41d9882e50bfcff4169f9a00df0d9dcee931fdd999d15776f8e5485fba40ff5b99
-  languageName: node
-  linkType: hard
-
 "@types/retry@npm:^0.12.0":
   version: 0.12.1
   resolution: "@types/retry@npm:0.12.1"
@@ -1151,7 +1142,6 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/express-session": ^1.17.4
     "@types/node": ^17.0.8
-    "@types/reflect-metadata": ^0.1.0
     apollo-server-express: ^3.6.1
     class-validator: ^0.13.2
     connect-redis: ^6.0.0
@@ -1160,7 +1150,7 @@ __metadata:
     express-session: ^1.17.2
     graphql: ^15.3.0
     graphql-fields: ^2.0.3
-    prisma: ^3.7.0
+    prisma: ~3.7.0
     redis: v3
     reflect-metadata: ^0.1.13
     ts-node: ^10.4.0
@@ -3485,7 +3475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^3.7.0":
+"prisma@npm:~3.7.0":
   version: 3.7.0
   resolution: "prisma@npm:3.7.0"
   dependencies:
@@ -3678,7 +3668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reflect-metadata@npm:*, reflect-metadata@npm:^0.1.13":
+"reflect-metadata@npm:^0.1.13":
   version: 0.1.13
   resolution: "reflect-metadata@npm:0.1.13"
   checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4

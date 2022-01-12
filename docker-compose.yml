@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: .docker/frontend/Dockerfile
+    restart: always
+    env_file:
+      - .env.example
+      - .env
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../.docker/backend/Dockerfile
+    restart: always
+    env_file:
+      - ./backend/.env.example
+      - ./backend/.env
+
+  proxy:
+    image: caddy:alpine
+    restart: always
+    volumes:
+      - "./.docker/proxy/Caddyfile:/etc/caddy/Caddyfile:ro"

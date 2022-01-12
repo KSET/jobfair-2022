@@ -15,6 +15,10 @@ const isProd = "production" === process.env.NODE_ENV;
 
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
+  nitro: {
+    preset: "server",
+  },
+
   buildModules: [
     "@vueuse/nuxt",
     "@nuxtjs/eslint-module",
@@ -53,7 +57,7 @@ export default defineNuxtConfig({
               .substring(__dirname.length + 1)
               .split("?")
               .shift() ?? "SOMETHING_WENT_WRONG_PARSE"
-          ;
+            ;
 
           const idScope = `${ absoluteFilePath }/${ name }`;
           if (!identNameMap.has(idScope)) {

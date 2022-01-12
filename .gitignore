@@ -99,3 +99,11 @@ sw.*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Docker
+.docker/*
+!.docker/backend
+!.docker/frontend
+!.docker/proxy
+docker-compose.override.yml
+docker-compose.*.override.yml

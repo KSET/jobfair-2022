@@ -4,6 +4,7 @@ import redis from "redis";
 import {
   Router,
 } from "express";
+import cookie from "cookie";
 
 export default (app: Router) => {
   const COOKIE_NAME = "jobfair-session" as const;
@@ -13,6 +14,33 @@ export default (app: Router) => {
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient({
     url: process.env.REDIS_URL,
+  });
+
+  app.use((req, res, next) => {
+    const sessionIdHeader = req.headers["x-session-id"];
+
+    if (!sessionIdHeader) {
+      return next();
+    }
+
+    const sessionId =
+      Array.isArray(sessionIdHeader)
+        ? sessionIdHeader[0]
+        : sessionIdHeader
+    ;
+
+    const cookies = cookie.parse(req.headers.cookie || "");
+
+    cookies[COOKIE_NAME] = sessionId;
+
+    req.headers.cookie =
+      Object
+        .entries(cookies)
+        .map(([ k, v ]) => cookie.serialize(k, v))
+        .join("; ")
+    ;
+
+    next();
   });
 
   app.use(session({

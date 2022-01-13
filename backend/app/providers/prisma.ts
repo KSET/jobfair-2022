@@ -3,7 +3,7 @@ import {
   Prisma,
 } from "@prisma/client";
 
-const options: Prisma.PrismaClientOptions =
+const envOptions: Prisma.PrismaClientOptions =
   "production" === process.env.NODE_ENV
     ? {}
     : {
@@ -11,5 +11,10 @@ const options: Prisma.PrismaClientOptions =
       errorFormat: "pretty",
     }
 ;
+
+const options: Prisma.PrismaClientOptions = {
+  rejectOnNotFound: false,
+  ...envOptions,
+};
 
 export const prisma = new PrismaClient(options);

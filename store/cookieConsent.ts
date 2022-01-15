@@ -4,7 +4,12 @@ import {
 import {
   useState as useGtagState,
 } from "vue-gtag-next";
-import Cookies from "js-cookie";
+import {
+  unref,
+} from "vue";
+import {
+  useCookie,
+} from "#app";
 
 const COOKIE_NAME = "jf-meetup-cookie-consent";
 
@@ -13,6 +18,20 @@ enum ConsentState {
   Denied = "DENIED",
   Undecided = "UNDECIDED",
 }
+
+const consentCookie = () => {
+  const nextMonth = new Date();
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+  return useCookie<ConsentState>(
+    COOKIE_NAME,
+    {
+      expires: nextMonth,
+      path: "/",
+      sameSite: "strict",
+    },
+  );
+};
 
 export const useCookieConsentStore = defineStore(
   "cookieConsent",
@@ -33,7 +52,7 @@ export const useCookieConsentStore = defineStore(
 
     actions: {
       fetchConsent() {
-        const consent = Cookies.get(COOKIE_NAME) as (ConsentState | undefined);
+        const consent = unref(consentCookie());
 
         this.processConsent(consent || ConsentState.Undecided);
       },
@@ -41,21 +60,12 @@ export const useCookieConsentStore = defineStore(
       processConsent(status: ConsentState) {
         this.consent = status;
 
-        const cookieValue = Cookies.get(COOKIE_NAME);
+        const cookie = consentCookie();
+        const cookieValue = unref(cookie);
         const cookieValueMatches = cookieValue === status;
 
         if (!cookieValue || !cookieValueMatches) {
-          const nextMonth = new Date();
-          nextMonth.setMonth(nextMonth.getMonth() + 1);
-
-          Cookies.set(
-            COOKIE_NAME,
-            status,
-            {
-              expires: nextMonth,
-              path: "/",
-            },
-          );
+          cookie.value = status;
         }
 
         const {

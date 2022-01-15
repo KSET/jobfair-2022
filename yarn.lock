@@ -5282,7 +5282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-status-codes@npm:*, http-status-codes@npm:^2.2.0":
+"http-status-codes@npm:*":
   version: 2.2.0
   resolution: "http-status-codes@npm:2.2.0"
   checksum: 31e1d730856210445da0907d9b484629e69e4fe92ac032478a7aa4d89e5b215e2b4e75d7ebce40d0537b6850bd281b2f65c7cc36cc2677e5de056d6cea1045ce
@@ -5861,13 +5861,6 @@ __metadata:
   version: 3.1.1
   resolution: "joycon@npm:3.1.1"
   checksum: 8003c9c3fc79c5c7602b1c7e9f7a2df2e9916f046b0dbad862aa589be78c15734d11beb9fe846f5e06138df22cb2ad29961b6a986ba81c4920ce2b15a7f11067
-  languageName: node
-  linkType: hard
-
-"js-cookie@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "js-cookie@npm:3.0.1"
-  checksum: bb48de67e2a6bd1ae3dfd6b2d5a167c33dd0c5a37e909206161eb0358c98f17cb55acd55827a58e9eea3630d89444e7479f7938ef4420dda443218b8c434a4c3
   languageName: node
   linkType: hard
 
@@ -8521,11 +8514,8 @@ __metadata:
     eslint: ^8.3.0
     eslint-plugin-nuxt: ^3.1.0
     graphql: ^16.2.0
-    http-status-codes: ^2.2.0
     husky: ^7.0.4
-    js-cookie: ^3.0.1
     lint-staged: ">=10"
-    lodash-es: ^4.17.21
     normalize.css: ^8.0.1
     nuxt3: ^3.0.0-27336769.5a7a979
     pinia: ^2.0.5

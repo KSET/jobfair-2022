@@ -11,7 +11,7 @@ import {
   useCookie,
 } from "#app";
 
-const COOKIE_NAME = "jf-meetup-cookie-consent";
+const COOKIE_NAME = "job-fair-cookie-consent";
 
 enum ConsentState {
   Accepted = "ACCEPTED",

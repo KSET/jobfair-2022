@@ -286,16 +286,16 @@
       border-radius: 4px;
       background-color: $content-background-color;
 
-      &::after {
+      &::before {
         position: absolute;
-        top: .5rem;
+        bottom: .5rem;
         right: .5rem;
         width: 1.5rem;
         height: 100%;
         content: "";
         pointer-events: none;
         background-repeat: no-repeat;
-        background-position: top;
+        background-position: bottom;
         background-size: contain;
         filter: drop-shadow(0 0 0 black) invert(1);
       }
@@ -318,7 +318,7 @@
 
         .eventContainer {
 
-          &::after {
+          &::before {
             background-image: $icon;
           }
         }

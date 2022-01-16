@@ -40,7 +40,9 @@
           @mouseover.prevent="menu.hover && show()"
           @mouseleave.prevent="menu.hover && hide()"
         >
-          <slot name="contents" />
+          <div :class="$style.contentsWrapper">
+            <slot name="contents" />
+          </div>
         </div>
       </transition>
     </div>
@@ -277,32 +279,33 @@
       bottom: auto;
       width: 100%;
 
-      > * {
+      .contentsWrapper {
         position: relative;
+        display: contents;
 
-        ::before,
-        ::after {
+        &::before,
+        &::after {
           position: absolute;
           z-index: 1;
           width: 0;
           height: 0;
         }
 
-        ::before {
+        &::before {
           border: calc(#{$arrow-size} + #{$arrow-position-inset} + 1px) solid transparent;
         }
 
-        ::after {
+        &::after {
           border: calc(#{$arrow-size} + #{$arrow-position-inset}) solid transparent;
         }
       }
 
       &.withArrow {
 
-        > * {
+        .contentsWrapper {
 
-          ::before,
-          ::after {
+          &::before,
+          &::after {
             content: "";
           }
         }
@@ -315,20 +318,20 @@
         top: auto;
         bottom: calc(100% + #{$container-offset});
 
-        > * {
+        .contentsWrapper {
 
-          ::before,
-          ::after {
+          &::before,
+          &::after {
             top: calc(100% - #{$arrow-position-inset});
             left: 50%;
           }
 
-          ::before {
+          &::before {
             transform: translate(-50%, 1px);
             border-top-color: $arrow-border-color;
           }
 
-          ::after {
+          &::after {
             transform: translateX(-50%);
             border-top-color: $arrow-color;
           }
@@ -350,20 +353,20 @@
         top: 0;
         left: calc(100% + #{$container-offset});
 
-        > * {
+        .contentsWrapper {
 
-          ::before,
-          ::after {
+          &::before,
+          &::after {
             top: $arrow-offset;
             left: 0;
           }
 
-          ::before {
+          &::before {
             transform: translate(-100%, calc(-1 * #{$arrow-position-inset}));
             border-right-color: $arrow-border-color;
           }
 
-          ::after {
+          &::after {
             transform: translateX(calc(-100% + #{$arrow-position-inset}));
             border-right-color: $arrow-color;
           }
@@ -385,20 +388,20 @@
         top: calc(100% + #{$container-offset});
         bottom: auto;
 
-        > * {
+        .contentsWrapper {
 
-          ::before,
-          ::after {
+          &::before,
+          &::after {
             top: 0;
             left: 50%;
           }
 
-          ::before {
+          &::before {
             transform: translate(calc(-100% + #{$arrow-position-inset}), -100%);
             border-bottom-color: $arrow-border-color;
           }
 
-          ::after {
+          &::after {
             transform: translate(-100%, -100%);
             border-bottom-color: $arrow-color;
           }
@@ -420,20 +423,20 @@
         top: 0;
         right: calc(100% + #{$container-offset});
 
-        > * {
+        .contentsWrapper {
 
-          ::before,
-          ::after {
+          &::before,
+          &::after {
             top: $arrow-offset;
             right: 0;
           }
 
-          ::before {
+          &::before {
             transform: translate(100%, calc(-1 * #{$arrow-position-inset}));
             border-left-color: $arrow-border-color;
           }
 
-          ::after {
+          &::after {
             transform: translateX(calc(100% - #{$arrow-position-inset}));
             border-left-color: $arrow-color;
           }
@@ -456,8 +459,8 @@
       }
 
       .default-leave-active {
-        transition-property: all;
         transition-duration: .5s;
+        transition-property: all;
       }
 
       .default-enter,

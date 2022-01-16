@@ -49,7 +49,7 @@
 
         <div class="col-12 text-center">
           <p-button class="p-button-outlined p-button-secondary">
-            Saznaj više
+            <translated-text trans-key="index.news.learnMore" />
             <icon-chevron-right />
           </p-button>
         </div>
@@ -84,7 +84,7 @@
 
         <div class="col-12 text-center">
           <p-button class="p-button-outlined">
-            Pogledaj više
+            <translated-text trans-key="index.gallery.showMore" />
             <icon-chevron-right />
           </p-button>
         </div>

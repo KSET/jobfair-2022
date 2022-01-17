@@ -40,8 +40,8 @@ export const useTranslationsStore = defineStore(
     }),
 
     getters: {
-      translation(state) {
-        return (key: string) => state.translations[state.currentLanguage]?.[key] ?? key;
+      translation(state): (key: string, language?: Language) => string {
+        return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] ?? key;
       },
 
       capitalizedTranslation(): (key: string) => string {

@@ -203,6 +203,7 @@
       font-weight: bold;
       display: block;
       margin-bottom: .75rem;
+      cursor: pointer;
       color: #{color.adjust($fer-black, $alpha: -.2)};
 
       &.withColon {

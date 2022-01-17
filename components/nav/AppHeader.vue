@@ -40,11 +40,9 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :class="$style.button" :to="joinNowRoute">
-              <p-button class="p-button-outlined">
-                <translated-text trans-key="button.joinNow" />
-              </p-button>
-            </nuxt-link>
+            <nav-user-module
+              :class="$style.button"
+            />
           </li>
         </ul>
         <p-button
@@ -74,15 +72,9 @@
                 </nuxt-link>
               </li>
               <li>
-                <nuxt-link
+                <nav-user-module
                   :class="$style.button"
-                  :to="joinNowRoute"
-                  @click="sidebarOpen = false"
-                >
-                  <p-button class="p-button-outlined">
-                    <translated-text trans-key="button.joinNow" />
-                  </p-button>
-                </nuxt-link>
+                />
               </li>
             </ul>
           </Sidebar>
@@ -107,10 +99,11 @@
   } from "~/store/pages";
   import TranslatedText from "~/components/TranslatedText.vue";
   import IconMenuOpen from "~/assets/images/component/AppHeader/menu.svg?component";
-  import useJoinNowRoute from "~/composables/useJoinNowRoute";
+  import NavUserModule from "~/components/nav/NavUserModule.vue";
 
   export default defineComponent({
     components: {
+      NavUserModule,
       Sidebar,
       TranslatedText,
       IconMenuOpen,
@@ -119,7 +112,6 @@
     setup() {
       const { y } = useWindowScroll();
       const pagesStore = usePagesStore();
-      const joinNowRoute = useJoinNowRoute();
 
       const isAtTop = computed(() => 0 === y.value);
 
@@ -131,7 +123,6 @@
         isAtTop,
         sidebarOpen,
         pages,
-        joinNowRoute,
       };
     },
   });

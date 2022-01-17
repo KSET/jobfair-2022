@@ -1,0 +1,37 @@
+mutation Login($password: String!, $identifier: String!) {
+    login(password: $password, identifier: $identifier) {
+        errors {
+            field
+            message
+        }
+
+        user {
+            ...frag_UserProfile
+        }
+    }
+}
+
+mutation Register($info: UserRegisterInput!) {
+    register(info: $info) {
+        errors {
+            field
+            message
+        }
+
+        user {
+            ...frag_UserProfile
+        }
+    }
+}
+
+mutation Logout {
+    logout
+}
+
+mutation UpdateTranslation($data: TranslationCreateInput!) {
+    updateTranslation(data: $data) {
+        key
+        value
+        language
+    }
+}

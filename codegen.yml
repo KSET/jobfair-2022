@@ -1,0 +1,15 @@
+overwrite: true
+schema: "./graphql/schema.graphql"
+documents: "./graphql/documents/**/*.graphql"
+generates:
+  ./graphql/schema.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-resolvers"
+      - "typescript-document-nodes"
+
+config:
+  typesPrefix: "I"
+  declarationKind: "type"
+  skipTypename: true

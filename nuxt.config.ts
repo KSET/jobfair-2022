@@ -31,6 +31,7 @@ export default defineNuxtConfig({
       "rambda",
       "rambdax",
       "primevue",
+      "graphql",
     ],
     publicPath: "/assets/",
   },

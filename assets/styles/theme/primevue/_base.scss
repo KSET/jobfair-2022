@@ -66,6 +66,28 @@ h6 {
 
 .pi {
   font-size: 1rem;
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  display: inline-block;
+  text-transform: none;
+  speak: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &::before {
+    content: "@";
+    pointer-events: none;
+    color: transparent;
+  }
+
+  &.pi-chevron-down {
+
+    &::before {
+      content: url("@/assets/images/util/arrow-down.svg?url");
+    }
+  }
 }
 
 .p-link {

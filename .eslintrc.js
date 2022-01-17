@@ -28,6 +28,8 @@ module.exports = {
   // add your custom rules here
   rules: {
     "@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
+    "@typescript-eslint/await-thenable": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/prefer-return-this-type": [ "warn" ],
     "@typescript-eslint/prefer-optional-chain": [ "warn" ],
     "@typescript-eslint/member-delimiter-style": [

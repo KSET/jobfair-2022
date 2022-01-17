@@ -4,30 +4,47 @@
       <translated-text trans-key="login.header" />
     </h1>
 
-    <form :class="$style.formContainer" method="POST">
+    <form
+      :aria-disabled="isLoading"
+      :class="$style.formContainer"
+      method="POST"
+      @submit.prevent="handleSubmit"
+    >
       <app-input
         v-model="info.username"
         :class="$style.formElement"
         label-key="form.email"
-        name="username"
+        name="identifier"
         placeholder="user@example.com"
         required
-        type="text"
+        type="email"
       />
 
       <app-input
         v-model="info.password"
         :class="$style.formElement"
-        label-key="form.password"
         :minlength="8"
+        label-key="form.password"
         name="password"
         placeholder="••••••••"
         required
         type="password"
       />
 
-      <div :class="$style.registerContainer">
+      <div
+        v-if="errors.user.length > 0"
+        :class="$style.errorContainer"
+      >
+        <translated-text
+          v-for="err in errors.user"
+          :key="err.message"
+          :trans-key="err.message"
+        />
+      </div>
+
+      <div :class="$style.submitContainer">
         <p-button
+          :loading="isLoading"
           class="p-button-secondary w-full font-bold"
           type="submit"
         >
@@ -48,11 +65,21 @@
   import {
     defineComponent,
     reactive,
+    ref,
   } from "vue";
+  import {
+    mapObject,
+  } from "rambdax";
+  import {
+    useRouter,
+  } from "vue-router";
   import AppMaxWidthContainer from "../components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useTitle from "~/composables/useTitle";
   import AppInput from "~/components/util/form/app-input.vue";
+  import {
+    useUserStore,
+  } from "~/store/user";
 
   export default defineComponent({
     name: "PageLogin",
@@ -65,14 +92,57 @@
 
     setup() {
       useTitle("login.header");
+      const router = useRouter();
+      const userStore = useUserStore();
+
+      const isLoading = ref(false);
 
       const info = reactive({
         username: "",
         password: "",
       });
 
+      type AuthError = {
+        message: string,
+      };
+      const errors = reactive(mapObject(() => [] as AuthError[], {
+        ...info,
+        user: "",
+      }));
+
       return {
         info,
+        errors,
+        isLoading,
+        async handleSubmit() {
+          isLoading.value = true;
+          const resp = await userStore.login({
+            identifier: info.username,
+            password: info.password,
+          });
+          isLoading.value = false;
+
+          if (!resp) {
+            errors.user.push({
+              message: "errors.somethingWentWrong",
+            });
+            return;
+          }
+
+          const errorList = resp.errors;
+
+          if (!errorList) {
+            await router.push("/");
+
+            return;
+          }
+
+          for (const error of errorList) {
+            errors[error.field].push({
+              message: error.message,
+            });
+          }
+        },
       };
     },
   });
@@ -98,8 +168,20 @@
     }
   }
 
-  .registerContainer {
+  .errorContainer {
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    margin-top: -.75rem;
+    margin-bottom: -1.5rem;
+    text-align: center;
+    color: $fer-error;
+    gap: .5rem;
+  }
+
+  .submitContainer {
     margin-top: 1.5rem;
+    margin-bottom: 4rem;
 
     @include media(md) {
       margin-top: .625rem;

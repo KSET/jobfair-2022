@@ -3,7 +3,6 @@
 .output
 node_modules
 .idea
-backend
 .git
 docker-compose.yml
 docker-compose.*.yml

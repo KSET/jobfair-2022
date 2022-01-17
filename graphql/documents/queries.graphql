@@ -1,0 +1,33 @@
+fragment frag_UserProfile on User {
+    uid
+    name
+    email
+    phone
+    roles {
+        name
+    }
+}
+
+query Profile {
+    profile {
+        ...frag_UserProfile
+    }
+}
+
+query TranslationsFor($language: String!) {
+    allTranslationsFor(language: $language) {
+        key
+        value
+    }
+}
+
+query InitialData($language: String!) {
+    profile {
+        ...frag_UserProfile
+    }
+
+    allTranslationsFor(language: $language) {
+        key
+        value
+    }
+}

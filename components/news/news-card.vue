@@ -8,6 +8,7 @@
     :to="{ name: 'news-slug', params: { slug: newsItem.slug } }"
   >
     <p-button
+      tabindex="-1"
       class="flex border-noround text-left align-self-stretch p-0 p-button-secondary p-button-text"
     >
       <div

@@ -9,7 +9,7 @@ import cookie from "cookie";
 export default (app: Router) => {
   const COOKIE_NAME = "jobfair-session" as const;
   const SESSION_SECRET = process.env.SESSION_SECRET || `${ Date.now().toString(36) }-${ Math.random().toString(36) }`;
-  const SESSION_TTL = Number.parseInt(process.env.SESSION_TTL || "0") || undefined;
+  const SESSION_TTL = Number.parseInt(process.env.SESSION_TTL || "0");
 
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient({
@@ -54,7 +54,11 @@ export default (app: Router) => {
     rolling: true,
     cookie: {
       sameSite: "strict",
-      maxAge: SESSION_TTL,
+      maxAge:
+        0 < SESSION_TTL
+          ? SESSION_TTL * 1000
+          : undefined
+      ,
     },
     name: COOKIE_NAME,
   }));

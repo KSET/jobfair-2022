@@ -6,8 +6,16 @@ import {
   RouteHandler,
 } from "./request";
 
+export enum Role {
+  Student = "student",
+  Company = "company",
+  AccountManager = "account-manager",
+  PR = "pr",
+  Admin = "admin",
+}
+
 export type AuthConfig = {
-  role?: string,
+  role?: Role,
 };
 
 export const requireAuthMiddleware =

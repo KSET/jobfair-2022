@@ -1,5 +1,6 @@
 import type {
   Request,
+  Response,
 } from "express";
 import type {
   Session as ExpressSession,
@@ -11,14 +12,22 @@ import {
 import {
   prisma,
 } from "../providers/prisma";
+import {
+  Role,
+} from "../helpers/auth";
 
 export type Session = ExpressSession & Partial<SessionData> & {
   userId?: User["id"],
 };
 
+export type SessionUser = User & {
+  roles: Role[],
+};
+
 export type Context = {
   prisma: typeof prisma,
   req: Request,
-  user: unknown,
+  res: Response,
+  user: SessionUser | null,
   session: Session,
 };

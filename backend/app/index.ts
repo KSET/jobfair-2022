@@ -1,19 +1,19 @@
 import "reflect-metadata";
 
 import express from "express";
-import {
-  User,
-} from "@prisma/client";
 import withSessionMiddleware from "./middleware/session";
 import withGraphqlMiddleware from "./middleware/graphql";
 import withUserMiddleware from "./middleware/with-user";
+import {
+  SessionUser,
+} from "./types/apollo-context";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface Request {
-      user: null | User,
+      user: SessionUser | null,
     }
   }
 }

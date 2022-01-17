@@ -55,6 +55,16 @@ export const useTranslationsStore = defineStore(
     },
 
     actions: {
+      async setCurrentLanguage(language: Language) {
+        try {
+          await this.fetchTranslations(language);
+          this.currentLanguage = language;
+        } catch {
+        }
+
+        return this.currentLanguage;
+      },
+
       async updateTranslation(
         {
           key,
@@ -100,21 +110,22 @@ export const useTranslationsStore = defineStore(
         };
       },
 
-      setTranslations(translationList: { key: string, value: string, }[]) {
-        this.translations = {
-          [this.currentLanguage]: Object.fromEntries(
-            translationList.map((x) => [ x.key, x.value ]),
-          ),
-        } as Translations;
+      setTranslations(translationList: { key: string, value: string, }[], language?: Language) {
+        const lang = language ?? this.currentLanguage;
+
+        this.translations[lang] = Object.fromEntries(
+          translationList.map((x) => [ x.key, x.value ]),
+        );
 
         return this.translations;
       },
 
-      async fetchTranslations() {
+      async fetchTranslations(language?: Language) {
+        const lang = language ?? this.currentLanguage;
         const translationsQuery = await useQuery<ITranslationsForQuery, ITranslationsForQueryVariables>({
           query: TranslationsFor,
           variables: {
-            language: this.currentLanguage,
+            language: lang,
           },
         })();
 
@@ -122,7 +133,7 @@ export const useTranslationsStore = defineStore(
           translationsQuery.data?.allTranslationsFor ?? [] as ITranslationsForQuery["allTranslationsFor"]
         ;
 
-        return this.setTranslations(translationList);
+        return this.setTranslations(translationList, lang);
       },
     },
   },

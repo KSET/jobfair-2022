@@ -70,13 +70,18 @@ h6 {
   font-style: normal;
   font-variant: normal;
   line-height: 1;
-  display: inline-block;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-transform: none;
   speak: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   &::before {
+    width: 1em;
+    height: 1em;
     content: "@";
     pointer-events: none;
     color: transparent;
@@ -87,6 +92,29 @@ h6 {
     &::before {
       content: url("@/assets/images/util/arrow-down.svg?url");
     }
+  }
+
+  &.pi-spinner {
+
+    &::before {
+      content: url("@/assets/images/util/loading.svg?url");
+    }
+  }
+
+  &.pi-spin {
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+
   }
 }
 

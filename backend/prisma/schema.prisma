@@ -16,26 +16,52 @@ datasource db {
 
 model User {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id        Int      @id @default(autoincrement())
-  /// @TypeGraphQL.field(name: "id")
-  uid       String   @unique @default(cuid())
-  email     String   @unique
-  firstName String
-  lastName  String
-  phone     String
+  id         Int        @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid        String     @unique @default(cuid())
+  email      String     @unique
+  firstName  String
+  lastName   String
+  phone      String
+  usersRoles UserRole[]
   /// @TypeGraphQL.omit(output: true)
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  password   String
+  /// @TypeGraphQL.omit(input: true)
+  createdAt  DateTime   @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt  DateTime   @updatedAt
 }
 
 model Translation {
   key       String
   value     String
   language  String
+  /// @TypeGraphQL.omit(input: true)
   createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
   updatedAt DateTime @updatedAt
 
   @@unique([key, language])
   @@index([key, language])
+}
+
+model Role {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  /// @TypeGraphQL.omit(input: true)
+  createdAt  DateTime   @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt  DateTime   @updatedAt
+  usersRoles UserRole[]
+}
+
+model UserRole {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@id([userId, roleId])
+  @@index([roleId])
 }

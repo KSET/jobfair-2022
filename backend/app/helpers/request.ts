@@ -1,18 +1,17 @@
 import {
-  IncomingMessage,
-  ServerResponse,
-} from "http";
-import type {
-  Promisable,
-} from "type-fest";
+  constants as HttpStatus,
+} from "http2";
 import {
   getReasonPhrase,
   StatusCodes,
 } from "http-status-codes";
 import {
+  RequestHandler,
+} from "express-serve-static-core";
+import {
   map,
   pipe,
-} from "rambda";
+} from "rambdax";
 import {
   ServiceError,
 } from "../services/errors/service-error";
@@ -107,7 +106,7 @@ export const asyncWrapper =
         .catch()
 ;
 
-export type RouteHandler<T> = (req: IncomingMessage, res: ServerResponse) => Promisable<T>;
+export type RouteHandler<P> = RequestHandler<P>;
 
 export const routeWrapper =
   <T>(fn: RouteHandler<T>) =>
@@ -116,59 +115,15 @@ export const routeWrapper =
 
 export const rawRoute =
   <T>(fn: RouteHandler<T>) =>
-    routeWrapper(async (req, res) => {
+    asyncWrapper<RouteHandler<T>>(async (req, res, next) => {
       try {
-        const result = await fn(req, res);
+        const result = await fn(req, res, next) as unknown;
 
         if (result instanceof Buffer || "string" === typeof result) {
           return res.end(result);
-        } else if (!res.writableEnded) {
+        } else {
           return res.end();
         }
-      } catch (err) {
-        const e =
-          (err instanceof ServiceError)
-            ? ApiError.fromService(err)
-            : ApiError.fromError(err as Error)
-        ;
-
-        if (!(err instanceof ApiError)) {
-          if ("development" === process.env.NODE_ENV) {
-            // eslint-disable-next-line no-console
-            console.log("|> ERROR", "\n", e);
-          }
-        }
-
-        res.setHeader("X-Api-Error", e.message);
-        res.statusCode = e.statusCode;
-        return res.end();
-      }
-    })
-;
-
-
-export const apiRoute =
-  <T>(handler: RouteHandler<T>) =>
-    routeWrapper(async (req, res) => {
-      const endRequest =
-        <T>(payload: T) =>
-          res
-            .setHeader("Content-Type", "application/json")
-            .end(JSON.stringify(payload))
-      ;
-
-      try {
-        const result = await handler(req, res);
-
-        if (res.writableEnded) {
-          return;
-        }
-
-        if (result instanceof ServerResponse) {
-          return result.end();
-        }
-
-        return endRequest(success(result));
       } catch (err) {
         const e =
           (err instanceof ServiceError)
@@ -176,10 +131,49 @@ export const apiRoute =
             : ApiError.fromError<unknown>(err as Error)
         ;
 
+        if (e.statusCode) {
+          res.status(e.statusCode);
+        } else {
+          res.status(HttpStatus.HTTP_STATUS_FORBIDDEN);
+        }
+
+        if (err instanceof ApiError) {
+          res.set("X-Api-Error", e.message);
+        } else if ("development" === process.env.NODE_ENV) {
+          // eslint-disable-next-line no-console
+          console.log("|> ERROR", "\n", e);
+        }
+
+        return res.end();
+      }
+    })
+;
+
+
+export const apiRoute =
+  <T>(fn: RouteHandler<T>) =>
+    asyncWrapper<RouteHandler<T>>(async (req, res, next) => {
+      try {
+        const result = await fn(req, res, next) as unknown;
+
+        return res.json(success(result));
+      } catch (err) {
+        const e =
+          (err instanceof ServiceError)
+            ? ApiError.fromService<unknown>(err)
+            : ApiError.fromError<unknown>(err as Error)
+        ;
+
+        if (e.statusCode) {
+          res.status(e.statusCode);
+        } else {
+          res.status(HttpStatus.HTTP_STATUS_FORBIDDEN);
+        }
+
         const errorData = error({
-          status: e.statusCode,
+          status: res.statusCode,
           reason: e.message,
-          data: e.data as unknown,
+          data: e.data,
         });
 
         if (!(err instanceof ApiError)) {
@@ -202,8 +196,7 @@ export const apiRoute =
           }
         }
 
-        res.statusCode = errorData.status;
-        return endRequest(errorData);
+        return res.json(errorData);
       }
     })
 ;

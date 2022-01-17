@@ -15,7 +15,6 @@ export const authChecker: AuthChecker<Context> = (
   roles,
 ) => {
   console.log({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     root,
     args,
     context,

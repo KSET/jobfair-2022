@@ -8,6 +8,7 @@
         "module": "commonjs",
         "lib": [
             "es2018",
+            "es2021",
             "esnext.asynciterable"
         ],
         "experimentalDecorators": true,

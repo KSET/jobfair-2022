@@ -1,22 +1,24 @@
 import {
+  Arg,
+  Ctx,
+  Mutation,
   ObjectType,
   Query,
   Resolver,
 } from "type-graphql";
 import {
-  Translation,
-
   applyModelsEnhanceMap,
+  Translation,
+  TranslationCreateInput,
 } from "@generated/type-graphql";
 import {
-  prisma,
-} from "../../providers/prisma";
+  Context,
+} from "../../types/apollo-context";
 
 export {
   FindManyTranslationResolver,
   FindUniqueTranslationResolver,
   FindFirstTranslationResolver,
-  CreateTranslationResolver,
 } from "@generated/type-graphql";
 
 applyModelsEnhanceMap({
@@ -30,7 +32,37 @@ applyModelsEnhanceMap({
 @Resolver()
 export class TranslationsResolver {
   @Query(() => [ Translation ])
-  allTranslations() {
-    return prisma.translation.findMany();
+  allTranslationsFor(
+  @Ctx() ctx: Context,
+    @Arg("language") language: string,
+  ) {
+    return ctx.prisma.translation.findMany({
+      where: {
+        language,
+      },
+    });
+  }
+
+  @Mutation(() => Translation, { nullable: true })
+  async updateTranslation(
+  @Ctx() ctx: Context,
+    @Arg("data") data: TranslationCreateInput,
+  ) {
+    if (!ctx.user) {
+      return null;
+    }
+
+    return await ctx.prisma.translation.upsert({
+      where: {
+        // eslint-disable-next-line camelcase
+        key_language: {
+          key: data.key,
+          language: data.language,
+        },
+      },
+
+      create: data,
+      update: data,
+    });
   }
 }

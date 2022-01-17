@@ -31,6 +31,7 @@
     computed,
     defineComponent,
     onMounted,
+    watch,
   } from "vue";
   import Toast from "primevue/toast";
   import {
@@ -99,6 +100,12 @@
             siteName: "Job Fair",
           }),
         ],
+      });
+
+      const user = computed(() => userStore.user);
+
+      watch(user, () => {
+        translationsStore.isEditable = false;
       });
 
       const data = {

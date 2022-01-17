@@ -99,3 +99,6 @@ sw.*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# GraphQL
+app/graphql/schema/schema.graphql

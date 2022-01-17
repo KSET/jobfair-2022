@@ -14,9 +14,12 @@ import {
   prisma,
 } from "../providers/prisma";
 import resolvers from "../graphql/resolvers";
+// import {
+//   authChecker,
+// } from "../graphql/auth-checker";
 import {
-  authChecker,
-} from "../graphql/auth-checker";
+  schemaFileConfig,
+} from "../graphql/schema/helpers";
 
 export default async (app: Router) => {
   const apollo = new ApolloServer({
@@ -29,7 +32,8 @@ export default async (app: Router) => {
     schema: await buildSchema({
       resolvers,
       validate: false,
-      authChecker,
+      // authChecker,
+      emitSchemaFile: schemaFileConfig(),
       authMode:
         "production" === process.env.NODE_ENV
           ? "null"

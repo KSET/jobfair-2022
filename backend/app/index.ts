@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import express from "express";
+import serverTiming from "server-timing";
 import withSessionMiddleware from "./middleware/session";
 import withGraphqlMiddleware from "./middleware/graphql";
 import withUserMiddleware from "./middleware/with-user";
@@ -22,6 +23,8 @@ export async function start() {
   const app = express();
 
   app.set("trust proxy", 1);
+
+  app.use(serverTiming());
 
   await withSessionMiddleware(app);
   await withUserMiddleware(app);

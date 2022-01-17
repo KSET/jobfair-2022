@@ -23,9 +23,10 @@ import {
 
 export default async (app: Router) => {
   const apollo = new ApolloServer({
-    context: ({ req }): Context => ({
+    context: ({ req, res }): Context => ({
       prisma,
       req,
+      res,
       user: req.user,
       session: req.session,
     }),

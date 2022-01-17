@@ -15,13 +15,21 @@ import {
 } from "../helpers/auth";
 
 export default (app: Router) => {
+  const TIMER_NAME = "session-user";
+
   app.use(async (req, res, next) => {
+    res.startTime(TIMER_NAME, "Session user");
     const session = req.session as (Session | undefined);
 
     req.user = null;
 
-    if (!session?.userId) {
+    const end = () => {
+      res.endTime(TIMER_NAME);
       return next();
+    };
+
+    if (!session?.userId) {
+      return end();
     }
 
     const user = await prisma.user.findUnique({
@@ -42,7 +50,7 @@ export default (app: Router) => {
     });
 
     if (!user) {
-      return next();
+      return end();
     }
 
     const roles = user.usersRoles.map(({ role }) => role.name as Role);
@@ -57,7 +65,7 @@ export default (app: Router) => {
       roles,
     };
 
-    return next();
+    return end();
   });
 
   return app;

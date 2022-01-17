@@ -25,6 +25,7 @@
         "rambdax": "^8.0.0",
         "redis": "v3",
         "reflect-metadata": "^0.1.13",
+        "server-timing": "^3.3.1",
         "ts-node": "^10.4.0",
         "tslib": "^2.3.1",
         "type-graphql": "^1.1.1",

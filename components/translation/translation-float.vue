@@ -7,13 +7,19 @@
       <legend>Translations</legend>
       <div>
         <label class="flex">
-          <input-switch v-model="checked" />
-          <span class="ml-3">Editable</span>
+          <input-switch
+            v-model="checked"
+            :disabled="isLoading"
+          />
+          <span
+            :class="$style.inputLabel"
+          >Editable</span>
         </label>
       </div>
       <div class="mt-3">
         <p-dropdown
           v-model="selectedLanguage"
+          :loading="isLoading"
           :options="availableLanguages"
           option-label="label"
           option-value="value"
@@ -44,6 +50,7 @@
 
     setup() {
       const translationsStore = useTranslationsStore();
+      const isLoading = ref(false);
 
       const checked = ref(translationsStore.isEditable);
       watch(checked, (value) => {
@@ -51,8 +58,15 @@
       });
 
       const selectedLanguage = ref(translationsStore.currentLanguage);
-      watch(selectedLanguage, (value) => {
-        translationsStore.currentLanguage = value;
+      watch(selectedLanguage, async (value: Language, oldValue: Language) => {
+        isLoading.value = true;
+        try {
+          await translationsStore.setCurrentLanguage(value);
+        } catch {
+          selectedLanguage.value = oldValue;
+        } finally {
+          isLoading.value = false;
+        }
       });
 
       return {
@@ -60,6 +74,7 @@
         checked,
         availableLanguages: Object.entries(Language).map(([ label, value ]) => ({ label, value })),
         selectedLanguage,
+        isLoading,
       };
     },
   });
@@ -82,6 +97,15 @@
 
     :global(.p-inputtext) {
       padding: .4rem .8rem;
+    }
+
+    :global(label) {
+      cursor: pointer;
+    }
+
+    .inputLabel {
+      margin-left: 1rem;
+      user-select: none;
     }
   }
 </style>

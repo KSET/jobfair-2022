@@ -28,7 +28,7 @@ applyModelsEnhanceMap({
   User: {},
 });
 
-const selectTransform: Record<string, (select: Record<string, any>) => void> = {
+const selectTransform: Record<string, (select: Record<string, unknown>) => void> = {
   roles(select) {
     select.usersRoles = {
       include: {

@@ -29,6 +29,8 @@ import {
 } from "./auth";
 
 type RequestMethod = "all" | "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
+type NonEmptyArray<T> = [ T, ...T[] ];
+type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
 
 export class Router {
   private router: express.Router;
@@ -38,49 +40,49 @@ export class Router {
   }
 
   /// //////// REQUEST METHODS START ///////////
-  all<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  all<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("all", path, handlers);
   }
 
-  get<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  get<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("get", path, handlers);
   }
 
-  getRaw<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  getRaw<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRawRoute("get", path, handlers);
   }
 
-  post<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  post<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("post", path, handlers);
   }
 
-  postRaw<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  postRaw<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRawRoute("post", path, handlers);
   }
 
-  put<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  put<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("put", path, handlers);
   }
 
-  delete<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  delete<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("delete", path, handlers);
   }
 
-  patch<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  patch<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("patch", path, handlers);
   }
 
-  options<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  options<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("options", path, handlers);
   }
 
-  head<R>(path: string, ...handlers: RouteHandler<R>[]) {
+  head<R>(path: string, ...handlers: RouteHandlers<R>) {
     return this.addRoute("head", path, handlers);
   }
 
   /// //////// REQUEST METHODS END ///////////
 
-  use<R>(...handlers: RouteHandler<R>[]) {
+  use<R>(...handlers: RouteHandlers<R>) {
     const exposedHandlers =
       handlers
         .map((handler) => {
@@ -99,19 +101,20 @@ export class Router {
     return this;
   }
 
-  with<R>(...handlers: RouteHandler<R>[]) {
+  with<R>(...handlers: RouteHandlers<R>) {
     return this.use(...handlers);
   }
 
-  addRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandler<R>[]) {
+  addRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandlers<R>) {
     return this.addWrappedRoute(requestMethod, path, handlersList, apiRoute);
   }
 
-  addRawRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandler<R>[]) {
+  addRawRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandlers<R>) {
     return this.addWrappedRoute(requestMethod, path, handlersList, rawRoute);
   }
 
-  addWrappedRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandler<R>[], wrapper: ((handler: RouteHandler<R>) => RouteHandler<R>)) {
+  addWrappedRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandlers<R>, wrapper: ((handler: RouteHandler<R>) => RouteHandler<R>)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const handler = handlersList.pop()!;
 
     this.router[requestMethod](path, ...[ ...handlersList, wrapper(handler) ]);

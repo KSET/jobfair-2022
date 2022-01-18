@@ -22,9 +22,7 @@
   import {
     computed,
     defineComponent,
-    onMounted,
     ref,
-    toRefs,
     unref,
     watch,
   } from "vue";
@@ -38,6 +36,24 @@
   type Props = {
     transKey: string,
   };
+
+  function cleanUpText(textRef: MaybeRef<string>): string {
+    const text = unref(textRef);
+
+    const brKey = `|${ Math.random().toString(36).slice(3) }|`;
+    const html =
+      String(text)
+        .trim()
+        .replace(/<br>/gi, `${ brKey }br${ brKey }`)
+        .replaceAll("\n", `${ brKey }br${ brKey }`)
+    ;
+    const div = document.createElement("div");
+    div.innerHTML = html;
+
+    const eBrKey = brKey.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+
+    return div.textContent?.replace(RegExp(`${ eBrKey }br${ eBrKey }`, "gi"), "\n").trim() || "";
+  }
 
   export default defineComponent({
     props: {
@@ -59,81 +75,18 @@
 
     setup(
       props: Props,
-      { emit },
     ) {
       const translationsStore = useTranslationsStore();
 
-      const el = ref<HTMLElement | null>(null);
-      const text = ref<string>("");
-      const isLoading = ref(false);
+      const translatedText = computed(() => translationsStore.translation(unref(props.transKey)));
+      const text = ref<string>(unref(translatedText));
 
-      function cleanUpText(textRef: MaybeRef<string>): string {
-        const text = unref(textRef);
-
-        const brKey = `|${ Math.random().toString(36).slice(3) }|`;
-        const html =
-          String(text)
-            .trim()
-            .replace(/<br>/gi, `${ brKey }br${ brKey }`)
-            .replaceAll("\n", `${ brKey }br${ brKey }`)
-        ;
-        const div = document.createElement("div");
-        div.innerHTML = html;
-
-        const eBrKey = brKey.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
-
-        return div.textContent?.replace(RegExp(`${ eBrKey }br${ eBrKey }`, "gi"), "\n").trim() || "";
-      }
-
-      const translation = computed(() => {
-        const el$ = unref(el);
-
-        if (null === el$) {
-          return unref(cleanText);
-        }
-
-        return unref(cleanText) || cleanUpText(ref(el$.innerHTML));
+      watch(translatedText, (value) => {
+        text.value = value;
       });
-
-      onMounted(() => {
-        text.value = unref(translation);
-      });
-
-      const cleanText = computed(() => cleanUpText(text));
-      const { transKey } = toRefs(props);
-      const updateTranslation =
-        (
-          {
-            key,
-            value,
-          }: {
-            key: MaybeRef<string>,
-            value: MaybeRef<string>,
-          },
-        ) =>
-          translationsStore
-            .updateTranslation({
-              key: unref(key),
-              value: unref(value),
-            })
-      ;
-
-      const translate = computed(() => translationsStore.translation);
-      const translatedText = computed(() => unref(translate)(unref(transKey)));
-
-      watch(
-        text,
-        () => {
-          emit("update:modelValue", unref(translatedText));
-        },
-        {
-          immediate: true,
-        },
-      );
 
       return {
-        isLoading,
-        text,
+        isLoading: computed(() => translationsStore.translationLoading(props.transKey)),
         translatedText,
         handleFocus(e: FocusEvent) {
           const el = e.target as (HTMLElement | null);
@@ -154,50 +107,30 @@
           sel.addRange(range);
         },
         async handleBlur() {
-          const key = transKey;
-          const value = cleanText;
+          const cleanText = cleanUpText(text);
 
-          if (!unref(value)) {
+          if (cleanText === unref(translatedText)) {
             return;
           }
 
-          isLoading.value = true;
-          const response = await updateTranslation({
-            key,
-            value,
+          const success = await translationsStore.updateTranslation({
+            key: props.transKey,
+            value: cleanText,
           });
-          isLoading.value = false;
 
-          if (!response) {
-            return alert("Can't reach server. Please try again.");
+          if (!success) {
+            return alert("Something went wrong. Please try again.");
           }
-
-          const {
-            error,
-            errorData,
-          } = response;
-
-          if (error) {
-            const message =
-              errorData
-                ? errorData.join("\n")
-                : "Something went wrong"
-            ;
-
-            return alert(message);
-          }
-
-          text.value = "";
         },
         handleClick(event: Event) {
           event.preventDefault();
           event.stopPropagation();
+          event.stopImmediatePropagation();
           return false;
         },
         handleInput(event: InputEvent) {
           text.value = (event.target as (HTMLElement | null))?.innerText ?? "";
         },
-        el,
       };
     },
   });

@@ -42,7 +42,7 @@ export const useTranslationsStore = defineStore(
 
     getters: {
       translation(state): (key: string, language?: Language) => string {
-        return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] ?? key;
+        return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] || key;
       },
 
       translationLoading(state): (key: string, language?: Language) => boolean {

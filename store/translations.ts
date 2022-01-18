@@ -35,6 +35,7 @@ export const useTranslationsStore = defineStore(
   {
     state: () => ({
       translations: {} as Translations,
+      translationsLoading: {} as Partial<Record<Language, Record<string, boolean>>>,
       isEditable: false,
       currentLanguage: Language.HR,
     }),
@@ -42,6 +43,10 @@ export const useTranslationsStore = defineStore(
     getters: {
       translation(state): (key: string, language?: Language) => string {
         return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] ?? key;
+      },
+
+      translationLoading(state): (key: string, language?: Language) => boolean {
+        return (key: string, language?: Language): boolean => state.translationsLoading[language ?? state.currentLanguage]?.[key] ?? false;
       },
 
       capitalizedTranslation(): (key: string) => string {
@@ -80,19 +85,25 @@ export const useTranslationsStore = defineStore(
           language = this.currentLanguage;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const langLoading = this.translationsLoading[language];
+        if (langLoading) {
+          langLoading[key] = true;
+        }
         const resp = await useMutation<IUpdateTranslationMutation, IUpdateTranslationMutationVariables>(UpdateTranslation)({
           data: {
             key,
             value,
             language,
           },
-        });
+        }).catch(() => null);
+        if (langLoading) {
+          langLoading[key] = false;
+        }
 
-        const translation = resp.data?.updateTranslation;
+        const translation = resp?.data?.updateTranslation;
 
         if (!translation) {
-          return null;
+          return false;
         }
 
         const respLanguage = translation.language as Language;
@@ -103,11 +114,8 @@ export const useTranslationsStore = defineStore(
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.translations[respLanguage]![translation.key] = translation.value;
-        return {
-          error: false,
-          errorData: [] as string[],
-          language,
-        };
+
+        return true;
       },
 
       setTranslations(translationList: { key: string, value: string, }[], language?: Language) {
@@ -115,6 +123,9 @@ export const useTranslationsStore = defineStore(
 
         this.translations[lang] = Object.fromEntries(
           translationList.map((x) => [ x.key, x.value ]),
+        );
+        this.translationsLoading[lang] = Object.fromEntries(
+          translationList.map((x) => [ x.key, false ]),
         );
 
         return this.translations;

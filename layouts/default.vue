@@ -39,6 +39,11 @@
     min-height: 100vh;
   }
 
+  .main {
+    display: flex;
+    flex: 1;
+  }
+
   .header + .main {
     margin-top: $nav-height;
   }

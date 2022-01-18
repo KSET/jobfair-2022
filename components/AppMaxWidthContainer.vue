@@ -8,6 +8,7 @@
   @import "assets/styles/include/all";
 
   .pageContainer {
+    flex: 1;
     max-width: $content-max-width;
     margin: 0 auto #{$content-padding};
     padding: 0;

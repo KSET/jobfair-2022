@@ -308,6 +308,7 @@
   $width-padding: 1rem;
 
   .container {
+    flex: 1;
 
     .secondary {
       color: $fer-black;

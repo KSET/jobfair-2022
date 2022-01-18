@@ -14,6 +14,10 @@ import {
 import {
   Context,
 } from "../../types/apollo-context";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../../helpers/auth";
 
 export {
   FindManyTranslationResolver,
@@ -49,6 +53,10 @@ export class TranslationsResolver {
     @Arg("data") data: TranslationCreateInput,
   ) {
     if (!ctx.user) {
+      return null;
+    }
+
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
       return null;
     }
 

@@ -58,7 +58,12 @@
               <translated-text trans-key="press.contact.name" />
             </span>
             <span :class="$style.contactEmail">
-              <translated-text trans-key="press.contact.email" />
+              <a :href="`mailto:${contactEmail}`">
+                <translated-text
+                  v-model="contactEmail"
+                  trans-key="press.contact.email"
+                />
+              </a>
             </span>
           </p>
         </div>
@@ -97,6 +102,7 @@
 <script lang="ts">
   import {
     defineComponent,
+    ref,
   } from "vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
@@ -116,6 +122,8 @@
       useTitle("press.header");
 
       return {
+        contactEmail: ref(""),
+
         mediaReleases: [
           {
             date: new Date("2020-03-27"),
@@ -196,6 +204,10 @@
     .contactEmail {
       opacity: .7;
       color: $fer-black;
+
+      > * {
+        color: $fer-black;
+      }
     }
 
     .contactName {

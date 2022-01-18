@@ -14,6 +14,7 @@
           Meetup
         </h2>
         <nuxt-link
+          v-if="!isLoggedIn"
           :to="joinNowRoute"
           style="font-size: .9rem;"
         >
@@ -186,6 +187,7 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
     ref,
   } from "vue";
@@ -203,6 +205,9 @@
   import IconChevronRight from "~icons/ep/arrow-right";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useJoinNowRoute from "~/composables/useJoinNowRoute";
+  import {
+    useUserStore,
+  } from "~/store/user";
 
   export default defineComponent({
     name: "PageIndex",
@@ -216,6 +221,7 @@
 
     async setup() {
       const newsStore = useNewsStore();
+      const userStore = useUserStore();
       const joinNowRoute = useJoinNowRoute();
 
       const [
@@ -279,6 +285,7 @@
       }
 
       return {
+        isLoggedIn: computed(() => userStore.isLoggedIn),
         news,
         gallery,
         participants,

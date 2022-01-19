@@ -103,6 +103,9 @@
 </template>
 
 <script lang="ts">
+  import {
+    defineComponent,
+  } from "vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import VueCalendar from "~/components/external/VueCalendar.vue";
@@ -111,7 +114,7 @@
   import IconStar from "~icons/grommet-icons/star";
   import AppImg from "~/components/util/app-img.vue";
 
-  export default {
+  export default defineComponent({
     name: "PageSchedule",
 
     components: {
@@ -213,7 +216,7 @@
         formatEventTime: (date: Date): string => eventTimeFormatter.format(date),
       };
     },
-  };
+  });
 </script>
 
 <style lang="scss" module>

@@ -14,11 +14,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import {
+    defineComponent,
+  } from "vue";
   import AppFooter from "~/components/nav/AppFooter.vue";
   import AppHeader from "~/components/nav/AppHeader.vue";
 
-  export default {
+  export default defineComponent({
     name: "LayoutDefault",
 
     components: {
@@ -27,7 +30,7 @@
     },
 
     inheritAttrs: false,
-  };
+  });
 </script>
 
 <style lang="scss" module>

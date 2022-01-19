@@ -213,7 +213,6 @@
         ...info,
         user: "",
       }));
-      // eslint-disable-next-line no-return-assign
       const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
 
       const isLoading = ref(false);

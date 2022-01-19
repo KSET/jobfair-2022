@@ -124,7 +124,7 @@ module.exports = {
     "no-tabs": "warn",
     "no-new-func": "error",
     "no-new-wrappers": "error",
-    "no-return-assign": [ "error", "always" ],
+    "no-return-assign": "off",
     "no-script-url": "error",
     "no-self-compare": "error",
     "no-sequences": "error",

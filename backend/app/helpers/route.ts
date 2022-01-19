@@ -8,13 +8,15 @@ import {
   statSync,
 } from "fs";
 import {
+  always,
+  cond,
   groupBy,
   map,
   mapKeys,
   pipe,
   reduce,
   replace,
-  sortBy,
+  sort,
   toPairs,
 } from "rambdax";
 import express, {
@@ -218,6 +220,15 @@ export const registerRoutesInFolderRecursive = (...folderParts: string[]) => {
     ];
   };
 
+  const longestCommonPrefix = (a: string, b: string): string => {
+    let i = 0;
+    while (a[i] && a[i] === b[i]) {
+      i += 1;
+    }
+
+    return a.substring(0, i);
+  };
+
   const getHandler = (filePath: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const router: Router | express.Router = require(filePath).default;
@@ -260,7 +271,22 @@ export const registerRoutesInFolderRecursive = (...folderParts: string[]) => {
     groupBy(absoluteRoute),
     mapKeys(replace(/\[([^\]]+)]/gi, ":$1")),
     toPairs,
-    sortBy<[ string, string[] ]>((x) => x[0]),
+    sort<[ string, string[] ]>(([ a ], [ b ]) => {
+      const fix = cond<number[], number>([
+        [ (x) => 0 > x, always(Infinity) ],
+        [ always(true), (x) => x ],
+      ]);
+
+      const common = longestCommonPrefix(a, b).length - 1;
+      const A = a.substring(common).indexOf(":");
+      const B = b.substring(common).indexOf(":");
+
+      if (A === B) {
+        return a.localeCompare(b);
+      }
+
+      return fix(B) - fix(A);
+    }),
     reduce(assignPathToRouter, express.Router(DEFAULT_ROUTER_OPTIONS)),
   );
 

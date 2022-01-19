@@ -40,6 +40,7 @@ export const useTranslationsStore = defineStore(
       translations: {} as Translations,
       translationsLoading: {} as Partial<Record<Language, Record<string, boolean>>>,
       isEditable: false,
+      isLoading: false,
       currentLanguage: Language.HR,
     }),
 
@@ -147,18 +148,23 @@ export const useTranslationsStore = defineStore(
 
       async fetchTranslations(language?: Language) {
         const lang = language ?? this.currentLanguage;
+
+        this.isLoading = true;
         const translationsQuery = await useQuery<ITranslationsForQuery, ITranslationsForQueryVariables>({
           query: TranslationsFor,
           variables: {
             language: lang,
           },
-        })();
+        })().catch(() => null);
 
         const translationList =
-          translationsQuery.data?.allTranslationsFor ?? [] as ITranslationsForQuery["allTranslationsFor"]
+          translationsQuery?.data?.allTranslationsFor ?? [] as ITranslationsForQuery["allTranslationsFor"]
         ;
 
-        return this.setTranslations(translationList, lang);
+        this.setTranslations(translationList, lang);
+        this.isLoading = false;
+
+        return this.translations;
       },
     },
   },

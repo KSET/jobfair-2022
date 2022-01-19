@@ -2,20 +2,20 @@
   <div>
     <Html :lang="currentLanguage">
       <Head>
-        <Meta name="locale" :content="currentLanguage" />
-        <Meta name="og:locale" property="og:locale" :content="currentLanguage" />
+        <Meta :content="currentLanguage" name="locale" />
+        <Meta :content="currentLanguage" name="og:locale" property="og:locale" />
         <Meta
           v-for="language in otherLanugages"
           :key="language"
-          name="locale:alternative"
           :content="language"
+          name="locale:alternative"
         />
         <Meta
           v-for="language in otherLanugages"
           :key="language"
+          :content="language"
           name="og:locale:alternative"
           property="og:locale:alternative"
-          :content="language"
         />
       </Head>
     </Html>
@@ -41,6 +41,19 @@
         v-if="isLoggedIn"
       />
     </client-only>
+
+    <client-only>
+      <p-dialog
+        :class="$style.translationsLoading"
+        modal
+        :visible="isTranslationsLoading"
+      >
+        <icon-globe
+          :class="$style.translationsLoadingSpinner"
+          class="pi pi-spin"
+        />
+      </p-dialog>
+    </client-only>
   </div>
 </template>
 
@@ -52,6 +65,10 @@
     watch,
   } from "vue";
   import Toast from "primevue/toast";
+  import Dialog from "primevue/dialog";
+  import {
+    useThrottle,
+  } from "@vueuse/core";
   import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
@@ -82,6 +99,8 @@
     IInitialDataQueryVariables,
     InitialData,
   } from "~/graphql/schema";
+  // import IconSpinner from "~icons/fluent/spinner-ios-20-filled";
+  import IconGlobe from "~icons/bi/globe";
 
   export default defineComponent({
     components: {
@@ -89,6 +108,8 @@
       AppProgressBar,
       CookieConsent,
       PToast: Toast,
+      PDialog: Dialog,
+      IconGlobe,
     },
 
     inheritAttrs: false,
@@ -100,6 +121,7 @@
 
       const currentLanguage = computed(() => translationsStore.currentLanguage.replaceAll("_", "-"));
       const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replaceAll("_", "-")));
+      const isTranslationsLoading = useThrottle(computed(() => translationsStore.isLoading), 500);
 
       onMounted(() => {
         useCookieConsentStore().fetchConsent();
@@ -131,6 +153,7 @@
         isLoggedIn: computed(() => userStore.isLoggedIn),
         currentLanguage,
         otherLanguages,
+        isTranslationsLoading,
       };
 
       if (!nuxt.ssrContext) {
@@ -167,6 +190,31 @@
       transition-timing-function: $transition-timing-function;
       transition-duration: .25s;
       transition-property: none;
+    }
+  }
+
+  .translationsLoading {
+    box-shadow: none;
+
+    :global(.p-dialog-header),
+    :global(.p-dialog-footer) {
+      display: none;
+    }
+
+    :global(.p-dialog-content) {
+      $size: max(20vmin, 4rem);
+
+      overflow: hidden;
+      width: $size;
+      height: $size;
+      padding: 0;
+      background: none;
+    }
+
+    .translationsLoadingSpinner {
+      width: 100%;
+      height: 100%;
+      transform: rotate(90deg);
     }
   }
 </style>

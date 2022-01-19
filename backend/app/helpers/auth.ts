@@ -53,7 +53,18 @@ export const requireAuthMiddleware =
         }));
       }
 
-      console.log(config);
+      if (config.role && !hasAtLeastRole(config.role, req.user)) {
+        res.status(StatusCodes.UNAUTHORIZED);
+
+        return res.json(error({
+          reason: "authorization-required",
+          status: StatusCodes.UNAUTHORIZED,
+          data: {
+            required: `role:${ config.role }`,
+            given: req.user.roles,
+          },
+        }));
+      }
 
       return next();
     }

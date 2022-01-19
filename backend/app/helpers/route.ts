@@ -34,14 +34,17 @@ type RequestMethod = "all" | "get" | "post" | "put" | "delete" | "patch" | "opti
 type NonEmptyArray<T> = [ T, ...T[] ];
 type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
 
+export const DEFAULT_ROUTER_OPTIONS: RouterOptions = {
+  mergeParams: true,
+  caseSensitive: true,
+  strict: false,
+} as const;
+
 export class Router {
   private router: express.Router;
 
   constructor(
-    options: RouterOptions = {
-      mergeParams: true,
-      caseSensitive: false,
-    },
+    options: RouterOptions = DEFAULT_ROUTER_OPTIONS,
   ) {
     this.router = express.Router(options);
   }
@@ -256,10 +259,7 @@ export const registerRoutesInFolderRecursive = (...folderParts: string[]) => {
     mapKeys(replace(/\[([^\]]+)]/gi, ":$1")),
     toPairs,
     sortBy<[ string, string[] ]>((x) => x[0]),
-    reduce(assignPathToRouter, express.Router({
-      mergeParams: true,
-      caseSensitive: true,
-    })),
+    reduce(assignPathToRouter, express.Router(DEFAULT_ROUTER_OPTIONS)),
   );
 
   return createRouterFor(folder);

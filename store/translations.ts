@@ -6,6 +6,7 @@ import {
   map,
   pipe,
   split,
+  omit,
 } from "rambda";
 import {
   capitalize,
@@ -27,6 +28,8 @@ export enum Language {
   EN = "en_US",
   HR = "hr_HR",
 }
+
+const LanguageToName = Object.fromEntries(Object.entries(Language).map(([ a, b ]) => [ b, a ])) as Record<Language, keyof Language>;
 
 export type Translations = Partial<Record<Language, Record<string, string>>>;
 
@@ -55,6 +58,17 @@ export const useTranslationsStore = defineStore(
           split(" "),
           map(capitalize),
           join(" "),
+        );
+      },
+
+      otherLanguages(): Language[] {
+        return Object.values(
+          omit(
+            [
+              LanguageToName[this.currentLanguage],
+            ] as unknown as Language[],
+            Language,
+          ),
         );
       },
     },

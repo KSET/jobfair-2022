@@ -1,6 +1,24 @@
 <template>
   <div>
-    <Html lang="hr-HR" />
+    <Html :lang="currentLanguage">
+      <Head>
+        <Meta name="locale" :content="currentLanguage" />
+        <Meta name="og:locale" property="og:locale" :content="currentLanguage" />
+        <Meta
+          v-for="language in otherLanugages"
+          :key="language"
+          name="locale:alternative"
+          :content="language"
+        />
+        <Meta
+          v-for="language in otherLanugages"
+          :key="language"
+          name="og:locale:alternative"
+          property="og:locale:alternative"
+          :content="language"
+        />
+      </Head>
+    </Html>
 
     <client-only>
       <app-progress-bar />
@@ -80,6 +98,9 @@
       const translationsStore = useTranslationsStore();
       const nuxt = useNuxtApp();
 
+      const currentLanguage = computed(() => translationsStore.currentLanguage.replaceAll("_", "-"));
+      const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replaceAll("_", "-")));
+
       onMounted(() => {
         useCookieConsentStore().fetchConsent();
       });
@@ -95,8 +116,6 @@
             viewport: "width=device-width, initial-scale=1, maximum-scale=5.0, minimum-scale=1, minimal-ui",
             "theme-color": "#00003f",
             "background-color": "#00003f",
-            locale: "hr_HR",
-            "locale:alternative": "en_US",
             siteName: "Job Fair",
           }),
         ],
@@ -110,6 +129,8 @@
 
       const data = {
         isLoggedIn: computed(() => userStore.isLoggedIn),
+        currentLanguage,
+        otherLanguages,
       };
 
       if (!nuxt.ssrContext) {

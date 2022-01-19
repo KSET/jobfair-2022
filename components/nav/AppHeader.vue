@@ -44,6 +44,19 @@
               :class="$style.button"
             />
           </li>
+          <li class="ml-3">
+            <ul :class="$style.languageSwitcher">
+              <li
+                v-for="(code, lang) in languages"
+                :key="code"
+                :class="{
+                  [$style.languageSelected]: code === currentLanguage,
+                }"
+                @click="currentLanguage = code"
+                v-text="lang"
+              />
+            </ul>
+          </li>
         </ul>
         <p-button
           :class="$style.sidebarBtn"
@@ -100,6 +113,10 @@
   import TranslatedText from "~/components/TranslatedText.vue";
   import IconMenuOpen from "~/assets/images/component/AppHeader/menu.svg?component";
   import NavUserModule from "~/components/nav/NavUserModule.vue";
+  import {
+    Language,
+    useTranslationsStore,
+  } from "~/store/translations";
 
   export default defineComponent({
     components: {
@@ -112,6 +129,7 @@
     setup() {
       const { y } = useWindowScroll();
       const pagesStore = usePagesStore();
+      const translationsStore = useTranslationsStore();
 
       const isAtTop = computed(() => 0 === y.value);
 
@@ -123,6 +141,11 @@
         isAtTop,
         sidebarOpen,
         pages,
+        languages: Language,
+        currentLanguage: computed({
+          get: () => translationsStore.currentLanguage,
+          set: (value) => translationsStore.setCurrentLanguage(value),
+        }),
       };
     },
   });
@@ -130,6 +153,7 @@
 
 <style lang="scss" module>
   @use "sass:map";
+  @use "sass:color";
   @import "assets/styles/include/all";
 
   $item-spacing: 1.5rem;
@@ -276,7 +300,7 @@
         margin: 0;
         padding: 0;
 
-        li {
+        > li {
           display: flex;
           align-items: center;
           height: 100%;
@@ -310,10 +334,36 @@
           }
         }
 
-        li + li {
+        > li + li {
           margin-left: $item-spacing;
         }
       }
+    }
+  }
+
+  ul.languageSwitcher {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: $fer-white;
+
+    > li + li {
+      margin-top: .1rem;
+    }
+
+    li {
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        color: #{color.mix($fer-white, $fer-yellow, 50%)};
+      }
+    }
+
+    .languageSelected {
+      user-select: none;
+      pointer-events: none;
+      color: $fer-yellow !important;
     }
   }
 

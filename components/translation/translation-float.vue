@@ -31,9 +31,9 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
     ref,
-    watch,
   } from "vue";
   import InputSwitch from "primevue/inputswitch";
   import Dropdown from "primevue/dropdown";
@@ -52,21 +52,23 @@
       const translationsStore = useTranslationsStore();
       const isLoading = ref(false);
 
-      const checked = ref(translationsStore.isEditable);
-      watch(checked, (value) => {
-        translationsStore.isEditable = value;
+      const checked = computed({
+        get: () => translationsStore.isEditable,
+        set: (value) => translationsStore.isEditable = value,
       });
 
-      const selectedLanguage = ref(translationsStore.currentLanguage);
-      watch(selectedLanguage, async (value: Language, oldValue: Language) => {
-        isLoading.value = true;
-        try {
-          await translationsStore.setCurrentLanguage(value);
-        } catch {
-          selectedLanguage.value = oldValue;
-        } finally {
-          isLoading.value = false;
-        }
+      const selectedLanguage = computed({
+        get: () => translationsStore.currentLanguage,
+        set: async (value) => {
+          isLoading.value = true;
+          try {
+            await translationsStore.setCurrentLanguage(value);
+          } catch {
+            selectedLanguage.value = translationsStore.currentLanguage;
+          } finally {
+            isLoading.value = false;
+          }
+        },
       });
 
       return {

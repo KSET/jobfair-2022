@@ -8,6 +8,9 @@ import withUserMiddleware from "./middleware/with-user";
 import {
   SessionUser,
 } from "./types/apollo-context";
+import {
+  registerRoutesInFolderRecursive,
+} from "./helpers/route";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -32,6 +35,7 @@ export async function start() {
   await withSessionMiddleware(app);
   await withUserMiddleware(app);
   app.use("/api", await withGraphqlMiddleware(express.Router()));
+  app.use("/api", await registerRoutesInFolderRecursive(__dirname, "routes"));
 
   const PORT = Number(process.env.PORT) || 3001;
   const HOST = process.env.HOST || "localhost";

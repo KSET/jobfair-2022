@@ -248,7 +248,9 @@ export const registerRoutesInFolderRecursive = (...folderParts: string[]) => {
 
       const handler = getHandler(filePath);
 
-      router.use(path, handler);
+      if (handler) {
+        router.use(path, handler);
+      }
 
       return router;
     };

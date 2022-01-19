@@ -156,6 +156,10 @@ export const apiRoute =
       try {
         const result = await fn(req, res, next) as unknown;
 
+        if (result === res) {
+          return res.end();
+        }
+
         return res.json(success(result));
       } catch (err) {
         const e =

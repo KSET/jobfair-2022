@@ -102,7 +102,7 @@ h6 {
   }
 
   &.pi-spin {
-    animation: spin 2s linear infinite;
+    animation: spin 1s #{$transition-timing-function} infinite;
   }
 
   @keyframes spin {

@@ -146,7 +146,7 @@ export class Router {
 export class AuthRouter extends Router {
   private boundRouter: express.Router | null = null;
 
-  constructor(authConfig: AuthConfig, options?: RouterOptions) {
+  constructor(authConfig?: AuthConfig, options?: RouterOptions) {
     super(options);
 
     this.use(requireAuthMiddleware(authConfig));

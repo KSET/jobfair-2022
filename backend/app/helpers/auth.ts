@@ -38,7 +38,7 @@ export const hasAtLeastRole =
 ;
 
 export const requireAuthMiddleware =
-  <T>(config: AuthConfig): RouteHandler<T> =>
+  <T>(config: AuthConfig = {}): RouteHandler<T> =>
     (req, res, next) => {
       if (!req.user) {
         res.status(StatusCodes.UNAUTHORIZED);

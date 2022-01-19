@@ -17,7 +17,9 @@ import {
   sortBy,
   toPairs,
 } from "rambdax";
-import express from "express";
+import express, {
+  RouterOptions,
+} from "express";
 import {
   apiRoute,
   rawRoute,
@@ -35,8 +37,13 @@ type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
 export class Router {
   private router: express.Router;
 
-  constructor() {
-    this.router = express.Router();
+  constructor(
+    options: RouterOptions = {
+      mergeParams: true,
+      caseSensitive: false,
+    },
+  ) {
+    this.router = express.Router(options);
   }
 
   /// //////// REQUEST METHODS START ///////////
@@ -136,10 +143,16 @@ export class Router {
 export class AuthRouter extends Router {
   private boundRouter: express.Router | null = null;
 
-  constructor(authConfig: AuthConfig) {
-    super();
+  constructor(authConfig: AuthConfig, options?: RouterOptions) {
+    super(options);
 
     this.use(requireAuthMiddleware(authConfig));
+  }
+
+  static boundToRouter(router: Router | express.Router, authConfig: AuthConfig) {
+    const self = new this(authConfig);
+
+    return self.bindToRouter(router);
   }
 
   bindToRouter(newRouter: Router | express.Router) {
@@ -150,12 +163,6 @@ export class AuthRouter extends Router {
     }
 
     return this;
-  }
-
-  static boundToRouter(router: Router | express.Router, authConfig: AuthConfig) {
-    const self = new this(authConfig);
-
-    return self.bindToRouter(router);
   }
 
   expose() {
@@ -249,7 +256,10 @@ export const registerRoutesInFolderRecursive = (...folderParts: string[]) => {
     mapKeys(replace(/\[([^\]]+)]/gi, ":$1")),
     toPairs,
     sortBy<[ string, string[] ]>((x) => x[0]),
-    reduce(assignPathToRouter, express.Router()),
+    reduce(assignPathToRouter, express.Router({
+      mergeParams: true,
+      caseSensitive: true,
+    })),
   );
 
   return createRouterFor(folder);

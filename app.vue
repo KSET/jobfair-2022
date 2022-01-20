@@ -100,6 +100,7 @@
     InitialData,
   } from "~/graphql/schema";
   // import IconSpinner from "~icons/fluent/spinner-ios-20-filled";
+  // noinspection TypeScriptCheckImport
   import IconGlobe from "~icons/bi/globe";
 
   export default defineComponent({
@@ -149,34 +150,26 @@
         translationsStore.isEditable = false;
       });
 
-      const data = {
+      if (nuxt.ssrContext) {
+        const initialData = await useQuery<IInitialDataQuery, IInitialDataQueryVariables>({
+          query: InitialData,
+          variables: {
+            language: translationsStore.currentLanguage,
+          },
+        })().catch(() => Promise.resolve(null));
+
+        if (initialData) {
+          userStore.user = initialData.data?.profile ?? null;
+          translationsStore.setTranslations(initialData.data?.allTranslationsFor ?? []);
+        }
+      }
+
+      return {
         isLoggedIn: computed(() => userStore.isLoggedIn),
         currentLanguage,
         otherLanguages,
         isTranslationsLoading,
       };
-
-      if (!nuxt.ssrContext) {
-        return data;
-      }
-
-      const initialData = await useQuery<IInitialDataQuery, IInitialDataQueryVariables>({
-        query: InitialData,
-        variables: {
-          language: translationsStore.currentLanguage,
-        },
-      })().catch(() => null);
-
-      if (!initialData) {
-        return;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      userStore.user = initialData.data?.profile ?? null;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
-      translationsStore.setTranslations(initialData.data?.allTranslationsFor ?? []);
-
-      return data;
     },
   });
 </script>

@@ -23,6 +23,7 @@ model User {
   firstName  String
   lastName   String
   phone      String
+  /// @TypeGraphQL.omit(output: true, input: true)
   usersRoles UserRole[]
   /// @TypeGraphQL.omit(output: true)
   password   String
@@ -53,6 +54,7 @@ model Role {
   createdAt  DateTime   @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt  DateTime   @updatedAt
+  /// @TypeGraphQL.omit(output: true, input: true)
   usersRoles UserRole[]
 }
 

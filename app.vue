@@ -156,7 +156,7 @@
           variables: {
             language: translationsStore.currentLanguage,
           },
-        })().catch(() => Promise.resolve(null));
+        })();
 
         if (initialData) {
           userStore.user = initialData.data?.profile ?? null;

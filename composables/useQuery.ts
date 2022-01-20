@@ -64,14 +64,18 @@ function doQuery<TData, TVars extends object>(
   const nuxt = useNuxtApp();
 
   return (
-    nuxt.$urql.query<TData, TVars>(query, variables, {
-      fetchOptions: {
-        headers: {
-          ...defaultQueryHeaders(),
-          ...argHeaders,
+    nuxt
+      .$urql
+      .query<TData, TVars>(query, variables, {
+        fetchOptions: {
+          headers: {
+            ...defaultQueryHeaders(),
+            ...argHeaders,
+          },
         },
-      },
-    }).toPromise()
+      })
+      .toPromise()
+      .catch(() => Promise.resolve(null))
   );
 }
 
@@ -85,14 +89,18 @@ function doMutation<TData, TVars extends object>(
   const nuxt = useNuxtApp();
 
   return (
-    nuxt.$urql.mutation<TData, TVars>(query, variables, {
-      fetchOptions: {
-        headers: {
-          ...defaultQueryHeaders(),
-          ...argHeaders,
+    nuxt
+      .$urql
+      .mutation<TData, TVars>(query, variables, {
+        fetchOptions: {
+          headers: {
+            ...defaultQueryHeaders(),
+            ...argHeaders,
+          },
         },
-      },
-    }).toPromise()
+      })
+      .toPromise()
+      .catch(() => Promise.resolve(null))
   );
 }
 

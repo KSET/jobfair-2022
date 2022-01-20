@@ -37,13 +37,7 @@ export const useUserStore = defineStore(
 
     actions: {
       async login(data: ILoginMutationVariables) {
-        const doLogin = useMutation<ILoginMutation, ILoginMutationVariables>(Login);
-
-        // noinspection TypeScriptValidateJSTypes
-        const resp =
-          await doLogin(data)
-            .catch((_reason) => null)
-        ;
+        const resp = await useMutation<ILoginMutation, ILoginMutationVariables>(Login)(data);
 
         const info = resp?.data?.login ?? null;
 
@@ -55,10 +49,7 @@ export const useUserStore = defineStore(
       },
 
       async logout() {
-        try {
-          await useMutation<ILogoutMutation, ILogoutMutationVariables>(Logout)({});
-        } catch {
-        }
+        await useMutation<ILogoutMutation, ILogoutMutationVariables>(Logout)({});
 
         this.user = null;
 
@@ -66,13 +57,7 @@ export const useUserStore = defineStore(
       },
 
       async register(data: IRegisterMutationVariables) {
-        const doRegister = useMutation<IRegisterMutation, IRegisterMutationVariables>(Register);
-
-        // noinspection TypeScriptValidateJSTypes
-        const resp =
-          await doRegister(data)
-            .catch((_reason) => null)
-        ;
+        const resp = await useMutation<IRegisterMutation, IRegisterMutationVariables>(Register)(data);
 
         const info = resp?.data?.register ?? null;
 
@@ -88,7 +73,7 @@ export const useUserStore = defineStore(
           query: Profile,
         })();
 
-        this.user = profile.data?.profile ?? null;
+        this.user = profile?.data?.profile ?? null;
 
         return this.user;
       },

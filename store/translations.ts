@@ -110,7 +110,7 @@ export const useTranslationsStore = defineStore(
             value,
             language,
           },
-        }).catch(() => null);
+        });
         if (langLoading) {
           langLoading[key] = false;
         }
@@ -155,7 +155,7 @@ export const useTranslationsStore = defineStore(
           variables: {
             language: lang,
           },
-        })().catch(() => null);
+        })();
 
         const translationList =
           translationsQuery?.data?.allTranslationsFor ?? [] as ITranslationsForQuery["allTranslationsFor"]

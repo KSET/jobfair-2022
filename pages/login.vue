@@ -73,7 +73,7 @@
   import {
     useRouter,
   } from "vue-router";
-  import AppMaxWidthContainer from "../components/AppMaxWidthContainer.vue";
+  import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useTitle from "~/composables/useTitle";
   import AppInput from "~/components/util/form/app-input.vue";

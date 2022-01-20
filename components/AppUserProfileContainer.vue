@@ -38,8 +38,8 @@
   import {
     defineComponent,
   } from "vue";
-  import TranslatedText from "./TranslatedText";
-  import ProfilePicture from "./user/profile/profile-picture";
+  import TranslatedText from "~/components/TranslatedText.vue";
+  import ProfilePicture from "~/components/user/profile/profile-picture.vue";
 
   export default defineComponent({
     components: {

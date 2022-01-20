@@ -3,15 +3,19 @@ import {
   applyModelsEnhanceMap,
   FindManyUserArgs,
   Role,
+  UserCreateInput,
 } from "@generated/type-graphql";
 import {
   transformFields,
 } from "@generated/type-graphql/helpers";
 import {
+  Arg,
   Args,
   Ctx,
   FieldResolver,
   Info,
+  Mutation,
+  ObjectType,
   Query,
   Resolver,
   Root,
@@ -21,8 +25,17 @@ import {
 } from "graphql";
 import graphqlFields from "graphql-fields";
 import {
+  omit,
+} from "rambdax";
+import {
   Context,
 } from "../../types/apollo-context";
+import {
+  ProfileValidation,
+} from "../../services/validation-service";
+import {
+  ValidationResponseFor,
+} from "../helpers/validation";
 
 applyModelsEnhanceMap({
   User: {},
@@ -44,6 +57,10 @@ const selectTransform: Record<string, (select: Record<string, unknown>) => void>
     select.lastName = true;
   },
 };
+
+@ObjectType()
+class UpdateProfileResponse extends ValidationResponseFor(User) {
+}
 
 @Resolver((_of) => User)
 export class UserResolver {
@@ -86,5 +103,49 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   profile(@Ctx() ctx: Context) {
     return ctx.user;
+  }
+
+  @Mutation(() => UpdateProfileResponse, { nullable: true })
+  async updateProfile(
+    @Ctx() ctx: Context,
+      @Arg("info") data: UserCreateInput,
+  ): Promise<UpdateProfileResponse> {
+    if (!ctx.user) {
+      return {
+        errors: [
+          {
+            field: "auth",
+            message: "Not logged in",
+          },
+        ],
+      };
+    }
+
+    // Validate data
+    {
+      const { errors } = await ProfileValidation(data);
+
+      if (errors.length) {
+        return {
+          errors,
+        };
+      }
+    }
+
+    const user = await ctx.prisma.user.update({
+      where: {
+        id: ctx.user.id,
+      },
+      data: {
+        ...omit([
+          "password",
+          "passwordRepeat",
+        ])(data),
+      },
+    });
+
+    return {
+      entity: user,
+    };
   }
 }

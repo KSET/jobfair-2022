@@ -18,6 +18,11 @@ const registerValidation = z.object({
   passwordRepeat: z.string().min(PASSWORD_LENGTH_MIN),
 });
 
+const profileValidation = registerValidation.omit({
+  password: true,
+  passwordRepeat: true,
+});
+
 const formatValidation =
   async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(validationObject: ZodType<Output, Def, Input>, data: unknown): Promise<{ success: boolean, errors: { field: string, message: string, }[], }> => {
     const validation = await validationObject.safeParseAsync(data);
@@ -42,3 +47,5 @@ const formatValidation =
 ;
 
 export const RegisterValidation = <T>(user: T) => formatValidation(registerValidation, user);
+
+export const ProfileValidation = <T>(user: T) => formatValidation(profileValidation, user);

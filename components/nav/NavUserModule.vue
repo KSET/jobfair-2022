@@ -89,6 +89,7 @@
         },
         async logout() {
           await userStore.logout();
+          window.location.reload();
         },
         joinNowRoute,
         isLoggedIn,

@@ -1,6 +1,10 @@
 import {
   z,
+  ZodType,
 } from "zod";
+import {
+  ZodTypeDef,
+} from "zod/lib/types";
 
 export const PASSWORD_LENGTH_MIN = 8 as const;
 export const PASSWORD_LENGTH_MAX = 99 as const;
@@ -14,23 +18,27 @@ const registerValidation = z.object({
   passwordRepeat: z.string().min(PASSWORD_LENGTH_MIN),
 });
 
-export async function RegisterValidation<T>(user: T): Promise<{ success: boolean, errors: { field: string, message: string, }[], }> {
-  const validation = await registerValidation.safeParseAsync(user);
+const formatValidation =
+  async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(validationObject: ZodType<Output, Def, Input>, data: unknown): Promise<{ success: boolean, errors: { field: string, message: string, }[], }> => {
+    const validation = await validationObject.safeParseAsync(data);
 
-  if (validation.success) {
+    if (validation.success) {
+      return {
+        success: true,
+        errors: [],
+      };
+    }
+
+    const errors = validation.error.errors.map((err) => ({
+      field: err.path.join("."),
+      message: err.message,
+    }));
+
     return {
-      success: true,
-      errors: [],
+      success: validation.success,
+      errors,
     };
   }
+;
 
-  const errors = validation.error.errors.map((err) => ({
-    field: err.path.join("."),
-    message: err.message,
-  }));
-
-  return {
-    success: validation.success,
-    errors,
-  };
-}
+export const RegisterValidation = <T>(user: T) => formatValidation(registerValidation, user);

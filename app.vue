@@ -5,13 +5,13 @@
         <Meta :content="currentLanguage" name="locale" />
         <Meta :content="currentLanguage" name="og:locale" property="og:locale" />
         <Meta
-          v-for="language in otherLanugages"
+          v-for="language in otherLanguages"
           :key="language"
           :content="language"
           name="locale:alternative"
         />
         <Meta
-          v-for="language in otherLanugages"
+          v-for="language in otherLanguages"
           :key="language"
           :content="language"
           name="og:locale:alternative"

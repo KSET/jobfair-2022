@@ -5,7 +5,7 @@ mutation Login($password: String!, $identifier: String!) {
             message
         }
 
-        user {
+        entity {
             ...frag_UserProfile
         }
     }
@@ -18,7 +18,7 @@ mutation Register($info: UserRegisterInput!) {
             message
         }
 
-        user {
+        entity {
             ...frag_UserProfile
         }
     }

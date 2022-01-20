@@ -41,8 +41,8 @@ export const useUserStore = defineStore(
 
         const info = resp?.data?.login ?? null;
 
-        if (info?.user) {
-          this.user = info.user;
+        if (info?.entity) {
+          this.user = info.entity;
         }
 
         return info;
@@ -61,8 +61,8 @@ export const useUserStore = defineStore(
 
         const info = resp?.data?.register ?? null;
 
-        if (info?.user) {
-          this.user = info.user;
+        if (info?.entity) {
+          this.user = info.entity;
         }
 
         return info;

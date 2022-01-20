@@ -26,27 +26,12 @@ import {
 import {
   RegisterValidation,
 } from "../../services/validation-service";
+import {
+  ValidationResponseFor,
+} from "../helpers/validation";
 
-@ObjectType({
-  simpleResolvers: true,
-})
-export class FieldError {
-  @Field()
-    field: string = "";
-
-  @Field()
-    message: string = "";
-}
-
-@ObjectType({
-  simpleResolvers: true,
-})
-export class AuthResponse {
-  @Field(() => [ FieldError ], { nullable: true })
-    errors?: FieldError[];
-
-  @Field(() => User, { nullable: true })
-    user?: User;
+@ObjectType()
+class AuthResponse extends ValidationResponseFor(User) {
 }
 
 @InputType()
@@ -77,7 +62,9 @@ export class AuthResolver {
     }
 
     ctx.session.userId = user.id;
-    return { user };
+    return {
+      entity: user,
+    };
   }
 
   @Mutation((_returns) => Boolean)
@@ -153,7 +140,7 @@ export class AuthResolver {
     ctx.session.userId = user.id;
 
     return {
-      user,
+      entity: user,
     };
   }
 }

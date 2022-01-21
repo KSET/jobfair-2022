@@ -112,6 +112,8 @@
       const translationsStore = useTranslationsStore();
       const nuxt = useNuxtApp();
 
+      translationsStore.setLanguageFromCookie();
+
       const currentLanguage = computed(() => translationsStore.currentLanguage.replaceAll("_", "-"));
       const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replaceAll("_", "-")));
       const isTranslationsLoading = useThrottle(computed(() => translationsStore.isLoading), 500);

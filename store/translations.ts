@@ -9,6 +9,9 @@ import {
   omit,
 } from "rambda";
 import {
+  unref,
+} from "vue";
+import {
   capitalize,
 } from "~/helpers/string";
 import {
@@ -23,6 +26,9 @@ import {
   useMutation,
   useQuery,
 } from "~/composables/useQuery";
+import {
+  useCookie,
+} from "#app";
 
 export enum Language {
   EN = "en_US",
@@ -30,6 +36,14 @@ export enum Language {
 }
 
 const LanguageToName = Object.fromEntries(Object.entries(Language).map(([ a, b ]) => [ b, a ])) as Record<Language, keyof Language>;
+
+const cookieLanguage = () => useCookie<Language>(
+  "jobfair-lang",
+  {
+    expires: new Date(new Date().setMonth(new Date().getMonth() + 12)),
+    path: "/",
+  },
+);
 
 export type Translations = Partial<Record<Language, Record<string, string>>>;
 
@@ -75,10 +89,16 @@ export const useTranslationsStore = defineStore(
     },
 
     actions: {
+      setLanguageFromCookie() {
+        this.currentLanguage = unref(cookieLanguage()) || Language.HR;
+      },
+
       async setCurrentLanguage(language: Language) {
+        const cookie = cookieLanguage();
         try {
           await this.fetchTranslations(language);
           this.currentLanguage = language;
+          cookie.value = language;
         } catch {
         }
 

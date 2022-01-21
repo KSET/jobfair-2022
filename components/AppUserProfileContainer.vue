@@ -4,6 +4,10 @@
       <div :class="$style.avatarContainer">
         <profile-picture />
       </div>
+      <p
+        class="text-center"
+        v-text="user.email"
+      />
       <div :class="$style.linksContainer">
         <ul>
           <li>
@@ -36,15 +40,27 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
   } from "vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import ProfilePicture from "~/components/user/profile/profile-picture.vue";
+  import {
+    useUserStore,
+  } from "~/store/user";
 
   export default defineComponent({
     components: {
       TranslatedText,
       ProfilePicture,
+    },
+
+    setup() {
+      const userStore = useUserStore();
+
+      return {
+        user: computed(() => userStore.user),
+      };
     },
   });
 </script>
@@ -62,6 +78,7 @@
       flex-direction: column;
       width: 300px;
       padding: 3.75rem 1rem 2rem;
+      color: $fer-white;
       background-color: $fer-dark-blue;
 
       @include media(md) {

@@ -64,6 +64,10 @@
       padding: 3.75rem 1rem 2rem;
       background-color: $fer-dark-blue;
 
+      @include media(md) {
+        display: none;
+      }
+
       .avatarContainer {
         overflow: hidden;
         width: 60%;

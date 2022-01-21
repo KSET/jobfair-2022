@@ -31,11 +31,15 @@ import {
   Context,
 } from "../../types/apollo-context";
 import {
+  PasswordUpdateValidation,
   ProfileValidation,
 } from "../../services/validation-service";
 import {
   ValidationResponseFor,
 } from "../helpers/validation";
+import {
+  PasswordService,
+} from "../../services/password-service";
 
 applyModelsEnhanceMap({
   User: {},
@@ -60,6 +64,10 @@ const selectTransform: Record<string, (select: Record<string, unknown>) => void>
 
 @ObjectType()
 class UpdateProfileResponse extends ValidationResponseFor(User) {
+}
+
+@ObjectType()
+class UpdatePasswordResponse extends ValidationResponseFor(User) {
 }
 
 @Resolver((_of) => User)
@@ -132,7 +140,7 @@ export class UserResolver {
       }
     }
 
-    const user = await ctx.prisma.user.update({
+    await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,
       },
@@ -145,7 +153,69 @@ export class UserResolver {
     });
 
     return {
-      entity: user,
+      entity: ctx.user,
+    };
+  }
+
+  @Mutation(() => UpdatePasswordResponse, { nullable: true })
+  async updatePassword(
+    @Ctx() ctx: Context,
+      @Arg("currentPassword") currentPassword: string,
+      @Arg("newPassword") newPassword: string,
+      @Arg("newPasswordRepeat") newPasswordRepeat: string,
+  ): Promise<UpdatePasswordResponse> {
+    if (!ctx.user) {
+      return {
+        errors: [
+          {
+            field: "password",
+            message: "Not logged in",
+          },
+        ],
+      };
+    }
+
+    // Validate old password
+    {
+      const valid = await PasswordService.comparePasswords(currentPassword, ctx.user.password);
+
+      if (!valid) {
+        return {
+          errors: [
+            {
+              field: "currentPassword",
+              message: "Wrong password",
+            },
+          ],
+        };
+      }
+    }
+
+    // Validate data
+    {
+      const { errors } = await PasswordUpdateValidation({
+        newPassword,
+        newPasswordRepeat,
+      });
+
+      if (errors.length) {
+        return {
+          errors,
+        };
+      }
+    }
+
+    await ctx.prisma.user.update({
+      where: {
+        id: ctx.user.id,
+      },
+      data: {
+        password: await PasswordService.hashPassword(newPassword),
+      },
+    });
+
+    return {
+      entity: ctx.user,
     };
   }
 }

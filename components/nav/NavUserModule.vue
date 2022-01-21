@@ -44,6 +44,16 @@
           </div>
         </div>
 
+        <div v-if="isAdmin">
+          <small :class="$style.overlayPanelLabel">Admin</small>
+          <label class="flex">
+            <input-switch v-model="translationsEditable" />
+            <span style="margin-left: auto;">
+              Edit text
+            </span>
+          </label>
+        </div>
+
         <div>
           <ul :class="$style.overlayPanelItems">
             <li>
@@ -90,6 +100,7 @@
     watch,
   } from "vue";
   import OverlayPanel from "primevue/overlaypanel";
+  import InputSwitch from "primevue/inputswitch";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useJoinNowRoute from "~/composables/useJoinNowRoute";
   import {
@@ -97,17 +108,22 @@
   } from "~/store/user";
   import IconChevronDown from "~icons/ep/arrow-down";
   import ProfilePicture from "~/components/user/profile/profile-picture.vue";
+  import {
+    useTranslationsStore,
+  } from "~/store/translations";
 
   export default defineComponent({
     components: {
       ProfilePicture,
       TranslatedText,
       POverlayPanel: OverlayPanel,
+      InputSwitch,
       IconChevronDown,
     },
 
     setup() {
       const joinNowRoute = useJoinNowRoute();
+      const translationsStore = useTranslationsStore();
       const userStore = useUserStore();
       const op$ = ref(null as (null | OverlayPanel));
       const isOverlayPanelOpen = ref(false);
@@ -127,10 +143,15 @@
           await userStore.logout();
           window.location.reload();
         },
+        translationsEditable: computed({
+          get: () => translationsStore.isEditable,
+          set: (value) => translationsStore.isEditable = value,
+        }),
         joinNowRoute,
         isLoggedIn,
         isOverlayPanelOpen,
         user: computed(() => userStore.user),
+        isAdmin: computed(() => userStore.isAdmin),
         op$,
       };
     },

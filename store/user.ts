@@ -33,6 +33,10 @@ export const useUserStore = defineStore(
       isLoggedIn(state) {
         return Boolean(state.user);
       },
+
+      isAdmin(state) {
+        return state.user?.roles.some(({ name }) => "admin" === name) ?? false;
+      },
     },
 
     actions: {

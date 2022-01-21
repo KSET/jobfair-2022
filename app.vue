@@ -37,12 +37,6 @@
     </client-only>
 
     <client-only>
-      <translation-float
-        v-if="isLoggedIn"
-      />
-    </client-only>
-
-    <client-only>
       <p-dialog
         :class="$style.translationsLoading"
         modal
@@ -90,7 +84,6 @@
   import {
     useNuxtApp,
   } from "#app";
-  import TranslationFloat from "~/components/translation/translation-float.vue";
   import {
     useQuery,
   } from "~/composables/useQuery";
@@ -105,7 +98,6 @@
 
   export default defineComponent({
     components: {
-      TranslationFloat,
       AppProgressBar,
       CookieConsent,
       PToast: Toast,

@@ -305,7 +305,7 @@
           align-items: center;
           height: 100%;
 
-          a {
+          > a {
             font-weight: bold;
             line-height: 0;
             display: flex;

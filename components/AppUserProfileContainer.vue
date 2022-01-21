@@ -98,17 +98,24 @@
               font-size: 1.125rem;
               font-weight: 600;
               line-height: 1.3125rem;
+              padding-inline: .625rem;
               padding-bottom: .25rem;
-              transition-property: border-color;
+              transition-property: border-color, padding;
               text-transform: capitalize;
               color: $fer-white;
               border-bottom: 1px solid;
 
               &:global(.router-link-exact-active) {
+                padding-inline: 1.25rem;
                 color: $fer-yellow;
+
+                &:hover {
+                  padding-inline: 1.25rem;
+                }
               }
 
               &:hover {
+                padding-inline: .75rem;
                 transition-duration: 0s;
                 border-color: #{color.mix($fer-white, $fer-yellow, 50%)} !important;
               }

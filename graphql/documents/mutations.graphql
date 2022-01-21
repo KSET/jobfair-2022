@@ -35,3 +35,29 @@ mutation UpdateTranslation($data: TranslationCreateInput!) {
         language
     }
 }
+
+mutation UpdateProfile($info: UserCreateInput!) {
+    updateProfile(info: $info) {
+        errors {
+            field
+            message
+        }
+
+        entity {
+            ...frag_UserProfile
+        }
+    }
+}
+
+mutation UpdatePassword($currentPassword: String!, $newPassword: String!, $newPasswordRepeat: String!) {
+    updatePassword(currentPassword: $currentPassword, newPassword: $newPassword, newPasswordRepeat: $newPasswordRepeat) {
+        errors {
+            field
+            message
+        }
+
+        entity {
+            ...frag_UserProfile
+        }
+    }
+}

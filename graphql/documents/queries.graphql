@@ -1,6 +1,8 @@
 fragment frag_UserProfile on User {
     uid
     name
+    firstName
+    lastName
     email
     phone
     roles {

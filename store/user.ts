@@ -10,10 +10,16 @@ import {
   IProfileQueryVariables,
   IRegisterMutation,
   IRegisterMutationVariables,
+  IUpdatePasswordMutation,
+  IUpdatePasswordMutationVariables,
+  IUpdateProfileMutation,
+  IUpdateProfileMutationVariables,
   Login,
   Logout,
   Profile,
   Register,
+  UpdatePassword,
+  UpdateProfile,
 } from "~/graphql/schema";
 import {
   useMutation,
@@ -80,6 +86,30 @@ export const useUserStore = defineStore(
         this.user = profile?.data?.profile ?? null;
 
         return this.user;
+      },
+
+      async updateProfile(data: IUpdateProfileMutationVariables) {
+        const resp = await useMutation<IUpdateProfileMutation, IUpdateProfileMutationVariables>(UpdateProfile)(data);
+
+        const info = resp?.data?.updateProfile ?? null;
+
+        if (info?.entity) {
+          this.user = info.entity;
+        }
+
+        return info;
+      },
+
+      async updatePassword(data: IUpdatePasswordMutationVariables) {
+        const resp = await useMutation<IUpdatePasswordMutation, IUpdatePasswordMutationVariables>(UpdatePassword)(data);
+
+        const info = resp?.data?.updatePassword ?? null;
+
+        if (info?.entity) {
+          this.user = info.entity;
+        }
+
+        return info;
       },
     },
   },

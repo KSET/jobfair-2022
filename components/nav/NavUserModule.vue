@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="isLoggedIn"
+    id="nav-user-module"
     :class="$style.container"
   >
     <p-button
@@ -24,6 +25,7 @@
         id="user-dropdown-panel"
         ref="op$"
         :class="$style.overlayPanel"
+        append-to="#nav-user-module"
         @hide="isOverlayPanelOpen = false"
         @show="isOverlayPanelOpen = true"
       >
@@ -42,30 +44,30 @@
           </div>
         </div>
 
-        <hr>
-
-        <ul :class="$style.overlayPanelItems">
-          <li>
-            <nuxt-link :to="{ name: 'profile-me' }">
+        <div>
+          <ul :class="$style.overlayPanelItems">
+            <li>
+              <nuxt-link :to="{ name: 'profile-me' }">
+                <translated-text
+                  trans-key="profile.my-profile"
+                />
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link :to="{ name: 'profile-me-settings' }">
+                <translated-text
+                  trans-key="profile.settings"
+                />
+              </nuxt-link>
+            </li>
+            <li>
               <translated-text
-                trans-key="profile.my-profile"
+                trans-key="auth.logout"
+                @click="logout"
               />
-            </nuxt-link>
-          </li>
-          <li>
-            <nuxt-link :to="{ name: 'profile-me-settings' }">
-              <translated-text
-                trans-key="profile.settings"
-              />
-            </nuxt-link>
-          </li>
-          <li>
-            <translated-text
-              trans-key="auth.logout"
-              @click="logout"
-            />
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </p-overlay-panel>
     </client-only>
   </div>
@@ -138,9 +140,11 @@
 <style lang="scss" module>
   @use "sass:map";
   @use "sass:color";
+  @use "sass:math";
   @import "assets/styles/include";
 
   .container {
+    position: relative;
 
     .dropdownButton {
       font-weight: 600;
@@ -165,8 +169,10 @@
     $border-color: $fer-white;
     $padding-x: 1.25rem;
     $padding-y: .875rem;
-    $gap: $padding-y;
 
+    top: 100% !important;
+    left: 100% !important;
+    transform: translateX(-100%);
     color: pick-visible-color($background, $fer-white, $fer-black);
     border: 1px solid #{$border-color};
     background: $background;
@@ -174,7 +180,7 @@
 
     &::before,
     &::after {
-      // content: none;
+      left: calc(100% - 1.25rem);
       border-bottom-color: $border-color;
     }
 
@@ -182,14 +188,56 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      padding: #{$padding-y} #{$padding-x};
-      gap: $gap;
+      padding: 0;
+
+      > * {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: #{$padding-y} #{$padding-x};
+        border-bottom: 1px solid #{color.adjust($border-color, $alpha: -.4)};
+
+        .overlayPanelLabel {
+          font-size: .875rem;
+          position: relative;
+          top: calc(-.5 * #{$padding-y});
+          left: calc(-.5 * #{$padding-x});
+          margin-bottom: calc(.5 * #{$padding-y});
+          opacity: .6;
+        }
+      }
+
+      > *:last-child {
+        border-bottom: none;
+      }
+    }
+
+    :global {
+
+      .p-inputswitch {
+
+        .p-inputswitch-slider {
+          background: color.adjust($fer-white, $alpha: -.62);
+
+          &:hover {
+            background: color.adjust($fer-white, $alpha: -.5);
+          }
+        }
+
+        &.p-inputswitch-checked {
+
+          .p-inputswitch-slider {
+            background: color.adjust($fer-yellow, $alpha: -.5);
+          }
+        }
+      }
     }
 
     .overlayPanelHeaderContainer {
       display: flex;
       align-items: center;
-      gap: $gap;
+      flex-direction: row;
+      gap: .875rem;
     }
 
     .overlayPanelHeader {

@@ -2,9 +2,6 @@ import {
   Router,
 } from "express";
 import {
-  omit,
-} from "rambdax";
-import {
   Session,
 } from "../types/apollo-context";
 import {
@@ -56,12 +53,7 @@ export default (app: Router) => {
     const roles = user.usersRoles.map(({ role }) => role.name as Role);
 
     req.user = {
-      ...omit(
-        [
-          "usersRoles",
-        ],
-        user,
-      ),
+      ...user,
       roles,
     };
 

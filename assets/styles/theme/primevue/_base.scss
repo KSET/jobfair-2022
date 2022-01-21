@@ -108,18 +108,18 @@ label {
   &.pi-spin {
     animation: spin 1s #{$transition-timing-function} infinite;
   }
+}
 
-  @keyframes spin {
+@keyframes spin {
 
-    from {
-      transform: rotate(0deg);
-    }
-
-    to {
-      transform: rotate(360deg);
-    }
-
+  from {
+    transform: rotate(0deg);
   }
+
+  to {
+    transform: rotate(360deg);
+  }
+
 }
 
 .p-link {
@@ -6700,21 +6700,41 @@ label {
   background-color: #{rgba($fer-yellow, .16)};
 }
 
-.p-button:disabled {
+.p-button:not(.p-button-loading):disabled {
   opacity: 1;
   color: #{rgba($fer-black, 0.38)} !important;
   background-color: #{rgba($fer-black, 0.12)} !important;
+
+  &.p-button-text {
+    color: #{rgba($fer-black, 0.38)} !important;
+    background-color: transparent !important;
+  }
+
+  &.p-button-outlined {
+    color: #{rgba($fer-black, 0.38)} !important;
+    border-color: #{rgba($fer-black, 0.38)} !important;
+    background-color: transparent !important;
+  }
 }
 
-.p-button:disabled.p-button-text {
-  color: #{rgba($fer-black, 0.38)} !important;
-  background-color: transparent !important;
-}
+.p-button.p-button-loading:disabled {
+  position: relative;
+  opacity: 1;
+  color: transparent;
+  filter: saturate(.875) invert(.1);
 
-.p-button:disabled.p-button-outlined {
-  color: #{rgba($fer-black, 0.38)} !important;
-  border-color: #{rgba($fer-black, 0.38)} !important;
-  background-color: transparent !important;
+  &::after {
+    position: absolute;
+    width: 100%;
+    height: 60%;
+    content: '';
+    background-image: url("@/assets/images/util/loading.svg?url");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    filter: invert(1);
+    animation: spin 1s #{$transition-timing-function} infinite;
+  }
 }
 
 .p-button.p-button-raised:enabled:focus {

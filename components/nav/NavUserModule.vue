@@ -1,12 +1,11 @@
 <template>
   <div
     v-if="isLoggedIn"
-    id="nav-user-module"
     :class="$style.container"
   >
     <p-button
+      :aria-controls="panelId"
       :class="$style.dropdownButton"
-      aria-controls="user-dropdown-panel"
       aria-haspopup="true"
       class="p-button-outlined"
       type="button"
@@ -22,10 +21,13 @@
     </p-button>
     <client-only>
       <p-overlay-panel
-        id="user-dropdown-panel"
+        :id="panelId"
         ref="op$"
-        :class="$style.overlayPanel"
-        append-to="#nav-user-module"
+        :append-to="mountTo"
+        :class="{
+          [$style.overlayPanel]: true,
+          [$style.overlayPanelTop]: top,
+        }"
         @hide="isOverlayPanelOpen = false"
         @show="isOverlayPanelOpen = true"
       >
@@ -121,6 +123,19 @@
       IconChevronDown,
     },
 
+    props: {
+      mountTo: {
+        required: true,
+        type: String,
+      },
+
+      top: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+    },
+
     setup() {
       const joinNowRoute = useJoinNowRoute();
       const translationsStore = useTranslationsStore();
@@ -147,6 +162,7 @@
           get: () => translationsStore.isEditable,
           set: (value) => translationsStore.isEditable = value,
         }),
+        panelId: `overlay-panel-${ Date.now().toString(36) }-${ Math.random().toString(36).substring(3) }`,
         joinNowRoute,
         isLoggedIn,
         isOverlayPanelOpen,
@@ -190,6 +206,7 @@
     $border-color: $fer-white;
     $padding-x: 1.25rem;
     $padding-y: .875rem;
+    $arrow-size: 10px;
 
     top: 100% !important;
     left: 100% !important;
@@ -198,6 +215,29 @@
     border: 1px solid #{$border-color};
     background: $background;
     box-shadow: #{map.get($shadows, "shadow-4")};
+
+    &.overlayPanelTop {
+      top: calc(-1 * #{$arrow-size}) !important;
+      left: 0 !important;
+      margin-top: 0;
+      transform: translate(0, -100%);
+
+      &::before,
+      &::after {
+        left: 1.25rem;
+        border-top-color: $border-color;
+      }
+    }
+
+    &::before {
+      margin-left: calc(-1 * #{$arrow-size});
+      border-width: $arrow-size;
+    }
+
+    &::after {
+      margin-left: calc(-.8 * #{$arrow-size});
+      border-width: calc(.8 * #{$arrow-size});
+    }
 
     &::before,
     &::after {

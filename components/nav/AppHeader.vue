@@ -39,9 +39,15 @@
             </nuxt-link>
           </li>
           <li>
-            <nav-user-module
-              :class="$style.button"
-            />
+            <div
+              id="header-nav-mount-point"
+              class="relative"
+            >
+              <nav-user-module
+                :class="$style.button"
+                mount-to="#header-nav-mount-point"
+              />
+            </div>
           </li>
           <li class="ml-3">
             <ul :class="$style.languageSwitcher">
@@ -83,9 +89,16 @@
                 </nuxt-link>
               </li>
               <li>
-                <nav-user-module
-                  :class="$style.button"
-                />
+                <div
+                  id="header-nav-sidebar-mount-point"
+                  class="relative"
+                >
+                  <nav-user-module
+                    :class="$style.button"
+                    mount-to="#header-nav-sidebar-mount-point"
+                    top
+                  />
+                </div>
               </li>
             </ul>
           </Sidebar>

@@ -19,7 +19,7 @@
           <img
             :class="$style.logoImage"
             alt="Job Fair logo"
-            src="~/assets/images/logo/jobfair.svg?url"
+            src="~/assets/images/logo/jobfair.png"
           >
         </nuxt-link>
       </div>
@@ -216,7 +216,7 @@
           content: "";
 
           // noinspection CssUnknownTarget
-          background-image: url("~/assets/images/logo/jobfair.svg?url");
+          background-image: url("~/assets/images/logo/jobfair.png");
           background-repeat: no-repeat;
           background-position: left center;
           background-size: contain;

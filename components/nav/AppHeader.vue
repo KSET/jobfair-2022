@@ -34,7 +34,6 @@
           >
             <nuxt-link
               :to="page.to"
-              @click="sidebarOpen = false"
             >
               <translated-text :trans-key="page.name" />
             </nuxt-link>
@@ -79,7 +78,6 @@
               >
                 <nuxt-link
                   :to="page.to"
-                  @click="sidebarOpen = false"
                 >
                   <translated-text :trans-key="page.name" />
                 </nuxt-link>
@@ -102,11 +100,15 @@
     computed,
     defineComponent,
     ref,
+    watch,
   } from "vue";
   import {
     useWindowScroll,
   } from "@vueuse/core";
   import Sidebar from "primevue/sidebar";
+  import {
+    useRoute,
+  } from "vue-router";
   import {
     usePagesStore,
   } from "~/store/pages";
@@ -130,10 +132,21 @@
       const { y } = useWindowScroll();
       const pagesStore = usePagesStore();
       const translationsStore = useTranslationsStore();
+      const route = useRoute();
 
       const isAtTop = computed(() => 0 === y.value);
 
       const sidebarOpen = ref(false);
+
+      watch(
+        route,
+        () => {
+          sidebarOpen.value = false;
+        },
+        {
+          deep: true,
+        },
+      );
 
       const pages = computed(() => pagesStore.pages);
 

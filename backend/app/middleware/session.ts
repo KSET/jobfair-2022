@@ -1,10 +1,12 @@
 import session from "express-session";
 import connectRedis from "connect-redis";
-import redis from "redis";
 import {
   Router,
 } from "express";
 import cookie from "cookie";
+import {
+  redis,
+} from "../providers/redis";
 
 export default (app: Router) => {
   const COOKIE_NAME = "jobfair-session" as const;
@@ -12,9 +14,6 @@ export default (app: Router) => {
   const SESSION_TTL = Number.parseInt(process.env.SESSION_TTL || "0");
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient({
-    url: process.env.REDIS_URL,
-  });
 
   app.use((req, res, next) => {
     const sessionIdHeader = req.headers["x-session-id"];
@@ -45,7 +44,7 @@ export default (app: Router) => {
 
   app.use(session({
     store: new RedisStore({
-      client: redisClient,
+      client: redis,
       prefix: "jobfair:session:",
     }) as unknown as session.Store,
     saveUninitialized: false,

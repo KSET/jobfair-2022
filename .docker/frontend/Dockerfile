@@ -6,11 +6,10 @@ COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/ .yarn/
 COPY . .
 
-# generate backend thingys
+# generate backend schema-related stuff
 WORKDIR /app/backend
 RUN yarn install
 RUN yarn db:client:gen
-#RUN yarn graphql:schema:dump
 WORKDIR /app
 
 

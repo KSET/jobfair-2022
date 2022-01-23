@@ -11,16 +11,17 @@ import {
   TypedDocumentNode,
 } from "@urql/core";
 import {
-  useCookie,
+  isFunction,
+  mergeDeepRight,
+} from "rambdax";
+import {
   useNuxtApp,
 } from "#app";
 
 type Query = string | DocumentNode | TypedDocumentNode;
 
-type Headers = Record<string, string>;
-
 type QueryExecutionContext = {
-  headers: Headers,
+  headers: HeadersInit,
 };
 
 type Operation<TVars> = {
@@ -38,41 +39,36 @@ type QueryCompositeOptions<TVars> = {
 
 type QueryData<TVars> = {
   variables?: TVars,
-  headers?: Headers,
+  headers?: HeadersInit,
 };
-
-function defaultQueryHeaders() {
-  const headers: Headers = {
-    "content-type": "application/json",
-  };
-
-  const sessionId = unref(useCookie("jobfair-session"));
-  if (sessionId) {
-    headers["x-session-id"] = sessionId;
-  }
-
-  return headers;
-}
 
 function doQuery<TData, TVars extends object>(
   query: Query,
   {
     variables,
-    headers: argHeaders,
+    headers,
   } = {} as QueryData<TVars>,
 ) {
   const nuxt = useNuxtApp();
+
+  const baseFetchOptions =
+    (
+      isFunction(nuxt.$urql.fetchOptions)
+        ? (nuxt.$urql.fetchOptions as () => RequestInit)()
+        : (nuxt.$urql.fetchOptions as RequestInit | undefined)
+    ) || {}
+  ;
+
+  const newFetchOptions: RequestInit = {};
+  if (headers) {
+    newFetchOptions.headers = headers;
+  }
 
   return (
     nuxt
       .$urql
       .query<TData, TVars>(query, variables, {
-        fetchOptions: {
-          headers: {
-            ...defaultQueryHeaders(),
-            ...argHeaders,
-          },
-        },
+        fetchOptions: mergeDeepRight(baseFetchOptions, newFetchOptions),
       })
       .toPromise()
       .catch(() => Promise.resolve(null))
@@ -83,21 +79,29 @@ function doMutation<TData, TVars extends object>(
   query: Query,
   {
     variables,
-    headers: argHeaders,
+    headers,
   } = {} as QueryData<TVars>,
 ) {
   const nuxt = useNuxtApp();
+
+  const baseFetchOptions =
+    (
+      isFunction(nuxt.$urql.fetchOptions)
+        ? (nuxt.$urql.fetchOptions as () => RequestInit)()
+        : (nuxt.$urql.fetchOptions as RequestInit | undefined)
+    ) || {}
+  ;
+
+  const newFetchOptions: RequestInit = {};
+  if (headers) {
+    newFetchOptions.headers = headers;
+  }
 
   return (
     nuxt
       .$urql
       .mutation<TData, TVars>(query, variables, {
-        fetchOptions: {
-          headers: {
-            ...defaultQueryHeaders(),
-            ...argHeaders,
-          },
-        },
+        fetchOptions: mergeDeepRight(baseFetchOptions, newFetchOptions),
       })
       .toPromise()
       .catch(() => Promise.resolve(null))

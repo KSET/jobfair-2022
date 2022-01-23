@@ -4,7 +4,14 @@ import {
   fetchExchange,
 } from "@urql/core";
 import {
+  unref,
+} from "vue";
+import {
+  mergeDeepRight,
+} from "rambdax";
+import {
   defineNuxtPlugin,
+  useCookie,
   useRuntimeConfig,
 } from "#app";
 
@@ -19,6 +26,24 @@ export default defineNuxtPlugin(() => {
           dedupExchange,
           fetchExchange,
         ],
+        fetchOptions: () => {
+          let config: RequestInit = {};
+
+          // Session ID header for server
+          {
+            const sessionId = unref(useCookie("jobfair-session"));
+
+            if (sessionId) {
+              config = mergeDeepRight(config, {
+                headers: {
+                  "x-session-id": sessionId,
+                },
+              });
+            }
+          }
+
+          return config;
+        },
       }),
     },
   };

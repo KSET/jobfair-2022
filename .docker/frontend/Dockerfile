@@ -7,6 +7,7 @@ WORKDIR /app/backend
 COPY ./backend/package.json ./backend/yarn.lock ./backend/.yarnrc.yml ./
 COPY ./backend/.yarn/ ./.yarn/
 RUN yarn install
+COPY ./backend/ ./
 RUN yarn db:client:gen
 
 WORKDIR /app

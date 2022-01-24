@@ -109,12 +109,14 @@
         ...info,
         user: "",
       }));
+      const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
 
       return {
         info,
         errors,
         isLoading,
         async handleSubmit() {
+          resetErrors();
           isLoading.value = true;
           const resp = await userStore.login({
             identifier: info.username,

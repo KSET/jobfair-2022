@@ -108,6 +108,10 @@ export class UserResolver {
     @Info() info: GraphQLResolveInfo,
     @Args() args: FindManyUserArgs,
   ) {
+    if (!ctx.user) {
+      return [];
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const select = transformSelect(transformFields(graphqlFields(info)));
 

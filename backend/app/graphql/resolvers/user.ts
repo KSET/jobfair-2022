@@ -25,7 +25,9 @@ import {
 } from "graphql";
 import graphqlFields from "graphql-fields";
 import {
+  keys,
   omit,
+  reduce,
 } from "rambdax";
 import {
   Context,
@@ -45,22 +47,36 @@ applyModelsEnhanceMap({
   User: {},
 });
 
-const selectTransform: Record<string, (select: Record<string, unknown>) => void> = {
+const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
   roles(select) {
-    select.usersRoles = {
+    (select as Record<string, unknown>).usersRoles = {
       include: {
         role: {
           select: select.roles,
         },
       },
     };
+    delete select.roles;
+
+    return select;
   },
 
   name(select) {
-    select.firstName = true;
-    select.lastName = true;
+    (select as Record<string, unknown>).firstName = true;
+    (select as Record<string, unknown>).lastName = true;
+    delete select.name;
+
+    return select;
   },
 };
+
+export const transformSelect = <T extends Record<string, unknown>>(select: T): T => reduce(
+  (acc, key) =>
+    selectTransform[key as string]?.(acc) ?? acc
+  ,
+  select,
+  keys(select),
+);
 
 @ObjectType()
 class UpdateProfileResponse extends ValidationResponseFor(User) {
@@ -93,14 +109,7 @@ export class UserResolver {
     @Args() args: FindManyUserArgs,
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformFields(graphqlFields(info));
-
-    for (const key of Object.keys(select)) {
-      selectTransform[key]?.(select);
-      if (key in this) {
-        delete select[key];
-      }
-    }
+    const select = transformSelect(transformFields(graphqlFields(info)));
 
     return await ctx.prisma.user.findMany({
       ...args,

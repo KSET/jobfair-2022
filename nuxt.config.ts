@@ -7,6 +7,8 @@ import {
 import StylelintPlugin from "@frsource/vite-plugin-stylelint";
 import SvgLoader from "vite-svg-loader";
 
+const ASSETS_PATH = "/assets/";
+
 const uid = new ShortUniqueId();
 
 const identNameMap = new Map<string, string>();
@@ -33,7 +35,7 @@ export default defineNuxtConfig({
       "primevue",
       "graphql",
     ],
-    publicPath: "/assets/",
+    publicPath: ASSETS_PATH,
   },
 
   css: [
@@ -49,7 +51,14 @@ export default defineNuxtConfig({
     "@/assets/styles/theme/primevue/theme.scss",
   ],
 
+  app: {
+    buildAssetsDir: ASSETS_PATH,
+    baseURL: "/",
+  },
+
   vite: {
+    base: ASSETS_PATH,
+
     css: {
       modules: {
         generateScopedName(name, absoluteFilePath) {
@@ -58,7 +67,7 @@ export default defineNuxtConfig({
               .substring(__dirname.length + 1)
               .split("?")
               .shift() ?? "SOMETHING_WENT_WRONG_PARSE"
-            ;
+          ;
 
           const idScope = `${ absoluteFilePath }/${ name }`;
           if (!identNameMap.has(idScope)) {

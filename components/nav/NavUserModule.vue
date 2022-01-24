@@ -224,25 +224,25 @@
 
       &::before,
       &::after {
-        left: 1.25rem;
-        border-top-color: $border-color;
+        left: 1.25rem !important;
+        border-top-color: $border-color !important;
       }
     }
 
     &::before {
-      margin-left: calc(-1 * #{$arrow-size});
-      border-width: $arrow-size;
+      margin-left: calc(-1 * #{$arrow-size}) !important;
+      border-width: $arrow-size !important;
     }
 
     &::after {
-      margin-left: calc(-.8 * #{$arrow-size});
-      border-width: calc(.8 * #{$arrow-size});
+      margin-left: calc(-.8 * #{$arrow-size}) !important;
+      border-width: calc(.8 * #{$arrow-size}) !important;
     }
 
     &::before,
     &::after {
-      left: calc(100% - 1.25rem);
-      border-bottom-color: $border-color;
+      left: calc(100% - 1.25rem) !important;
+      border-bottom-color: $border-color !important;
     }
 
     :global(.p-overlaypanel-content) {

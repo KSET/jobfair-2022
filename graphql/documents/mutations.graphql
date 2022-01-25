@@ -99,7 +99,9 @@ mutation RegisterCompany($info: CreateCompanyInput!) {
             brandName
             descriptionEn
             descriptionHr
-            industryId
+            industry {
+                name
+            }
         }
     }
 }
@@ -118,7 +120,9 @@ mutation UpdateCompanyInfo($info: CreateCompanyInput!) {
             brandName
             descriptionEn
             descriptionHr
-            industryId
+            industry {
+                name
+            }
         }
     }
 }

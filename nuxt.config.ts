@@ -15,6 +15,11 @@ const identNameMap = new Map<string, string>();
 
 const isProd = "production" === process.env.NODE_ENV;
 
+const cssClassNameBlacklist = new Set([
+  "pi",
+  "fc",
+]);
+
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
   nitro: {
@@ -65,9 +70,14 @@ export default defineNuxtConfig({
 
           const idScope = `${ absoluteFilePath }/${ name }`;
           if (!identNameMap.has(idScope)) {
+            let id;
+            do {
+              id = uid.sequentialUUID();
+            } while (cssClassNameBlacklist.has(id) || id.startsWith("p-"));
+
             identNameMap.set(
               idScope,
-              uid.sequentialUUID(),
+              id,
             );
           }
 

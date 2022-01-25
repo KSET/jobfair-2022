@@ -8,6 +8,7 @@ import type {
 } from "express-session";
 import {
   User,
+  Company,
 } from "@prisma/client";
 import {
   prisma,
@@ -22,6 +23,7 @@ export type Session = ExpressSession & Partial<SessionData> & {
 
 export type SessionUser = User & {
   roles: Role[],
+  companies: Company[],
 };
 
 export type Context = {

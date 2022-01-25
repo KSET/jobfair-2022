@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <div v-if="isAdmin">
+        <div v-if="isAdmin" :class="$style.overlayPanelAdminContainer">
           <small :class="$style.overlayPanelLabel">Admin</small>
           <label class="flex">
             <input-switch v-model="translationsEditable" />
@@ -54,6 +54,17 @@
               Edit text
             </span>
           </label>
+          <div>
+            <ul :class="$style.overlayPanelItems">
+              <li>
+                <nuxt-link :to="{ name: 'admin' }">
+                  <translated-text
+                    trans-key="admin.home"
+                  />
+                </nuxt-link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div>
@@ -206,6 +217,7 @@
     $border-color: $fer-white;
     $padding-x: 1.25rem;
     $padding-y: .875rem;
+    $item-gap: .875rem;
     $arrow-size: 10px;
 
     top: 100% !important;
@@ -263,9 +275,17 @@
           position: relative;
           top: calc(-.5 * #{$padding-y});
           left: calc(-.5 * #{$padding-x});
-          margin-bottom: calc(.5 * #{$padding-y});
+          margin-bottom: calc(-1 * (#{$item-gap} / 2));
+          text-align: left;
           opacity: .6;
         }
+      }
+
+      .overlayPanelAdminContainer {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        gap: $item-gap;
       }
 
       > *:last-child {

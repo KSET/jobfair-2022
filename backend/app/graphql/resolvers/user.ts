@@ -1,5 +1,6 @@
 import {
   User,
+  Company,
   applyModelsEnhanceMap,
   FindManyUserArgs,
   Role,
@@ -42,6 +43,9 @@ import {
 import {
   PasswordService,
 } from "../../services/password-service";
+import {
+  transformSelect as transformSelectCompany,
+} from "./company";
 
 applyModelsEnhanceMap({
   User: {},
@@ -57,6 +61,19 @@ const selectTransform: Record<string, <T extends Record<string, unknown>>(select
       },
     };
     delete select.roles;
+
+    return select;
+  },
+
+  companies(select) {
+    (select as Record<string, unknown>).usersCompanies = {
+      include: {
+        company: {
+          select: transformSelectCompany(select.companies as Record<string, unknown>),
+        },
+      },
+    };
+    delete select.companies;
 
     return select;
   },
@@ -100,6 +117,13 @@ export class UserResolver {
   @Root() user: User,
   ) {
     return user.usersRoles?.map(({ role }) => role) || [];
+  }
+
+  @FieldResolver((_type) => [ Company ])
+  companies(
+    @Root() user: User,
+  ): Company[] {
+    return user.usersCompanies?.map(({ company }) => company!) || [];
   }
 
   @Query((_type) => [ User ])

@@ -16,21 +16,23 @@ datasource db {
 
 model User {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id         Int        @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   /// @TypeGraphQL.omit(input: true)
-  uid        String     @unique @default(cuid())
-  email      String     @unique
-  firstName  String
-  lastName   String
-  phone      String
+  uid            String        @unique @default(cuid())
+  email          String        @unique
+  firstName      String
+  lastName       String
+  phone          String
   /// @TypeGraphQL.omit(output: true, input: true)
-  usersRoles UserRole[]
+  usersRoles     UserRole[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  usersCompanies UserCompany[]
   /// @TypeGraphQL.omit(output: true)
-  password   String
+  password       String
   /// @TypeGraphQL.omit(input: true)
-  createdAt  DateTime   @default(now())
+  createdAt      DateTime      @default(now())
   /// @TypeGraphQL.omit(input: true)
-  updatedAt  DateTime   @updatedAt
+  updatedAt      DateTime      @updatedAt
 }
 
 model Translation {
@@ -66,4 +68,43 @@ model UserRole {
 
   @@id([userId, roleId])
   @@index([roleId])
+}
+
+model Company {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id             Int           @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid            String        @unique @default(cuid())
+  vat            String        @unique
+  legalName      String
+  brandName      String
+  address        String
+  website        String
+  /// @TypeGraphQL.omit(input: true)
+  industry       Industry      @relation(fields: [industryId], references: [id])
+  descriptionEn  String
+  descriptionHr  String
+  /// @TypeGraphQL.omit(output: true, input: true)
+  usersCompanies UserCompany[]
+
+  industryId Int
+}
+
+model Industry {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  /// @TypeGraphQL.omit(output: true, input: true)
+  company Company[]
+}
+
+model UserCompany {
+  user    User    @relation(fields: [userId], references: [id])
+  company Company @relation(fields: [companyId], references: [id])
+
+  userId    Int
+  companyId Int
+
+  @@id([userId, companyId])
+  @@index([companyId])
 }

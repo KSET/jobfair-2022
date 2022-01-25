@@ -43,6 +43,15 @@ export default (app: Router) => {
             },
           },
         },
+        usersCompanies: {
+          select: {
+            company: {
+              include: {
+                industry: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -52,9 +61,12 @@ export default (app: Router) => {
 
     const roles = user.usersRoles.map(({ role }) => role.name as Role);
 
+    const companies = user.usersCompanies.map(({ company }) => company);
+
     req.user = {
       ...user,
       roles,
+      companies,
     };
 
     return end();

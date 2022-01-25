@@ -43,6 +43,10 @@ export const useUserStore = defineStore(
       isAdmin(state) {
         return state.user?.roles.some(({ name }) => "admin" === name) ?? false;
       },
+
+      hasCompany(state) {
+        return 0 < (state.user?.companies.length ?? 0);
+      },
     },
 
     actions: {

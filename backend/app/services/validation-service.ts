@@ -58,3 +58,15 @@ const passwordUpdateValidation = z.object({
   newPasswordRepeat: passwordValidation,
 });
 export const PasswordUpdateValidation = <T>(update: T) => formatValidation(passwordUpdateValidation, update);
+
+
+const companyValidation = z.object({
+  legalName: z.string().min(1),
+  brandName: z.string().min(1).max(100),
+  address: z.string().min(1),
+  descriptionEn: z.string().min(1).max(365),
+  descriptionHr: z.string().min(1).max(365),
+  website: z.string().url().min(1).max(100),
+  industry: z.string().min(1),
+});
+export const CompanyValidation = <T>(company: T) => formatValidation(companyValidation, company);

@@ -61,3 +61,64 @@ mutation UpdatePassword($currentPassword: String!, $newPassword: String!, $newPa
         }
     }
 }
+
+mutation ValidateVat($vat: String!) {
+    validateVat(vat: $vat) {
+        valid
+        exists
+        info {
+            address
+            legalName
+        }
+    }
+}
+
+mutation CreateIndustry($name: String!) {
+    createIndustry(name: $name) {
+        name
+    }
+}
+
+mutation RenameIndustry($oldName: String!, $newName: String!) {
+    renameIndustry(oldName: $oldName, newName: $newName) {
+        name
+    }
+}
+
+mutation RegisterCompany($info: CreateCompanyInput!) {
+    registerCompany(info: $info) {
+        errors {
+            message
+            field
+        }
+        entity {
+            uid
+            vat
+            legalName
+            address
+            brandName
+            descriptionEn
+            descriptionHr
+            industryId
+        }
+    }
+}
+
+mutation UpdateCompanyInfo($info: CreateCompanyInput!) {
+    updateCompanyInfo(info: $info) {
+        errors {
+            message
+            field
+        }
+        entity {
+            uid
+            vat
+            legalName
+            address
+            brandName
+            descriptionEn
+            descriptionHr
+            industryId
+        }
+    }
+}

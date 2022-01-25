@@ -8,6 +8,19 @@ fragment frag_UserProfile on User {
     roles {
         name
     }
+    companies {
+        uid
+        vat
+        legalName
+        brandName
+        address
+        website
+        descriptionEn
+        descriptionHr
+        industry {
+            name
+        }
+    }
 }
 
 query Profile {
@@ -31,5 +44,11 @@ query InitialData($language: String!) {
     allTranslationsFor(language: $language) {
         key
         value
+    }
+}
+
+query Industries {
+    industries {
+        name
     }
 }

@@ -28,6 +28,24 @@
               />
             </nuxt-link>
           </li>
+          <li v-if="hasCompany">
+            <nuxt-link
+              :to="{ name: 'profile-me-company' }"
+            >
+              <translated-text
+                trans-key="profile.company"
+              />
+            </nuxt-link>
+          </li>
+          <li v-else>
+            <nuxt-link
+              :to="{ name: 'profile-register-company' }"
+            >
+              <translated-text
+                trans-key="profile.company-register"
+              />
+            </nuxt-link>
+          </li>
         </ul>
       </div>
     </aside>
@@ -60,6 +78,7 @@
 
       return {
         user: computed(() => userStore.user),
+        hasCompany: computed(() => userStore.hasCompany),
       };
     },
   });
@@ -145,6 +164,21 @@
     .content {
       flex: 1;
       padding: 2.5rem;
+
+      > h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1.875rem;
+        margin-top: 0;
+        margin-bottom: 4rem;
+        text-align: center;
+        color: $fer-dark-blue;
+
+        @include media(md) {
+          font-size: 1.625rem;
+          margin: 2.25rem 0;
+        }
+      }
     }
   }
 </style>

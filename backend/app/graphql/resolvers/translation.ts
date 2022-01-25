@@ -18,6 +18,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import {
+  EventsService,
+} from "../../services/events-service";
 
 export {
   FindManyTranslationResolver,
@@ -59,6 +62,8 @@ export class TranslationsResolver {
     if (!hasAtLeastRole(Role.Admin, ctx.user)) {
       return null;
     }
+
+    void EventsService.logEvent("translation:update", ctx.user.id, { name: data.key, lang: data.language });
 
     return await ctx.prisma.translation.upsert({
       where: {

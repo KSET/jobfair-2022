@@ -14,6 +14,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import {
+  EventsService,
+} from "../../services/events-service";
 
 export {
   FindManyIndustryResolver,
@@ -33,6 +36,8 @@ export class IndustryResolver {
     if (!hasAtLeastRole(Role.Admin, ctx.user)) {
       return null;
     }
+
+    void EventsService.logEvent("industry:create", ctx.user.id, name);
 
     return ctx.prisma.industry.create({
       data: {
@@ -54,6 +59,8 @@ export class IndustryResolver {
     if (!hasAtLeastRole(Role.Admin, ctx.user)) {
       return null;
     }
+
+    void EventsService.logEvent("industry:rename", ctx.user.id, { old: oldName, new: newName });
 
     return ctx.prisma.industry.update({
       where: {

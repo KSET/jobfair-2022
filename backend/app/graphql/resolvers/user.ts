@@ -44,6 +44,9 @@ import {
   PasswordService,
 } from "../../services/password-service";
 import {
+  EventsService,
+} from "../../services/events-service";
+import {
   transformSelect as transformSelectCompany,
 } from "./company";
 
@@ -189,6 +192,8 @@ export class UserResolver {
       },
     });
 
+    void EventsService.logEvent("profile:update", ctx.user.id);
+
     return {
       entity: ctx.user,
     };
@@ -250,6 +255,8 @@ export class UserResolver {
         password: await PasswordService.hashPassword(newPassword),
       },
     });
+
+    void EventsService.logEvent("profile:password:update", ctx.user.id);
 
     return {
       entity: ctx.user,

@@ -33,6 +33,8 @@ model User {
   createdAt      DateTime      @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt      DateTime      @updatedAt
+  /// @TypeGraphQL.omit(output: true, input: true)
+  events         EventLog[]
 }
 
 model Translation {
@@ -87,6 +89,7 @@ model Company {
   /// @TypeGraphQL.omit(output: true, input: true)
   usersCompanies UserCompany[]
 
+  /// @TypeGraphQL.omit(output: true, input: true)
   industryId Int
 }
 
@@ -107,4 +110,17 @@ model UserCompany {
 
   @@id([userId, companyId])
   @@index([companyId])
+}
+
+model EventLog {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id   Int      @id @default(autoincrement())
+  name String
+  user User?    @relation(fields: [userId], references: [id])
+  data String?
+  /// @TypeGraphQL.omit(input: true)
+  date DateTime @default(now())
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  userId Int?
 }

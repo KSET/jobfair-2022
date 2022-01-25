@@ -29,6 +29,9 @@ import {
 import {
   ValidationResponseFor,
 } from "../helpers/validation";
+import {
+  EventsService,
+} from "../../services/events-service";
 
 @ObjectType()
 class AuthResponse extends ValidationResponseFor(User) {
@@ -62,6 +65,9 @@ export class AuthResolver {
     }
 
     ctx.session.userId = user.id;
+
+    void EventsService.logEvent("user:login", user.id);
+
     return {
       entity: user,
     };
@@ -138,6 +144,8 @@ export class AuthResolver {
 
     // Log the user in
     ctx.session.userId = user.id;
+
+    void EventsService.logEvent("user:register", user.id);
 
     return {
       entity: user,

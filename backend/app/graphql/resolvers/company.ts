@@ -30,6 +30,9 @@ import {
 import {
   CompanyService,
 } from "../../services/company-service";
+import {
+  EventsService,
+} from "../../services/events-service";
 
 const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
   industry(select) {
@@ -178,6 +181,8 @@ export class CompanyValidationResolver {
       },
     });
 
+    void EventsService.logEvent("company:register", ctx.user.id, { vat: create.company.vat });
+
     return {
       entity: create.company,
     };
@@ -246,6 +251,8 @@ export class CompanyValidationResolver {
         industry: true,
       },
     });
+
+    void EventsService.logEvent("company:update", ctx.user.id, { vat: create.vat });
 
     return {
       entity: create,

@@ -4,7 +4,6 @@ import {
   start,
 } from "./app";
 
-// eslint-disable-next-line no-void
 void start().then(({ host, port, message }) => {
   console.log(`Server started on http://${ host }:${ port }`);
   if (message) {

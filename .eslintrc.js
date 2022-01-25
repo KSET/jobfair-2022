@@ -59,6 +59,7 @@ module.exports = {
     ],
     "no-dupe-class-members": "off",
     "@typescript-eslint/no-var-requires": "off",
+    "no-void": "off",
     "vue/comment-directive": "off",
     "vue/no-v-model-argument": "off",
     "vue/no-multiple-template-root": "off",

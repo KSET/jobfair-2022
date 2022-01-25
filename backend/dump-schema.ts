@@ -16,7 +16,6 @@ declare global {
   }
 }
 
-// eslint-disable-next-line no-void
 void (async () => {
   await build();
 })().then(

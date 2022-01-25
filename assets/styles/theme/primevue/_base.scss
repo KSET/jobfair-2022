@@ -105,10 +105,28 @@ label {
     }
   }
 
+  &.pi-times {
+
+    &::before {
+      background-image: url("@/assets/images/util/close.svg?url");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
+
   &.pi-search {
 
     &::before {
       content: url("@/assets/images/util/search.svg?url");
+    }
+  }
+
+  &.pi-check {
+
+    &::before {
+      background-image: url("@/assets/images/util/check.svg?url");
+      background-repeat: no-repeat;
+      background-size: contain;
     }
   }
 
@@ -6735,12 +6753,12 @@ label {
     width: 100%;
     height: 60%;
     content: "";
+    animation: spin 1s #{$transition-timing-function} infinite;
     background-image: url("@/assets/images/util/loading.svg?url");
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
     filter: invert(1);
-    animation: spin 1s #{$transition-timing-function} infinite;
   }
 }
 

@@ -86,7 +86,6 @@ label {
   &::before {
     width: 1em;
     height: 1em;
-    content: "@";
     pointer-events: none;
     color: transparent;
   }
@@ -108,6 +107,7 @@ label {
   &.pi-times {
 
     &::before {
+      content: "";
       background-image: url("@/assets/images/util/close.svg?url");
       background-repeat: no-repeat;
       background-size: contain;
@@ -124,6 +124,7 @@ label {
   &.pi-check {
 
     &::before {
+      content: "";
       background-image: url("@/assets/images/util/check.svg?url");
       background-repeat: no-repeat;
       background-size: contain;

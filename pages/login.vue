@@ -64,6 +64,7 @@
 <script lang="ts">
   import {
     defineComponent,
+    nextTick,
     reactive,
     ref,
   } from "vue";
@@ -135,6 +136,8 @@
 
           if (!errorList) {
             await router.push("/");
+            await nextTick();
+            window.location.reload();
 
             return;
           }

@@ -11,6 +11,7 @@ import {
   ICreateIndustryMutationVariables,
   IIndustriesQuery,
   IIndustriesQueryVariables,
+  IIndustry,
   Industries,
   IRenameIndustryMutation,
   IRenameIndustryMutationVariables,
@@ -30,11 +31,15 @@ export const useIndustriesStore = defineStore(
           query: Industries,
         })();
 
-        if (!resp?.data?.industries) {
-          return null;
+        return this.setIndustries(resp?.data?.industries);
+      },
+
+      setIndustries(industries?: IIndustry[]) {
+        if (!industries) {
+          return;
         }
 
-        this.industries = resp.data.industries.map(({ name }) => name);
+        this.industries = industries.map(({ name }) => name);
       },
 
       async createIndustry(name: string) {

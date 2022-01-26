@@ -1,23 +1,35 @@
 import {
   Arg,
+  Args,
   Ctx,
   Field,
   FieldResolver,
+  Info,
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
   Root,
 } from "type-graphql";
 import {
-  CompanyCreateInput,
+  User,
   Company,
+  CompanyCreateInput,
+  FindManyCompanyArgs,
   Industry,
 } from "@generated/type-graphql";
 import {
   keys,
   reduce,
 } from "rambdax";
+import graphqlFields from "graphql-fields";
+import {
+  transformFields,
+} from "@generated/type-graphql/helpers";
+import {
+  GraphQLResolveInfo,
+} from "graphql";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -33,12 +45,32 @@ import {
 import {
   EventsService,
 } from "../../services/events-service";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../../helpers/auth";
+import {
+  transformSelect as transformSelectUser,
+} from "./user";
 
 const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
   industry(select) {
     (select as Record<string, unknown>).industry = {
       select: select.industry,
     };
+
+    return select;
+  },
+
+  members(select) {
+    (select as Record<string, unknown>).usersCompanies = {
+      select: {
+        user: {
+          select: transformSelectUser(select.members as Record<string, unknown>),
+        },
+      },
+    };
+    delete select.members;
 
     return select;
   },
@@ -90,6 +122,13 @@ export class CompanyValidationResolver {
   @Root() company: Company,
   ) {
     return company.industry;
+  }
+
+  @FieldResolver((_type) => [ User ])
+  members(
+  @Root() company: Company,
+  ) {
+    return company.usersCompanies?.map((uc) => uc.user) || [];
   }
 
   @Mutation(() => ValidateVatResponse)
@@ -207,7 +246,7 @@ export class CompanyValidationResolver {
 
     const isInCompany = ctx.user.companies.some((company) => company.vat === info.vat);
 
-    if (!isInCompany) {
+    if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
       return {
         errors: [
           {
@@ -257,5 +296,49 @@ export class CompanyValidationResolver {
     return {
       entity: create,
     };
+  }
+}
+
+@Resolver(() => Company)
+export class CompanyListResolver {
+  @Query(() => [ Company ])
+  companies(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+    @Args() args: FindManyCompanyArgs,
+  ) {
+    if (!ctx.user) {
+      return [];
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const select = transformSelect(transformFields(graphqlFields(info)));
+
+    return ctx.prisma.company.findMany({
+      ...args,
+      select,
+    });
+  }
+
+  @Query(() => Company, { nullable: true })
+  company(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+    @Arg("vat") vat: string,
+  ) {
+    if (!ctx.user) {
+      return null;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const select = transformSelect(transformFields(graphqlFields(info)));
+
+    return ctx.prisma.company.findUnique({
+      where: {
+        vat,
+      },
+
+      select,
+    });
   }
 }

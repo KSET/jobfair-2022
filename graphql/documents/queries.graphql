@@ -47,6 +47,22 @@ query InitialData($language: String!) {
     }
 }
 
+query Company($vat: String!) {
+    company(vat: $vat) {
+        uid
+        legalName
+        brandName
+        descriptionEn
+        descriptionHr
+        address
+        vat
+        website
+        industry {
+            name
+        }
+    }
+}
+
 query Industries {
     industries {
         name

@@ -3,8 +3,12 @@ import {
 } from "pinia";
 import {
   useMutation,
+  useQuery,
 } from "~/composables/useQuery";
 import {
+  Company,
+  ICompanyQuery,
+  IQueryCompanyArgs,
   IRegisterCompanyMutation,
   IRegisterCompanyMutationVariables,
   IUpdateCompanyInfoMutation,
@@ -26,6 +30,17 @@ export const useCompanyStore = defineStore(
         });
 
         return resp?.data?.validateVat || null;
+      },
+
+      async fetchCompany(vat: string) {
+        const resp = await useQuery<ICompanyQuery, IQueryCompanyArgs>({
+          query: Company,
+          variables: {
+            vat,
+          },
+        })();
+
+        return resp?.data?.company || null;
       },
 
       async registerCompany(variables: IRegisterCompanyMutationVariables) {

@@ -9,4 +9,6 @@ void start().then(({ host, port, message }) => {
   if (message) {
     console.log(message);
   }
+}).catch((err) => {
+  console.error(err);
 });

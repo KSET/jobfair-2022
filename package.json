@@ -15,6 +15,7 @@
     "dependencies": {
         "@nuxtjs/composition-api": "^0.31.0",
         "@pinia/nuxt": "^0.1.8",
+        "@urql/exchange-multipart-fetch": "^0.1.14",
         "normalize.css": "^8.0.1",
         "pinia": "^2.0.9",
         "postcss": "^8.4.5",

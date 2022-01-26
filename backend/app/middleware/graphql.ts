@@ -8,6 +8,10 @@ import {
   Router,
 } from "express";
 import {
+  GraphQLUpload,
+  graphqlUploadExpress,
+} from "graphql-upload";
+import {
   Context,
 } from "../types/apollo-context";
 import {
@@ -30,6 +34,9 @@ export default async (app: Router) => {
       user: req.user,
       session: req.session,
     }),
+    resolvers: {
+      Upload: GraphQLUpload,
+    },
     schema: await buildSchema({
       resolvers,
       validate: false,
@@ -46,6 +53,7 @@ export default async (app: Router) => {
 
   await apollo.start();
 
+  app.use(graphqlUploadExpress());
   app.use(apollo.getMiddleware());
 
   return app;

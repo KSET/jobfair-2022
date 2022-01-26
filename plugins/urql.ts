@@ -1,8 +1,10 @@
 import {
   createClient,
   dedupExchange,
-  fetchExchange,
 } from "@urql/core";
+import {
+  multipartFetchExchange,
+} from "@urql/exchange-multipart-fetch";
 import {
   unref,
 } from "vue";
@@ -24,7 +26,7 @@ export default defineNuxtPlugin(() => {
         url: `${ config.API_BASE as string }/graphql`,
         exchanges: [
           dedupExchange,
-          fetchExchange,
+          multipartFetchExchange,
         ],
         fetchOptions: () => {
           let config: RequestInit = {};

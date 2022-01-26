@@ -2363,7 +2363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@urql/core@npm:^2.3.6":
+"@urql/core@npm:>=2.3.6, @urql/core@npm:^2.3.6":
   version: 2.3.6
   resolution: "@urql/core@npm:2.3.6"
   dependencies:
@@ -2372,6 +2372,19 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 39b10abc9b600cf698bc702b9b678cf8cf4851faa8041be6fe26e439a18a447f8f39049cd2a9b188076cbd272ead62286ea05294c5de14719e7799caa8c44942
+  languageName: node
+  linkType: hard
+
+"@urql/exchange-multipart-fetch@npm:^0.1.14":
+  version: 0.1.14
+  resolution: "@urql/exchange-multipart-fetch@npm:0.1.14"
+  dependencies:
+    "@urql/core": ">=2.3.6"
+    extract-files: ^11.0.0
+    wonka: ^4.0.14
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 86c2a1a647f7fd2f2ac5830c6cde85b37d78e884d3b8063a37255447572509136c4b3a2a698311ed99bc626fe864358e8910de98be880e5c398b19e106f7971e
   languageName: node
   linkType: hard
 
@@ -11738,6 +11751,7 @@ __metadata:
     "@types/js-cookie": ^3.0.1
     "@types/lodash-es": ^4.17.5
     "@urql/core": ^2.3.6
+    "@urql/exchange-multipart-fetch": ^0.1.14
     "@vue/compiler-sfc": ^3.2.27
     "@vueuse/nuxt": ^7.5.3
     cssesc: ^3.0.0

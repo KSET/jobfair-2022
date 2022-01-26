@@ -11,6 +11,9 @@ import {
 import {
   registerRoutesInFolderRecursive,
 } from "./helpers/route";
+import {
+  init as initMinio,
+} from "./providers/minio";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -23,6 +26,12 @@ declare global {
 }
 
 export async function start() {
+  const success = await initMinio();
+
+  if (!success) {
+    throw new Error("Minio init failed");
+  }
+
   const app = express();
 
   app.set("trust proxy", 1);

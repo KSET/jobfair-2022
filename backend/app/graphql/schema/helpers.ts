@@ -12,6 +12,11 @@ export const schemaPath =
   () =>
     resolve(
       __dirname,
+      "../",
+      "../",
+      "../",
+      "../",
+      "./graphql",
       "./schema.graphql",
     )
 ;

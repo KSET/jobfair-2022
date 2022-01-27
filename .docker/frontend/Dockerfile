@@ -1,15 +1,4 @@
 FROM node:16-slim as builder
-# Install packages required for building node modules
-RUN apt-get update -y && apt-get install openssl -y
-
-# Generate backend artefacts required for frontend build
-WORKDIR /app/backend
-COPY ./backend/package.json ./backend/yarn.lock ./backend/.yarnrc.yml ./
-COPY ./backend/.yarn/ ./.yarn/
-RUN yarn install
-COPY ./backend/ ./
-RUN yarn db:client:gen
-
 WORKDIR /app
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/ .yarn/

@@ -1,6 +1,7 @@
 .dockerignore
 .docker
 .output
+backend
 node_modules
 .idea
 .git

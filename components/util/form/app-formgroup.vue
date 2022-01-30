@@ -92,15 +92,13 @@
 
 <script lang="ts">
   import {
+    defineAsyncComponent,
     defineComponent,
   } from "vue";
   import {
     MaybeRef,
   } from "@vueuse/shared";
-  import AppTextarea from "~/components/util/form/app-textarea.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import AppInput from "~/components/util/form/app-input.vue";
-  import AppDropdown from "~/components/util/form/app-dropdown.vue";
 
   type ClassDefinition = Record<string, boolean> | string;
 
@@ -153,10 +151,10 @@
 
   export default defineComponent({
     components: {
-      AppDropdown,
-      AppInput,
+      AppDropdown: defineAsyncComponent(() => import("~/components/util/form/app-dropdown.vue")),
+      AppInput: defineAsyncComponent(() => import("~/components/util/form/app-input.vue")),
       TranslatedText,
-      AppTextarea,
+      AppTextarea: defineAsyncComponent(() => import("~/components/util/form/app-textarea.vue")),
     },
 
     props: {

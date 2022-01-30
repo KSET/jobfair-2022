@@ -107,7 +107,7 @@ class UpdatePasswordResponse extends ValidationResponseFor(User) {
 }
 
 @Resolver((_of) => User)
-export class UserResolver {
+export class UserFieldResolver {
   @FieldResolver((_type) => String)
   name(
   @Root() user: User,
@@ -128,7 +128,10 @@ export class UserResolver {
   ): Company[] {
     return user.usersCompanies?.map(({ company }) => company!) || [];
   }
+}
 
+@Resolver((_of) => User)
+export class UserInfoResolver {
   @Query((_type) => [ User ])
   async users(
   @Ctx() ctx: Context,
@@ -147,7 +150,10 @@ export class UserResolver {
       select,
     });
   }
+}
 
+@Resolver((_of) => User)
+export class UserProfileResolver {
   @Query(() => User, { nullable: true })
   profile(@Ctx() ctx: Context) {
     return ctx.user;

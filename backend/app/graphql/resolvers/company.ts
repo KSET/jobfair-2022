@@ -116,7 +116,7 @@ class CreateCompanyResponse extends ValidationResponseFor(Company) {
 }
 
 @Resolver(() => Company)
-export class CompanyValidationResolver {
+export class CompanyFieldResolver {
   @FieldResolver((_type) => Industry, { nullable: true })
   industry(
   @Root() company: Company,
@@ -130,7 +130,10 @@ export class CompanyValidationResolver {
   ) {
     return company.usersCompanies?.map((uc) => uc.user) || [];
   }
+}
 
+@Resolver(() => Company)
+export class CompanyValidationResolver {
   @Mutation(() => ValidateVatResponse)
   validateVat(
     @Ctx() ctx: Context,
@@ -138,7 +141,10 @@ export class CompanyValidationResolver {
   ): Promise<ValidateVatResponse> {
     return CompanyService.validateVat(vat);
   }
+}
 
+@Resolver(() => Company)
+export class CompanyInfoMutationsResolver {
   @Mutation(() => CreateCompanyResponse, { nullable: true })
   async registerCompany(
     @Ctx() ctx: Context,

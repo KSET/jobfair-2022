@@ -49,6 +49,8 @@
     onMounted,
     ref,
     toRefs,
+    unref,
+    watch,
   } from "vue";
   import {
     until,
@@ -125,9 +127,13 @@
       const imgEl = ref<HTMLImageElement | null>(null);
 
       const isVisible = ref(false);
-      const isPreview = ref(null !== props.lazySrc.value);
+      const isPreview = ref(Boolean(unref(props.lazySrc)));
       const imgSrc = ref(props.lazySrc.value || props.src.value);
       const actualAspectRatio = ref(0.5);
+
+      watch(props.src, (val) => {
+        imgSrc.value = val;
+      });
 
       function calculateActualAspectRatio() {
         if (null === imgEl.value) {

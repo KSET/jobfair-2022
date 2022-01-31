@@ -253,6 +253,23 @@
         }
       };
 
+      const handleInputChange = (files?: FileList | null) => {
+        if (!files) {
+          return;
+        }
+
+        const [ file ] = files || [];
+        if (file) {
+          setPreviewSrc(file);
+        }
+
+        if (props.multiple) {
+          emit("update:modelValue", files);
+        } else {
+          emit("update:modelValue", file);
+        }
+      };
+
       return {
         previewImg$,
         id: reactive({
@@ -277,27 +294,13 @@
           }
         },
         handleChange(event: Event) {
-          const files = (event.target as HTMLInputElement | undefined)?.files;
-
-          emit("update:modelValue", files);
-
-          const [ file ] = files || [];
-          if (!file) {
-            return false;
-          }
-
-          setPreviewSrc(file);
+          handleInputChange((event.target as HTMLInputElement)?.files);
 
           return false;
         },
         handleDrop(event: DragEvent) {
           isDragOver.value = false;
-          const [ file ] = event.dataTransfer?.files || [];
-          if (!file) {
-            return false;
-          }
-
-          setPreviewSrc(file);
+          handleInputChange(event.dataTransfer?.files);
 
           return false;
         },

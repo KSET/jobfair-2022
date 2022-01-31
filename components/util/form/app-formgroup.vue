@@ -58,6 +58,60 @@
           />
         </template>
       </app-dropdown>
+      <app-date-input
+        v-else-if="input.type === 'date'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${inputName}`"
+        :name="inputName"
+        :placeholder="input.placeholder"
+        :required="input.required ?? false"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-date-input>
+      <app-file-input
+        v-else-if="input.type === 'file'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :accept="input.accept"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :file-name="input.fileName"
+        :file-type="input.fileType"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${inputName}`"
+        :multiple="input.multiple ?? false"
+        :name="inputName"
+        :placeholder="input.placeholder"
+        :required="input.required ?? false"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-file-input>
       <app-input
         v-else
         :key="`${input.type}-${inputName}`"
@@ -116,7 +170,6 @@
     {
       type:
         "text"
-        | "date"
         | "datetime-local"
         | "email"
         | "month"
@@ -133,6 +186,11 @@
         "number",
       value: number,
     }
+    | {
+      type:
+        "date",
+      value: string | Date,
+    }
   );
 
   type InputDropdown = InputBase & {
@@ -147,14 +205,29 @@
     type: "textarea",
   };
 
-  export type InputEntry = InputText | InputDropdown | InputTextarea;
+  type InputFile = InputBase & {
+    type: "file",
+    accept?: MaybeRef<string | string[]>,
+    fileName?: MaybeRef<string>,
+    fileType?: MaybeRef<string>,
+    multiple?: MaybeRef<boolean>,
+  };
+
+  export type InputEntry =
+    InputText
+    | InputDropdown
+    | InputTextarea
+    | InputFile
+  ;
 
   export default defineComponent({
     components: {
+      AppFileInput: defineAsyncComponent(() => import("~/components/util/form/app-file-input.vue")),
       AppDropdown: defineAsyncComponent(() => import("~/components/util/form/app-dropdown.vue")),
       AppInput: defineAsyncComponent(() => import("~/components/util/form/app-input.vue")),
-      TranslatedText,
       AppTextarea: defineAsyncComponent(() => import("~/components/util/form/app-textarea.vue")),
+      AppDateInput: defineAsyncComponent(() => import("~/components/util/form/app-date-input.vue")),
+      TranslatedText,
     },
 
     props: {

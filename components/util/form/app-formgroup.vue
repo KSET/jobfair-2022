@@ -49,9 +49,9 @@
         :required="input.required ?? false"
         v-bind="input.attrs || {}"
       >
-        <template v-if="errors.industry.length > 0" #message>
+        <template v-if="errors[inputName].length > 0" #message>
           <translated-text
-            v-for="err in errors.industry"
+            v-for="err in errors[inputName]"
             :key="err.message"
             :trans-key="err.message"
             class="block"

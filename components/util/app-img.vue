@@ -121,6 +121,9 @@
 
     setup(
       propValues: Props,
+      {
+        emit,
+      },
     ) {
       const props = toRefs(propValues);
 
@@ -152,6 +155,7 @@
       onMounted(() => {
         calculateActualAspectRatio();
         imgEl.value?.addEventListener("load", () => {
+          emit("load", unref(imgEl)?.src);
           calculateActualAspectRatio();
         });
       });

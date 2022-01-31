@@ -3,9 +3,9 @@ import {
 } from "../providers/prisma";
 
 export class EventsService {
-  public static async logEvent(name: string, userId?: number, data?: unknown) {
+  public static logEvent(name: string, userId?: number, data?: unknown) {
     try {
-      return await prisma.eventLog.create({
+      return prisma.eventLog.create({
         data: {
           name,
           user: {

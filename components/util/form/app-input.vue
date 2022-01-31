@@ -201,7 +201,7 @@
 
     .label {
       font-weight: bold;
-      display: block;
+      display: inline-block;
       margin-bottom: .75rem;
       cursor: pointer;
       color: #{color.adjust($fer-black, $alpha: -.2)};

@@ -205,6 +205,12 @@
         default: () => "",
       },
 
+      fileType: {
+        required: false,
+        type: String,
+        default: () => "",
+      },
+
       multiple: {
         required: false,
         type: Boolean,
@@ -233,8 +239,8 @@
 
       const previewSrc = ref("");
       const previewName = ref("");
-      const setPreviewSrc = (file: File) => {
-        previewName.value = file.name;
+      const setPreviewSrc = (name: string, mimetype: string, file: File | string) => {
+        previewName.value = name;
 
         const supportsImageType = (type: string) => {
           try {
@@ -244,14 +250,22 @@
           }
         };
 
-        if (supportsImageType(file.type.toLowerCase())) {
-          previewSrc.value = URL.createObjectURL(file);
-        } else if (zipMimeTypes.has(file.type.toLowerCase())) {
+        if (supportsImageType(mimetype.toLowerCase())) {
+          previewSrc.value =
+            "object" === typeof file
+              ? URL.createObjectURL(file)
+              : file
+          ;
+        } else if (zipMimeTypes.has(mimetype.toLowerCase())) {
           previewSrc.value = "archive";
         } else {
           previewSrc.value = "file";
         }
       };
+
+      if (props.fileType && props.fileName && "string" === typeof props.modelValue) {
+        setPreviewSrc(props.fileName, props.fileType, props.modelValue);
+      }
 
       const handleInputChange = (files?: FileList | null) => {
         if (!files) {
@@ -260,7 +274,7 @@
 
         const [ file ] = files || [];
         if (file) {
-          setPreviewSrc(file);
+          setPreviewSrc(file.name, file.type, file);
         }
 
         if (props.multiple) {

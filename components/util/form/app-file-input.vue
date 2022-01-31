@@ -82,6 +82,7 @@
       :aria-required="orNull(required)"
       :class="{
         [$style.input]: true,
+        [$style.invalid]: invalid,
       }"
       :disabled="disabled"
       :multiple="multiple"

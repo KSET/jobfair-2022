@@ -12,7 +12,7 @@ export const PASSWORD_LENGTH_MAX = 99 as const;
 const passwordValidation = z.string().min(PASSWORD_LENGTH_MIN).max(PASSWORD_LENGTH_MAX);
 
 const formatValidation =
-  async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(validationObject: ZodType<Output, Def, Input>, data: unknown): Promise<{ success: boolean, errors: { field: string, message: string, }[], }> => {
+  async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(validationObject: ZodType<Output, Def, Input>, data: unknown): Promise<{ success: boolean, errors: { field: keyof Output, message: string, }[], }> => {
     const validation = await validationObject.safeParseAsync(data);
 
     if (validation.success) {
@@ -23,7 +23,7 @@ const formatValidation =
     }
 
     const errors = validation.error.errors.map((err) => ({
-      field: err.path.join("."),
+      field: err.path.join(".") as keyof Output,
       message: err.message,
     }));
 

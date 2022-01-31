@@ -70,3 +70,10 @@ const companyValidation = z.object({
   industry: z.string().min(1),
 });
 export const CompanyValidation = <T>(company: T) => formatValidation(companyValidation, company);
+
+
+const pressReleaseValidation = z.object({
+  title: z.string().min(1),
+  published: z.date(),
+});
+export const PressReleaseValidation = <T>(pressRelease: T) => formatValidation(pressReleaseValidation, pressRelease);

@@ -82,12 +82,67 @@ type CreateCompanyResponse {
   errors: [FieldError!]
 }
 
+type CreatePressReleaseResponse {
+  entity: PressRelease
+  errors: [FieldError!]
+}
+
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
 
 type FieldError {
   field: String!
   message: String!
+}
+
+type File {
+  _count: FileCount
+  createdAt: DateTime!
+  etag: String!
+  mimeType: String!
+  name: String!
+  size: Int!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+type FileCount {
+  forPressRelease: Int!
+}
+
+input FileOrderByWithRelationInput {
+  etag: SortOrder
+  mimeType: SortOrder
+  name: SortOrder
+  size: SortOrder
+  uploader: UserOrderByWithRelationInput
+}
+
+input FileRelationFilter {
+  is: FileWhereInput
+  isNot: FileWhereInput
+}
+
+input FileWhereInput {
+  AND: [FileWhereInput!]
+  NOT: [FileWhereInput!]
+  OR: [FileWhereInput!]
+  etag: StringFilter
+  mimeType: StringFilter
+  name: StringFilter
+  size: IntFilter
+  uploader: UserRelationFilter
 }
 
 type Industry {
@@ -119,8 +174,20 @@ input IndustryWhereUniqueInput {
   name: String
 }
 
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
+}
+
 type Mutation {
   createIndustry(name: String!): Industry
+  createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
@@ -128,9 +195,32 @@ type Mutation {
   renameIndustry(newName: String!, oldName: String!): Industry
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
+  updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
   updateTranslation(data: TranslationCreateInput!): Translation
   validateVat(vat: String!): ValidateVatResponse!
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntFilter
+  notIn: [Int!]
 }
 
 input NestedStringFilter {
@@ -147,12 +237,61 @@ input NestedStringFilter {
   startsWith: String
 }
 
+type PressRelease {
+  createdAt: DateTime!
+  file: File
+  published: DateTime!
+  title: String!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+input PressReleaseOrderByWithRelationInput {
+  creator: UserOrderByWithRelationInput
+  file: FileOrderByWithRelationInput
+  published: SortOrder
+  title: SortOrder
+}
+
+enum PressReleaseScalarFieldEnum {
+  createdAt
+  creatorId
+  fileId
+  id
+  published
+  title
+  uid
+  updatedAt
+}
+
+input PressReleaseWhereInput {
+  AND: [PressReleaseWhereInput!]
+  NOT: [PressReleaseWhereInput!]
+  OR: [PressReleaseWhereInput!]
+  creator: UserRelationFilter
+  file: FileRelationFilter
+  published: DateTimeFilter
+  title: StringFilter
+}
+
+input PressReleaseWhereUniqueInput {
+  uid: String = ""
+}
+
+input PressReleaseWithFilesCreateInput {
+  file: Upload = null
+  published: DateTime = null
+  title: String = ""
+}
+
 type Query {
   allTranslationsFor(language: String!): [Translation!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
+  pressRelease(uid: String!): PressRelease
+  pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
@@ -251,6 +390,9 @@ type UpdateProfileResponse {
   errors: [FieldError!]
 }
 
+# The `Upload` scalar type represents a file upload.
+scalar Upload
+
 type User {
   _count: UserCount
   companies: [Company!]!
@@ -267,6 +409,8 @@ type User {
 
 type UserCount {
   events: Int!
+  files: Int!
+  pressReleases: Int!
   usersCompanies: Int!
   usersRoles: Int!
 }
@@ -294,6 +438,11 @@ input UserRegisterInput {
   password: String!
   passwordRepeat: String = ""
   phone: String!
+}
+
+input UserRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
 }
 
 enum UserScalarFieldEnum {

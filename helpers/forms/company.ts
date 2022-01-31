@@ -8,7 +8,7 @@ import {
   InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
-type Company = Omit<ICompany, "industryId" | "_count" | "uid">;
+type Company = Omit<ICompany, "industryId" | "_count" | "uid" | "members">;
 export const companyCreate =
   <T extends Company>(company?: T) =>
     (industries: MaybeRef<{ label: string, value: string, }[]>): Record<keyof Company, InputEntry> =>

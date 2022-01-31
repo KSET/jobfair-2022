@@ -33,8 +33,13 @@ model User {
   createdAt      DateTime      @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt      DateTime      @updatedAt
+
   /// @TypeGraphQL.omit(output: true, input: true)
-  events         EventLog[]
+  events        EventLog[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  files         File[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  pressReleases PressRelease[]
 }
 
 model Translation {
@@ -123,4 +128,49 @@ model EventLog {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   userId Int?
+}
+
+model PressRelease {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int      @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid       String   @unique @default(cuid())
+  title     String
+  published DateTime
+  file      File     @relation(fields: [fileId], references: [id])
+  creator   User     @relation(fields: [creatorId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  creatorId Int
+  /// @TypeGraphQL.omit(output: true, input: true)
+  fileId    Int
+}
+
+model File {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int      @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid       String   @unique @default(cuid())
+  name      String
+  size      Int
+  etag      String
+  mimeType  String
+  /// @TypeGraphQL.omit(output: true, input: true)
+  minioKey  String   @unique
+  uploader  User     @relation(fields: [uploaderId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  // No polymorphism, workaround is this :(
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forPressRelease PressRelease[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  uploaderId Int
 }

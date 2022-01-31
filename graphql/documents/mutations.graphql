@@ -126,3 +126,29 @@ mutation UpdateCompanyInfo($info: CreateCompanyInput!) {
         }
     }
 }
+
+mutation CreatePressRelease($info: PressReleaseWithFilesCreateInput!) {
+    createPressRelease(info: $info) {
+        entity {
+            title
+            published
+        }
+        errors {
+            field
+            message
+        }
+    }
+}
+
+mutation UpdatePressRelease($uid: String!, $info: PressReleaseWithFilesCreateInput!) {
+    updatePressRelease(uid: $uid, info: $info) {
+        entity {
+            title
+            published
+        }
+        errors {
+            field
+            message
+        }
+    }
+}

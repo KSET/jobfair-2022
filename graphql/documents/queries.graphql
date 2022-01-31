@@ -68,3 +68,26 @@ query Industries {
         name
     }
 }
+
+query PressRelease($uid: String!) {
+    pressRelease(uid: $uid) {
+        title
+        published
+        file {
+            name
+            mimeType
+            uid
+        }
+    }
+}
+
+query PressReleases {
+    pressReleases(orderBy: { published: desc }) {
+        uid
+        title
+        published
+        file {
+            uid
+        }
+    }
+}

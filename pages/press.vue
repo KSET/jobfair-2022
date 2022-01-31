@@ -74,10 +74,12 @@
           </h2>
 
           <div :class="$style.mediaReleaseContainer">
-            <div
+            <a
               v-for="item of mediaReleases"
-              :key="item.id"
+              :key="item.uid"
               :class="$style.mediaRelease"
+              :href="item.downloadLink"
+              target="_blank"
             >
               <div
                 :class="$style.mediaReleaseIcon"
@@ -86,12 +88,13 @@
               </div>
               <div :class="$style.mediaReleaseText">
                 <time
-                  :datetime="item.date.toISOString()"
+                  :datetime="item.published.toISOString()"
+                  :title="item.published.toLocaleDateString()"
                   v-text="item.formattedDate"
                 />
                 <span v-text="item.title" />
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -108,6 +111,14 @@
   import useTitle from "~/composables/useTitle";
   import TranslatedText from "~/components/TranslatedText.vue";
   import IconDownload from "~icons/ph/download-simple-light";
+  import {
+    useQuery,
+  } from "~/composables/useQuery";
+  import {
+    IPressReleasesQuery,
+    IPressReleasesQueryVariables,
+    PressReleases,
+  } from "~/graphql/schema";
 
   export default defineComponent({
     name: "PagePress",
@@ -118,38 +129,29 @@
       IconDownload,
     },
 
-    setup() {
+    async setup() {
       useTitle("press.header");
+
+      const resp = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
+        query: PressReleases,
+      })();
+
+      const releases = resp?.data?.pressReleases || [];
 
       return {
         contactEmail: ref(""),
 
-        mediaReleases: [
-          {
-            date: new Date("2020-03-27"),
-            title: "Ostajemo doma: Otkazan ovogodišnji Job Fair",
-          },
-          {
-            date: new Date("2020-03-02"),
-            title: "U pohodu na karijeru - otvorena baza životopisa za 15. Job Fair!",
-          },
-          {
-            date: new Date("2020-02-12"),
-            title: "Svi govori vode u KSET: Petnaesti Job Fair u znaku tematskih Talkova",
-          },
-          {
-            date: new Date("2020-02-03"),
-            title: "Otvorene prijave za poduzeća na petnaestom Job Fairu!",
-          },
-          {
-            date: new Date("2020-01-29"),
-            title: "Karijera započinje na FER-u - poznat datum održavanja ovogodišnjeg Job Faira!",
-          },
-        ].map((item, i) => ({
-          id: i,
-          formattedDate: `${ item.date.getDate() }. ${ item.date.getMonth() + 1 }. ${ item.date.getFullYear() }.`,
-          ...item,
-        })),
+        mediaReleases:
+          releases
+            .map((release) => ({
+              ...release,
+              published: new Date(String(release.published)),
+            }))
+            .map((release) => ({
+              ...release,
+              formattedDate: `${ release.published.getDate() }. ${ release.published.getMonth() + 1 }. ${ release.published.getFullYear() }.`,
+              downloadLink: release.file ? `/api/file/${ release.file.uid }` : "#",
+            })),
 
         pressKitItems: [
           {
@@ -361,11 +363,28 @@
       font-size: 1rem;
       width: 1rem;
       height: 1rem;
+      transition-timing-function: $transition-bounce-function;
+      transition-property: transform;
     }
 
     .mediaRelease {
       display: flex;
+      color: $fer-dark-blue;
       gap: 1rem;
+
+      &:hover {
+
+        .mediaReleaseIcon {
+          transform: translateY(10%);
+        }
+      }
+
+      &:active {
+
+        .mediaReleaseIcon {
+          transform: translateY(20%);
+        }
+      }
     }
 
     .mediaReleaseText {

@@ -32,9 +32,11 @@ const roleToPriority: Record<Role, number> = {
 export const hasAtLeastRole =
   (
     minimumRoleName: Role,
-    user: SessionUser,
+    user?: SessionUser | null,
   ): boolean =>
-    user.roles.some((role) => roleToPriority[minimumRoleName] <= roleToPriority[role])
+    user
+      ? user.roles.some((role) => roleToPriority[minimumRoleName] <= roleToPriority[role])
+      : false
 ;
 
 export const requireAuthMiddleware =

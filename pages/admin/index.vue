@@ -5,6 +5,36 @@
     </h1>
 
     <div>
+      <h2>Press</h2>
+      <ul>
+        <li>
+          <h3>Press Releases</h3>
+          <ul>
+            <li
+              v-for="pressRelease in pressReleases"
+              :key="pressRelease.uid"
+            >
+              <time
+                :datetime="pressRelease.published.toISOString()"
+                :title="pressRelease.published.toLocaleDateString()"
+                v-text="formatDate(pressRelease.published)"
+              />
+              <span v-text="pressRelease.title" />
+              <a :href="$router.resolve({ name: 'admin-press-releases-uid-edit', params: { uid: pressRelease.uid } }).href">
+                Edit
+              </a>
+            </li>
+            <li>
+              <nuxt-link :to="{ name: 'admin-press-releases-new' }">
+                New
+              </nuxt-link>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div>
       <h2>Industrije</h2>
 
       <ul>
@@ -83,7 +113,9 @@
   } from "~/composables/useQuery";
   import {
     ICompany,
+    IFile,
     IIndustry,
+    IPressRelease,
     IUser,
   } from "~/graphql/schema";
 
@@ -123,9 +155,16 @@
                              | "brandName">;
       type QIndustry = Pick<IIndustry, "name">;
       type QUser = Pick<IUser, "name" | "uid">;
+      type QPressRelease = Pick<IPressRelease,
+                                "title"
+                                  | "uid"
+                                  | "published"> & {
+        file: Pick<IFile, "uid">,
+      };
       type QueryData = {
         industries: Pick<IIndustry, "name">[],
         companies: (QCompany & { industry: QIndustry, members: QUser, })[],
+        pressReleases: QPressRelease[],
       };
       type QueryArgs = never;
       const res = await useQuery<QueryData, QueryArgs>({
@@ -146,6 +185,14 @@
                     name
                 }
             }
+            pressReleases(orderBy: { published: desc }) {
+                uid
+                title
+                published
+                file {
+                    uid
+                }
+            }
         }
         `,
       })().then((res) => res?.data);
@@ -156,7 +203,9 @@
       return {
         industries,
         companies,
+        pressReleases: (res?.pressReleases || [] as QPressRelease[]).map((item) => ({ ...item, published: new Date(String(item.published)) })),
         info,
+        formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
         async handleCategorySubmit() {
           info.industriesLoading = true;
           const resp = await industriesStore.createIndustry(info.newIndustry);

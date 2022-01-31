@@ -70,7 +70,6 @@
       return {
         translatedText,
         isEditable: computed(() => translationsStore.isEditable),
-        onInput: console.log,
       };
     },
   });

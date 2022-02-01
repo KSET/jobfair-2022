@@ -198,6 +198,7 @@ type Mutation {
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
   updateTranslation(data: TranslationCreateInput!): Translation
+  updateUser(info: UserUpdateInput!, uid: String!): UpdateProfileResponse
   validateVat(vat: String!): ValidateVatResponse!
 }
 
@@ -296,6 +297,7 @@ type Query {
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
+  user(uid: String!): User
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
@@ -478,6 +480,15 @@ enum UserScalarFieldEnum {
   phone
   uid
   updatedAt
+}
+
+input UserUpdateInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  phone: String!
+  roles: [String!] = []
 }
 
 input UserWhereInput {

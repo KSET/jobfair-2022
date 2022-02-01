@@ -80,6 +80,8 @@ label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 1em;
+  height: 1em;
   text-transform: none;
   speak: none;
   -webkit-font-smoothing: antialiased;
@@ -151,6 +153,12 @@ label {
       background-image: url("@/assets/images/util/check.svg?url");
       background-repeat: no-repeat;
       background-size: contain;
+    }
+
+    &.p-checkbox-icon {
+      &::before {
+        background-image: none;
+      }
     }
   }
 

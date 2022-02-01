@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div v-if="!notFound" :class="$style.container">
     <aside :class="$style.aside">
       <div :class="$style.avatarContainer">
         <profile-picture />
@@ -54,6 +54,9 @@
       <slot />
     </div>
   </div>
+  <app-max-width-container v-else>
+    <page-not-found />
+  </app-max-width-container>
 </template>
 
 <script lang="ts">
@@ -66,11 +69,23 @@
   import {
     useUserStore,
   } from "~/store/user";
+  import PageNotFound from "~/components/page-not-found.vue";
+  import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
 
   export default defineComponent({
     components: {
+      AppMaxWidthContainer,
       TranslatedText,
       ProfilePicture,
+      PageNotFound,
+    },
+
+    props: {
+      notFound: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
     },
 
     setup() {

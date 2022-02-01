@@ -1,8 +1,30 @@
 <template>
   <div :class="$style.pageContainer">
-    <slot />
+    <slot v-if="!notFound" />
+    <page-not-found v-else />
   </div>
 </template>
+
+<script lang="ts">
+  import {
+    defineComponent,
+  } from "vue";
+  import PageNotFound from "~/components/page-not-found.vue";
+
+  export default defineComponent({
+    components: {
+      PageNotFound,
+    },
+
+    props: {
+      notFound: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+    },
+  });
+</script>
 
 <style lang="scss" module>
   @import "assets/styles/include/all";

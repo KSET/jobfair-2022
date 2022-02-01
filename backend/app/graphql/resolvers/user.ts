@@ -176,6 +176,29 @@ export class UserProfileResolver {
       }
     }
 
+    // Check email
+    {
+      const otherEmailUser = await ctx.prisma.user.findUnique({
+        where: {
+          email: data.email,
+        },
+        select: {
+          uid: true,
+        },
+      });
+
+      if (otherEmailUser && ctx.user.uid !== otherEmailUser.uid) {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already exists",
+            },
+          ],
+        };
+      }
+    }
+
     await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,

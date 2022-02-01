@@ -157,7 +157,6 @@
   type ClassDefinition = Record<string, boolean> | string;
 
   type InputBase = {
-    value: string,
     placeholder?: string,
     loading?: boolean,
     required?: boolean,
@@ -168,6 +167,7 @@
 
   type InputText = InputBase & (
     {
+      value: string,
       type:
         "text"
         | "datetime-local"
@@ -194,6 +194,7 @@
   );
 
   type InputDropdown = InputBase & {
+    value: string | string[],
     type: "dropdown",
     options: MaybeRef<{
       label: string,
@@ -202,10 +203,12 @@
   };
 
   type InputTextarea = InputBase & {
+    value: string,
     type: "textarea",
   };
 
   type InputFile = InputBase & {
+    value: string,
     type: "file",
     accept?: MaybeRef<string | string[]>,
     fileName?: MaybeRef<string>,

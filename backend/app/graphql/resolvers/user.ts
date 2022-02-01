@@ -48,8 +48,11 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
-  transformSelect as transformSelectCompany,
+  transformSelect as transformSelectCompanies,
 } from "./company";
+import {
+  transformSelect as transformSelectRoles,
+} from "./role";
 
 @Resolver((_of) => User)
 export class UserFieldResolver {
@@ -64,40 +67,30 @@ export class UserFieldResolver {
   roles(
   @Root() user: User,
   ) {
-    return user.usersRoles?.map(({ role }) => role) || [];
+    return user.roles;
   }
 
   @FieldResolver((_type) => [ Company ])
   companies(
-    @Root() user: User,
-  ): Company[] {
-    return user.usersCompanies?.map(({ company }) => company!) || [];
+  @Root() user: User,
+  ) {
+    return user.companies;
   }
 }
 
 export const transformSelect = transformSelectFor<UserFieldResolver>({
   roles(select) {
-    select.usersRoles = {
-      include: {
-        role: {
-          select: select.roles,
-        },
-      },
+    select.roles = {
+      select: transformSelectRoles(select.roles as Record<string, unknown>),
     };
-    delete select.roles;
 
     return select;
   },
 
   companies(select) {
-    select.usersCompanies = {
-      include: {
-        company: {
-          select: transformSelectCompany(select.companies as Record<string, unknown>),
-        },
-      },
+    select.companies = {
+      select: transformSelectCompanies(select.companies as Record<string, unknown>),
     };
-    delete select.companies;
 
     return select;
   },
@@ -146,12 +139,16 @@ export class UserInfoResolver {
 export class UserProfileResolver {
   @Query(() => User, { nullable: true })
   profile(@Ctx() ctx: Context) {
-    return ctx.user;
+    return {
+      ...ctx.user,
+      roles: ctx.user?.roles.map((name) => ({ name })),
+    };
   }
 
   @Mutation(() => UpdateProfileResponse, { nullable: true })
   async updateProfile(
     @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
       @Arg("info") data: UserCreateInput,
   ): Promise<UpdateProfileResponse> {
     if (!ctx.user) {
@@ -199,7 +196,7 @@ export class UserProfileResolver {
       }
     }
 
-    await ctx.prisma.user.update({
+    const entity = await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,
       },
@@ -209,18 +206,20 @@ export class UserProfileResolver {
           "passwordRepeat",
         ])(data),
       },
-    });
+      select: toSelect(info, transformSelect),
+    }) as User;
 
     void EventsService.logEvent("profile:update", ctx.user.id);
 
     return {
-      entity: ctx.user,
+      entity,
     };
   }
 
   @Mutation(() => UpdatePasswordResponse, { nullable: true })
   async updatePassword(
     @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
       @Arg("currentPassword") currentPassword: string,
       @Arg("newPassword") newPassword: string,
       @Arg("newPasswordRepeat") newPasswordRepeat: string,
@@ -266,19 +265,20 @@ export class UserProfileResolver {
       }
     }
 
-    await ctx.prisma.user.update({
+    const entity = await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,
       },
       data: {
         password: await PasswordService.hashPassword(newPassword),
       },
-    });
+      select: toSelect(info, transformSelect),
+    }) as User;
 
     void EventsService.logEvent("profile:password:update", ctx.user.id);
 
     return {
-      entity: ctx.user,
+      entity,
     };
   }
 }

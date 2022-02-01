@@ -46,7 +46,7 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
-  transformSelect as transformSelectUser,
+  transformSelect as transformSelectMembers,
 } from "./user";
 
 @Resolver(() => Company)
@@ -58,11 +58,11 @@ export class CompanyFieldResolver {
     return company.industry;
   }
 
-  @FieldResolver((_type) => [ User ])
+  @FieldResolver((_type) => [ User ], { nullable: true })
   members(
   @Root() company: Company,
   ) {
-    return company.usersCompanies?.map((uc) => uc.user) || [];
+    return company.members;
   }
 }
 
@@ -76,14 +76,9 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
   },
 
   members(select) {
-    select.usersCompanies = {
-      select: {
-        user: {
-          select: transformSelectUser(select.members as Record<string, unknown>),
-        },
-      },
+    select.members = {
+      select: transformSelectMembers(select.members as Record<string, unknown>),
     };
-    delete select.members;
 
     return select;
   },
@@ -191,33 +186,26 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
-    const create = await ctx.prisma.userCompany.create({
+    const entity = await ctx.prisma.company.create({
       data: {
-        company: {
-          create: {
-            ...info,
-            industry: {
-              connect: {
-                id: industry.id,
-              },
-            },
+        ...info,
+        industry: {
+          connect: {
+            id: industry.id,
           },
         },
-        user: {
+        members: {
           connect: {
             id: ctx.user.id,
           },
         },
       },
-      select: {
-        company: true,
-      },
     });
 
-    void EventsService.logEvent("company:register", ctx.user.id, { vat: create.company.vat });
+    void EventsService.logEvent("company:register", ctx.user.id, { vat: entity.vat });
 
     return {
-      entity: create.company,
+      entity,
     };
   }
 

@@ -34,24 +34,12 @@ export default (app: Router) => {
         id: session.userId,
       },
       include: {
-        usersRoles: {
+        roles: {
           select: {
-            role: {
-              select: {
-                name: true,
-              },
-            },
+            name: true,
           },
         },
-        usersCompanies: {
-          select: {
-            company: {
-              include: {
-                industry: true,
-              },
-            },
-          },
-        },
+        companies: true,
       },
     });
 
@@ -59,14 +47,11 @@ export default (app: Router) => {
       return end();
     }
 
-    const roles = user.usersRoles.map(({ role }) => role.name as Role);
-
-    const companies = user.usersCompanies.map(({ company }) => company);
+    const roles = user.roles.map(({ name }) => name as Role);
 
     req.user = {
       ...user,
       roles,
-      companies,
     };
 
     return end();

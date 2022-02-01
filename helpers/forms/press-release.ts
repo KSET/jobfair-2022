@@ -1,4 +1,5 @@
 import {
+  IFile,
   IPressRelease,
 } from "~/graphql/schema";
 import {
@@ -6,9 +7,17 @@ import {
 } from "~/components/util/form/app-formgroup.vue";
 
 type PressRelease = Omit<IPressRelease,
-  "createdAt"
-  | "uid"
-  | "updatedAt">;
+    "createdAt"
+    | "uid"
+    | "file"
+    | "updatedAt">
+  & {
+  file: Pick<IFile,
+    "uid"
+    | "name"
+    | "mimeType">,
+}
+  ;
 export const pressReleaseCreate =
   <T extends PressRelease>(pressRelease?: T | null): Record<keyof PressRelease | "file", InputEntry> =>
     ({

@@ -16,14 +16,14 @@ type Company {
   descriptionHr: String!
   industry: Industry
   legalName: String!
-  members: [User!]!
+  members: [User!]
   uid: String!
   vat: String!
   website: String!
 }
 
 type CompanyCount {
-  usersCompanies: Int!
+  members: Int!
 }
 
 input CompanyOrderByWithRelationInput {
@@ -293,6 +293,7 @@ type Query {
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
+  roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
@@ -311,7 +312,29 @@ type Role {
 }
 
 type RoleCount {
-  usersRoles: Int!
+  users: Int!
+}
+
+input RoleOrderByWithRelationInput {
+  name: SortOrder
+}
+
+enum RoleScalarFieldEnum {
+  createdAt
+  id
+  name
+  updatedAt
+}
+
+input RoleWhereInput {
+  AND: [RoleWhereInput!]
+  NOT: [RoleWhereInput!]
+  OR: [RoleWhereInput!]
+  name: StringFilter
+}
+
+input RoleWhereUniqueInput {
+  name: String
 }
 
 enum SortOrder {
@@ -408,11 +431,11 @@ type User {
 }
 
 type UserCount {
+  companies: Int!
   events: Int!
   files: Int!
   pressReleases: Int!
-  usersCompanies: Int!
-  usersRoles: Int!
+  roles: Int!
 }
 
 input UserCreateInput {

@@ -20,7 +20,7 @@ export class EventsService {
 
       return prisma.eventLog.create({
         data,
-      });
+      }).then((x) => x);
     } catch {
       return null;
     }

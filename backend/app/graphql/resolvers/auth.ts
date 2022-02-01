@@ -54,6 +54,7 @@ export class AuthResolver {
     const user = await AuthService.authenticateUser(identifier, password);
 
     if (!user) {
+      void EventsService.logEvent("user:login:attempt", null, { identifier });
       return {
         errors: [
           {

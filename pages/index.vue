@@ -5,14 +5,11 @@
       <div :class="$style.heroImage" />
       <div :class="$style.heroContent">
         <h3 :class="$style.heroContentSupertitle">
-          19. - 23.10. | FER, Zagreb
+          <translated-text trans-key="index.hero.date" />
         </h3>
         <h1 :class="$style.heroContentTitle">
-          JobFair
+          <translated-text trans-key="index.hero.title" />
         </h1>
-        <h2 :class="$style.heroContentSubtitle">
-          Meetup
-        </h2>
         <nuxt-link
           v-if="!isLoggedIn"
           :to="joinNowRoute"

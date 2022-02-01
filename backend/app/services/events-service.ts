@@ -3,18 +3,23 @@ import {
 } from "../providers/prisma";
 
 export class EventsService {
-  public static logEvent(name: string, userId?: number, data?: unknown) {
+  public static logEvent(name: string, userId?: number | null, payload?: unknown) {
     try {
-      return prisma.eventLog.create({
-        data: {
-          name,
-          user: {
-            connect: {
-              id: userId,
-            },
+      const data = {
+        name,
+        data: payload !== undefined ? JSON.stringify(payload) : payload,
+      };
+
+      if (userId) {
+        (data as Record<string, unknown>).user = {
+          connect: {
+            id: userId,
           },
-          data: data !== undefined ? JSON.stringify(data) : data,
-        },
+        };
+      }
+
+      return prisma.eventLog.create({
+        data,
       });
     } catch {
       return null;

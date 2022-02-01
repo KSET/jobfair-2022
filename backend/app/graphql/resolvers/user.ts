@@ -230,7 +230,7 @@ export class UserProfileResolver {
           "passwordRepeat",
         ])(data),
       },
-      select: toSelect(info, transformSelect),
+      select: transformSelect(toSelect(info, (x) => x).entity as Record<string, unknown> || { uid: true }),
     }) as User;
 
     void EventsService.logEvent("profile:update", ctx.user.id);
@@ -296,7 +296,7 @@ export class UserProfileResolver {
       data: {
         password: await PasswordService.hashPassword(newPassword),
       },
-      select: toSelect(info, transformSelect),
+      select: transformSelect(toSelect(info, (x) => x).entity as Record<string, unknown> || { uid: true }),
     }) as User;
 
     void EventsService.logEvent("profile:password:update", ctx.user.id);

@@ -9,8 +9,10 @@ import {
   Arg,
   Args,
   Ctx,
+  Field,
   FieldResolver,
   Info,
+  InputType,
   Mutation,
   ObjectType,
   Query,
@@ -48,8 +50,11 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
-  transformSelect as transformSelectCompany,
+  transformSelect as transformSelectCompanies,
 } from "./company";
+import {
+  transformSelect as transformSelectRoles,
+} from "./role";
 
 @Resolver((_of) => User)
 export class UserFieldResolver {
@@ -64,40 +69,30 @@ export class UserFieldResolver {
   roles(
   @Root() user: User,
   ) {
-    return user.usersRoles?.map(({ role }) => role) || [];
+    return user.roles;
   }
 
   @FieldResolver((_type) => [ Company ])
   companies(
-    @Root() user: User,
-  ): Company[] {
-    return user.usersCompanies?.map(({ company }) => company!) || [];
+  @Root() user: User,
+  ) {
+    return user.companies;
   }
 }
 
 export const transformSelect = transformSelectFor<UserFieldResolver>({
   roles(select) {
-    select.usersRoles = {
-      include: {
-        role: {
-          select: select.roles,
-        },
-      },
+    select.roles = {
+      select: transformSelectRoles(select.roles as Record<string, unknown>),
     };
-    delete select.roles;
 
     return select;
   },
 
   companies(select) {
-    select.usersCompanies = {
-      include: {
-        company: {
-          select: transformSelectCompany(select.companies as Record<string, unknown>),
-        },
-      },
+    select.companies = {
+      select: transformSelectCompanies(select.companies as Record<string, unknown>),
     };
-    delete select.companies;
 
     return select;
   },
@@ -140,18 +135,44 @@ export class UserInfoResolver {
       select: toSelect(info, transformSelect),
     });
   }
+
+  @Query((_type) => User, { nullable: true })
+  user(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+    @Arg("uid") uid: string,
+  ) {
+    if (!ctx.user) {
+      return null;
+    }
+
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return null;
+    }
+
+    return ctx.prisma.user.findUnique({
+      where: {
+        uid,
+      },
+      select: toSelect(info, transformSelect),
+    }) as Promise<User | null>;
+  }
 }
 
 @Resolver((_of) => User)
 export class UserProfileResolver {
   @Query(() => User, { nullable: true })
   profile(@Ctx() ctx: Context) {
-    return ctx.user;
+    return {
+      ...ctx.user,
+      roles: ctx.user?.roles.map((name) => ({ name })),
+    };
   }
 
   @Mutation(() => UpdateProfileResponse, { nullable: true })
   async updateProfile(
     @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
       @Arg("info") data: UserCreateInput,
   ): Promise<UpdateProfileResponse> {
     if (!ctx.user) {
@@ -199,7 +220,7 @@ export class UserProfileResolver {
       }
     }
 
-    await ctx.prisma.user.update({
+    const entity = await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,
       },
@@ -209,18 +230,20 @@ export class UserProfileResolver {
           "passwordRepeat",
         ])(data),
       },
-    });
+      select: toSelect(info, transformSelect),
+    }) as User;
 
     void EventsService.logEvent("profile:update", ctx.user.id);
 
     return {
-      entity: ctx.user,
+      entity,
     };
   }
 
   @Mutation(() => UpdatePasswordResponse, { nullable: true })
   async updatePassword(
     @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
       @Arg("currentPassword") currentPassword: string,
       @Arg("newPassword") newPassword: string,
       @Arg("newPasswordRepeat") newPasswordRepeat: string,
@@ -266,19 +289,127 @@ export class UserProfileResolver {
       }
     }
 
-    await ctx.prisma.user.update({
+    const entity = await ctx.prisma.user.update({
       where: {
         id: ctx.user.id,
       },
       data: {
         password: await PasswordService.hashPassword(newPassword),
       },
-    });
+      select: toSelect(info, transformSelect),
+    }) as User;
 
     void EventsService.logEvent("profile:password:update", ctx.user.id);
 
     return {
-      entity: ctx.user,
+      entity,
+    };
+  }
+}
+
+@InputType()
+class UserUpdateInput extends UserCreateInput {
+  @Field(() => [ String ])
+    roles: string[] = [];
+}
+
+@Resolver((_of) => User)
+export class UserEditResolver {
+  @Mutation(() => UpdateProfileResponse, { nullable: true })
+  async updateUser(
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+      @Arg("uid") uid: string,
+      @Arg("info") data: UserUpdateInput,
+  ): Promise<UpdateProfileResponse | null> {
+    if (!ctx.user) {
+      return null;
+    }
+
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return null;
+    }
+
+    // Validate data
+    {
+      const { errors } = await ProfileValidation(data);
+
+      if (errors.length) {
+        return {
+          errors,
+        };
+      }
+    }
+
+    // Check email
+    {
+      const otherEmailUser = await ctx.prisma.user.findUnique({
+        where: {
+          email: data.email,
+        },
+        select: {
+          uid: true,
+        },
+      });
+
+      if (otherEmailUser && uid !== otherEmailUser.uid) {
+        return {
+          errors: [
+            {
+              field: "email",
+              message: "Email already exists",
+            },
+          ],
+        };
+      }
+    }
+
+    const oldUser = await ctx.prisma.user.findUnique({
+      where: {
+        uid,
+      },
+      select: {
+        roles: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!oldUser) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "User does not exist",
+          },
+        ],
+      };
+    }
+
+    const entity = await ctx.prisma.user.update({
+      where: {
+        uid,
+      },
+      data: {
+        ...omit([
+          "password",
+          "passwordRepeat",
+          "roles",
+        ])(data),
+        roles: {
+          disconnect: oldUser.roles,
+          connect: data.roles.map((name) => ({ name })),
+        },
+      },
+      select: transformSelect(toSelect(info, (x) => x).entity as Record<string, unknown> || { uid: true }),
+    }) as User;
+
+    void EventsService.logEvent("user:update", ctx.user.id, { uid });
+
+    return {
+      entity,
     };
   }
 }

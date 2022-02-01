@@ -82,9 +82,35 @@
             <li
               v-for="member in company.members"
               :key="member.uid"
-              v-text="member.name"
-            />
+            >
+              <span v-text="member.name" />
+              -
+              <em v-text="member.email" />
+              &nbsp;
+              <nuxt-link :to="{ name: 'admin-user-uid-edit', params: { uid: member.uid } }">
+                Edit
+              </nuxt-link>
+            </li>
           </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Korisnici</h2>
+
+      <ul>
+        <li
+          v-for="user in users"
+          :key="user.uid"
+        >
+          <span v-text="user.name" />
+          -
+          <em v-text="user.email" />
+          &nbsp;
+          <nuxt-link :to="{ name: 'admin-user-uid-edit', params: { uid: user.uid } }">
+            Edit
+          </nuxt-link>
         </li>
       </ul>
     </div>
@@ -154,17 +180,21 @@
                              | "legalName"
                              | "brandName">;
       type QIndustry = Pick<IIndustry, "name">;
-      type QUser = Pick<IUser, "name" | "uid">;
       type QPressRelease = Pick<IPressRelease,
                                 "title"
                                   | "uid"
                                   | "published"> & {
         file: Pick<IFile, "uid">,
       };
+      type QUser = Pick<IUser,
+                        "uid"
+                          | "name"
+                          | "email">;
       type QueryData = {
         industries: Pick<IIndustry, "name">[],
         companies: (QCompany & { industry: QIndustry, members: QUser, })[],
         pressReleases: QPressRelease[],
+        users: QUser[],
       };
       type QueryArgs = never;
       const res = await useQuery<QueryData, QueryArgs>({
@@ -183,6 +213,7 @@
                 members {
                     uid
                     name
+                    email
                 }
             }
             pressReleases(orderBy: { published: desc }) {
@@ -192,6 +223,11 @@
                 file {
                     uid
                 }
+            }
+            users {
+                uid
+                name
+                email
             }
         }
         `,
@@ -203,6 +239,7 @@
       return {
         industries,
         companies,
+        users: res?.users || [],
         pressReleases: (res?.pressReleases || [] as QPressRelease[]).map((item) => ({ ...item, published: new Date(String(item.published)) })),
         info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,

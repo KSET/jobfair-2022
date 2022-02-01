@@ -49,6 +49,19 @@ mutation UpdateProfile($info: UserCreateInput!) {
     }
 }
 
+mutation UpdateUser($uid: String!, $info: UserUpdateInput!) {
+    updateUser(uid: $uid, info: $info) {
+        errors {
+            field
+            message
+        }
+
+        entity {
+            uid
+        }
+    }
+}
+
 mutation UpdatePassword($currentPassword: String!, $newPassword: String!, $newPasswordRepeat: String!) {
     updatePassword(currentPassword: $currentPassword, newPassword: $newPassword, newPasswordRepeat: $newPasswordRepeat) {
         errors {

@@ -16,24 +16,25 @@ datasource db {
 
 model User {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id             Int           @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   /// @TypeGraphQL.omit(input: true)
-  uid            String        @unique @default(cuid())
-  email          String        @unique
-  firstName      String
-  lastName       String
-  phone          String
-  /// @TypeGraphQL.omit(output: true, input: true)
-  usersRoles     UserRole[]
-  /// @TypeGraphQL.omit(output: true, input: true)
-  usersCompanies UserCompany[]
+  uid       String   @unique @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  phone     String
+  /// @TypeGraphQL.omit(input: true)
+  roles     Role[]
   /// @TypeGraphQL.omit(output: true)
-  password       String
+  password  String
   /// @TypeGraphQL.omit(input: true)
-  createdAt      DateTime      @default(now())
+  createdAt DateTime @default(now())
   /// @TypeGraphQL.omit(input: true)
-  updatedAt      DateTime      @updatedAt
+  updatedAt DateTime @updatedAt
 
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  companies     Company[]
   /// @TypeGraphQL.omit(output: true, input: true)
   events        EventLog[]
   /// @TypeGraphQL.omit(output: true, input: true)
@@ -57,42 +58,34 @@ model Translation {
 
 model Role {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id         Int        @id @default(autoincrement())
-  name       String     @unique
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
   /// @TypeGraphQL.omit(input: true)
-  createdAt  DateTime   @default(now())
+  createdAt DateTime @default(now())
   /// @TypeGraphQL.omit(input: true)
-  updatedAt  DateTime   @updatedAt
+  updatedAt DateTime @updatedAt
+
   /// @TypeGraphQL.omit(output: true, input: true)
-  usersRoles UserRole[]
-}
-
-model UserRole {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-
-  @@id([userId, roleId])
-  @@index([roleId])
+  users User[]
 }
 
 model Company {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id             Int           @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   /// @TypeGraphQL.omit(input: true)
-  uid            String        @unique @default(cuid())
-  vat            String        @unique
-  legalName      String
-  brandName      String
-  address        String
-  website        String
+  uid           String   @unique @default(cuid())
+  vat           String   @unique
+  legalName     String
+  brandName     String
+  address       String
+  website       String
   /// @TypeGraphQL.omit(input: true)
-  industry       Industry      @relation(fields: [industryId], references: [id])
-  descriptionEn  String
-  descriptionHr  String
+  industry      Industry @relation(fields: [industryId], references: [id])
+  descriptionEn String
+  descriptionHr String
+
   /// @TypeGraphQL.omit(output: true, input: true)
-  usersCompanies UserCompany[]
+  members User[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   industryId Int
@@ -104,17 +97,6 @@ model Industry {
   name    String    @unique
   /// @TypeGraphQL.omit(output: true, input: true)
   company Company[]
-}
-
-model UserCompany {
-  user    User    @relation(fields: [userId], references: [id])
-  company Company @relation(fields: [companyId], references: [id])
-
-  userId    Int
-  companyId Int
-
-  @@id([userId, companyId])
-  @@index([companyId])
 }
 
 model EventLog {

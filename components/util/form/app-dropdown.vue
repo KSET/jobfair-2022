@@ -25,9 +25,10 @@
         />
       </slot>
     </label>
-    <p-dropdown
-      :id="id.input"
+    <p-multi-select
+      v-if="isMultiple"
       v-model="input"
+      :input-id="id.input"
       :aria-describedby="elseNull(visible.message, id.message)"
       :aria-errormessage="elseNull(visible.label && invalid, id.label)"
       :aria-invalid="orNull(invalid)"
@@ -39,7 +40,30 @@
         [$style.invalid]: invalid,
       }"
       :disabled="disabled"
-      :filter="filter"
+      :filter="!noFilter"
+      :name="name"
+      :options="options"
+      :placeholder="orNull(placeholder)"
+      :required="required"
+      option-label="label"
+      option-value="value"
+    />
+    <p-dropdown
+      v-else
+      v-model="input"
+      :input-id="id.input"
+      :aria-describedby="elseNull(visible.message, id.message)"
+      :aria-errormessage="elseNull(visible.label && invalid, id.label)"
+      :aria-invalid="orNull(invalid)"
+      :aria-label="orNull(label || labelTranslated)"
+      :aria-labelledby="elseNull(visible.label, id.label)"
+      :aria-required="orNull(required)"
+      :class="{
+        [$style.input]: true,
+        [$style.invalid]: invalid,
+      }"
+      :disabled="disabled"
+      :filter="!noFilter"
       :name="name"
       :options="options"
       :placeholder="orNull(placeholder)"
@@ -64,12 +88,12 @@
 <script lang="ts">
   import {
     computed,
+    defineAsyncComponent,
     defineComponent,
     reactive,
     ref,
     unref,
   } from "vue";
-  import Dropdown from "primevue/dropdown";
   import useModelWrapper from "~/composables/useModelWrapper";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -77,13 +101,14 @@
   export default defineComponent({
     components: {
       TranslatedText,
-      PDropdown: Dropdown,
+      PDropdown: defineAsyncComponent(() => import("primevue/dropdown")),
+      PMultiSelect: defineAsyncComponent(() => import("primevue/multiselect")),
     },
 
     props: {
       modelValue: {
         required: false,
-        type: [ String, Number ],
+        type: [ String, Array ],
         default: () => "",
       },
 
@@ -134,10 +159,16 @@
         default: () => "",
       },
 
-      filter: {
+      noFilter: {
         required: false,
         type: Boolean,
-        default: () => true,
+        default: () => false,
+      },
+
+      multiple: {
+        required: false,
+        type: Boolean,
+        default: () => false,
       },
 
       options: {
@@ -178,6 +209,7 @@
         labelTranslated: ref(""),
         elseNull,
         orNull,
+        isMultiple: computed(() => props.multiple || Array.isArray(props.modelValue)),
       };
     },
   });

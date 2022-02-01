@@ -51,16 +51,25 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 
-export const transformSelect = transformSelectFor({
+@Resolver((_of) => PressRelease)
+export class PressReleaseFieldResolver {
+  @FieldResolver((_type) => File, { nullable: true })
+  file(
+  @Root() pressRelease: PressRelease,
+  ) {
+    return pressRelease.file;
+  }
+}
+
+export const transformSelect = transformSelectFor<PressReleaseFieldResolver>({
   file(select) {
-    (select as Record<string, unknown>).file = {
+    select.file = {
       select: select.file,
     };
 
     return select;
   },
 });
-
 
 @ObjectType()
 class CreatePressReleaseResponse extends ValidationResponseFor(PressRelease) {
@@ -88,16 +97,6 @@ class PressReleaseWhereUniqueInput {
 class PressReleaseFindManyArgs extends FindManyPressReleaseArgs {
   @Field(() => PressReleaseWhereUniqueInput, { nullable: true })
     cursor?: PressReleaseWhereUniqueInput;
-}
-
-@Resolver((_of) => PressRelease)
-export class PressReleaseFieldResolver {
-  @FieldResolver((_type) => File, { nullable: true })
-  file(
-  @Root() pressRelease: PressRelease,
-  ) {
-    return pressRelease.file;
-  }
 }
 
 const canViewRelease =

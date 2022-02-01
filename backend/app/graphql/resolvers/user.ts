@@ -1,7 +1,6 @@
 import {
   User,
   Company,
-  applyModelsEnhanceMap,
   FindManyUserArgs,
   Role as QRole,
   UserCreateInput,
@@ -52,54 +51,6 @@ import {
   transformSelect as transformSelectCompany,
 } from "./company";
 
-applyModelsEnhanceMap({
-  User: {},
-});
-
-export const transformSelect = transformSelectFor({
-  roles(select) {
-    (select as Record<string, unknown>).usersRoles = {
-      include: {
-        role: {
-          select: select.roles,
-        },
-      },
-    };
-    delete select.roles;
-
-    return select;
-  },
-
-  companies(select) {
-    (select as Record<string, unknown>).usersCompanies = {
-      include: {
-        company: {
-          select: transformSelectCompany(select.companies as Record<string, unknown>),
-        },
-      },
-    };
-    delete select.companies;
-
-    return select;
-  },
-
-  name(select) {
-    (select as Record<string, unknown>).firstName = true;
-    (select as Record<string, unknown>).lastName = true;
-    delete select.name;
-
-    return select;
-  },
-});
-
-@ObjectType()
-class UpdateProfileResponse extends ValidationResponseFor(User) {
-}
-
-@ObjectType()
-class UpdatePasswordResponse extends ValidationResponseFor(User) {
-}
-
 @Resolver((_of) => User)
 export class UserFieldResolver {
   @FieldResolver((_type) => String)
@@ -122,6 +73,50 @@ export class UserFieldResolver {
   ): Company[] {
     return user.usersCompanies?.map(({ company }) => company!) || [];
   }
+}
+
+export const transformSelect = transformSelectFor<UserFieldResolver>({
+  roles(select) {
+    select.usersRoles = {
+      include: {
+        role: {
+          select: select.roles,
+        },
+      },
+    };
+    delete select.roles;
+
+    return select;
+  },
+
+  companies(select) {
+    select.usersCompanies = {
+      include: {
+        company: {
+          select: transformSelectCompany(select.companies as Record<string, unknown>),
+        },
+      },
+    };
+    delete select.companies;
+
+    return select;
+  },
+
+  name(select) {
+    select.firstName = true;
+    select.lastName = true;
+    delete select.name;
+
+    return select;
+  },
+});
+
+@ObjectType()
+class UpdateProfileResponse extends ValidationResponseFor(User) {
+}
+
+@ObjectType()
+class UpdatePasswordResponse extends ValidationResponseFor(User) {
 }
 
 @Resolver((_of) => User)

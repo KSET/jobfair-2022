@@ -49,9 +49,26 @@ import {
   transformSelect as transformSelectUser,
 } from "./user";
 
-export const transformSelect = transformSelectFor({
+@Resolver(() => Company)
+export class CompanyFieldResolver {
+  @FieldResolver((_type) => Industry, { nullable: true })
+  industry(
+  @Root() company: Company,
+  ) {
+    return company.industry;
+  }
+
+  @FieldResolver((_type) => [ User ])
+  members(
+  @Root() company: Company,
+  ) {
+    return company.usersCompanies?.map((uc) => uc.user) || [];
+  }
+}
+
+export const transformSelect = transformSelectFor<CompanyFieldResolver>({
   industry(select) {
-    (select as Record<string, unknown>).industry = {
+    select.industry = {
       select: select.industry,
     };
 
@@ -59,7 +76,7 @@ export const transformSelect = transformSelectFor({
   },
 
   members(select) {
-    (select as Record<string, unknown>).usersCompanies = {
+    select.usersCompanies = {
       select: {
         user: {
           select: transformSelectUser(select.members as Record<string, unknown>),
@@ -101,23 +118,6 @@ class ValidateVatResponse {
 
 @ObjectType()
 class CreateCompanyResponse extends ValidationResponseFor(Company) {
-}
-
-@Resolver(() => Company)
-export class CompanyFieldResolver {
-  @FieldResolver((_type) => Industry, { nullable: true })
-  industry(
-  @Root() company: Company,
-  ) {
-    return company.industry;
-  }
-
-  @FieldResolver((_type) => [ User ])
-  members(
-  @Root() company: Company,
-  ) {
-    return company.usersCompanies?.map((uc) => uc.user) || [];
-  }
 }
 
 @Resolver(() => Company)

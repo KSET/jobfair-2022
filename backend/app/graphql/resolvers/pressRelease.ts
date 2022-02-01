@@ -26,10 +26,6 @@ import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
-  keys,
-  reduce,
-} from "rambdax";
-import {
   Context,
   SessionUser,
 } from "../../types/apollo-context";
@@ -52,9 +48,10 @@ import {
 } from "../../services/events-service";
 import {
   toSelect,
+  transformSelectFor,
 } from "../helpers/resolver";
 
-const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
+export const transformSelect = transformSelectFor({
   file(select) {
     (select as Record<string, unknown>).file = {
       select: select.file,
@@ -62,15 +59,7 @@ const selectTransform: Record<string, <T extends Record<string, unknown>>(select
 
     return select;
   },
-};
-
-export const transformSelect = <T extends Record<string, unknown>>(select: T): T => reduce(
-  (acc, key) =>
-    selectTransform[key as string]?.(acc) ?? acc
-  ,
-  select,
-  keys(select),
-);
+});
 
 
 @ObjectType()

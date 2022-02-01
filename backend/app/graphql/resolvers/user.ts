@@ -22,9 +22,7 @@ import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
-  keys,
   omit,
-  reduce,
 } from "rambdax";
 import {
   Context,
@@ -48,6 +46,7 @@ import {
 } from "../../helpers/auth";
 import {
   toSelect,
+  transformSelectFor,
 } from "../helpers/resolver";
 import {
   transformSelect as transformSelectCompany,
@@ -57,7 +56,7 @@ applyModelsEnhanceMap({
   User: {},
 });
 
-const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
+export const transformSelect = transformSelectFor({
   roles(select) {
     (select as Record<string, unknown>).usersRoles = {
       include: {
@@ -91,15 +90,7 @@ const selectTransform: Record<string, <T extends Record<string, unknown>>(select
 
     return select;
   },
-};
-
-export const transformSelect = <T extends Record<string, unknown>>(select: T): T => reduce(
-  (acc, key) =>
-    selectTransform[key as string]?.(acc) ?? acc
-  ,
-  select,
-  keys(select),
-);
+});
 
 @ObjectType()
 class UpdateProfileResponse extends ValidationResponseFor(User) {

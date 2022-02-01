@@ -20,10 +20,6 @@ import {
   Industry,
 } from "@generated/type-graphql";
 import {
-  keys,
-  reduce,
-} from "rambdax";
-import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
@@ -47,12 +43,13 @@ import {
 } from "../../helpers/auth";
 import {
   toSelect,
+  transformSelectFor,
 } from "../helpers/resolver";
 import {
   transformSelect as transformSelectUser,
 } from "./user";
 
-const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
+export const transformSelect = transformSelectFor({
   industry(select) {
     (select as Record<string, unknown>).industry = {
       select: select.industry,
@@ -73,15 +70,7 @@ const selectTransform: Record<string, <T extends Record<string, unknown>>(select
 
     return select;
   },
-};
-
-export const transformSelect = <T extends Record<string, unknown>>(select: T): T => reduce(
-  (acc, key) =>
-    selectTransform[key as string]?.(acc) ?? acc
-  ,
-  select,
-  keys(select),
-);
+});
 
 @InputType()
 class CreateCompanyInput extends CompanyCreateInput {

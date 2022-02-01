@@ -3,7 +3,7 @@ import {
   Company,
   applyModelsEnhanceMap,
   FindManyUserArgs,
-  Role,
+  Role as QRole,
   UserCreateInput,
 } from "@generated/type-graphql";
 import {
@@ -46,6 +46,10 @@ import {
 import {
   EventsService,
 } from "../../services/events-service";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../../helpers/auth";
 import {
   transformSelect as transformSelectCompany,
 } from "./company";
@@ -115,7 +119,7 @@ export class UserFieldResolver {
     return `${ user.firstName } ${ user.lastName }`;
   }
 
-  @FieldResolver((_type) => [ Role ])
+  @FieldResolver((_type) => [ QRole ])
   roles(
   @Root() user: User,
   ) {
@@ -133,7 +137,7 @@ export class UserFieldResolver {
 @Resolver((_of) => User)
 export class UserInfoResolver {
   @Query((_type) => [ User ])
-  async users(
+  users(
   @Ctx() ctx: Context,
     @Info() info: GraphQLResolveInfo,
     @Args() args: FindManyUserArgs,
@@ -142,10 +146,14 @@ export class UserInfoResolver {
       return [];
     }
 
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return [];
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const select = transformSelect(transformFields(graphqlFields(info)));
 
-    return await ctx.prisma.user.findMany({
+    return ctx.prisma.user.findMany({
       ...args,
       select,
     });

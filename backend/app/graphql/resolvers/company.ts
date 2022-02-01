@@ -23,10 +23,6 @@ import {
   keys,
   reduce,
 } from "rambdax";
-import graphqlFields from "graphql-fields";
-import {
-  transformFields,
-} from "@generated/type-graphql/helpers";
 import {
   GraphQLResolveInfo,
 } from "graphql";
@@ -49,6 +45,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import {
+  toSelect,
+} from "../helpers/resolver";
 import {
   transformSelect as transformSelectUser,
 } from "./user";
@@ -317,12 +316,9 @@ export class CompanyListResolver {
       return [];
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformSelect(transformFields(graphqlFields(info)));
-
     return ctx.prisma.company.findMany({
       ...args,
-      select,
+      select: toSelect(info, transformSelect),
     });
   }
 
@@ -336,15 +332,12 @@ export class CompanyListResolver {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformSelect(transformFields(graphqlFields(info)));
-
     return ctx.prisma.company.findUnique({
       where: {
         vat,
       },
 
-      select,
+      select: toSelect(info, transformSelect),
     });
   }
 }

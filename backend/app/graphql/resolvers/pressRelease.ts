@@ -19,16 +19,12 @@ import {
   FindManyPressReleaseArgs,
 } from "@generated/type-graphql";
 import {
-  transformFields,
-} from "@generated/type-graphql/helpers";
-import {
   FileUpload,
   GraphQLUpload,
 } from "graphql-upload";
 import {
   GraphQLResolveInfo,
 } from "graphql";
-import graphqlFields from "graphql-fields";
 import {
   keys,
   reduce,
@@ -54,6 +50,9 @@ import {
 import {
   EventsService,
 } from "../../services/events-service";
+import {
+  toSelect,
+} from "../helpers/resolver";
 
 const selectTransform: Record<string, <T extends Record<string, unknown>>(select: T) => T> = {
   file(select) {
@@ -126,12 +125,9 @@ export class PressReleaseFindResolver {
       @Info() info: GraphQLResolveInfo,
       @Args() args: PressReleaseFindManyArgs,
   ): Promise<PressRelease[]> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformSelect(transformFields(graphqlFields(info)));
-
     const releases = await ctx.prisma.pressRelease.findMany({
       ...args,
-      select,
+      select: toSelect(info, transformSelect),
     }) as PressRelease[];
 
     const canView = canViewRelease(ctx.user);
@@ -145,15 +141,12 @@ export class PressReleaseFindResolver {
       @Info() info: GraphQLResolveInfo,
       @Arg("uid") uid: string,
   ): Promise<PressRelease | null> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformSelect(transformFields(graphqlFields(info)));
-
     const release = await ctx.prisma.pressRelease.findUnique({
       where: {
         uid,
       },
       select: {
-        ...select,
+        ...toSelect(info, transformSelect),
         published: true,
       },
     }) as PressRelease | null;

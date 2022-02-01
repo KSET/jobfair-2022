@@ -7,9 +7,6 @@ import {
   UserCreateInput,
 } from "@generated/type-graphql";
 import {
-  transformFields,
-} from "@generated/type-graphql/helpers";
-import {
   Arg,
   Args,
   Ctx,
@@ -24,7 +21,6 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
-import graphqlFields from "graphql-fields";
 import {
   keys,
   omit,
@@ -50,6 +46,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import {
+  toSelect,
+} from "../helpers/resolver";
 import {
   transformSelect as transformSelectCompany,
 } from "./company";
@@ -150,12 +149,9 @@ export class UserInfoResolver {
       return [];
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const select = transformSelect(transformFields(graphqlFields(info)));
-
     return ctx.prisma.user.findMany({
       ...args,
-      select,
+      select: toSelect(info, transformSelect),
     });
   }
 }

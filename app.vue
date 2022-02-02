@@ -41,8 +41,8 @@
     <client-only>
       <p-dialog
         :class="$style.translationsLoading"
-        modal
         :visible="isTranslationsLoading"
+        modal
       >
         <icon-globe
           :class="$style.translationsLoadingSpinner"
@@ -201,9 +201,12 @@
     }
 
     .translationsLoadingSpinner {
+      $shadow: 2px;
+
       width: 100%;
       height: 100%;
-      transform: rotate(90deg);
+      padding: calc(2 * #{$shadow});
+      filter: invert(1) drop-shadow(0 0 #{$shadow} black);
     }
   }
 </style>

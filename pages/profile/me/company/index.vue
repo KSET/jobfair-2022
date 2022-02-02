@@ -43,12 +43,9 @@
 
 <script lang="ts">
   import {
-    computed,
     defineComponent,
-    onBeforeMount,
     reactive,
     ref,
-    unref,
     useCssModule,
   } from "vue";
   import {
@@ -60,14 +57,14 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import {
+    gql,
+  } from "@urql/core";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
     useUserStore,
   } from "~/store/user";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
-  import {
-    useIndustriesStore,
-  } from "~/store/industries";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     useCompanyStore,
@@ -76,6 +73,13 @@
     companyCreate,
   } from "~/helpers/forms/company";
   import useTitle from "~/composables/useTitle";
+  import {
+    useQuery,
+  } from "~/composables/useQuery";
+  import {
+    ICompany,
+    IIndustry,
+  } from "~/graphql/schema";
 
   export default defineComponent({
     name: "PageProfileCompanyHome",
@@ -86,27 +90,54 @@
       AppUserProfileContainer,
     },
 
-    setup() {
+    async setup() {
       useTitle("profile.about-company");
 
       const $style = useCssModule();
       const toast = useToast();
       const userStore = useUserStore();
-      const industriesStore = useIndustriesStore();
       const companyStore = useCompanyStore();
 
       const isLoading = ref(false);
 
-      const industriesOptions = computed(() => industriesStore.industries.map((x) => ({ label: x, value: x })));
-      const company = computed(() => userStore.user!.companies[0]);
+      const { vat } = userStore.user!.companies[0];
 
-      onBeforeMount(async () => {
-        isLoading.value = true;
-        await industriesStore.fetchIndustries();
-        isLoading.value = false;
-      });
+      type QData = {
+        industries: Pick<IIndustry, "name">[],
+        company: ICompany,
+      };
+      type QArgs = {
+        vat: string,
+      };
+      const resp = await useQuery<QData, QArgs>({
+        query: gql`
+            query Company($vat: String!) {
+                industries {
+                    name
+                }
+                company(vat: $vat) {
+                    uid
+                    legalName
+                    brandName
+                    descriptionEn
+                    descriptionHr
+                    address
+                    vat
+                    website
+                    industry {
+                        name
+                    }
+                }
+            }
+        `,
+        variables: {
+          vat,
+        },
+      })();
 
-      const info_ = companyCreate(unref(company))(industriesOptions);
+      const industries = (resp?.data?.industries || []).map((x) => ({ label: x.name, value: x.name }));
+
+      const info_ = companyCreate(resp?.data?.company)(industries);
       const info = reactive({
         ...info_,
         industry: {
@@ -128,7 +159,6 @@
 
       return {
         isLoading,
-        company,
         info,
         errors,
         async handleUpdate() {
@@ -140,7 +170,6 @@
           )(info);
 
           isLoading.value = true;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const resp = await companyStore.updateCompanyInfo({
             info: data,
           });

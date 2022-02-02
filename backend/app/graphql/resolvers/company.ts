@@ -309,6 +309,13 @@ export class CompanyListResolver {
       return null;
     }
 
+    if (
+      !ctx.user.companies.some((company) => company.vat === vat) &&
+      !hasAtLeastRole(Role.Admin, ctx.user)
+    ) {
+      return null;
+    }
+
     return ctx.prisma.company.findUnique({
       where: {
         vat,

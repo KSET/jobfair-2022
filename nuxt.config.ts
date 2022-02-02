@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import Icons from "unplugin-icons/vite";
 import ShortUniqueId from "short-unique-id";
 import cssesc from "cssesc";

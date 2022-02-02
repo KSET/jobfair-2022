@@ -16,6 +16,7 @@
         "@nuxtjs/composition-api": "^0.31.0",
         "@pinia/nuxt": "^0.1.8",
         "@urql/exchange-multipart-fetch": "^0.1.14",
+        "dotenv": "^15.0.0",
         "normalize.css": "^8.0.1",
         "pinia": "^2.0.11",
         "postcss": "^8.4.5",

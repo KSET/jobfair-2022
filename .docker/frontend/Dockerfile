@@ -1,5 +1,7 @@
 FROM node:16-slim as builder
 WORKDIR /app
+ENV YARN_CACHE_FOLDER=/usr/local/yarn-cache
+VOLUME /usr/local/yarn-cache
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn/ .yarn/
 # With buildkit cache yarn stuff

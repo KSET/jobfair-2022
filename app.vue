@@ -24,9 +24,11 @@
       <app-progress-bar />
     </client-only>
 
-    <NuxtPage
-      v-bind="$attrs"
-    />
+    <NuxtLayout>
+      <NuxtPage
+        v-bind="$attrs"
+      />
+    </NuxtLayout>
 
     <client-only>
       <p-toast />

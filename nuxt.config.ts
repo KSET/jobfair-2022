@@ -58,8 +58,6 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    base: ASSETS_PATH,
-
     css: {
       modules: {
         generateScopedName(name, absoluteFilePath) {

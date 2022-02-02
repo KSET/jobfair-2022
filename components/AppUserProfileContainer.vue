@@ -29,13 +29,13 @@
             </nuxt-link>
           </li>
           <li v-if="hasCompany">
-            <nuxt-link
-              :to="{ name: 'profile-me-company' }"
+            <a
+              :href="$router.resolve({ name: 'profile-me-company' }).href"
             >
               <translated-text
                 trans-key="profile.company"
               />
-            </nuxt-link>
+            </a>
           </li>
           <li v-else>
             <nuxt-link

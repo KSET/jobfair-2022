@@ -238,6 +238,16 @@ input NestedStringFilter {
   startsWith: String
 }
 
+type News {
+  content: String!
+  date: DateTime!
+  description: String!
+  image: String!
+  lang: String!
+  slug: String!
+  title: String!
+}
+
 type PressRelease {
   createdAt: DateTime!
   file: File
@@ -291,6 +301,8 @@ type Query {
   company(vat: String!): Company
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
+  news(lang: String!): [News!]!
+  newsItem(slug: String!): News
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User

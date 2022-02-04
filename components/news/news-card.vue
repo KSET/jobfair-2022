@@ -18,10 +18,9 @@
         }"
       >
         <app-img
-          v-if="newsItem.images"
+          v-if="newsItem.image"
           :alt="newsItem.title"
-          :lazy-src="newsItem.images.thumb.url"
-          :src="newsItem.images.default.url"
+          :src="newsItem.image"
           aspect-ratio="1.85"
         />
 
@@ -56,7 +55,9 @@
   export default defineComponent({
     name: "NewsCard",
 
-    components: { AppImg },
+    components: {
+      AppImg,
+    },
 
     props: {
       newsItem: {

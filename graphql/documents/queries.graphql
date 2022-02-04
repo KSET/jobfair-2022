@@ -91,3 +91,23 @@ query PressReleases {
         }
     }
 }
+
+query News($lang: String!) {
+    news(lang: $lang) {
+        slug
+        image
+        date
+        title
+        description
+    }
+}
+
+query NewsItem($slug: String!) {
+    newsItem(slug: $slug) {
+        date
+        image
+        title
+        description
+        content
+    }
+}

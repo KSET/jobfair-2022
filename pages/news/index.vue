@@ -6,8 +6,7 @@
 
     <app-img
       :alt="newsItem.title"
-      :lazy-src="newsItem.images.thumb.url"
-      :src="newsItem.images.default.url"
+      :src="newsItem.image"
       aspect-ratio="1.78"
       class="hidden md:flex"
     >
@@ -77,11 +76,13 @@
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
   import useTitle from "~/composables/useTitle";
+  import TranslatedText from "~/components/TranslatedText.vue";
 
   export default defineComponent({
     name: "PageBlog",
 
     components: {
+      TranslatedText,
       NewsCard,
       AppImg,
       AppMaxWidthContainer,

@@ -1,34 +1,24 @@
 import {
   formatDate,
 } from "@/helpers/date";
+import {
+  INews,
+} from "~/graphql/schema";
 
-type Image = {
-  url: string,
-  width: number,
-};
-
-export type News = Record<string, unknown> & {
-  slug: string,
-  title: string,
-  description: string,
-  date: string | Date,
-  images: {
-    thumb: Image,
-    default: Image,
-  },
-  formattedDate?: string,
-};
+export type NewsWithDate = Partial<INews> & { date: unknown, };
+export type NewsWithFormattedDate<T = NewsWithDate> = T & { date: Date, formattedDate: string, };
 
 export const processNewsItem =
-  (newsItem: News): News =>
+  <T extends NewsWithDate>(newsItem: T): NewsWithFormattedDate<T> =>
     ({
       ...newsItem,
-      formattedDate: formatDate(newsItem.date),
+      date: new Date(String(newsItem.date)),
+      formattedDate: formatDate(new Date(String(newsItem.date))),
     })
 ;
 
 export const processNews =
-  (news: News[]): News[] =>
+  <T extends Partial<INews> & { date: unknown, }>(news: T[]): NewsWithFormattedDate<T>[] =>
     news
       .map(processNewsItem)
 ;

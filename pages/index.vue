@@ -329,18 +329,16 @@
       }
 
       .heroImage {
-        $filter: color.adjust($fer-dark-blue, $alpha: -.4);
-
         position: absolute;
         z-index: 1;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: $fer-dark-blue;
+        background-color: color.adjust($fer-dark-blue, $alpha: -.4);
 
         // noinspection CssUnknownTarget
-        background-image: linear-gradient(0deg, $filter, $filter), url("@/assets/images/page/index/bg.png");
+        background-image: url("@/assets/images/page/index/bg.png");
         background-repeat: no-repeat;
         background-position: center center;
         background-size: cover;

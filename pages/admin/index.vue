@@ -114,6 +114,16 @@
         </li>
       </ul>
     </div>
+
+    <div>
+      <h2>Prijevodi</h2>
+
+      <h3>
+        <nuxt-link :to="{ name: 'admin-translations' }">
+          Uredi
+        </nuxt-link>
+      </h3>
+    </div>
   </app-max-width-container>
 </template>
 <script lang="ts">

@@ -6,7 +6,12 @@ export const useSettingsStore = defineStore(
   "settings",
   {
     state: () => ({
-      settings: {} as Record<string, string>,
+      settings: {
+        "Instagram URL": "https://www.instagram.com/jobfairfer/",
+        "Facebook URL": "https://fb.com/JobFair.FER",
+        "Youtube URL": "https://youtube.com/c/jobfairfer",
+        "LinkedIn URL": "https://linkedin.com/company/jobfairfer",
+      } as Record<string, string>,
     }),
 
     getters: {

@@ -76,7 +76,6 @@
               class="col-6 md:col-4"
             >
               <app-img
-                :lazy-src="galleryItem.thumb"
                 :src="galleryItem.url"
                 alt="img"
                 aspect-ratio="1.95"
@@ -211,6 +210,9 @@
   import {
     useUserStore,
   } from "~/store/user";
+  import {
+    useGalleryStore,
+  } from "~/store/gallery";
 
   export default defineComponent({
     name: "PageIndex",
@@ -225,6 +227,7 @@
     async setup() {
       const newsStore = useNewsStore();
       const userStore = useUserStore();
+      const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
 
       const [
@@ -270,10 +273,7 @@
         },
       })));
 
-      const gallery = ref(new Array(6).fill(0).map((_, i) => ({
-        url: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/people`,
-        thumb: `https://placeimg.com/${ 128 + i }/${ 72 + i }/people`,
-      })));
+      const gallery = computed(() => galleryStore.items);
 
       function getParticipantTitleText({
         name,

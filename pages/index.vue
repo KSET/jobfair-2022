@@ -199,7 +199,6 @@
   } from "~/store/news";
   import {
     dotGet,
-    ensureArray,
     limitLength,
   } from "~/helpers/data";
   import AppImg from "~/components/util/app-img.vue";
@@ -230,14 +229,8 @@
       const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
 
-      const [
-        news,
-      ] = await Promise.all([
-        newsStore
-          .fetchNews()
-          .then(ensureArray)
-          .then(limitLength(3)),
-      ]);
+      await newsStore.fetchNews();
+      const news = computed(() => limitLength(3)(newsStore.items));
 
       const participants = ref(new Array(10).fill(0).map((_, i) => ({
         id: `participant-${ i }`,

@@ -2,6 +2,7 @@ import {
   defineStore,
 } from "pinia";
 import {
+  NewsWithFormattedDate,
   processNewsItem,
 } from "~/helpers/news";
 import {
@@ -23,7 +24,7 @@ export const useNewsStore = defineStore(
   "news",
   {
     state: () => ({
-      items: [],
+      items: [] as NewsWithFormattedDate[],
     }),
 
     actions: {
@@ -39,7 +40,9 @@ export const useNewsStore = defineStore(
 
         const news = resp?.data?.news || [];
 
-        return news.map(processNewsItem);
+        this.items = news.map(processNewsItem);
+
+        return this.items;
       },
 
       async fetchNewsItem(slug: string) {

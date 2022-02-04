@@ -65,24 +65,16 @@
   import {
     computed,
     defineComponent,
-    ref,
     unref,
-    watch,
   } from "vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppImg from "~/components/util/app-img.vue";
   import {
     useNewsStore,
   } from "~/store/news";
-  import {
-    ensureArray,
-  } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
   import useTitle from "~/composables/useTitle";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import {
-    useTranslationsStore,
-  } from "~/store/translations";
 
   export default defineComponent({
     name: "PageBlog",
@@ -97,23 +89,10 @@
     async setup() {
       useTitle("news.header");
       const newsStore = useNewsStore();
-      const translationsStore = useTranslationsStore();
-      const language = computed(() => translationsStore.currentLanguage);
 
-      const [
-        newsItems,
-      ] = await Promise.all([
-        newsStore
-          .fetchNews()
-          .then(ensureArray),
-      ]);
-
-      const news = ref(newsItems);
-      watch(language, async () => {
-        news.value = await newsStore.fetchNews().then(ensureArray);
-      });
-
-      const newsItem = computed(() => unref(newsItems)[0]);
+      await newsStore.fetchNews();
+      const news = computed(() => newsStore.items);
+      const newsItem = computed(() => unref(news)[0]);
 
       return {
         news,

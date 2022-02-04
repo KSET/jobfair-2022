@@ -97,6 +97,9 @@
   // import IconSpinner from "~icons/fluent/spinner-ios-20-filled";
   // noinspection TypeScriptCheckImport
   import IconGlobe from "~icons/bi/globe";
+  import {
+    useNewsStore,
+  } from "~/store/news";
 
   export default defineComponent({
     components: {
@@ -112,6 +115,7 @@
     async setup() {
       const userStore = useUserStore();
       const translationsStore = useTranslationsStore();
+      const newsStore = useNewsStore();
       const nuxt = useNuxtApp();
 
       translationsStore.setLanguageFromCookie();
@@ -122,6 +126,10 @@
 
       onMounted(() => {
         useCookieConsentStore().fetchConsent();
+      });
+
+      watch(currentLanguage, async () => {
+        await newsStore.fetchNews();
       });
 
       useMeta({

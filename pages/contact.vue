@@ -110,7 +110,7 @@
             />
             <a
               :class="$style.link"
-              :href="getSetting('YouTube URL', '#')"
+              :href="getSetting('Youtube URL', '#')"
               rel="noopener noreferrer"
               target="_blank"
             >

@@ -15,9 +15,13 @@ export const usePagesStore = defineStore(
           name: "page.name.news",
           to: { name: "news" },
         },
+        // {
+        //   name: "page.name.schedule",
+        //   to: { name: "schedule" },
+        // },
         {
-          name: "page.name.schedule",
-          to: { name: "schedule" },
+          name: "page.name.about",
+          to: { name: "about" },
         },
         {
           name: "page.name.contact",

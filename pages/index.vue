@@ -48,10 +48,14 @@
         </div>
 
         <div class="col-12 text-center">
-          <p-button class="p-button-outlined p-button-secondary">
-            <translated-text trans-key="index.news.learnMore" />
-            <icon-chevron-right />
-          </p-button>
+          <nuxt-link
+            :to="{ name: 'news' }"
+          >
+            <p-button class="p-button-outlined p-button-secondary">
+              <translated-text trans-key="index.news.learnMore" />
+              <icon-chevron-right />
+            </p-button>
+          </nuxt-link>
         </div>
       </div>
     </div>

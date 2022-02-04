@@ -78,6 +78,19 @@
             position="full"
           >
             <ul :class="$style.sidebarNav">
+              <li :class="$style.languageSwitcherSidebarContainer">
+                <ul :class="[$style.languageSwitcher, $style.languageSwitcherSidebar]">
+                  <li
+                    v-for="(code, lang) in languages"
+                    :key="code"
+                    :class="{
+                      [$style.languageSelected]: code === currentLanguage,
+                    }"
+                    @click="currentLanguage = code"
+                    v-text="lang"
+                  />
+                </ul>
+              </li>
               <li
                 v-for="page in pages"
                 :key="page.name"
@@ -250,6 +263,7 @@
       }
 
       :global(.p-sidebar-content) {
+        position: relative;
         display: flex;
         align-items: center;
         flex: 1 0 auto;
@@ -367,11 +381,25 @@
     }
   }
 
+  .languageSwitcherSidebarContainer {
+    position: absolute;
+    top: 2rem;
+    right: 1rem;
+  }
+
   ul.languageSwitcher {
     margin: 0;
     padding: 0;
     list-style: none;
     color: $fer-white;
+
+    &.languageSwitcherSidebar {
+      font-size: 1.625rem;
+
+      > li + li {
+        margin-top: .5rem;
+      }
+    }
 
     > li + li {
       margin-top: .1rem;

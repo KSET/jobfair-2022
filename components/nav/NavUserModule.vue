@@ -32,7 +32,7 @@
         @show="isOverlayPanelOpen = true"
       >
         <div :class="$style.overlayPanelHeaderContainer">
-          <profile-picture style="width: 3rem;" />
+          <profile-picture :class="$style.overlayPanelHeaderImage" />
 
           <div :class="$style.overlayPanelHeader">
             <span
@@ -319,6 +319,12 @@
       align-items: center;
       flex-direction: row;
       gap: .875rem;
+    }
+
+    .overlayPanelHeaderImage {
+      width: 3rem;
+      box-shadow: 0 0 4px 2px #{color.adjust($fer-white, $alpha: -.7)};
+      border-radius: 100%;
     }
 
     .overlayPanelHeader {

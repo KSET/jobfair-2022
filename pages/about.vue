@@ -48,19 +48,6 @@
               <translated-text trans-key="about-meetup.location.kset" />
             </p>
           </div>
-          <div class="col-12 md:col-6">
-            <app-img
-              :src="img.icons.fer"
-              alt="FER"
-              aspect-ratio="1"
-              class="mx-6"
-              contain
-            />
-
-            <p :class="$style.locationName">
-              <translated-text trans-key="about-meetup.location.fer" />
-            </p>
-          </div>
         </div>
       </div>
     </div>

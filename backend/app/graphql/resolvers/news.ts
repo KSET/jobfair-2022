@@ -118,10 +118,10 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
-].map((obj, i) => ({
+].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),
-  image: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/tech`,
+  image: "/tmp/blog.jpg",
 }));
 
 export class NewsMockResolver {

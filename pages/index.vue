@@ -4,16 +4,18 @@
       <div :class="$style.heroSizer" />
       <div :class="$style.heroImage" />
       <div :class="$style.heroContent">
+        <img
+          :class="$style.heroContentImage"
+          alt="Job Fair"
+          src="~/assets/images/logo/jobfair.png"
+        >
         <h3 :class="$style.heroContentSupertitle">
           <translated-text trans-key="index.hero.date" />
         </h3>
-        <h1 :class="$style.heroContentTitle">
-          <translated-text trans-key="index.hero.title" />
-        </h1>
         <nuxt-link
           v-if="!isLoggedIn"
+          :class="$style.heroContentJoinNow"
           :to="joinNowRoute"
-          style="font-size: .9rem;"
         >
           <p-button :class="$style.secondary">
             <translated-text trans-key="button.joinNow" />
@@ -316,16 +318,19 @@
     }
 
     .heroContainer {
-      $image-aspect-ratio: math.div(1, 2);
+      $image-aspect-ratio: math.div(2048, 1365);
 
       font-size: 4rem;
       position: relative;
       display: flex;
       flex: 1 0 auto;
-      min-height: 500px;
+
+      @include media(md) {
+        font-size: 2rem;
+      }
 
       .heroSizer {
-        padding-bottom: #{$image-aspect-ratio * 100%};
+        padding-bottom: #{math.div(1, $image-aspect-ratio) * 100%};
       }
 
       .heroImage {
@@ -352,6 +357,10 @@
         padding: 0 #{$width-padding};
         text-align: right;
 
+        @include media(md) {
+          margin-top: #{$width-padding};
+        }
+
         > * {
           line-height: 1.1em;
         }
@@ -360,17 +369,31 @@
           font-size: .4em;
           font-weight: bold;
           margin: 0;
+          transition-property: margin-bottom;
           text-transform: capitalize;
           color: $fer-yellow;
+
+          @include media(md) {
+            margin-bottom: 1rem;
+          }
         }
 
-        .heroContentTitle {
-          font-size: 1em;
-          font-weight: bold;
-          margin-top: 1rem;
-          margin-bottom: 0;
-          text-transform: capitalize;
-          color: $fer-white;
+        .heroContentJoinNow {
+          font-size: .9rem;
+          transition-property: font-size;
+
+          @include media(md) {
+            font-size: .625rem;
+          }
+        }
+
+        .heroContentImage {
+          width: 30%;
+          transition-property: width;
+
+          @include media(md) {
+            width: 42%;
+          }
         }
 
         .heroContentSubtitle {

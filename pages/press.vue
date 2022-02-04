@@ -43,7 +43,7 @@
                 :class="$style.pressKitItemDownloadIcon"
               />
             </div>
-            <span v-text="item.name" />
+            <translated-text :trans-key="item.name" />
           </div>
         </div>
       </div>
@@ -155,22 +155,22 @@
 
         pressKitItems: [
           {
-            name: "Job Fair Meetup logotip",
+            name: "press.press-kit.item.jobfair-logo",
           },
           {
-            name: "Fakultet elektrotehnike i računarstva logotip",
+            name: "press.press-kit.item.fer-logo",
           },
           {
-            name: "Klub studenata elektrotehnike logotip",
+            name: "press.press-kit.item.kset-logo",
           },
           {
-            name: "Centar karijera logotip",
+            name: "press.press-kit.item.ckf-logo",
           },
           {
-            name: "Savez studenata FER-a",
+            name: "press.press-kit.item.ssfer-logo",
           },
           {
-            name: "Opis događaja",
+            name: "press.press-kit.item.description-logo",
           },
         ],
       };

@@ -98,12 +98,36 @@
           </div>
         </div>
       </div>
+
+      <div class="col-12 md:col-6 mt-7 md:mt-8">
+        <h2 :class="$style.subHeader">
+          <translated-text trans-key="press.press-gallery.header" />
+        </h2>
+        <p style="line-height: 2rem;">
+          <translated-text trans-key="press.press-gallery.text" />
+        </p>
+        <div class="grid">
+          <div
+            v-for="galleryItem in gallery"
+            :key="galleryItem.url"
+            class="col-6"
+          >
+            <app-img
+              :src="galleryItem.url"
+              alt="img"
+              aspect-ratio="1.95"
+              class="border-round"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </app-max-width-container>
 </template>
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
     ref,
   } from "vue";
@@ -119,11 +143,16 @@
     IPressReleasesQueryVariables,
     PressReleases,
   } from "~/graphql/schema";
+  import {
+    useGalleryStore,
+  } from "~/store/gallery";
+  import AppImg from "~/components/util/app-img.vue";
 
   export default defineComponent({
     name: "PagePress",
 
     components: {
+      AppImg,
       TranslatedText,
       AppMaxWidthContainer,
       IconDownload,
@@ -131,6 +160,8 @@
 
     async setup() {
       useTitle("press.header");
+
+      const galleryStore = useGalleryStore();
 
       const resp = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
         query: PressReleases,
@@ -140,6 +171,8 @@
 
       return {
         contactEmail: ref(""),
+
+        gallery: computed(() => galleryStore.items),
 
         mediaReleases:
           releases

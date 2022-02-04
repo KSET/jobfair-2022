@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <div :class="$style.sectionContainer">
+    <div :class="$style.sectionContainer" class="hidden">
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <div :class="$style.sectionContainer">
+    <div :class="$style.sectionContainer" class="hidden">
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
@@ -156,7 +156,7 @@
       </div>
     </div>
 
-    <div :class="$style.sectionContainer">
+    <div :class="$style.sectionContainer" class="hidden">
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">

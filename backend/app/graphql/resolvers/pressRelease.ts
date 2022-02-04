@@ -187,7 +187,7 @@ export class PressReleaseResolver {
       };
     }
 
-    const file = await FileService.uploadFile("press/press-release" as MinioBase, await info.file, user);
+    const file = await FileService.uploadFile(`press/press-release/${ user.id }` as MinioBase, await info.file, user);
 
     if (!file) {
       return {
@@ -282,7 +282,7 @@ export class PressReleaseResolver {
     };
 
     if (info.file) {
-      const file = await FileService.uploadFile("press/press-release" as MinioBase, await info.file, user);
+      const file = await FileService.uploadFile(`press/press-release/${ user.id }` as MinioBase, await info.file, user);
 
       if (!file) {
         return {

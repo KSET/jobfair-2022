@@ -27,7 +27,7 @@ export class FileService {
   public static async uploadFile(base: MinioBase, fileInfo: FileUpload, user: User) {
     try {
       const minioBase = (base.endsWith("/") ? base : `${ base }/`).replace(/\/+$/g, "/").replace(/^\/*/g, "");
-      const minioKey = `${ minioBase }${ user.id }/${ Date.now().toString(36) }.${ process.hrtime.bigint().toString(36) }.${ fileInfo.filename }`;
+      const minioKey = `${ minioBase }${ Date.now().toString(36) }.${ process.hrtime.bigint().toString(36) }.${ fileInfo.filename }`;
 
       const minioUpload = await minio.putObject(
         BUCKET_NAME,

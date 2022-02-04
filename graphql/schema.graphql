@@ -448,6 +448,7 @@ type UserCount {
   companies: Int!
   events: Int!
   files: Int!
+  images: Int!
   pressReleases: Int!
   roles: Int!
 }

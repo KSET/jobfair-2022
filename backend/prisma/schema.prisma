@@ -41,6 +41,8 @@ model User {
   files         File[]
   /// @TypeGraphQL.omit(output: true, input: true)
   pressReleases PressRelease[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  images        Image[]
 }
 
 model Translation {
@@ -155,4 +157,46 @@ model File {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   uploaderId Int
+}
+
+model Image {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int            @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid       String         @unique @default(cuid())
+  uploader  User           @relation(fields: [uploaderId], references: [id])
+  name      String
+  original  ImageVariation @relation("ImageVariationOriginal", fields: [originalImageId], references: [id])
+  full      ImageVariation @relation("ImageVariationFull", fields: [fullImageId], references: [id])
+  thumb     ImageVariation @relation("ImageVariationThumb", fields: [thumbImageId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime       @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime       @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  uploaderId      Int
+  /// @TypeGraphQL.omit(output: true, input: true)
+  originalImageId Int
+  /// @TypeGraphQL.omit(output: true, input: true)
+  fullImageId     Int
+  /// @TypeGraphQL.omit(output: true, input: true)
+  thumbImageId    Int
+}
+
+model ImageVariation {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id       Int    @id @default(autoincrement())
+  etag     String
+  mimeType String
+  /// @TypeGraphQL.omit(output: true, input: true)
+  minioKey String @unique
+
+  // No polymorphism, workaround is this :(
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forOriginal Image[] @relation("ImageVariationOriginal")
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forFull     Image[] @relation("ImageVariationFull")
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forThumb    Image[] @relation("ImageVariationThumb")
 }

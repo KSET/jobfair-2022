@@ -36,21 +36,27 @@
         <div
           :class="$style.pressKitContainer"
         >
-          <div
+          <a
             v-for="item in pressKitItems"
             :key="JSON.stringify(item)"
             :class="$style.pressKitItem"
+            :href="item.file"
+            download
+            target="_blank"
           >
             <div :class="$style.pressKitItemImage">
-              <div :class="$style.pressItemImageElement">
-                Image
-              </div>
+              <div
+                :class="$style.pressItemImageElement"
+                :style="{
+                  backgroundImage: `url('${item.image}')`
+                }"
+              />
               <icon-download
                 :class="$style.pressKitItemDownloadIcon"
               />
             </div>
             <translated-text :trans-key="item.name" />
-          </div>
+          </a>
         </div>
       </div>
 
@@ -128,6 +134,7 @@
         </div>
       </div>
     </div>
+    <pre v-text="pressKitItems" />
   </app-max-width-container>
 </template>
 
@@ -153,6 +160,9 @@
   import {
     useGalleryStore,
   } from "~/store/gallery";
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore: Type declaration stuff
+  const PreviewIcons = import.meta.globEager("../assets/images/page/press/*.png");
 
   export default defineComponent({
     name: "PagePress",
@@ -175,6 +185,15 @@
 
       const releases = resp?.data?.pressReleases || [];
 
+      const previewIcons =
+        Object.fromEntries(
+          Object
+            .entries(PreviewIcons)
+            .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
+          ,
+        )
+      ;
+
       return {
         contactEmail: ref(""),
 
@@ -195,23 +214,35 @@
         pressKitItems: [
           {
             name: "press.press-kit.item.jobfair-logo",
+            image: previewIcons.JobFair,
+            file: "/tmp/press/Job Fair logo negativ.jpg",
           },
           {
             name: "press.press-kit.item.fer-logo",
+            image: previewIcons.FER,
+            file: "/tmp/press/FER_logo_1.png",
           },
           {
             name: "press.press-kit.item.kset-logo",
+            image: previewIcons.KSET,
+            file: "/tmp/press/KSET logo crni.png",
           },
           {
             name: "press.press-kit.item.ckf-logo",
+            image: previewIcons.CKF,
+            file: "/tmp/press/CKF_bijela.jpg",
           },
           {
             name: "press.press-kit.item.ssfer-logo",
+            image: previewIcons.SSFER,
+            file: "/tmp/press/Job-Fair-org-SSFER-color.png",
           },
           {
             name: "press.press-kit.item.description-logo",
+            image: previewIcons.opis,
+            file: "/tmp/press/Job Fair - Opće informacije.pdf",
           },
-        ],
+        ].map((x) => ({ ...x, file: encodeURI(x.file) })),
       };
     },
   });
@@ -336,9 +367,11 @@
         flex-direction: column;
         cursor: pointer;
         text-align: center;
+        color: #{color.adjust($fer-black, $alpha: -.2)};
         gap: .5rem;
 
         &:hover {
+          color: $fer-black;
 
           .pressKitItemImage {
             transition-duration: 0s;
@@ -346,7 +379,7 @@
 
             .pressItemImageElement {
               transition-duration: 0s;
-              opacity: .2;
+              opacity: 1;
             }
 
             .pressKitItemDownloadIcon {
@@ -370,15 +403,19 @@
       .pressKitItemImage {
         position: relative;
         height: 150px;
-        padding: 3rem 4.5rem;
         transition-timing-function: $transition-bounce-function;
         transition-property: border-color;
         border: 1px solid #{color.adjust($fer-black, $alpha: -.8)};
         border-radius: 4px;
 
         .pressItemImageElement {
+          width: 100%;
+          height: 100%;
           transition-property: opacity;
           opacity: .6;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
         }
 
         .pressKitItemDownloadIcon {

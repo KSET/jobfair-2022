@@ -112,17 +112,17 @@
         <p style="line-height: 2rem;">
           <translated-text trans-key="press.press-gallery.text" />
         </p>
-        <div class="grid">
+        <div :class="$style.galleryContainer">
           <div
             v-for="galleryItem in gallery"
             :key="galleryItem.url"
-            class="col-6"
+            :class="$style.galleryItem"
           >
-            <app-img
+            <p-image
+              :class="$style.galleryImage"
               :src="galleryItem.url"
               alt="img"
-              aspect-ratio="1.95"
-              class="border-round"
+              preview
             />
           </div>
         </div>
@@ -137,6 +137,7 @@
     defineComponent,
     ref,
   } from "vue";
+  import Image from "primevue/image";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -152,13 +153,12 @@
   import {
     useGalleryStore,
   } from "~/store/gallery";
-  import AppImg from "~/components/util/app-img.vue";
 
   export default defineComponent({
     name: "PagePress",
 
     components: {
-      AppImg,
+      PImage: Image,
       TranslatedText,
       AppMaxWidthContainer,
       IconDownload,
@@ -440,6 +440,30 @@
 
         &:last-child {
           margin-right: 0;
+        }
+      }
+    }
+
+    .galleryContainer {
+      display: grid;
+      gap: .8rem;
+      grid-template-columns: 1fr 1fr;
+
+      .galleryItem {
+        overflow: hidden;
+        width: 100%;
+        border-radius: 4px;
+        aspect-ratio: 1.95;
+
+        :global(.p-image) {
+          width: 100%;
+          height: 100%;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
       }
     }

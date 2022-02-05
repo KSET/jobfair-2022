@@ -46,6 +46,7 @@ export default defineNuxtConfig({
   },
 
   css: [
+    "@/node_modules/primeicons/primeicons.css",
     "@/node_modules/normalize.css/normalize.css",
     "@/node_modules/primeflex/primeflex.css",
     "@/node_modules/primevue/resources/primevue.css",

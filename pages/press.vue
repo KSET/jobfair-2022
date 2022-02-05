@@ -19,13 +19,19 @@
             $style.pressKitDownloadHeader
           ]"
         >
-          <translated-text trans-key="press.press-kit" />
-          <span :class="$style.pressKitDownload">
+          <span class="flex-1">
+            <translated-text trans-key="press.press-kit" />
+          </span>
+          <a
+            :class="$style.pressKitDownload"
+            href="/Job%20Fair%20-%20Press%20kit.zip"
+            target="_blank"
+          >
             <icon-download
               :class="$style.pressKitDownloadIcon"
             />
             <translated-text trans-key="press.press-kit.download" />
-          </span>
+          </a>
         </h2>
         <div
           :class="$style.pressKitContainer"
@@ -283,10 +289,13 @@
       font-size: 1rem;
       display: flex;
       align-items: flex-end;
+      flex: 1;
+      justify-content: flex-end;
       margin-left: auto;
       cursor: pointer;
       transition-timing-function: $transition-bounce-function;
       transition-property: transform;
+      color: $fer-dark-blue;
       gap: .625rem;
 
       @include media(md) {

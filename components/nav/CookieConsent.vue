@@ -66,76 +66,78 @@
           position="bottom"
         >
           <p>
-            Ovo su pravila o kolačićima za Job Fair Meetup, kojima se može pristupiti s adrese <a href="https://jobfairmeetup.fer.unizg.hr/">https://jobfairmeetup.fer.unizg.hr/</a>
+            This is the Cookie Policy for Job Fair, accessible from https://jobfair.fer.unizg.hr/
           </p>
 
           <div>
             <p>
-              <b>Što su kolačići?</b>
+              <strong>What Are Cookies</strong>
             </p>
 
             <p>
-              Kao što je uobičajena praksa kod gotovo svih profesionalnih stranica, ova internetska stranica koristi kolačiće, odnosno malene datoteke koje se preuzimaju na vaše računalo, radi poboljšanja vašeg
-              iskustva. Ova stranica opisuje koje podatke prikupljaju, kako ih koristimo i zašto ponekad moramo pohraniti ove kolačiće. Također ćemo podijeliti kako možete spriječiti pohranu ovih kolačića, no to
-              može smanjiti ili onemogućiti određene elemente ili funkcionalnosti stranice. Za općenitije informacije o kolačićima pročitajte ovaj članak.
+              As is common practice with almost all professional websites this site uses cookies, which are tiny files that are downloaded to your computer, to improve your experience. This page describes what
+              information they gather, how we use it and why we sometimes need to store these cookies. We will also share how you can prevent these cookies from being stored however this may downgrade or 'break'
+              certain elements of the site's functionality.
             </p>
-          </div>
-
-          <div>
             <p>
-              <b>Kako koristimo kolačiće?</b>
-            </p>
-
-            <p>
-              Kolačiće koristimo iz raznih razloga opisanih u nastavku. Nažalost, u većini slučajeva ne postoje standardne opcije za onemogućavanje kolačića bez potpunog onemogućavanja funkcionalnosti i značajki
-              koje
-              dodaju na ovu stranicu. Preporučuje se da ostavite sve kolačiće ako niste sigurni trebate li ih ili ne u slučaju da se koriste za pružanje neke od usluga koju koristite na našoj stranici.
+              For more general information on cookies, please read <a href="https://www.privacypolicyonline.com/what-are-cookies/" target="_blank" rel="noopener noreferrer">"What Are Cookies"</a>.
             </p>
           </div>
 
           <div>
             <p>
-              <b>Onemogućavanje kolačića</b>
+              <strong>How We Use Cookies</strong>
             </p>
 
             <p>
-              Postavljanje kolačića možete spriječiti podešavanjem postavki na vašem pregledniku (kako to učiniti potražite na službenim stranicama vašeg preglednika). Imajte na umu da će onemogućavanje kolačića
-              utjecati na funkcionalnost ove i mnogih drugih internetskih stranica koje posjećujete. Onemogućavanje kolačića obično će rezultirati i onemogućavanjem određenih funkcionalnosti i značajki ove
-              internetske stranice. Stoga se preporučuje da omogućite kolačiće.
+              We use cookies for a variety of reasons detailed below. Unfortunately in most cases there are no industry standard options for disabling cookies without completely disabling the functionality and
+              features they add to this site. It is recommended that you leave on all cookies if you are not sure whether you need them or not in case they are used to provide a service that you use.
             </p>
           </div>
 
           <div>
             <p>
-              <b>Kolačiće koje koristimo</b>
+              <strong>Disabling Cookies</strong>
+            </p>
+
+            <p>
+              You can prevent the setting of cookies by adjusting the settings on your browser (see your browser official help page for how to do this). Be aware that disabling cookies will affect the functionality
+              of this and many other websites that you visit. Disabling cookies will usually result in also disabling certain functionality and features of this site. Therefore it is recommended that you do not
+              disable cookies.
+            </p>
+          </div>
+
+          <div>
+            <p>
+              <strong>The Cookies We Set</strong>
             </p>
 
             <ul>
               <li>
-                Kolačići povezani s računom
+                Account related cookies
                 <br>
-                Ako napravite račun kod nas, mi ćemo koristiti kolačiće za upravljanje postupkom registracije i opću administraciju. Ti se kolačići obično brišu kada se odjavite, no u nekimslučajevima mogu
-                ostati i nakon toga da bi zapamtili postavke vaše web lokacije kada ste odjavljeni.
+                If you create an account with us then we will use cookies for the management of the signup process and general administration. These cookies will usually be deleted when you log out however in some
+                cases they may remain afterwards to remember your site preferences when logged out.
               </li>
 
               <li>
-                Kolačići povezani s prijavom
+                Login related cookies
                 <br>
-                Kolačiće koristimo kada ste prijavljeni kako bismo se mogli sjetiti ovih podataka. To sprječava da se morate prijaviti svaki put kad posjetite našu stranicu. Ti se kolačići obično uklanjaju ili brišu
-                kada se odjavite kako biste osigurali da možete pristupiti ograničenim značajkama i područjima naše stranice samo kada ste prijavljeni.
+                We use cookies when you are logged in so that we can remember this fact. This prevents you from having to log in every single time you visit a new page. These cookies are typically removed or cleared
+                when you log out to ensure that you can only access restricted features and areas when logged in.
               </li>
 
               <li>
-                Kolačići povezani s obrascima
+                Forms related cookies
                 <br>
-                Kada podatke šaljete putem obrasca poput onih koji se nalaze na stranicama studentskog poratala, kolačići mogu biti postavljeni tako da pamte vaše korisničke podatke za buduću korespondenciju.
+                When you submit data through a form such as those found on registration pages, cookies may be set to remember your user details for future correspondence.
               </li>
 
               <li>
-                Kolačići za preferencije
+                Site preferences cookies
                 <br>
-                Kako bismo vam pružili sjajno iskustvo na našoj stranici, pružamo funkcionalnost za podešavanje vaših postavki načina rada naše stranice kada je koristite. Da bismo zapamtili vaše postavke, moramo
-                postaviti kolačiće tako da se ti podaci mogu pozivati kad god komunicirate sa stranicom na koju vaše postavke utječu.
+                In order to provide you with a great experience on this site we provide the functionality to set your preferences for how this site runs when you use it. In order to remember your preferences we need
+                to set cookies so that this information can be called whenever you interact with a page that is affected by your preferences.
               </li>
             </ul>
 
@@ -144,23 +146,24 @@
 
           <div>
             <p>
-              <b>Kolačići treće strane</b>
+              <strong>Third Party Cookies</strong>
             </p>
 
             <p>
-              U nekim posebnim slučajevima koristimo i kolačiće koje pružaju pouzdane treće strane. Sljedeći odjeljak detaljno opisuje koje kolačiće trećih strana možete naići na našoj stranici.
+              In some special cases we also use cookies provided by trusted third parties. The following section details which third party cookies you might encounter through this site.
             </p>
 
             <ul>
               <li>
-                Naša stranica koristi Google Analytics, jedno od najraširenijih i najpouzdanijih rješenja za analitiku na internetu, koji nam pomaže da shvatimo kako koristite našu stranicui načine na koje možemo
-                poboljšati vaše iskustvo. Ovi kolačići mogu pratiti stvari poput vremena koje provodite na našim stranicama kako bismo nastavili stvarati zanimljiv sadržaj.
-                Za više informacija o kolačićima Google Analyticsa pogledajte njihovu službenu stranicu.
+                This site uses Google Analytics which is one of the most widespread and trusted analytics solutions on the web for helping us to understand how you use the site and ways that we can improve your
+                experience. These cookies may track things such as how long you spend on the site and the pages that you visit so we can continue to produce engaging content.
+                <br>
+                For more information on Google Analytics cookies, see the official Google Analytics page.
               </li>
 
               <li>
-                Povremeno testiramo nove značajke i izvršavamo suptilne promjene u načinu isporuke funkcionalnosti naše stranice. Kada još uvijek testiramo nove značajke, ovi se kolačići mogu koristiti za
-                osiguravanje dosljednog iskustva tijekom boravka na stranici, istovremeno osiguravajući da razumijemo koje optimizacije naši korisnici najviše cijene.
+                From time to time we test new features and make subtle changes to the way that the site is delivered. When we are still testing new features these cookies may be used to ensure that you receive a
+                consistent experience whilst on the site whilst ensuring we understand which optimisations our users appreciate the most.
               </li>
             </ul>
 
@@ -169,18 +172,18 @@
 
           <div>
             <p>
-              <b>Više informacija</b>
+              <strong>More Information</strong>
             </p>
 
             <p>
-              Nadamo se da su vam ova pravila razjasnila zašto su kolačići bitni i kao što je već spomenuto, ako postoji nešto za što niste sigurni trebate li kolačiće ili ne, obično je sigurnije da kolačiće
-              ostavite omogućenima u slučaju da su potrebni za interakciju s jednom od značajki koje koristite na našoj stranici.
+              Hopefully that has clarified things for you and as was previously mentioned if there is something that you aren't sure whether you need or not it's usually safer to leave cookies enabled in case it
+              does interact with one of the features you use on our site.
             </p>
           </div>
 
           <div>
             <p>
-              Međutim, ako i dalje tražite više informacija, možete nas kontaktirati putem naše e-adrese <a href="mailto:jobfair@fer.hr" target="_blank">jobfair@fer.hr</a>.
+              However if you are still looking for more information then you can contact us through our email: <a href="mailto:jobfair@fer.hr" target="_blank" rel="noopener noreferrer">jobfair@fer.hr</a>.
             </p>
           </div>
         </Dialog>

@@ -75,6 +75,23 @@
     <div :class="$style.section">
       <app-img
         :class="$style.eventIcon"
+        :src="img.eventIcons.booths"
+        alt="Booths"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.booths.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.booths.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
         :src="img.eventIcons.talks"
         alt="Talks"
         aspect-ratio="1"

@@ -340,7 +340,7 @@
         background-color: color.adjust($fer-dark-blue, $alpha: -.4);
 
         // noinspection CssUnknownTarget
-        background-image: url("@/assets/images/page/index/bg.png");
+        background-image: url("@/assets/images/page/index/bg.jpg");
         background-repeat: no-repeat;
         background-position: center center;
         background-size: cover;

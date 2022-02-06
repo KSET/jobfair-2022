@@ -134,7 +134,6 @@
         </div>
       </div>
     </div>
-    <pre v-text="pressKitItems" />
   </app-max-width-container>
 </template>
 

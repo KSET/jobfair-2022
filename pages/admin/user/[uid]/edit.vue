@@ -159,7 +159,6 @@
             uid,
             info: {
               ...data,
-              password: "",
             },
           }).then((resp) => resp?.data?.updateUser);
           isLoading.value = false;

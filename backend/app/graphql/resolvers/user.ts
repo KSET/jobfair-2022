@@ -369,6 +369,7 @@ export class UserEditResolver {
         uid,
       },
       select: {
+        password: true,
         roles: {
           select: {
             name: true,
@@ -388,13 +389,18 @@ export class UserEditResolver {
       };
     }
 
+    if (data.password) {
+      data.password = await PasswordService.hashPassword(data.password);
+    } else {
+      data.password = oldUser.password;
+    }
+
     const entity = await ctx.prisma.user.update({
       where: {
         uid,
       },
       data: {
         ...omit([
-          "password",
           "passwordRepeat",
           "roles",
         ])(data),

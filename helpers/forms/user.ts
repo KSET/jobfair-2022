@@ -1,5 +1,5 @@
 import {
- capitalize,
+  capitalize,
 } from "lodash-es";
 import {
   IUser,
@@ -39,6 +39,7 @@ export const userProfileEdit =
 ;
 
 type User = Profile & {
+  password: string,
   roles: IUser["roles"],
 };
 export const userEdit =
@@ -46,6 +47,11 @@ export const userEdit =
     (roles: IUser["roles"]): Record<keyof User, InputEntry> =>
       ({
         ...userProfileEdit(user),
+        password: {
+          value: "",
+          type: "password",
+          required: false,
+        },
         roles: {
           value: user?.roles.map((role) => role.name) || [],
           type: "dropdown",

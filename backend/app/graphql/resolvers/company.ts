@@ -23,6 +23,9 @@ import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
+  omit,
+} from "rambdax";
+import {
   Context,
 } from "../../types/apollo-context";
 import {
@@ -145,6 +148,8 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
+    info.vat = info.vat.toUpperCase();
+
     const vatValidation = await CompanyService.validateVat(info.vat);
 
     if (!vatValidation.valid) {
@@ -226,6 +231,8 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
+    info.vat = info.vat.toUpperCase();
+
     const isInCompany = ctx.user.companies.some((company) => company.vat === info.vat);
 
     if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
@@ -256,9 +263,14 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
-    const create = await ctx.prisma.company.update({
+    const entity = await ctx.prisma.company.update({
       data: {
-        ...info,
+        ...omit(
+          [
+            "vat",
+          ],
+          info,
+        ),
         industry: {
           connect: {
             id: industry.id,
@@ -273,10 +285,10 @@ export class CompanyInfoMutationsResolver {
       },
     });
 
-    void EventsService.logEvent("company:update", ctx.user.id, { vat: create.vat });
+    void EventsService.logEvent("company:update", ctx.user.id, { vat: entity.vat });
 
     return {
-      entity: create,
+      entity,
     };
   }
 }

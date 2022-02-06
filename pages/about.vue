@@ -231,6 +231,14 @@
         <translated-text trans-key="about-meetup.howToParticipate.header" />
       </h2>
 
+
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.cv"
+        alt="CV"
+        aspect-ratio="1"
+        contain
+      />
       <h3 :class="$style.subHeader">
         <translated-text trans-key="about-meetup.cv.header" />
       </h3>
@@ -238,6 +246,14 @@
         <translated-text trans-key="about-meetup.cv.text" />
       </p>
 
+
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.qr"
+        alt="QR Code"
+        aspect-ratio="1"
+        contain
+      />
       <h3 :class="$style.subHeader">
         <translated-text trans-key="about-meetup.qr.header" />
       </h3>
@@ -342,12 +358,17 @@
       color: $fer-dark-blue;
     }
 
-    .eventIcon + .header {
+    .eventIcon + .header,
+    .eventIcon + .subHeader {
       margin-top: .8125rem;
     }
 
     .header + :global(p) {
       margin-top: 0;
+    }
+
+    .header + .eventIcon {
+      margin-top: .5rem;
     }
 
     .subHeader {
@@ -358,6 +379,10 @@
 
     :global(p) + .subHeader {
       margin-top: 2rem;
+    }
+
+    :global(p) + .eventIcon {
+      margin-top: 1.5rem;
     }
 
     .subHeader + :global(p) {

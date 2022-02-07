@@ -98,6 +98,18 @@ mutation RenameIndustry($oldName: String!, $newName: String!) {
     }
 }
 
+mutation CreateTalkCategory($name: String!) {
+    createTalkCategory(name: $name) {
+        name
+    }
+}
+
+mutation RenameTalkCategory($oldName: String!, $newName: String!) {
+    renameTalkCategory(oldName: $oldName, newName: $newName) {
+        name
+    }
+}
+
 mutation RegisterCompany($info: CreateCompanyInput!) {
     registerCompany(info: $info) {
         errors {
@@ -159,6 +171,26 @@ mutation UpdatePressRelease($uid: String!, $info: PressReleaseWithFilesCreateInp
             title
             published
         }
+        errors {
+            field
+            message
+        }
+    }
+}
+
+mutation CreateCompanyApplication($info: CompanyApplicationCreateInput!) {
+    createCompanyApplication(info: $info) {
+        entity {
+            talk {
+                uid
+            }
+            workshop {
+                uid
+            }
+            wantsCocktail
+            wantsPanel
+        }
+
         errors {
             field
             message

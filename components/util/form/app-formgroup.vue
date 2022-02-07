@@ -1,8 +1,10 @@
 <template>
-  <form
+  <component
+    :is="noForm ? 'div' : 'form'"
     :aria-disabled="loading"
     :class="$style.container"
-    @submit.prevent="$emit('submit', true)"
+    role="form"
+    @submit.prevent="!noForm && $emit('submit', true)"
   >
     <template
       v-for="(input, inputName) in inputs"
@@ -20,7 +22,7 @@
         :label-key="`form.${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
-        :required="input.required ?? false"
+        :required="input.required ?? true"
         v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
@@ -46,7 +48,7 @@
         :name="inputName"
         :options="input.options"
         :placeholder="input.placeholder"
-        :required="input.required ?? false"
+        :required="input.required ?? true"
         v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
@@ -71,7 +73,7 @@
         :label-key="`form.${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
-        :required="input.required ?? false"
+        :required="input.required ?? true"
         v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
@@ -100,7 +102,7 @@
         :multiple="input.multiple ?? false"
         :name="inputName"
         :placeholder="input.placeholder"
-        :required="input.required ?? false"
+        :required="input.required ?? true"
         v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
@@ -125,7 +127,7 @@
         :label-key="`form.${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
-        :required="input.required ?? false"
+        :required="input.required ?? true"
         :type="input.type || 'text'"
       >
         <template v-if="errors[inputName].length > 0" #message>
@@ -141,7 +143,7 @@
     <slot
       name="after"
     />
-  </form>
+  </component>
 </template>
 
 <script lang="ts">
@@ -243,6 +245,11 @@
         type: Object,
       },
       loading: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+      noForm: {
         required: false,
         type: Boolean,
         default: () => false,

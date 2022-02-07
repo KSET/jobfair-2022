@@ -28,24 +28,37 @@
               />
             </nuxt-link>
           </li>
-          <li v-if="hasCompany">
-            <a
-              :href="$router.resolve({ name: 'profile-me-company' }).href"
-            >
-              <translated-text
-                trans-key="profile.company"
-              />
-            </a>
-          </li>
-          <li v-else>
-            <nuxt-link
-              :to="{ name: 'profile-register-company' }"
-            >
-              <translated-text
-                trans-key="profile.company-register"
-              />
-            </nuxt-link>
-          </li>
+          <template v-if="hasCompany">
+            <li>
+              <a
+                :href="$router.resolve({ name: 'profile-me-company' }).href"
+              >
+                <translated-text
+                  trans-key="profile.company"
+                />
+              </a>
+            </li>
+            <li>
+              <a
+                :href="$router.resolve({ name: 'profile-me-company-signup' }).href"
+              >
+                <translated-text
+                  trans-key="profile.company.signup"
+                />
+              </a>
+            </li>
+          </template>
+          <template v-else>
+            <li>
+              <nuxt-link
+                :to="{ name: 'profile-register-company' }"
+              >
+                <translated-text
+                  trans-key="profile.company-register"
+                />
+              </nuxt-link>
+            </li>
+          </template>
         </ul>
       </div>
     </aside>

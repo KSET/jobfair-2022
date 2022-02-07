@@ -12,7 +12,10 @@ export const PASSWORD_LENGTH_MAX = 99 as const;
 const passwordValidation = z.string().min(PASSWORD_LENGTH_MIN).max(PASSWORD_LENGTH_MAX);
 
 const formatValidation =
-  async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(validationObject: ZodType<Output, Def, Input>, data: unknown): Promise<{ success: boolean, errors: { field: keyof Output, message: string, }[], }> => {
+  async <Output, Def extends ZodTypeDef = ZodTypeDef, Input = Output>(
+    validationObject: ZodType<Output, Def, Input>,
+    data: unknown,
+  ): Promise<{ success: boolean, errors: { field: keyof Output, message: string, }[], }> => {
     const validation = await validationObject.safeParseAsync(data);
 
     if (validation.success) {
@@ -77,3 +80,42 @@ const pressReleaseValidation = z.object({
   published: z.date(),
 });
 export const PressReleaseValidation = <T>(pressRelease: T) => formatValidation(pressReleaseValidation, pressRelease);
+
+const companyPresenterValidation = z.object({
+  firstName: z.string().min(2).max(80),
+  lastName: z.string().min(2).max(80),
+  bioEn: z.string().min(73).max(365),
+  bioHr: z.optional(z.string().min(73).max(365)),
+});
+export const CompanyPresenterValidation = <T>(presenter: T) => formatValidation(companyTalkValidation, presenter);
+
+const companyTalkValidation = z.object({
+  titleEn: z.string().min(1).max(75),
+  titleHr: z.optional(z.string().min(1).max(75)),
+  descriptionEn: z.string().min(73).max(365),
+  descriptionHr: z.optional(z.string().min(73).max(365)),
+  category: z.string(),
+  language: z.string(),
+  presenter: companyPresenterValidation,
+});
+export const CompanyTalkValidation = <T>(talk: T) => formatValidation(companyTalkValidation, talk);
+
+const companyWorkshopValidation = z.object({
+  titleEn: z.string().min(1).max(75),
+  titleHr: z.optional(z.string().min(1).max(75)),
+  descriptionEn: z.string().min(73).max(365),
+  descriptionHr: z.optional(z.string().min(73).max(365)),
+  category: z.string(),
+  language: z.string(),
+  presenter: companyPresenterValidation,
+});
+export const CompanyWorkshopValidation = <T>(workshop: T) => formatValidation(companyWorkshopValidation, workshop);
+
+const companyApplicationValidation = z.object({
+  booth: z.string(),
+  talk: z.nullable(companyTalkValidation),
+  workshop: z.nullable(companyWorkshopValidation),
+  wantsCocktail: z.boolean(),
+  wantsPanel: z.boolean(),
+});
+export const CompanyApplicationValidation = <T>(application: T) => formatValidation(companyApplicationValidation, application);

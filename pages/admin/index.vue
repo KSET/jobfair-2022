@@ -42,14 +42,14 @@
           v-for="industry in industries"
           :key="industry"
         >
-          <edit-industry
+          <editable-field
             :disabled="info.industriesLoading"
             :model-value="industry"
             @save="handleIndustryEdit(industry, $event)"
           />
         </li>
         <li>
-          <form @submit.prevent="handleCategorySubmit">
+          <form @submit.prevent="handleIndustrySubmit">
             <input
               v-model="info.newIndustry"
               :disabled="info.industriesLoading"
@@ -57,6 +57,38 @@
             >
             <button
               :disabled="info.industriesLoading"
+              class="ml-3"
+            >
+              Create
+            </button>
+          </form>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2>Kategorije talkova</h2>
+
+      <ul>
+        <li
+          v-for="talkCategory in talkCategories"
+          :key="talkCategory"
+        >
+          <editable-field
+            :disabled="info.talkCategoriesLoading"
+            :model-value="talkCategory"
+            @save="handleTalkCategoryEdit(talkCategory, $event)"
+          />
+        </li>
+        <li>
+          <form @submit.prevent="handleTalkCategorySubmit">
+            <input
+              v-model="info.newTalkCategory"
+              :disabled="info.talkCategoriesLoading"
+              type="text"
+            >
+            <button
+              :disabled="info.talkCategoriesLoading"
               class="ml-3"
             >
               Create
@@ -143,7 +175,6 @@
   import {
     useIndustriesStore,
   } from "~/store/industries";
-  import EditIndustry from "~/components/admin/industries/edit-industry.vue";
   import {
     useQuery,
   } from "~/composables/useQuery";
@@ -151,15 +182,20 @@
     ICompany,
     IFile,
     IIndustry,
+    IApplicationTalkCategory,
     IPressRelease,
     IUser,
   } from "~/graphql/schema";
+  import {
+    useTalkCategoriesStore,
+  } from "~/store/talkCategories";
+  import EditableField from "~/components/admin/util/editable-field.vue";
 
   export default defineComponent({
     name: "PageAdminHome",
 
     components: {
-      EditIndustry,
+      EditableField,
       AppMaxWidthContainer,
       PChip: Chip,
     },
@@ -172,17 +208,25 @@
       useTitle("Admin", false);
 
       const industriesStore = useIndustriesStore();
+      const talkCategoriesStore = useTalkCategoriesStore();
 
       const info = reactive({
         newIndustry: "",
         industriesLoading: false,
+        newTalkCategory: "",
+        talkCategoriesLoading: false,
       });
 
       const industriesDelta = ref([] as string[]);
-
       const industries = computed({
         get: () => industriesStore.industries,
         set: (val) => industriesDelta.value = val,
+      });
+
+      const talkCategoriesDelta = ref([] as string[]);
+      const talkCategories = computed({
+        get: () => talkCategoriesStore.talkCategories,
+        set: (val) => talkCategoriesDelta.value = val,
       });
 
       type QCompany = Pick<ICompany,
@@ -202,6 +246,7 @@
                           | "email">;
       type QueryData = {
         industries: Pick<IIndustry, "name">[],
+        talkCategories: Pick<IApplicationTalkCategory, "name">[],
         companies: (QCompany & { industry: QIndustry, members: QUser, })[],
         pressReleases: QPressRelease[],
         users: QUser[],
@@ -211,6 +256,9 @@
         query: gql`
         query {
             industries {
+                name
+            }
+            talkCategories {
                 name
             }
             companies(orderBy: { legalName: asc }) {
@@ -244,16 +292,18 @@
       })().then((res) => res?.data);
 
       industriesStore.setIndustries(res?.industries);
+      talkCategoriesStore.setTalkCategories(res?.talkCategories);
 
       const companies = ref(res?.companies);
       return {
         industries,
+        talkCategories,
         companies,
         users: res?.users || [],
         pressReleases: (res?.pressReleases || [] as QPressRelease[]).map((item) => ({ ...item, published: new Date(String(item.published)) })),
         info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
-        async handleCategorySubmit() {
+        async handleIndustrySubmit() {
           info.industriesLoading = true;
           const resp = await industriesStore.createIndustry(info.newIndustry);
           if (!resp) {
@@ -273,6 +323,27 @@
             await industriesStore.fetchIndustries();
           }
           info.industriesLoading = false;
+        },
+        async handleTalkCategorySubmit() {
+          info.talkCategoriesLoading = true;
+          const resp = await talkCategoriesStore.createTalkCategory(info.newTalkCategory);
+          if (!resp) {
+            alert("Something went wrong. Please try again.");
+          } else {
+            await talkCategoriesStore.fetchTalkCategories();
+            info.newTalkCategory = "";
+          }
+          info.talkCategoriesLoading = false;
+        },
+        async handleTalkCategoryEdit(oldName: string, newName: string) {
+          info.talkCategoriesLoading = true;
+          const resp = await talkCategoriesStore.renameTalkCategory(oldName, newName);
+          if (!resp) {
+            alert("Something went wrong. Please try again.");
+          } else {
+            await talkCategoriesStore.fetchTalkCategories();
+          }
+          info.talkCategoriesLoading = false;
         },
       };
     },

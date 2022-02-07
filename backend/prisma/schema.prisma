@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 generator typegraphql {
@@ -88,6 +89,9 @@ model Company {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   members User[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  applications CompanyApplication[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   industryId Int
@@ -182,6 +186,10 @@ model Image {
   fullImageId     Int
   /// @TypeGraphQL.omit(output: true, input: true)
   thumbImageId    Int
+
+  // No polymorphism, workaround is this :(
+  /// @TypeGraphQL.omit(output: true, input: true)
+  ApplicationPresenter ApplicationPresenter[]
 }
 
 model ImageVariation {
@@ -199,4 +207,121 @@ model ImageVariation {
   forFull     Image[] @relation("ImageVariationFull")
   /// @TypeGraphQL.omit(output: true, input: true)
   forThumb    Image[] @relation("ImageVariationThumb")
+}
+
+model Season {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id       Int      @id @default(autoincrement())
+  name     String
+  startsAt DateTime
+  endsAt   DateTime
+
+  companies CompanyApplication[]
+}
+
+model CompanyApplication {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id            Int                  @id @default(autoincrement())
+  forCompany    Company              @relation(fields: [forCompanyId], references: [id])
+  forSeason     Season               @relation(fields: [forSeasonId], references: [id])
+  booth         String?
+  talk          ApplicationTalk?
+  workshop      ApplicationWorkshop?
+  wantsPanel    Boolean
+  wantsCocktail Boolean
+  /// @TypeGraphQL.omit(input: true)
+  createdAt     DateTime             @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt     DateTime             @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forCompanyId Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  @@unique([forCompanyId, forSeasonId])
+}
+
+model ApplicationTalk {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id             Int                     @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid            String                  @unique @default(cuid())
+  titleEn        String
+  titleHr        String
+  descriptionEn  String
+  descriptionHr  String
+  /// @TypeGraphQL.omit(input: true)
+  presenters     ApplicationPresenter[]
+  category       ApplicationTalkCategory @relation(fields: [categoryId], references: [id])
+  language       String
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication?     @relation(fields: [forApplicationId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt      DateTime                @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt      DateTime                @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int? @unique
+  /// @TypeGraphQL.omit(output: true, input: true)
+  categoryId       Int
+}
+
+model ApplicationTalkCategory {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  /// @TypeGraphQL.omit(input: true)
+  talks ApplicationTalk[]
+}
+
+model ApplicationPresenter {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  bioEn     String
+  bioHr     String
+  photo     Image?   @relation(fields: [photoId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  /// @TypeGraphQL.omit(input: true)
+  forTalks     ApplicationTalk[]
+  /// @TypeGraphQL.omit(input: true)
+  forWorkshops ApplicationWorkshop[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  photoId Int?
+}
+
+model ApplicationWorkshop {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id             Int                    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid            String                 @unique @default(cuid())
+  titleEn        String
+  titleHr        String
+  descriptionEn  String
+  descriptionHr  String
+  notesEn        String
+  notesHr        String
+  goal           String
+  /// @TypeGraphQL.omit(input: true)
+  presenters     ApplicationPresenter[]
+  language       String
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication?    @relation(fields: [forApplicationId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  createdAt      DateTime               @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt      DateTime               @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int? @unique
 }

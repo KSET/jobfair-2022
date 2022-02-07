@@ -2,6 +2,7 @@ import {
   defineStore,
 } from "pinia";
 import {
+  ICompany,
   ILoginMutation,
   ILoginMutationVariables,
   ILogoutMutation,
@@ -26,7 +27,8 @@ import {
   useQuery,
 } from "~/composables/useQuery";
 
-type User = IProfileQuery["profile"];
+type User = NonNullable<IProfileQuery["profile"]>;
+type Company = NonNullable<User["companies"][0]>;
 
 export const useUserStore = defineStore(
   "user",
@@ -44,8 +46,12 @@ export const useUserStore = defineStore(
         return state.user?.roles.some(({ name }) => "admin" === name) ?? false;
       },
 
-      hasCompany(state) {
-        return 0 < (state.user?.companies.length ?? 0);
+      company(state): Company | null {
+        return state.user?.companies?.[0] || null;
+      },
+
+      hasCompany(): boolean {
+        return Boolean(this.company);
       },
     },
 

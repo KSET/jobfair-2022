@@ -3,6 +3,87 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ApplicationPresenter {
+  _count: ApplicationPresenterCount
+  bioEn: String!
+  bioHr: String!
+  createdAt: DateTime!
+  firstName: String!
+  lastName: String!
+  updatedAt: DateTime!
+}
+
+type ApplicationPresenterCount {
+  forTalks: Int!
+  forWorkshops: Int!
+}
+
+type ApplicationTalk {
+  _count: ApplicationTalkCount
+  createdAt: DateTime!
+  descriptionEn: String!
+  descriptionHr: String!
+  language: String!
+  presenters: [ApplicationPresenter!]!
+  titleEn: String!
+  titleHr: String!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+type ApplicationTalkCategory {
+  _count: ApplicationTalkCategoryCount
+  name: String!
+}
+
+type ApplicationTalkCategoryCount {
+  talks: Int!
+}
+
+input ApplicationTalkCategoryOrderByWithRelationInput {
+  name: SortOrder
+}
+
+enum ApplicationTalkCategoryScalarFieldEnum {
+  id
+  name
+}
+
+input ApplicationTalkCategoryWhereInput {
+  AND: [ApplicationTalkCategoryWhereInput!]
+  NOT: [ApplicationTalkCategoryWhereInput!]
+  OR: [ApplicationTalkCategoryWhereInput!]
+  name: StringFilter
+}
+
+input ApplicationTalkCategoryWhereUniqueInput {
+  name: String
+}
+
+type ApplicationTalkCount {
+  presenters: Int!
+}
+
+type ApplicationWorkshop {
+  _count: ApplicationWorkshopCount
+  createdAt: DateTime!
+  descriptionEn: String!
+  descriptionHr: String!
+  goal: String!
+  language: String!
+  notesEn: String!
+  notesHr: String!
+  presenters: [ApplicationPresenter!]!
+  titleEn: String!
+  titleHr: String!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+type ApplicationWorkshopCount {
+  presenters: Int!
+}
+
 type AuthResponse {
   entity: User
   errors: [FieldError!]
@@ -22,7 +103,27 @@ type Company {
   website: String!
 }
 
+type CompanyApplication {
+  booth: String
+  createdAt: DateTime!
+  talk: ApplicationTalk
+  updatedAt: DateTime!
+  wantsCocktail: Boolean!
+  wantsPanel: Boolean!
+  workshop: ApplicationWorkshop
+}
+
+input CompanyApplicationCreateInput {
+  booth: String = null
+  talk: TalkCreateInput = null
+  vat: String = ""
+  wantsCocktail: Boolean = false
+  wantsPanel: Boolean = false
+  workshop: WorkshopCreateInput = null
+}
+
 type CompanyCount {
+  applications: Int!
   members: Int!
 }
 
@@ -64,6 +165,21 @@ input CompanyWhereInput {
 
 input CompanyWhereUniqueInput {
   vat: String
+}
+
+type CreateCompanyApplicationResponse {
+  entity: CompanyApplication
+  errors: [FieldError!]
+}
+
+type CreateCompanyApplicationTalkResponse {
+  entity: ApplicationTalk
+  errors: [FieldError!]
+}
+
+type CreateCompanyApplicationWorkshopResponse {
+  entity: ApplicationWorkshop
+  errors: [FieldError!]
 }
 
 input CreateCompanyInput {
@@ -186,13 +302,20 @@ input IntFilter {
 }
 
 type Mutation {
+  createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
+  createCompanyApplicationCocktailPreference(info: Boolean!, vat: String!): Boolean
+  createCompanyApplicationPanelPreference(info: Boolean!, vat: String!): Boolean
+  createCompanyApplicationTalk(info: TalkCreateInput, vat: String!): CreateCompanyApplicationTalkResponse
+  createCompanyApplicationWorkshop(info: WorkshopCreateInput, vat: String!): CreateCompanyApplicationWorkshopResponse
   createIndustry(name: String!): Industry
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
+  createTalkCategory(name: String!): ApplicationTalkCategory
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   renameIndustry(newName: String!, oldName: String!): Industry
+  renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
@@ -246,6 +369,14 @@ type News {
   lang: String!
   slug: String!
   title: String!
+}
+
+input PresenterCreateInput {
+  bioEn: String = ""
+  bioHr: String = ""
+  firstName: String = ""
+  lastName: String = ""
+  photo: Upload = null
 }
 
 type PressRelease {
@@ -307,6 +438,7 @@ type Query {
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
+  talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
   user(uid: String!): User
@@ -369,6 +501,16 @@ input StringFilter {
   not: NestedStringFilter
   notIn: [String!]
   startsWith: String
+}
+
+input TalkCreateInput {
+  category: String = ""
+  descriptionEn: String = ""
+  descriptionHr: String = ""
+  language: String = ""
+  presenter: PresenterCreateInput = null
+  titleEn: String = ""
+  titleHr: String = ""
 }
 
 type Translation {
@@ -528,4 +670,16 @@ type ValidateVatResponse {
 type VatData {
   address: String!
   legalName: String!
+}
+
+input WorkshopCreateInput {
+  descriptionEn: String = ""
+  descriptionHr: String = ""
+  goal: String = ""
+  language: String = ""
+  notesEn: String = ""
+  notesHr: String = ""
+  presenter: PresenterCreateInput = null
+  titleEn: String = ""
+  titleHr: String = ""
 }

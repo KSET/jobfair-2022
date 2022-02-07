@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <input
-      v-model="industry"
+      v-model="model"
       :disabled="disabled"
       type="text"
     >
@@ -42,18 +42,18 @@
     ],
 
     setup(props, { emit }) {
-      const industryChanged = ref(props.modelValue);
-      const industry = computed({
+      const modelChanged = ref(props.modelValue);
+      const model = computed({
         get: () => props.modelValue,
-        set: (value) => industryChanged.value = value,
+        set: (value) => modelChanged.value = value,
       });
 
       return {
-        industry,
+        model,
         handleSubmit() {
           emit(
             "save",
-            unref(industryChanged),
+            unref(modelChanged),
           );
         },
       };

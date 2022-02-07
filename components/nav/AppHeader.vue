@@ -241,6 +241,10 @@
           background-position: center center;
           background-size: contain;
           filter: invert(1);
+
+          &::before {
+            display: none;
+          }
         }
       }
 

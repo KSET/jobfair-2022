@@ -207,6 +207,17 @@ export class CompanyInfoMutationsResolver {
       },
     });
 
+    if (!entity) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Something went wrong",
+          },
+        ],
+      };
+    }
+
     void EventsService.logEvent("company:register", ctx.user.id, { vat: entity.vat });
 
     return {

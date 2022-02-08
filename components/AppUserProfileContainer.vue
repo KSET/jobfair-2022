@@ -38,7 +38,7 @@
                 />
               </a>
             </li>
-            <li>
+            <li v-if="isSeasonInProgress">
               <a
                 :href="$router.resolve({ name: 'profile-me-company-signup' }).href"
               >
@@ -84,6 +84,9 @@
   } from "~/store/user";
   import PageNotFound from "~/components/page-not-found.vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     components: {
@@ -103,8 +106,10 @@
 
     setup() {
       const userStore = useUserStore();
+      const seasonsStore = useSeasonsStore();
 
       return {
+        isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),
       };

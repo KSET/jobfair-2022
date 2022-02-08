@@ -100,6 +100,9 @@
   import {
     useNewsStore,
   } from "~/store/news";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     components: {
@@ -116,6 +119,7 @@
       const userStore = useUserStore();
       const translationsStore = useTranslationsStore();
       const newsStore = useNewsStore();
+      const seasonsStore = useSeasonsStore();
       const nuxt = useNuxtApp();
 
       translationsStore.setLanguageFromCookie();
@@ -165,6 +169,7 @@
         if (initialData) {
           userStore.user = initialData.data?.profile ?? null;
           translationsStore.setTranslations(initialData.data?.allTranslationsFor ?? []);
+          seasonsStore.setCurrentSeason(initialData.data?.currentSeason);
         }
       }
 

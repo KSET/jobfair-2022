@@ -45,6 +45,13 @@ query InitialData($language: String!) {
         key
         value
     }
+
+    currentSeason {
+        uid
+        name
+        startsAt
+        endsAt
+    }
 }
 
 query Company($vat: String!) {

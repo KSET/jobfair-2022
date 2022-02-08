@@ -1,5 +1,5 @@
 <template>
-  <app-user-profile-container :class="$style.container">
+  <app-user-profile-container :not-found="!isSeasonInProgress" :class="$style.container">
     <form
       style="display: contents;"
       @submit.prevent="handleFormSubmit"
@@ -121,6 +121,7 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
     reactive,
     ref,
@@ -173,6 +174,9 @@
   import {
     useTalkCategoriesStore,
   } from "~/store/talkCategories";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   enum FormFor {
     Talk = "talk",
@@ -198,6 +202,7 @@
       const toast = useToast();
       const userStore = useUserStore();
       const talkCategoriesStore = useTalkCategoriesStore();
+      const seasonsStore = useSeasonsStore();
 
       const company = userStore.company!;
 
@@ -302,6 +307,7 @@
       const isLoading = ref(false);
 
       return {
+        isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
         isLoading,
         items,
         booths,

@@ -122,6 +122,19 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
+    const canPickPanelOrCocktail = Boolean(info.talk || info.workshop || info.booth);
+
+    if (!canPickPanelOrCocktail && (info.wantsCocktail || info.wantsPanel)) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "You may not pick only cocktail and/or panel",
+          },
+        ],
+      };
+    }
+
     info.vat = info.vat.toUpperCase();
 
     const isInCompany = ctx.user.companies.some((company) => company.vat === info.vat);

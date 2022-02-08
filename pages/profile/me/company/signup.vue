@@ -212,7 +212,6 @@
           }),
           {
             [FormFor.Talk]: {
-              selected: true,
               forms: {
                 info: companyApplicationTalkCreate()({
                   requireHr,
@@ -238,7 +237,6 @@
             },
             [FormFor.Panel]: {
               forms: null,
-              selected: true,
             },
           },
         ),

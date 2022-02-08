@@ -214,23 +214,11 @@
             [FormFor.Talk]: {
               selected: true,
               forms: {
-                info: companyApplicationTalkCreate({
-                  language: "hr_HR",
-                  titleHr: "Title HR",
-                  titleEn: "Title EN",
-                  descriptionHr: "Opis Hrvatski bi trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla.",
-                  descriptionEn: "Description EN  bi trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla.",
-                  category: "",
-                })({
+                info: companyApplicationTalkCreate()({
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate({
-                  firstName: "Marko",
-                  lastName: "Horvat",
-                  bioHr: "Bio HR trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla",
-                  bioEn: "Bio EN v trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla trebalo biti dovoljno dugačak da bude barem 73 znaka. Inače nema smisla",
-                })({
+                presenter: companyApplicationPresenterCreate()({
                   requireHr,
                 }),
               },
@@ -277,6 +265,7 @@
           for (const item of Object.values(items)) {
             if (item.errors) {
               for (const errors of Object.values(item.errors)) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 resetErrorsFor(errors as any);
               }
             }

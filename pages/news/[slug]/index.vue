@@ -1,5 +1,5 @@
 <template>
-  <app-max-width-container :class="$style.container">
+  <app-max-width-container :not-found="!newsItem" :class="$style.container">
     <div :class="$style.newsContainer">
       <div
         :class="$style.image"

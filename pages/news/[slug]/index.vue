@@ -115,7 +115,7 @@
           description: metaData.description,
         })),
       });
-      useTitle(title);
+      useTitle(title, false);
 
       const [
         newsItem,

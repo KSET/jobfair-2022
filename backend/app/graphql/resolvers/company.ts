@@ -48,6 +48,7 @@ import {
   toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
+import SlackNotificationService from "../../services/slack-notification-service";
 import {
   transformSelect as transformSelectMembers,
 } from "./user";
@@ -219,6 +220,7 @@ export class CompanyInfoMutationsResolver {
     }
 
     void EventsService.logEvent("company:register", ctx.user.id, { vat: entity.vat });
+    void SlackNotificationService.notifyOfNewCompany({ ...entity, industry }, ctx.user);
 
     return {
       entity,

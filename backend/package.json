@@ -17,6 +17,7 @@
         "@types/node": "^17.0.13",
         "apollo-server-express": "^3.6.2",
         "argon2": "^0.28.3",
+        "axios": "^0.25.0",
         "class-validator": "^0.13.2",
         "connect-redis": "^6.0.0",
         "content-disposition": "^0.5.4",

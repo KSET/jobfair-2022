@@ -5,6 +5,7 @@
     </h1>
 
     <app-img
+      v-if="newsItem"
       :alt="newsItem.title"
       :src="newsItem.image"
       aspect-ratio="1.78"
@@ -32,6 +33,12 @@
         </div>
       </nuxt-link>
     </app-img>
+    <h2
+      v-else
+      class="text-center opacity-70"
+    >
+      <translated-text trans-key="news.no-news" />
+    </h2>
 
     <div :class="$style.newsContainer">
       <news-card

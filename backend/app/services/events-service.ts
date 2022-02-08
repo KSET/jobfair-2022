@@ -1,9 +1,12 @@
 import {
+  EventLog,
+} from "@generated/type-graphql";
+import {
   prisma,
 } from "../providers/prisma";
 
 export class EventsService {
-  public static logEvent(name: string, userId?: number | null, payload?: unknown) {
+  public static logEvent(name: string, userId?: number | null, payload?: unknown): Promise<EventLog | null> {
     try {
       const data = {
         name,
@@ -22,7 +25,7 @@ export class EventsService {
         data,
       }).then((x) => x);
     } catch {
-      return null;
+      return Promise.resolve(null);
     }
   }
 }

@@ -6,6 +6,40 @@
     >
       <div :class="$style.panels">
         <Panel
+          :class="[$style.panel, $style.panelBreakable]"
+          collapsed
+        >
+          <template #header>
+            <strong>
+              <translated-text trans-key="company-signup.form.booth" />
+            </strong>
+
+            <div
+              :style="{
+                gap: '1rem',
+              }"
+              class="flex flex-row"
+            >
+              <div
+                v-for="category of booths"
+                :key="category.key"
+              >
+                <label
+                  class="ml-2"
+                >
+                  <RadioButton
+                    :id="category.key"
+                    v-model="booth"
+                    :value="category"
+                    name="booth"
+                  />
+                  {{ category.name }}
+                </label>
+              </div>
+            </div>
+          </template>
+        </Panel>
+        <Panel
           v-for="(item, name) in items"
           :key="name"
           :class="$style.panel"
@@ -90,6 +124,7 @@
     defineComponent,
     reactive,
     ref,
+    unref,
   } from "vue";
   import Panel from "primevue/panel";
   import Checkbox from "primevue/checkbox";
@@ -107,6 +142,7 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import RadioButton from "primevue/radiobutton";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
     useMutation,
@@ -155,6 +191,7 @@
       AppUserProfileContainer,
       Panel,
       Checkbox,
+      RadioButton,
     },
 
     async setup() {
@@ -242,6 +279,15 @@
         ),
       );
 
+      const booths = [
+        { name: "None", key: null },
+        { name: "Startup", key: "s" },
+        { name: "Fast-growing", key: "m" },
+        { name: "Leading", key: "l" },
+      ];
+
+      const booth = ref(booths[0]);
+
       const toData =
         <T>(info: Record<keyof T, InputEntry>) =>
           pipe(
@@ -258,6 +304,8 @@
       return {
         isLoading,
         items,
+        booths,
+        booth,
         async handleFormSubmit() {
           const selectedObj = filter((item) => item.selected, items);
           for (const item of Object.values(items)) {
@@ -271,7 +319,7 @@
 
           const info: ICreateCompanyApplicationMutationVariables["info"] = {
             vat,
-            booth: "xl",
+            booth: unref(booth).key,
             talk:
               selectedObj.talk
                 ? {
@@ -373,6 +421,20 @@
     .panel {
       border-radius: 0;
       box-shadow: none;
+
+      &.panelBreakable {
+
+        :global(.p-panel-header) {
+          @include media(lg) {
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+        }
+      }
+
+      :global(.p-panel-icons) {
+        display: none;
+      }
 
       :global(.p-panel-header) {
         display: flex;

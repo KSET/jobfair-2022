@@ -86,6 +86,10 @@ model Company {
   industry      Industry @relation(fields: [industryId], references: [id])
   descriptionEn String
   descriptionHr String
+  /// @TypeGraphQL.omit(input: true)
+  createdAt     DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt     DateTime @default(now()) @updatedAt
 
   /// @TypeGraphQL.omit(output: true, input: true)
   members User[]

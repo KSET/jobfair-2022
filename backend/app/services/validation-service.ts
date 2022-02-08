@@ -112,7 +112,7 @@ const companyWorkshopValidation = z.object({
 export const CompanyWorkshopValidation = <T>(workshop: T) => formatValidation(companyWorkshopValidation, workshop);
 
 const companyApplicationValidation = z.object({
-  booth: z.string(),
+  booth: z.nullable(z.string()),
   talk: z.nullable(companyTalkValidation),
   workshop: z.nullable(companyWorkshopValidation),
   wantsCocktail: z.boolean(),

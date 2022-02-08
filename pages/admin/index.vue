@@ -5,6 +5,20 @@
     </h1>
 
     <div>
+      <h2>Prijevodi</h2>
+
+      <dl>
+        <dd>
+          <h3>
+            <nuxt-link :to="{ name: 'admin-translations' }">
+              Uredi
+            </nuxt-link>
+          </h3>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
       <h2>Press</h2>
       <ul>
         <li>
@@ -145,16 +159,6 @@
           </nuxt-link>
         </li>
       </ul>
-    </div>
-
-    <div>
-      <h2>Prijevodi</h2>
-
-      <h3>
-        <nuxt-link :to="{ name: 'admin-translations' }">
-          Uredi
-        </nuxt-link>
-      </h3>
     </div>
   </app-max-width-container>
 </template>

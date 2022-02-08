@@ -1,5 +1,6 @@
 import {
   Company,
+  Industry,
   User,
 } from "@prisma/client";
 import {
@@ -16,13 +17,10 @@ import {
 import {
   post,
 } from "../helpers/axios";
-import {
-  IIndustry,
-} from "../../../graphql/schema";
 
 export default class SlackNotificationService {
   static notifyOfNewCompany(
-    company: Company & { industry: IIndustry, },
+    company: Company & { industry: Industry, },
     creator: User,
   ) {
     const text = `

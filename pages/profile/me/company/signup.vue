@@ -1,5 +1,9 @@
 <template>
   <app-user-profile-container :not-found="!isSeasonInProgress" :class="$style.container">
+    <h1>
+      <translated-text trans-key="company-signup.header" />
+    </h1>
+
     <form
       style="display: contents;"
       @submit.prevent="handleFormSubmit"
@@ -177,6 +181,7 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import useTitle from "~/composables/useTitle";
 
   enum FormFor {
     Talk = "talk",
@@ -199,6 +204,8 @@
     },
 
     async setup() {
+      useTitle("company-signup.header");
+
       const toast = useToast();
       const userStore = useUserStore();
       const talkCategoriesStore = useTalkCategoriesStore();

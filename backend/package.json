@@ -6,7 +6,7 @@
         "dev": "ts-node-dev --clear --rs index.ts",
         "db:client:gen": "prisma generate",
         "db:schema:format": "prisma format",
-        "db:migration:new": "prisma migrate dev",
+        "db:migration:new": "prisma migrate dev --create-only",
         "db:migration:deploy": "prisma migrate deploy",
         "graphql:schema:dump": "ts-node dump-schema.ts",
         "lint": "eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore"

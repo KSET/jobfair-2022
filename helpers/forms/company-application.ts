@@ -12,6 +12,8 @@ import {
 
 export type Presenter = Omit<IApplicationPresenter,
   "_count"
+  | "createdAt"
+  | "updatedAt"
   | "photoId">;
 export const companyApplicationPresenterCreate =
   <T extends Presenter>(presenter?: T) =>
@@ -51,6 +53,8 @@ export type Talk = Omit<IApplicationTalk,
   | "forCompanyId"
   | "presenters"
   | "categoryId"
+  | "createdAt"
+  | "updatedAt"
   | "uid"> & {
   category: string,
 };
@@ -100,6 +104,8 @@ export type Workshop = Omit<IApplicationWorkshop,
   "_count"
   | "forCompanyId"
   | "presenters"
+  | "createdAt"
+  | "updatedAt"
   | "uid">;
 export const companyApplicationWorkshopCreate =
   <T extends Workshop>(workshop?: T) =>

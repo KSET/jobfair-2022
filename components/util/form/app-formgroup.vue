@@ -115,6 +115,31 @@
         </template>
       </app-file-input>
       <app-input
+        v-else-if="input.type === 'datetime-local'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${inputName}`"
+        :name="inputName"
+        :placeholder="input.placeholder"
+        :required="input.required ?? true"
+        type="datetime-local"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-input>
+      <app-input
         v-else
         :key="`${input.type}-${inputName}`"
         v-model="input.value"

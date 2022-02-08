@@ -113,7 +113,34 @@
     </div>
 
     <div>
-      <h2>Firme</h2>
+      <h2>Sezone</h2>
+
+      <fieldset>
+        <legend>New</legend>
+
+        <edit-season
+          @save="refreshSeasons"
+        />
+      </fieldset>
+
+      <fieldset
+        v-for="season in seasons"
+        :key="season.uid"
+        class="mt-3"
+      >
+        <legend v-text="season.name" />
+
+        <edit-season
+          :season="season"
+          :uid="season.uid"
+          @save="refreshSeasons"
+          @delete="refreshSeasons"
+        />
+      </fieldset>
+    </div>
+
+    <div>
+      <h2>Firme ({{ (companies || []).length }})</h2>
       <ul>
         <li
           v-for="company of companies"
@@ -143,7 +170,7 @@
     </div>
 
     <div>
-      <h2>Korisnici</h2>
+      <h2>Korisnici ({{ (users || []).length }})</h2>
 
       <ul>
         <li
@@ -174,6 +201,9 @@
   } from "@urql/core";
   import Tooltip from "primevue/tooltip";
   import Chip from "primevue/chip";
+  import {
+    sortBy,
+  } from "rambdax";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import {
@@ -189,16 +219,19 @@
     IApplicationTalkCategory,
     IPressRelease,
     IUser,
+    ISeason,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,
   } from "~/store/talkCategories";
   import EditableField from "~/components/admin/util/editable-field.vue";
+  import EditSeason from "~/components/page/admin/edit-season.vue";
 
   export default defineComponent({
     name: "PageAdminHome",
 
     components: {
+      EditSeason,
       EditableField,
       AppMaxWidthContainer,
       PChip: Chip,
@@ -247,13 +280,20 @@
       type QUser = Pick<IUser,
                         "uid"
                           | "name"
+                          | "createdAt"
                           | "email">;
+      type QSeason = Pick<ISeason,
+                          "uid"
+                            | "startsAt"
+                            | "endsAt"
+                            | "name">;
       type QueryData = {
         industries: Pick<IIndustry, "name">[],
         talkCategories: Pick<IApplicationTalkCategory, "name">[],
         companies: (QCompany & { industry: QIndustry, members: QUser, })[],
         pressReleases: QPressRelease[],
         users: QUser[],
+        seasons: QSeason[],
       };
       type QueryArgs = never;
       const res = await useQuery<QueryData, QueryArgs>({
@@ -290,6 +330,13 @@
                 uid
                 name
                 email
+                createdAt
+            }
+            seasons(orderBy: { endsAt: desc }) {
+                uid
+                name
+                startsAt
+                endsAt
             }
         }
         `,
@@ -298,12 +345,15 @@
       industriesStore.setIndustries(res?.industries);
       talkCategoriesStore.setTalkCategories(res?.talkCategories);
 
+      const seasons = ref((res?.seasons || []).map(reactive));
+
       const companies = ref(res?.companies);
       return {
         industries,
         talkCategories,
         companies,
-        users: res?.users || [],
+        users: sortBy<QUser>((u) => new Date(u.createdAt as string), res?.users || []),
+        seasons,
         pressReleases: (res?.pressReleases || [] as QPressRelease[]).map((item) => ({ ...item, published: new Date(String(item.published)) })),
         info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
@@ -348,6 +398,24 @@
             await talkCategoriesStore.fetchTalkCategories();
           }
           info.talkCategoriesLoading = false;
+        },
+        async refreshSeasons() {
+          const resp = await useQuery<{
+            seasons: QSeason[],
+          }, never>({
+            query: gql`
+            query {
+              seasons(orderBy: { endsAt: desc }) {
+                  uid
+                  name
+                  startsAt
+                  endsAt
+              }
+            }
+          `,
+          })();
+
+          seasons.value = (resp?.data?.seasons || []).map(reactive);
         },
       };
     },

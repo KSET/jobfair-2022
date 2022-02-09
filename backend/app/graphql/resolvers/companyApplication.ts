@@ -39,6 +39,7 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import SlackNotificationService from "../../services/slack-notification-service";
 import {
   TalkCreateInput,
   transformSelect as transformSelectTalks,
@@ -292,7 +293,7 @@ export class CompanyApplicationCreateResolver {
       }
 
       if (!oldApplication) {
-        return await prisma.companyApplication.create({
+        const entity = await prisma.companyApplication.create({
           data: {
             booth: info.booth,
             wantsPanel: info.wantsPanel,
@@ -356,6 +357,20 @@ export class CompanyApplicationCreateResolver {
             talk: true,
           },
         });
+
+        void SlackNotificationService.notifyOfNewApplication(
+          company,
+          ctx.user!,
+          {
+            booth: info.booth || ":x:",
+            workshop: Boolean(info.workshop),
+            talk: Boolean(info.talk),
+            cocktail: info.wantsCocktail,
+            panel: info.wantsPanel,
+          },
+        );
+
+        return entity;
       }
 
       const deleteIf =

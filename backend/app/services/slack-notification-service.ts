@@ -56,7 +56,7 @@ export default class SlackNotificationService {
     company: Company,
     creator: User,
     chosen: {
-      booth: string | null,
+      booth?: string | null,
       talk: boolean,
       workshop: boolean,
       panel: boolean,
@@ -72,7 +72,7 @@ export default class SlackNotificationService {
   - Ime: ${ company.brandName }
 
 *Odabrano*
-  - Štand: ${ chosen.booth || ":x:" }
+  - Štand: _${ chosen.booth || ":x:" }_
   - Talk: ${ has(chosen.talk) }
   - Workshop: ${ has(chosen.workshop) }
   - Panel: ${ has(chosen.panel) }

@@ -378,7 +378,7 @@ export class CompanyApplicationCreateResolver {
           company,
           ctx.user!,
           {
-            booth: info.booth || ":x:",
+            booth: booths.find((booth) => booth.key === info.booth)?.name,
             workshop: Boolean(info.workshop),
             talk: Boolean(info.talk),
             cocktail: info.wantsCocktail,

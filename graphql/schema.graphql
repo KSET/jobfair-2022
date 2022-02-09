@@ -136,6 +136,11 @@ input BoolFilter {
   not: NestedBoolFilter
 }
 
+type Booth {
+  key: String
+  name: String!
+}
+
 type Company {
   _count: CompanyCount
   address: String!
@@ -515,6 +520,7 @@ input PressReleaseWithFilesCreateInput {
 
 type Query {
   allTranslationsFor(language: String!): [Translation!]!
+  booths: [Booth!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication

@@ -41,6 +41,9 @@ import {
 } from "../../helpers/auth";
 import SlackNotificationService from "../../services/slack-notification-service";
 import {
+  BoothsService,
+} from "../../services/booths-service";
+import {
   TalkCreateInput,
   transformSelect as transformSelectTalks,
 } from "./companyApplicationTalk";
@@ -186,6 +189,19 @@ export class CompanyApplicationCreateResolver {
           {
             field: "entity",
             message: "You may not pick only cocktail and/or panel",
+          },
+        ],
+      };
+    }
+
+    const booths = await BoothsService.fetchBooths();
+
+    if (!booths.some((booth) => info.booth === booth.key)) {
+      return {
+        errors: [
+          {
+            field: "booth",
+            message: "Unknown booth",
           },
         ],
       };

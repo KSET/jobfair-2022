@@ -172,6 +172,7 @@
   import {
     CreateCompanyApplication,
     IApplicationTalkCategory,
+    IBooth,
     ICompanyApplication,
     ICreateCompanyApplicationMutation,
     ICreateCompanyApplicationMutationVariables,
@@ -232,6 +233,7 @@
 
       type QData = {
         talkCategories: Pick<IApplicationTalkCategory, "name">[],
+        booths: Pick<IBooth, "name" | "key">[],
         companyApplication: ICompanyApplication,
       };
       type QArgs = never;
@@ -240,6 +242,10 @@
           query CompanyApplication {
               talkCategories {
                   name
+              }
+              booths {
+                  name
+                  key
               }
               companyApplication {
                   booth
@@ -341,12 +347,7 @@
         ),
       );
 
-      const booths = [
-        { name: "None", key: null },
-        { name: "Startup", key: "s" },
-        { name: "Fast-growing", key: "m" },
-        { name: "Leading", key: "l" },
-      ];
+      const booths = resp?.booths || [];
 
       const booth = ref(booths.find((booth) => booth.key === resp?.companyApplication?.booth) || booths[0]);
 

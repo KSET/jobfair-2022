@@ -301,7 +301,7 @@
             [FormFor.Talk]: {
               forms: {
                 info: companyApplicationTalkCreate(
-                  resp?.companyApplication.talk,
+                  resp?.companyApplication?.talk,
                 )({
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
@@ -312,12 +312,12 @@
                   requireHr,
                 }),
               },
-              selected: Boolean(resp?.companyApplication.talk),
+              selected: Boolean(resp?.companyApplication?.talk),
             },
             [FormFor.Workshop]: {
               forms: {
                 info: companyApplicationWorkshopCreate(
-                  resp?.companyApplication.workshop,
+                  resp?.companyApplication?.workshop,
                 )({
                   requireHr,
                 }),
@@ -327,15 +327,15 @@
                   requireHr,
                 }),
               },
-              selected: Boolean(resp?.companyApplication.workshop),
+              selected: Boolean(resp?.companyApplication?.workshop),
             },
             [FormFor.Cocktail]: {
               forms: null,
-              selected: Boolean(resp?.companyApplication.wantsCocktail),
+              selected: Boolean(resp?.companyApplication?.wantsCocktail),
             },
             [FormFor.Panel]: {
               forms: null,
-              selected: Boolean(resp?.companyApplication.wantsPanel),
+              selected: Boolean(resp?.companyApplication?.wantsPanel),
             },
           } as const,
         ),
@@ -348,7 +348,7 @@
         { name: "Leading", key: "l" },
       ];
 
-      const booth = ref(booths.find((booth) => booth.key === resp?.companyApplication.booth) || booths[0]);
+      const booth = ref(booths.find((booth) => booth.key === resp?.companyApplication?.booth) || booths[0]);
 
       const toData =
         <T>(info: Record<keyof T, InputEntry>) =>

@@ -1,5 +1,5 @@
 <template>
-  <app-user-profile-container :not-found="!isSeasonInProgress" :class="$style.container">
+  <app-user-profile-container :class="$style.container">
     <h1>
       <translated-text trans-key="company-signup.header" />
     </h1>

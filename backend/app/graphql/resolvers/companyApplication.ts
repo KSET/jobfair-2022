@@ -44,6 +44,9 @@ import {
   BoothsService,
 } from "../../services/booths-service";
 import {
+  EventsService,
+} from "../../services/events-service";
+import {
   TalkCreateInput,
   transformSelect as transformSelectTalks,
 } from "./companyApplicationTalk";
@@ -308,6 +311,14 @@ export class CompanyApplicationCreateResolver {
         info.workshop.presenter.photo = undefined as unknown as null;
       }
 
+      const chosen = {
+        booth: booths.find((booth) => booth.key === info.booth)?.name,
+        workshop: Boolean(info.workshop),
+        talk: Boolean(info.talk),
+        cocktail: info.wantsCocktail,
+        panel: info.wantsPanel,
+      } as const;
+
       if (!oldApplication) {
         const entity = await prisma.companyApplication.create({
           data: {
@@ -374,17 +385,22 @@ export class CompanyApplicationCreateResolver {
           },
         });
 
-        void SlackNotificationService.notifyOfNewApplication(
-          company,
-          ctx.user!,
-          {
-            booth: booths.find((booth) => booth.key === info.booth)?.name,
-            workshop: Boolean(info.workshop),
-            talk: Boolean(info.talk),
-            cocktail: info.wantsCocktail,
-            panel: info.wantsPanel,
-          },
-        );
+        if (entity) {
+          void SlackNotificationService.notifyOfNewApplication(
+            company,
+            ctx.user!,
+            chosen,
+          );
+
+          void EventsService.logEvent(
+            "company-application:create",
+            ctx.user!.id,
+            {
+              vat: company.vat,
+              chosen,
+            },
+          );
+        }
 
         return entity;
       }
@@ -398,7 +414,7 @@ export class CompanyApplicationCreateResolver {
             : undefined
       ;
 
-      return await prisma.companyApplication.update({
+      const entity = await prisma.companyApplication.update({
         where: {
           // eslint-disable-next-line camelcase
           forCompanyId_forSeasonId: {
@@ -525,6 +541,19 @@ export class CompanyApplicationCreateResolver {
           },
         },
       });
+
+      if (entity) {
+        void EventsService.logEvent(
+          "company-application:update",
+          ctx.user!.id,
+          {
+            vat: company.vat,
+            chosen,
+          },
+        );
+      }
+
+      return entity;
     });
 
     return {

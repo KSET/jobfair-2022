@@ -172,6 +172,7 @@
   import {
     CreateCompanyApplication,
     IApplicationTalkCategory,
+    ICompanyApplication,
     ICreateCompanyApplicationMutation,
     ICreateCompanyApplicationMutationVariables,
   } from "~/graphql/schema";
@@ -231,14 +232,52 @@
 
       type QData = {
         talkCategories: Pick<IApplicationTalkCategory, "name">[],
+        companyApplication: ICompanyApplication,
       };
       type QArgs = never;
       const resp = await useQuery<QData, QArgs>({
         query: gql`
-          query {
-            talkCategories {
-              name
-            }
+          query CompanyApplication {
+              talkCategories {
+                  name
+              }
+              companyApplication {
+                  booth
+                  wantsPanel
+                  wantsCocktail
+                  talk {
+                      titleEn
+                      titleHr
+                      descriptionEn
+                      descriptionHr
+                      language
+                      category {
+                          name
+                      }
+                      presenters {
+                          firstName
+                          lastName
+                          bioHr
+                          bioEn
+                      }
+                  }
+                  workshop {
+                      titleEn
+                      titleHr
+                      descriptionEn
+                      descriptionHr
+                      language
+                      goal
+                      notesEn
+                      notesHr
+                      presenters {
+                          firstName
+                          lastName
+                          bioHr
+                          bioEn
+                      }
+                  }
+              }
           }
         `,
       })().then((resp) => resp?.data);
@@ -248,7 +287,6 @@
       const items = reactive(
         map(
           (x) => ({
-            selected: false,
             ...x,
             errors:
               x.forms
@@ -262,32 +300,44 @@
           {
             [FormFor.Talk]: {
               forms: {
-                info: companyApplicationTalkCreate()({
+                info: companyApplicationTalkCreate(
+                  resp?.companyApplication.talk,
+                )({
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate()({
+                presenter: companyApplicationPresenterCreate(
+                  resp?.companyApplication?.talk?.presenters[0],
+                )({
                   requireHr,
                 }),
               },
+              selected: Boolean(resp?.companyApplication.talk),
             },
             [FormFor.Workshop]: {
               forms: {
-                info: companyApplicationWorkshopCreate()({
+                info: companyApplicationWorkshopCreate(
+                  resp?.companyApplication.workshop,
+                )({
                   requireHr,
                 }),
-                presenter: companyApplicationPresenterCreate()({
+                presenter: companyApplicationPresenterCreate(
+                  resp?.companyApplication?.workshop?.presenters[0],
+                )({
                   requireHr,
                 }),
               },
+              selected: Boolean(resp?.companyApplication.workshop),
             },
             [FormFor.Cocktail]: {
               forms: null,
+              selected: Boolean(resp?.companyApplication.wantsCocktail),
             },
             [FormFor.Panel]: {
               forms: null,
+              selected: Boolean(resp?.companyApplication.wantsPanel),
             },
-          },
+          } as const,
         ),
       );
 
@@ -298,7 +348,7 @@
         { name: "Leading", key: "l" },
       ];
 
-      const booth = ref(booths[0]);
+      const booth = ref(booths.find((booth) => booth.key === resp?.companyApplication.booth) || booths[0]);
 
       const toData =
         <T>(info: Record<keyof T, InputEntry>) =>
@@ -336,15 +386,15 @@
             talk:
               selectedObj.talk
                 ? {
-                  ...toData<Talk>(selectedObj.talk!.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.talk!.forms!.presenter),
+                  ...toData<Talk>(selectedObj.talk.forms!.info),
+                  presenter: toData<Presenter>(selectedObj.talk.forms!.presenter),
                 }
                 : null,
             workshop:
               selectedObj.workshop
                 ? {
-                  ...toData<Workshop>(selectedObj.workshop!.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.talk!.forms!.presenter),
+                  ...toData<Workshop>(selectedObj.workshop.forms!.info),
+                  presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),
                 }
                 : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
@@ -408,7 +458,12 @@
             });
           }
 
-          console.log({ info, errorList, items });
+          toast.add({
+            severity: "warn",
+            summary: "Please check your form for errors",
+            closable: true,
+            life: 3000,
+          });
         },
       };
     },

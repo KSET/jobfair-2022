@@ -55,11 +55,10 @@ export type Talk = Omit<IApplicationTalk,
   | "categoryId"
   | "createdAt"
   | "updatedAt"
-  | "uid"> & {
-  category: string,
-};
+  | "uid">
+  ;
 export const companyApplicationTalkCreate =
-  <T extends Talk>(talk?: T) =>
+  <T extends Talk>(talk?: T | null) =>
     (
       {
         requireHr = false,
@@ -93,7 +92,7 @@ export const companyApplicationTalkCreate =
           options: Object.entries(Language).map(([ label, value ]) => ({ label, value })),
         },
         category: {
-          value: talk?.category || categories[0] || "",
+          value: talk?.category.name || categories[0] || "",
           type: "dropdown" as const,
           options: categories.map((x) => ({ label: x, value: x })),
         },
@@ -108,7 +107,7 @@ export type Workshop = Omit<IApplicationWorkshop,
   | "updatedAt"
   | "uid">;
 export const companyApplicationWorkshopCreate =
-  <T extends Workshop>(workshop?: T) =>
+  <T extends Workshop>(workshop?: T | null) =>
     (
       {
         requireHr = false,

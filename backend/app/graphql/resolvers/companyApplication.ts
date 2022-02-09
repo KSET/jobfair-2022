@@ -3,10 +3,11 @@ import {
   Ctx,
   Field,
   FieldResolver,
+  Info,
   InputType,
-  MaybePromise,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
   Root,
 } from "type-graphql";
@@ -19,12 +20,16 @@ import {
   omit,
 } from "rambdax";
 import {
+  GraphQLResolveInfo,
+} from "graphql";
+import {
   Context,
 } from "../../types/apollo-context";
 import {
   ValidationResponseFor,
 } from "../helpers/validation";
 import {
+  toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
 import {
@@ -102,6 +107,56 @@ class CompanyApplicationCreateInput {
 @ObjectType()
 class CreateCompanyApplicationResponse extends ValidationResponseFor(CompanyApplication) {
 }
+
+
+@Resolver(() => CompanyApplication)
+export class CompanyApplicationInfoResolver {
+  @Query(() => CompanyApplication, { nullable: true })
+  async companyApplication(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    if (!ctx.user) {
+      return null;
+    }
+
+    if (1 > ctx.user.companies.length) {
+      return null;
+    }
+
+    const [ company ] = ctx.user.companies;
+
+    const currentSeason = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!currentSeason) {
+      return null;
+    }
+
+    return ctx.prisma.companyApplication.findUnique({
+      where: {
+        // eslint-disable-next-line camelcase
+        forCompanyId_forSeasonId: {
+          forCompanyId: company.id,
+          forSeasonId: currentSeason.id,
+        },
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
+}
+
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationCreateResolver {
@@ -192,56 +247,6 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
-    const talkInfo =
-      info.talk
-        ? {
-          create: {
-            ...omit(
-              [
-                "presenter",
-              ],
-              info.talk,
-            ),
-            category: {
-              connect: {
-                name: info.talk.category,
-              },
-            },
-            presenters: {
-              create: {
-                ...omit(
-                  [ "photo" ],
-                  info.talk.presenter,
-                ),
-              },
-            },
-          },
-        }
-        : undefined;
-
-    const workshopInfo =
-      info.workshop
-        ? {
-          create: {
-            ...omit(
-              [
-                "presenter",
-              ],
-              info.workshop,
-            ),
-            presenters: {
-              create: {
-                ...omit(
-                  [ "photo" ],
-                  info.workshop.presenter,
-                ),
-              },
-            },
-          },
-        }
-        : undefined
-    ;
-
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
@@ -257,18 +262,34 @@ export class CompanyApplicationCreateResolver {
           talk: {
             select: {
               id: true,
+              presenters: {
+                select: {
+                  id: true,
+                },
+              },
             },
           },
 
           workshop: {
             select: {
               id: true,
+              presenters: {
+                select: {
+                  id: true,
+                },
+              },
             },
           },
         },
       });
 
-      console.log({ oldApplication });
+      if (info.talk?.presenter) {
+        info.talk.presenter.photo = undefined as unknown as null;
+      }
+
+      if (info.workshop?.presenter) {
+        info.workshop.presenter.photo = undefined as unknown as null;
+      }
 
       if (!oldApplication) {
         return await prisma.companyApplication.create({
@@ -276,8 +297,49 @@ export class CompanyApplicationCreateResolver {
             booth: info.booth,
             wantsPanel: info.wantsPanel,
             wantsCocktail: info.wantsCocktail,
-            talk: talkInfo,
-            workshop: workshopInfo,
+            talk: {
+              create:
+                info.talk
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...info.talk.presenter,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
+            workshop: {
+              create:
+                info.workshop
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      create: {
+                        ...info.workshop.presenter,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -289,50 +351,23 @@ export class CompanyApplicationCreateResolver {
               },
             },
           },
-        });
-      }
-
-      if (!info.talk && oldApplication.talk) {
-        await prisma.applicationTalk.delete({
-          where: {
-            forApplicationId: oldApplication.id,
-          },
-        });
-      } else if (info.talk) {
-        await prisma.applicationTalk.upsert({
-          where: {
-            forApplicationId: oldApplication.id,
-          },
-          create: {
-            ...talkInfo!.create,
-          },
-          update: {
-            ...talkInfo!.create,
+          include: {
+            workshop: true,
+            talk: true,
           },
         });
       }
 
-      if (!info.workshop && oldApplication.workshop) {
-        await prisma.applicationWorkshop.delete({
-          where: {
-            forApplicationId: oldApplication.id,
-          },
-        });
-      } else if (info.workshop) {
-        await prisma.applicationWorkshop.upsert({
-          where: {
-            forApplicationId: oldApplication.id,
-          },
-          create: {
-            ...workshopInfo!.create,
-          },
-          update: {
-            ...workshopInfo!.create,
-          },
-        });
-      }
+      const deleteIf =
+        (cond: unknown) =>
+          cond
+            ? {
+              delete: true,
+            }
+            : undefined
+      ;
 
-      return await ctx.prisma.companyApplication.update({
+      return await prisma.companyApplication.update({
         where: {
           // eslint-disable-next-line camelcase
           forCompanyId_forSeasonId: {
@@ -340,51 +375,129 @@ export class CompanyApplicationCreateResolver {
             forSeasonId: currentSeason.id,
           },
         },
+
         data: {
           booth: info.booth,
           wantsPanel: info.wantsPanel,
           wantsCocktail: info.wantsCocktail,
+          talk:
+            info.talk
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...info.talk.presenter,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      deleteMany: oldApplication.talk
+                        ? {
+                          id: {
+                            in: oldApplication.talk?.presenters.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: info.talk.presenter,
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.talk),
+          workshop:
+            info.workshop
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      create: {
+                        ...info.workshop.presenter,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      deleteMany: oldApplication.workshop
+                        ? {
+                          id: {
+                            in: oldApplication.workshop?.presenters.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: {
+                        ...info.workshop.presenter,
+                      },
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.workshop),
+          forCompany: {
+            connect: {
+              vat: info.vat,
+            },
+          },
+          forSeason: {
+            connect: {
+              id: currentSeason.id,
+            },
+          },
         },
+
         include: {
-          talk: true,
-          workshop: true,
+          workshop: {
+            include: {
+              presenters: true,
+            },
+          },
+          talk: {
+            include: {
+              presenters: true,
+              category: true,
+            },
+          },
         },
       });
-    });
-
-    console.log({
-      info,
-      entity,
     });
 
     return {
       entity,
     };
-  }
-
-  @Mutation(() => Boolean, { nullable: true })
-  createCompanyApplicationCocktailPreference(
-    @Ctx() ctx: Context,
-      @Arg("vat") vat: string,
-      @Arg("info") info: boolean,
-  ): MaybePromise<boolean | null> {
-    console.log({
-      info,
-    });
-
-    return null;
-  }
-
-  @Mutation(() => Boolean, { nullable: true })
-  createCompanyApplicationPanelPreference(
-    @Ctx() ctx: Context,
-      @Arg("vat") vat: string,
-      @Arg("info") info: boolean,
-  ): MaybePromise<boolean | null> {
-    console.log({
-      info,
-    });
-
-    return null;
   }
 }

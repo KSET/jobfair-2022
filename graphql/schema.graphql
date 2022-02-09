@@ -20,6 +20,7 @@ type ApplicationPresenterCount {
 
 type ApplicationTalk {
   _count: ApplicationTalkCount
+  category: ApplicationTalkCategory!
   createdAt: DateTime!
   descriptionEn: String!
   descriptionHr: String!
@@ -250,16 +251,6 @@ type CreateCompanyApplicationResponse {
   errors: [FieldError!]
 }
 
-type CreateCompanyApplicationTalkResponse {
-  entity: ApplicationTalk
-  errors: [FieldError!]
-}
-
-type CreateCompanyApplicationWorkshopResponse {
-  entity: ApplicationWorkshop
-  errors: [FieldError!]
-}
-
 input CreateCompanyInput {
   address: String!
   brandName: String!
@@ -381,10 +372,6 @@ input IntFilter {
 
 type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
-  createCompanyApplicationCocktailPreference(info: Boolean!, vat: String!): Boolean
-  createCompanyApplicationPanelPreference(info: Boolean!, vat: String!): Boolean
-  createCompanyApplicationTalk(info: TalkCreateInput, vat: String!): CreateCompanyApplicationTalkResponse
-  createCompanyApplicationWorkshop(info: WorkshopCreateInput, vat: String!): CreateCompanyApplicationWorkshopResponse
   createIndustry(name: String!): Industry
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   createSeason(info: SeasonCreateInput!): Season
@@ -530,6 +517,7 @@ type Query {
   allTranslationsFor(language: String!): [Translation!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
+  companyApplication: CompanyApplication
   currentSeason: Season
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!

@@ -3,26 +3,15 @@ import {
   ApplicationPresenter,
 } from "@generated/type-graphql";
 import {
-  Arg,
-  Ctx,
   Field,
   FieldResolver,
   InputType,
-  MaybePromise,
-  Mutation,
-  ObjectType,
   Resolver,
   Root,
 } from "type-graphql";
 import {
   transformSelectFor,
 } from "../helpers/resolver";
-import {
-  Context,
-} from "../../types/apollo-context";
-import {
-  ValidationResponseFor,
-} from "../helpers/validation";
 import {
   PresenterCreateInput,
 } from "./companyPresenter";
@@ -46,10 +35,6 @@ export const transformSelect = transformSelectFor<CompanyApplicationWorkshopFiel
     return select;
   },
 });
-
-@ObjectType()
-class CreateCompanyApplicationWorkshopResponse extends ValidationResponseFor(ApplicationWorkshop) {
-}
 
 @InputType()
 export class WorkshopCreateInput {
@@ -79,20 +64,4 @@ export class WorkshopCreateInput {
 
   @Field(() => PresenterCreateInput)
     presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
-}
-
-@Resolver(() => ApplicationWorkshop)
-export class CompanyApplicationWorkshopCreateResolver {
-  @Mutation(() => CreateCompanyApplicationWorkshopResponse, { nullable: true })
-  createCompanyApplicationWorkshop(
-    @Ctx() ctx: Context,
-      @Arg("vat") vat: string,
-      @Arg("info", () => WorkshopCreateInput, { nullable: true }) info: WorkshopCreateInput | null,
-  ): MaybePromise<CreateCompanyApplicationWorkshopResponse | null> {
-    console.log({
-      info,
-    });
-
-    return null;
-  }
 }

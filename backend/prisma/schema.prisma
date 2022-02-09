@@ -262,14 +262,14 @@ model ApplicationTalk {
   category       ApplicationTalkCategory @relation(fields: [categoryId], references: [id])
   language       String
   /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication?     @relation(fields: [forApplicationId], references: [id])
+  forApplication CompanyApplication      @relation(fields: [forApplicationId], references: [id])
   /// @TypeGraphQL.omit(input: true)
   createdAt      DateTime                @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt      DateTime                @updatedAt
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplicationId Int? @unique
+  forApplicationId Int @unique
   /// @TypeGraphQL.omit(output: true, input: true)
   categoryId       Int
 }
@@ -321,12 +321,12 @@ model ApplicationWorkshop {
   presenters     ApplicationPresenter[]
   language       String
   /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication?    @relation(fields: [forApplicationId], references: [id])
+  forApplication CompanyApplication     @relation(fields: [forApplicationId], references: [id])
   /// @TypeGraphQL.omit(input: true)
   createdAt      DateTime               @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt      DateTime               @updatedAt
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplicationId Int? @unique
+  forApplicationId Int @unique
 }

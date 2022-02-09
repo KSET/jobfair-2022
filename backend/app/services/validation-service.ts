@@ -105,7 +105,7 @@ const companyWorkshopValidation = z.object({
   titleHr: z.optional(z.string().min(1).max(75)),
   descriptionEn: z.string().min(73).max(365),
   descriptionHr: z.optional(z.string().min(73).max(365)),
-  category: z.string(),
+  goal: z.string().min(1).max(365),
   language: z.string(),
   presenter: companyPresenterValidation,
 });

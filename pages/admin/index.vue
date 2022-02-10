@@ -213,13 +213,9 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ICompany,
-    IFile,
-    IIndustry,
-    IApplicationTalkCategory,
-    IPressRelease,
-    IUser,
-    ISeason,
+    AdminInitialData,
+    IAdminInitialDataQueryVariables,
+    IAdminInitialDataQuery,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,
@@ -266,80 +262,8 @@
         set: (val) => talkCategoriesDelta.value = val,
       });
 
-      type QCompany = Pick<ICompany,
-                           "vat"
-                             | "legalName"
-                             | "brandName">;
-      type QIndustry = Pick<IIndustry, "name">;
-      type QPressRelease = Pick<IPressRelease,
-                                "title"
-                                  | "uid"
-                                  | "published"> & {
-        file: Pick<IFile, "uid">,
-      };
-      type QUser = Pick<IUser,
-                        "uid"
-                          | "name"
-                          | "createdAt"
-                          | "email">;
-      type QSeason = Pick<ISeason,
-                          "uid"
-                            | "startsAt"
-                            | "endsAt"
-                            | "name">;
-      type QueryData = {
-        industries: Pick<IIndustry, "name">[],
-        talkCategories: Pick<IApplicationTalkCategory, "name">[],
-        companies: (QCompany & { industry: QIndustry, members: QUser, })[],
-        pressReleases: QPressRelease[],
-        users: QUser[],
-        seasons: QSeason[],
-      };
-      type QueryArgs = never;
-      const res = await useQuery<QueryData, QueryArgs>({
-        query: gql`
-        query {
-            industries {
-                name
-            }
-            talkCategories {
-                name
-            }
-            companies(orderBy: { legalName: asc }) {
-                vat
-                legalName
-                brandName
-                industry {
-                    name
-                }
-                members {
-                    uid
-                    name
-                    email
-                }
-            }
-            pressReleases(orderBy: { published: desc }) {
-                uid
-                title
-                published
-                file {
-                    uid
-                }
-            }
-            users {
-                uid
-                name
-                email
-                createdAt
-            }
-            seasons(orderBy: { endsAt: desc }) {
-                uid
-                name
-                startsAt
-                endsAt
-            }
-        }
-        `,
+      const res = await useQuery<IAdminInitialDataQuery, IAdminInitialDataQueryVariables>({
+        query: AdminInitialData,
       })().then((res) => res?.data);
 
       industriesStore.setIndustries(res?.industries);
@@ -352,9 +276,12 @@
         industries,
         talkCategories,
         companies,
-        users: sortBy<QUser>((u) => new Date(u.createdAt as string), res?.users || []),
+        users: sortBy<NonNullable<IAdminInitialDataQuery["users"]>[0]>((u) => new Date(u.createdAt as string), res?.users || []),
         seasons,
-        pressReleases: (res?.pressReleases || [] as QPressRelease[]).map((item) => ({ ...item, published: new Date(String(item.published)) })),
+        pressReleases: (res?.pressReleases || [] as NonNullable<IAdminInitialDataQuery["pressReleases"]>).map((item) => ({
+          ...item,
+          published: new Date(String(item.published)),
+        })),
         info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
         async handleIndustrySubmit() {
@@ -401,7 +328,7 @@
         },
         async refreshSeasons() {
           const resp = await useQuery<{
-            seasons: QSeason[],
+            seasons: NonNullable<IAdminInitialDataQuery["seasons"]>,
           }, never>({
             query: gql`
             query {

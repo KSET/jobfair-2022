@@ -124,3 +124,45 @@ query NewsItem($slug: String!) {
         content
     }
 }
+
+query AdminInitialData {
+    industries {
+        name
+    }
+    talkCategories {
+        name
+    }
+    companies(orderBy: { legalName: asc }) {
+        vat
+        legalName
+        brandName
+        industry {
+            name
+        }
+        members {
+            uid
+            name
+            email
+        }
+    }
+    pressReleases(orderBy: { published: desc }) {
+        uid
+        title
+        published
+        file {
+            uid
+        }
+    }
+    users {
+        uid
+        name
+        email
+        createdAt
+    }
+    seasons(orderBy: { endsAt: desc }) {
+        uid
+        name
+        startsAt
+        endsAt
+    }
+}

@@ -457,7 +457,13 @@
     }
 
     .input {
-      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      opacity: 0;
     }
 
     $message-margin: .25rem;

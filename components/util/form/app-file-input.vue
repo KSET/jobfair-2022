@@ -88,7 +88,7 @@
       :multiple="multiple"
       :name="name"
       :placeholder="orNull(placeholder)"
-      :required="required"
+      :required="orNull(required && !previewSrc)"
       type="file"
       @change="handleChange"
     >

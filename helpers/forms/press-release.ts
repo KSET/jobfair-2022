@@ -12,10 +12,10 @@ type PressRelease = Omit<IPressRelease,
     | "file"
     | "updatedAt">
   & {
-  file: Pick<IFile,
+  file?: Pick<IFile,
     "uid"
     | "name"
-    | "mimeType">,
+    | "mimeType"> | null,
 }
   ;
 export const pressReleaseCreate =

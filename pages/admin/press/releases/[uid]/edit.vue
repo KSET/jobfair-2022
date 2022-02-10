@@ -1,7 +1,7 @@
 <template>
   <app-max-width-container :class="$style.container">
     <h1>
-      New press release
+      Edit press release
     </h1>
 
     <client-only>
@@ -40,7 +40,6 @@
         </template>
       </app-formgroup>
     </client-only>
-    <pre v-text="info" />
   </app-max-width-container>
 </template>
 <script lang="ts">

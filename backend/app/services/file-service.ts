@@ -57,4 +57,18 @@ export class FileService {
       return null;
     }
   }
+
+  public static async deleteFile(minioKey: string, user: User) {
+    try {
+      await minio.removeObject(BUCKET_NAME, minioKey);
+
+      void EventsService.logEvent("file:delete", user.id, { key: minioKey });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+
+      return false;
+    }
+  }
 }

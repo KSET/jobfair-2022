@@ -263,6 +263,14 @@ export class PressReleaseResolver {
       where: {
         uid,
       },
+      select: {
+        file: {
+          select: {
+            minioKey: true,
+            id: true,
+          },
+        },
+      },
     });
 
     if (!oldRelease) {
@@ -302,11 +310,24 @@ export class PressReleaseResolver {
       };
     }
 
-    const release = await ctx.prisma.pressRelease.update({
-      data,
-      where: {
-        uid,
-      },
+    const release = await ctx.prisma.$transaction(async (prisma) => {
+      const release = await prisma.pressRelease.update({
+        data,
+        where: {
+          uid,
+        },
+      });
+
+      if (info.file) {
+        await prisma.file.delete({
+          where: {
+            id: oldRelease.file.id,
+          },
+        });
+        await FileService.deleteFile(oldRelease.file.minioKey, user);
+      }
+
+      return release;
     });
 
     if (!release) {
@@ -320,7 +341,7 @@ export class PressReleaseResolver {
       };
     }
 
-    void EventsService.logEvent("press-release:create", user.id);
+    void EventsService.logEvent("press-release:update", user.id);
 
     return {
       entity: release,

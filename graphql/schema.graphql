@@ -151,9 +151,11 @@ type Company {
   industry: Industry
   legalName: String!
   members: [User!]
+  rasterLogo: Image
   uid: String!
   updatedAt: DateTime!
   vat: String!
+  vectorLogo: File
   website: String!
 }
 
@@ -228,9 +230,11 @@ enum CompanyScalarFieldEnum {
   id
   industryId
   legalName
+  rasterLogoId
   uid
   updatedAt
   vat
+  vectorLogoId
   website
 }
 
@@ -263,7 +267,9 @@ input CreateCompanyInput {
   descriptionHr: String!
   industry: String = ""
   legalName: String!
+  rasterLogo: Upload = null
   vat: String!
+  vectorLogo: Upload = null
   website: String!
 }
 
@@ -308,6 +314,7 @@ type File {
 }
 
 type FileCount {
+  forCompany: Int!
   forPressRelease: Int!
 }
 
@@ -333,6 +340,33 @@ input FileWhereInput {
   name: StringFilter
   size: IntFilter
   uploader: UserRelationFilter
+}
+
+type Image {
+  _count: ImageCount
+  createdAt: DateTime!
+  full: ImageVariation!
+  name: String!
+  thumb: ImageVariation!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+type ImageCount {
+  ApplicationPresenter: Int!
+  Company: Int!
+}
+
+type ImageVariation {
+  _count: ImageVariationCount
+  etag: String!
+  mimeType: String!
+}
+
+type ImageVariationCount {
+  forFull: Int!
+  forOriginal: Int!
+  forThumb: Int!
 }
 
 type Industry {

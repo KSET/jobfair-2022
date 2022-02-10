@@ -82,6 +82,7 @@
   import {
     ICompany,
     IIndustry,
+    IUpdateCompanyInfoMutationVariables,
   } from "~/graphql/schema";
   import PageNotFound from "~/components/page-not-found.vue";
 
@@ -131,6 +132,18 @@
               industry {
                   name
               }
+              rasterLogo {
+                  uid
+                  name
+                  full {
+                      mimeType
+                  }
+              }
+              vectorLogo {
+                  uid
+                  name
+                  mimeType
+              }
             }
 
             industries {
@@ -170,11 +183,19 @@
         isLoading,
         async handleUpdate() {
           resetErrors();
-          const data = pipe(
+          const data: IUpdateCompanyInfoMutationVariables["info"] = pipe(
             (x: typeof info) => keys(x),
             map((key) => [ key, (info[key] as { value: unknown, }).value ]),
             Object.fromEntries,
           )(info);
+
+          if ("string" === typeof data.vectorLogo) {
+            delete data.vectorLogo;
+          }
+
+          if ("string" === typeof data.rasterLogo) {
+            delete data.rasterLogo;
+          }
 
           isLoading.value = true;
           const resp = await companyStore.updateCompanyInfo({

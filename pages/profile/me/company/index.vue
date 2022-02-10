@@ -78,7 +78,11 @@
   } from "~/composables/useQuery";
   import {
     ICompany,
+    IFile,
+    IImage,
+    IImageVariation,
     IIndustry,
+    IUpdateCompanyInfoMutationVariables,
   } from "~/graphql/schema";
 
   export default defineComponent({
@@ -104,7 +108,12 @@
 
       type QData = {
         industries: Pick<IIndustry, "name">[],
-        company: ICompany,
+        company: ICompany & {
+          rasterLogo: Pick<IImage, "name" | "uid"> & {
+            full: Pick<IImageVariation, "mimeType">,
+          },
+          vectorLogo: Pick<IFile, "uid" | "name" | "mimeType">,
+        },
       };
       type QArgs = {
         vat: string,
@@ -126,6 +135,18 @@
                     website
                     industry {
                         name
+                    }
+                    rasterLogo {
+                        uid
+                        name
+                        full {
+                            mimeType
+                        }
+                    }
+                    vectorLogo {
+                        uid
+                        name
+                        mimeType
                     }
                 }
             }
@@ -163,11 +184,19 @@
         errors,
         async handleUpdate() {
           resetErrors();
-          const data = pipe(
+          const data: IUpdateCompanyInfoMutationVariables["info"] = pipe(
             (x: typeof info) => keys(x),
             map((key) => [ key, (info[key] as { value: unknown, }).value ]),
             Object.fromEntries,
           )(info);
+
+          if ("string" === typeof data.vectorLogo) {
+            delete data.vectorLogo;
+          }
+
+          if ("string" === typeof data.rasterLogo) {
+            delete data.rasterLogo;
+          }
 
           isLoading.value = true;
           const resp = await companyStore.updateCompanyInfo({
@@ -219,6 +248,18 @@
 
       @include media(lg) {
         grid-template-columns: 1fr;
+      }
+
+      .errorContainer {
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        margin-top: -.75rem;
+        margin-bottom: -1.5rem;
+        text-align: center;
+        color: $fer-error;
+        grid-column: span 2;
+        gap: .5rem;
       }
 
       .column2 {

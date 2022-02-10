@@ -3,12 +3,31 @@ import {
 } from "@vueuse/shared";
 import {
   ICompany,
+  IFile,
+  IImage,
 } from "~/graphql/schema";
 import {
   InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
-type Company = Omit<ICompany, "industryId" | "_count" | "uid" | "members">;
+type Company = Omit<ICompany,
+  "_count"
+  | "industryId"
+  | "members"
+  | "createdAt"
+  | "updatedAt"
+  | "uid"> & {
+  vectorLogo: Pick<IFile,
+    "uid"
+    | "name"
+    | "mimeType">,
+  rasterLogo: Pick<IImage,
+      "uid"
+      | "name">
+    & {
+    full: Pick<IImage["full"], "mimeType">,
+  },
+};
 export const companyCreate =
   <T extends Company>(company?: T) =>
     (industries: MaybeRef<{ label: string, value: string, }[]>): Record<keyof Company, InputEntry> =>
@@ -51,6 +70,20 @@ export const companyCreate =
         descriptionHr: {
           value: company?.descriptionHr ?? "",
           type: "textarea" as const,
+        },
+        vectorLogo: {
+          value: company?.vectorLogo?.uid ? `/api/file/${ company.vectorLogo.uid }` : "",
+          fileName: company?.vectorLogo?.name,
+          fileType: company?.vectorLogo?.mimeType,
+          accept: "application/pdf,.ai,.pdf,.eps",
+          type: "file" as const,
+        },
+        rasterLogo: {
+          value: company?.rasterLogo?.uid ? `/api/i/${ company.rasterLogo.uid }/full` : "",
+          fileName: company?.rasterLogo?.name,
+          fileType: company?.rasterLogo?.full?.mimeType,
+          accept: "image/png",
+          type: "file",
         },
       })
 ;

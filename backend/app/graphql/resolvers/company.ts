@@ -18,6 +18,8 @@ import {
   CompanyCreateInput,
   FindManyCompanyArgs,
   Industry,
+  Image,
+  File,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
@@ -25,6 +27,10 @@ import {
 import {
   omit,
 } from "rambdax";
+import {
+  FileUpload,
+  GraphQLUpload,
+} from "graphql-upload";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -50,8 +56,58 @@ import {
 } from "../helpers/resolver";
 import SlackNotificationService from "../../services/slack-notification-service";
 import {
+  FileService,
+  MinioBase,
+} from "../../services/file-service";
+import {
+  ImageBase,
+  ImageService,
+} from "../../services/image-service";
+import {
   transformSelect as transformSelectMembers,
 } from "./user";
+import {
+  transformSelect as transformSelectImage,
+} from "./image";
+
+const rasterLogoMimeTypes = new Set([
+  "image/png",
+]);
+const rasterLogoExtensions = [
+  ".png",
+];
+const vectorLogoMimeTypes = new Set([
+  "application/pdf",
+]);
+const vectorLogoExtensions = [
+  ".ai",
+  ".pdf",
+  ".eps",
+];
+
+type FileValidation = FileUpload | null | undefined;
+const fileValid = {
+  rasterLogo(file: FileValidation, required: boolean = false) {
+    if (!file) {
+      return !required;
+    }
+
+    return (
+      rasterLogoMimeTypes.has(file.mimetype.toLowerCase())
+    );
+  },
+
+  vectorLogo(file: FileValidation, required: boolean = false) {
+    if (!file) {
+      return !required;
+    }
+
+    return (
+      vectorLogoMimeTypes.has(file.mimetype.toLowerCase()) ||
+      vectorLogoExtensions.some((ext) => file.filename.endsWith(ext))
+    );
+  },
+};
 
 @Resolver(() => Company)
 export class CompanyFieldResolver {
@@ -67,6 +123,20 @@ export class CompanyFieldResolver {
   @Root() company: Company,
   ) {
     return company.members;
+  }
+
+  @FieldResolver((_type) => Image, { nullable: true })
+  rasterLogo(
+    @Root() company: Company,
+  ): Image | null {
+    return company.rasterLogo || null;
+  }
+
+  @FieldResolver((_type) => File, { nullable: true })
+  vectorLogo(
+    @Root() company: Company,
+  ): File | null {
+    return company.vectorLogo || null;
   }
 }
 
@@ -86,12 +156,34 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
 
     return select;
   },
+
+  rasterLogo(select) {
+    select.rasterLogo = {
+      select: transformSelectImage(select.rasterLogo as Record<string, unknown>),
+    };
+
+    return select;
+  },
+
+  vectorLogo(select) {
+    select.vectorLogo = {
+      select: select.vectorLogo,
+    };
+
+    return select;
+  },
 });
 
 @InputType()
 class CreateCompanyInput extends CompanyCreateInput {
   @Field()
     industry: string = "";
+
+  @Field(() => GraphQLUpload, { nullable: true })
+    vectorLogo: FileUpload | null = null;
+
+  @Field(() => GraphQLUpload, { nullable: true })
+    rasterLogo: FileUpload | null = null;
 }
 
 @ObjectType()
@@ -192,6 +284,87 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
+    const [
+      rasterLogoFile,
+      vectorLogoFile,
+    ] = await Promise.all([
+      await info.rasterLogo,
+      await info.vectorLogo,
+    ]);
+
+    if (!fileValid.vectorLogo(vectorLogoFile)) {
+      return {
+        errors: [
+          {
+            field: "vectorLogo",
+            message: `File must have extension: ${ vectorLogoExtensions.join(", ") }`,
+          },
+        ],
+      };
+    }
+
+    if (!fileValid.rasterLogo(rasterLogoFile)) {
+      return {
+        errors: [
+          {
+            field: "rasterLogo",
+            message: `File must have extension: ${ rasterLogoExtensions.join(", ") }`,
+          },
+        ],
+      };
+    }
+    let vectorLogoData;
+    if (info.vectorLogo) {
+      const vectorLogo = await FileService.uploadFile(
+        `company/${ info.vat }/logo/vector` as MinioBase,
+        vectorLogoFile!,
+        ctx.user,
+      );
+
+      if (!vectorLogo) {
+        return {
+          errors: [
+            {
+              field: "vectorLogo",
+              message: "Something went wrong",
+            },
+          ],
+        };
+      }
+
+      vectorLogoData = {
+        connect: {
+          id: vectorLogo.id,
+        },
+      };
+    }
+
+    let rasterLogoData;
+    if (info.rasterLogo) {
+      const rasterLogo = await ImageService.uploadImage(
+        `company/${ info.vat }/logo/raster` as ImageBase,
+        rasterLogoFile!,
+        ctx.user,
+      );
+
+      if (!rasterLogo) {
+        return {
+          errors: [
+            {
+              field: "rasterLogo",
+              message: "Something went wrong",
+            },
+          ],
+        };
+      }
+
+      rasterLogoData = {
+        connect: {
+          id: rasterLogo.id,
+        },
+      };
+    }
+
     const entity = await ctx.prisma.company.create({
       data: {
         ...info,
@@ -205,6 +378,8 @@ export class CompanyInfoMutationsResolver {
             id: ctx.user.id,
           },
         },
+        rasterLogo: rasterLogoData,
+        vectorLogo: vectorLogoData,
       },
     });
 
@@ -246,7 +421,8 @@ export class CompanyInfoMutationsResolver {
 
     info.vat = info.vat.toUpperCase();
 
-    const isInCompany = ctx.user.companies.some((company) => company.vat === info.vat);
+    const [ company ] = ctx.user.companies;
+    const isInCompany = company && company.vat === info.vat;
 
     if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
       return {
@@ -254,6 +430,36 @@ export class CompanyInfoMutationsResolver {
           {
             field: "vat",
             message: "You can not edit the company",
+          },
+        ],
+      };
+    }
+
+    const [
+      rasterLogoFile,
+      vectorLogoFile,
+    ] = await Promise.all([
+      await info.rasterLogo,
+      await info.vectorLogo,
+    ]);
+
+    if (!fileValid.vectorLogo(vectorLogoFile)) {
+      return {
+        errors: [
+          {
+            field: "vectorLogo",
+            message: `File must have extension: ${ vectorLogoExtensions.join(", ") }`,
+          },
+        ],
+      };
+    }
+
+    if (!fileValid.rasterLogo(rasterLogoFile)) {
+      return {
+        errors: [
+          {
+            field: "rasterLogo",
+            message: `File must have extension: ${ rasterLogoExtensions.join(", ") }`,
           },
         ],
       };
@@ -276,6 +482,58 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
+    let vectorLogoData;
+    if (info.vectorLogo) {
+      const vectorLogo = await FileService.uploadFile(
+        `company/${ company.vat }/logo/vector` as MinioBase,
+        vectorLogoFile!,
+        ctx.user,
+      );
+
+      if (!vectorLogo) {
+        return {
+          errors: [
+            {
+              field: "vectorLogo",
+              message: "Something went wrong",
+            },
+          ],
+        };
+      }
+
+      vectorLogoData = {
+        connect: {
+          id: vectorLogo.id,
+        },
+      };
+    }
+
+    let rasterLogoData;
+    if (info.rasterLogo) {
+      const rasterLogo = await ImageService.uploadImage(
+        `company/${ company.vat }/logo/raster` as ImageBase,
+        rasterLogoFile!,
+        ctx.user,
+      );
+
+      if (!rasterLogo) {
+        return {
+          errors: [
+            {
+              field: "rasterLogo",
+              message: "Something went wrong",
+            },
+          ],
+        };
+      }
+
+      rasterLogoData = {
+        connect: {
+          id: rasterLogo.id,
+        },
+      };
+    }
+
     const entity = await ctx.prisma.company.update({
       data: {
         ...omit(
@@ -289,6 +547,8 @@ export class CompanyInfoMutationsResolver {
             id: industry.id,
           },
         },
+        rasterLogo: rasterLogoData,
+        vectorLogo: vectorLogoData,
       },
       where: {
         vat: info.vat,
@@ -298,7 +558,9 @@ export class CompanyInfoMutationsResolver {
       },
     });
 
-    void EventsService.logEvent("company:update", ctx.user.id, { vat: entity.vat });
+    if (entity) {
+      void EventsService.logEvent("company:update", ctx.user.id, { vat: entity.vat });
+    }
 
     return {
       entity,

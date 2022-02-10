@@ -137,6 +137,7 @@ module.exports = {
       },
     ],
     "object-shorthand": [ "error", "always" ],
+//    "operator-linebreak": [ "error", "before" ],
     "prefer-arrow-callback": "warn",
     "prefer-const": "warn",
     "prefer-destructuring": [

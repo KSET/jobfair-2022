@@ -84,6 +84,10 @@ model Company {
   website       String
   /// @TypeGraphQL.omit(input: true)
   industry      Industry @relation(fields: [industryId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  vectorLogo    File?    @relation(fields: [vectorLogoId], references: [id])
+  /// @TypeGraphQL.omit(input: true)
+  rasterLogo    Image?   @relation(fields: [rasterLogoId], references: [id])
   descriptionEn String
   descriptionHr String
   /// @TypeGraphQL.omit(input: true)
@@ -99,6 +103,12 @@ model Company {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   industryId Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  vectorLogoId Int?
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  rasterLogoId Int?
 }
 
 model Industry {
@@ -162,6 +172,8 @@ model File {
   // No polymorphism, workaround is this :(
   /// @TypeGraphQL.omit(output: true, input: true)
   forPressRelease PressRelease[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forCompany      Company[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   uploaderId Int
@@ -194,6 +206,8 @@ model Image {
   // No polymorphism, workaround is this :(
   /// @TypeGraphQL.omit(output: true, input: true)
   ApplicationPresenter ApplicationPresenter[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  Company              Company[]
 }
 
 model ImageVariation {

@@ -2,6 +2,7 @@ import {
   IApplicationPresenter,
   IApplicationTalk,
   IApplicationWorkshop,
+  IImage,
 } from "~/graphql/schema";
 import {
   InputEntry,
@@ -14,7 +15,14 @@ export type Presenter = Omit<IApplicationPresenter,
   "_count"
   | "createdAt"
   | "updatedAt"
-  | "photoId">;
+  | "photoId"> & {
+  photo: Pick<IImage,
+      "uid"
+      | "name">
+    & {
+    full: Pick<IImage["full"], "mimeType">,
+  },
+};
 export const companyApplicationPresenterCreate =
   <T extends Presenter>(presenter?: T) =>
     (
@@ -44,6 +52,13 @@ export const companyApplicationPresenterCreate =
           type: "textarea" as const,
           placeholder: "Marko Horvat je dobar developer u našoj firmi.",
           required: requireHr,
+        },
+        photo: {
+          value: presenter?.photo?.uid ? `/api/i/${ presenter.photo.uid }/full` : "",
+          fileName: presenter?.photo?.name,
+          fileType: presenter?.photo?.full?.mimeType,
+          accept: "image/png,image/jpeg",
+          type: "file",
         },
       })
 ;

@@ -10,6 +10,7 @@ type ApplicationPresenter {
   createdAt: DateTime!
   firstName: String!
   lastName: String!
+  photo: Image
   updatedAt: DateTime!
 }
 

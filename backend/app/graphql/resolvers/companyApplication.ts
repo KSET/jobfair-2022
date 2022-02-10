@@ -47,6 +47,10 @@ import {
   EventsService,
 } from "../../services/events-service";
 import {
+  ImageBase,
+  ImageService,
+} from "../../services/image-service";
+import {
   TalkCreateInput,
   transformSelect as transformSelectTalks,
 } from "./companyApplicationTalk";
@@ -54,6 +58,17 @@ import {
   transformSelect as transformSelectWorkshops,
   WorkshopCreateInput,
 } from "./companyApplicationWorkshop";
+
+const photoMimeTypes = new Set([
+  "image/png",
+  "image/jpeg",
+]);
+
+const photoExtensions = [
+  ".jpeg",
+  ".jpg",
+  ".png",
+];
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationFieldResolver {
@@ -303,12 +318,116 @@ export class CompanyApplicationCreateResolver {
         },
       });
 
-      if (info.talk?.presenter) {
-        info.talk.presenter.photo = undefined as unknown as null;
+      let talkPresenter;
+      if (info.talk) {
+        const photoFile = await info.talk.presenter.photo;
+
+        if (!photoFile) {
+          return {
+            errors: [
+              {
+                field: "talk.presenter.photo",
+                message: "File required",
+              },
+            ],
+          };
+        }
+
+        if (
+          !photoMimeTypes.has(photoFile?.mimetype) ||
+          !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+        ) {
+          return {
+            errors: [
+              {
+                field: "talk.presenter.photo",
+                message: `File must have extension: ${ photoExtensions.join(", ") }`,
+              },
+            ],
+          };
+        }
+
+        const photo = await ImageService.uploadImage(
+          `company/${ info.vat }/talk/presenters` as ImageBase,
+          photoFile,
+          ctx.user!,
+        );
+
+        if (!photo) {
+          return {
+            errors: [
+              {
+                field: "talk.presenter.photo",
+                message: "Something went wrong",
+              },
+            ],
+          };
+        }
+
+        talkPresenter = {
+          ...info.talk.presenter,
+          photo: {
+            connect: {
+              id: photo.id,
+            },
+          },
+        };
       }
 
-      if (info.workshop?.presenter) {
-        info.workshop.presenter.photo = undefined as unknown as null;
+      let workshopPresenter;
+      if (info.workshop) {
+        const photoFile = await info.workshop.presenter.photo;
+
+        if (!photoFile) {
+          return {
+            errors: [
+              {
+                field: "workshop.presenter.photo",
+                message: "File required",
+              },
+            ],
+          };
+        }
+
+        if (
+          !photoMimeTypes.has(photoFile?.mimetype) ||
+          !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+        ) {
+          return {
+            errors: [
+              {
+                field: "workshop.presenter.photo",
+                message: `File must have extension: ${ photoExtensions.join(", ") }`,
+              },
+            ],
+          };
+        }
+
+        const photo = await ImageService.uploadImage(
+          `company/${ info.vat }/workshop/presenters` as ImageBase,
+          photoFile,
+          ctx.user!,
+        );
+
+        if (!photo) {
+          return {
+            errors: [
+              {
+                field: "workshop.presenter.photo",
+                message: "Something went wrong",
+              },
+            ],
+          };
+        }
+
+        workshopPresenter = {
+          ...info.workshop.presenter,
+          photo: {
+            connect: {
+              id: photo.id,
+            },
+          },
+        };
       }
 
       const chosen = {
@@ -342,7 +461,7 @@ export class CompanyApplicationCreateResolver {
                     },
                     presenters: {
                       create: {
-                        ...info.talk.presenter,
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
                       },
                     },
                   }
@@ -361,7 +480,7 @@ export class CompanyApplicationCreateResolver {
                     ),
                     presenters: {
                       create: {
-                        ...info.workshop.presenter,
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
                       },
                     },
                   }
@@ -380,8 +499,25 @@ export class CompanyApplicationCreateResolver {
             },
           },
           include: {
-            workshop: true,
-            talk: true,
+            workshop: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+              },
+            },
+            talk: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+                category: true,
+              },
+            },
           },
         });
 
@@ -445,7 +581,7 @@ export class CompanyApplicationCreateResolver {
                     },
                     presenters: {
                       create: {
-                        ...info.talk.presenter,
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
                       },
                     },
                   },
@@ -469,7 +605,9 @@ export class CompanyApplicationCreateResolver {
                           },
                         }
                         : undefined,
-                      create: info.talk.presenter,
+                      create: {
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
+                      },
                     },
                   },
                 },
@@ -488,7 +626,7 @@ export class CompanyApplicationCreateResolver {
                     ),
                     presenters: {
                       create: {
-                        ...info.workshop.presenter,
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
                       },
                     },
                   },
@@ -508,7 +646,7 @@ export class CompanyApplicationCreateResolver {
                         }
                         : undefined,
                       create: {
-                        ...info.workshop.presenter,
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
                       },
                     },
                   },
@@ -530,12 +668,20 @@ export class CompanyApplicationCreateResolver {
         include: {
           workshop: {
             include: {
-              presenters: true,
+              presenters: {
+                include: {
+                  photo: true,
+                },
+              },
             },
           },
           talk: {
             include: {
-              presenters: true,
+              presenters: {
+                include: {
+                  photo: true,
+                },
+              },
               category: true,
             },
           },
@@ -557,6 +703,8 @@ export class CompanyApplicationCreateResolver {
     });
 
     return {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       entity,
     };
   }

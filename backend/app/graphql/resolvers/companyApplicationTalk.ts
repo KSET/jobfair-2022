@@ -15,6 +15,7 @@ import {
 } from "../helpers/resolver";
 import {
   PresenterCreateInput,
+  transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
 
 @Resolver(() => ApplicationTalk)
@@ -37,7 +38,7 @@ export class CompanyApplicationTalkFieldResolver {
 export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldResolver>({
   presenters(select) {
     select.presenters = {
-      select: select.presenters,
+      select: transformSelectPresenter(select.presenters as Record<string, unknown>),
     };
 
     return select;

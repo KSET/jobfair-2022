@@ -265,6 +265,13 @@
                           lastName
                           bioHr
                           bioEn
+                          photo {
+                            name
+                            uid
+                            full {
+                              mimeType
+                            }
+                          }
                       }
                   }
                   workshop {
@@ -281,6 +288,13 @@
                           lastName
                           bioHr
                           bioEn
+                          photo {
+                            name
+                            uid
+                            full {
+                              mimeType
+                            }
+                          }
                       }
                   }
               }

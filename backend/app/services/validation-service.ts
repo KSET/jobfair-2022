@@ -67,8 +67,8 @@ const companyValidation = z.object({
   legalName: z.string().min(1),
   brandName: z.string().min(1).max(100),
   address: z.string().min(1),
-  descriptionEn: z.string().min(1).max(365),
-  descriptionHr: z.string().min(1).max(365),
+  descriptionEn: z.string().min(1).max(450),
+  descriptionHr: z.string().min(1).max(450),
   website: z.string().url().min(1).max(100),
   industry: z.string().min(1),
 });
@@ -84,16 +84,16 @@ export const PressReleaseValidation = <T>(pressRelease: T) => formatValidation(p
 const companyPresenterValidation = z.object({
   firstName: z.string().min(2).max(80),
   lastName: z.string().min(2).max(80),
-  bioEn: z.string().min(73).max(365),
-  bioHr: z.optional(z.string().min(73).max(365)),
+  bioEn: z.string().min(73).max(450),
+  bioHr: z.optional(z.string().min(73).max(450)),
 });
 export const CompanyPresenterValidation = <T>(presenter: T) => formatValidation(companyTalkValidation, presenter);
 
 const companyTalkValidation = z.object({
   titleEn: z.string().min(1).max(75),
   titleHr: z.optional(z.string().min(1).max(75)),
-  descriptionEn: z.string().min(73).max(365),
-  descriptionHr: z.optional(z.string().min(73).max(365)),
+  descriptionEn: z.string().min(73).max(450),
+  descriptionHr: z.optional(z.string().min(73).max(450)),
   category: z.string(),
   language: z.string(),
   presenter: companyPresenterValidation,
@@ -103,9 +103,9 @@ export const CompanyTalkValidation = <T>(talk: T) => formatValidation(companyTal
 const companyWorkshopValidation = z.object({
   titleEn: z.string().min(1).max(75),
   titleHr: z.optional(z.string().min(1).max(75)),
-  descriptionEn: z.string().min(73).max(365),
-  descriptionHr: z.optional(z.string().min(73).max(365)),
-  goal: z.string().min(1).max(365),
+  descriptionEn: z.string().min(73).max(450),
+  descriptionHr: z.optional(z.string().min(73).max(450)),
+  goal: z.string().min(1).max(450),
   language: z.string(),
   presenter: companyPresenterValidation,
 });

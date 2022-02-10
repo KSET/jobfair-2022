@@ -81,6 +81,9 @@
   } from "~/composables/useQuery";
   import {
     ICompany,
+    IFile,
+    IImage,
+    IImageVariation,
     IIndustry,
     IUpdateCompanyInfoMutationVariables,
   } from "~/graphql/schema";
@@ -112,6 +115,10 @@
         industries: Pick<IIndustry, "name">[],
         company: QCompany & {
           industry: QIndustry,
+          rasterLogo: Pick<IImage, "name" | "uid"> & {
+            full: Pick<IImageVariation, "mimeType">,
+          },
+          vectorLogo: Pick<IFile, "uid" | "name" | "mimeType">,
         },
       };
       type QueryArgs = {

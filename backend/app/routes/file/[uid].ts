@@ -9,9 +9,8 @@ import {
   prisma,
 } from "../../providers/prisma";
 import {
-  BUCKET_NAME,
-  minio,
-} from "../../providers/minio";
+  pipeFileInto,
+} from "../../helpers/minio";
 
 const router = new Router();
 
@@ -40,19 +39,7 @@ router.getRaw("/", async (req, res) => {
     .header("content-disposition", contentDisposition(file.name))
   ;
 
-  const minioFile = await minio.getObject(BUCKET_NAME, file.minioKey);
-
-  await new Promise((resolve) => {
-    minioFile.pipe(res);
-
-    minioFile.on("end", () => {
-      resolve(true);
-    });
-
-    minioFile.on("error", () => {
-      resolve(true);
-    });
-  });
+  await pipeFileInto(file.minioKey, res);
 
   return res.end();
 });

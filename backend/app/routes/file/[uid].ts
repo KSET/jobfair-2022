@@ -33,9 +33,16 @@ router.getRaw("/", async (req, res) => {
     return res.sendStatus(StatusCodes.NOT_FOUND);
   }
 
+  const providedEtag = req.header("if-none-match");
+
+  if (providedEtag && providedEtag === file.etag) {
+    return res.sendStatus(StatusCodes.NOT_MODIFIED);
+  }
+
   res
     .header("content-type", file.mimeType)
     .header("etag", file.etag)
+    .header("cache-control", "max-age=315360000,public,immutable")
     .header("content-disposition", contentDisposition(file.name))
   ;
 

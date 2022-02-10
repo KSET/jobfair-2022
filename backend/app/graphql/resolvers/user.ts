@@ -163,10 +163,13 @@ export class UserInfoResolver {
 export class UserProfileResolver {
   @Query(() => User, { nullable: true })
   profile(@Ctx() ctx: Context) {
-    return {
-      ...ctx.user,
-      roles: ctx.user?.roles.map((name) => ({ name })),
-    };
+    return ctx.user
+      ? {
+        ...ctx.user,
+        roles: ctx.user.roles.map((name) => ({ name })),
+      }
+      : null
+    ;
   }
 
   @Mutation(() => UpdateProfileResponse, { nullable: true })

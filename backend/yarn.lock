@@ -916,6 +916,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sax@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@types/sax@npm:1.2.4"
+  dependencies:
+    "@types/node": "*"
+  checksum: 2aa50cbf1d1f0cf8541ef1787f94c7442e58e63900afd3b45c354e4140ed5efc5cf26fca8eb9df9970a74c7ea582293ae2083271bd046dedf4c3cc2689a40892
+  languageName: node
+  linkType: hard
+
 "@types/semver@npm:^7.3.3":
   version: 7.3.9
   resolution: "@types/semver@npm:7.3.9"
@@ -953,6 +962,13 @@ __metadata:
   version: 0.0.30
   resolution: "@types/strip-json-comments@npm:0.0.30"
   checksum: 829ddd389645073f347c5b1924a8c34b8813af29756576e511c46f40e218193cf93ccbade62661d47fc70f707e98f410331729b8c20edfcb2e807d51df1ad4b7
+  languageName: node
+  linkType: hard
+
+"@types/validator@npm:^13.7.1":
+  version: 13.7.1
+  resolution: "@types/validator@npm:13.7.1"
+  checksum: 810649a23bc46928c85d933be73b106bacb651a412c4172e30a70e84c63cada595d391042274b16e1c05b391af3a4f157b360890fbc5462ee347275222d59b64
   languageName: node
   linkType: hard
 
@@ -1426,7 +1442,9 @@ __metadata:
     "@types/mime-types": ^2.1.1
     "@types/minio": ^7.0.12
     "@types/node": ^17.0.13
+    "@types/sax": ^1.2.4
     "@types/sharp": ^0.29.5
+    "@types/validator": ^13.7.1
     apollo-server-express: ^3.6.2
     argon2: ^0.28.3
     axios: ^0.25.0

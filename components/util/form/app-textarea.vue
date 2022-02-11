@@ -39,6 +39,8 @@
         [$style.invalid]: invalid,
       }"
       :disabled="disabled"
+      :maxlength="elseNull(maxlength >= 0, maxlength)"
+      :minlength="elseNull(minlength >= 0, minlength)"
       :name="name"
       :placeholder="orNull(placeholder)"
       :required="required"
@@ -124,6 +126,18 @@
         required: false,
         type: Boolean,
         default: () => false,
+      },
+
+      minlength: {
+        required: false,
+        type: Number,
+        default: () => -1,
+      },
+
+      maxlength: {
+        required: false,
+        type: Number,
+        default: () => -1,
       },
 
       placeholder: {

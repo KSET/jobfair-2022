@@ -21,6 +21,8 @@
         :invalid="errors[inputName].length > 0"
         :label-key="`form.${inputName}`"
         :name="inputName"
+        :maxlength="elseNull(maxlength >= 0, maxlength)"
+        :minlength="elseNull(minlength >= 0, minlength)"
         :placeholder="input.placeholder"
         :required="input.required ?? true"
         v-bind="input.attrs || {}"

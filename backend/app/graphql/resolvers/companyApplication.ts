@@ -26,6 +26,7 @@ import {
   Context,
 } from "../../types/apollo-context";
 import {
+  FieldError,
   ValidationResponseFor,
 } from "../helpers/validation";
 import {
@@ -300,6 +301,11 @@ export class CompanyApplicationCreateResolver {
               presenters: {
                 select: {
                   id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
                 },
               },
             },
@@ -311,6 +317,11 @@ export class CompanyApplicationCreateResolver {
               presenters: {
                 select: {
                   id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
                 },
               },
             },
@@ -320,114 +331,122 @@ export class CompanyApplicationCreateResolver {
 
       let talkPresenter;
       if (info.talk) {
-        const photoFile = await info.talk.presenter.photo;
-
-        if (!photoFile) {
-          return {
-            errors: [
-              {
-                field: "talk.presenter.photo",
-                message: "File required",
-              },
-            ],
-          };
-        }
-
-        if (
-          !photoMimeTypes.has(photoFile?.mimetype) ||
-          !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
-        ) {
-          return {
-            errors: [
-              {
-                field: "talk.presenter.photo",
-                message: `File must have extension: ${ photoExtensions.join(", ") }`,
-              },
-            ],
-          };
-        }
-
-        const photo = await ImageService.uploadImage(
-          `company/${ info.vat }/talk/presenters` as ImageBase,
-          photoFile,
-          ctx.user!,
-        );
-
-        if (!photo) {
-          return {
-            errors: [
-              {
-                field: "talk.presenter.photo",
-                message: "Something went wrong",
-              },
-            ],
-          };
-        }
-
         talkPresenter = {
           ...info.talk.presenter,
           photo: {
             connect: {
-              id: photo.id,
+              id: 0,
             },
           },
         };
+
+        const photoFile = await info.talk.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype) ||
+            !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "talk.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/talk/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "talk.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          talkPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.talk?.presenters[0].photo) {
+          talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "talk.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
       }
 
       let workshopPresenter;
       if (info.workshop) {
-        const photoFile = await info.workshop.presenter.photo;
-
-        if (!photoFile) {
-          return {
-            errors: [
-              {
-                field: "workshop.presenter.photo",
-                message: "File required",
-              },
-            ],
-          };
-        }
-
-        if (
-          !photoMimeTypes.has(photoFile?.mimetype) ||
-          !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
-        ) {
-          return {
-            errors: [
-              {
-                field: "workshop.presenter.photo",
-                message: `File must have extension: ${ photoExtensions.join(", ") }`,
-              },
-            ],
-          };
-        }
-
-        const photo = await ImageService.uploadImage(
-          `company/${ info.vat }/workshop/presenters` as ImageBase,
-          photoFile,
-          ctx.user!,
-        );
-
-        if (!photo) {
-          return {
-            errors: [
-              {
-                field: "workshop.presenter.photo",
-                message: "Something went wrong",
-              },
-            ],
-          };
-        }
-
         workshopPresenter = {
           ...info.workshop.presenter,
           photo: {
             connect: {
-              id: photo.id,
+              id: 0,
             },
           },
         };
+
+        const photoFile = await info.workshop.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype) ||
+            !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "workshop.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/workshop/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "workshop.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          workshopPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.workshop?.presenters[0].photo) {
+          workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "workshop.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
       }
 
       const chosen = {
@@ -700,7 +719,26 @@ export class CompanyApplicationCreateResolver {
       }
 
       return entity;
+    }).catch((err) => {
+      console.log(err);
+
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Something went wrong",
+          },
+        ],
+      };
     });
+
+    const errors = (entity as Record<string, unknown>).errors as FieldError[] | undefined;
+
+    if (errors) {
+      return {
+        errors,
+      };
+    }
 
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

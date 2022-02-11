@@ -422,9 +422,19 @@
             wantsPanel: Boolean(selectedObj.panel),
           };
 
+          if ("string" === typeof info.workshop?.presenter?.photo) {
+            delete info.workshop.presenter.photo;
+          }
+
+          if ("string" === typeof info.talk?.presenter?.photo) {
+            delete info.talk.presenter.photo;
+          }
+
+          isLoading.value = true;
           const resp = await useMutation<ICreateCompanyApplicationMutation, ICreateCompanyApplicationMutationVariables>(CreateCompanyApplication)({
             info,
           }).then((resp) => resp?.data?.createCompanyApplication);
+          isLoading.value = false;
 
           if (!resp) {
             return toast.add({

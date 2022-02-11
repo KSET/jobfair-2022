@@ -7,7 +7,7 @@ import {
 @ObjectType({
   simpleResolvers: true,
 })
-class FieldError {
+export class FieldError {
   @Field()
     field: string = "";
 

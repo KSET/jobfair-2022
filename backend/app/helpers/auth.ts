@@ -33,7 +33,7 @@ export const hasAtLeastRole =
   (
     minimumRoleName: Role,
     user?: SessionUser | null,
-  ): boolean =>
+  ): user is SessionUser & boolean =>
     user
       ? user.roles.some((role) => roleToPriority[minimumRoleName] <= roleToPriority[role])
       : false

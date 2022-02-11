@@ -194,6 +194,7 @@
         <li
           v-for="application in companyApplications"
           :key="JSON.stringify(application)"
+          class="mt-2"
         >
           <span
             class="mr-2 p-1 px-2 border-round"

@@ -165,4 +165,26 @@ query AdminInitialData {
         startsAt
         endsAt
     }
+    companyApplications {
+        wantsCocktail
+        wantsPanel
+        booth
+        talk {
+            language
+            titleEn
+            category {
+                name
+            }
+        }
+        workshop {
+            language
+            titleEn
+        }
+        forCompany {
+            brandName
+            industry {
+                name
+            }
+        }
+    }
 }

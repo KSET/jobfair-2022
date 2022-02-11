@@ -187,6 +187,49 @@
         </li>
       </ul>
     </div>
+
+    <div>
+      <h2>Prijave ({{ companyApplications.length }})</h2>
+      <ul>
+        <li
+          v-for="application in companyApplications"
+          :key="JSON.stringify(application)"
+        >
+          <span
+            class="mr-2 p-1 px-2 border-round"
+            style="background-color: rgb(0 0 0 / 15%);"
+            v-text="application.forCompany.industry.name"
+          />
+          <strong v-text="application.forCompany.brandName" />
+          <ul class="mt-3">
+            <li v-if="application.talk" class="mb-2">
+              <strong>Talk</strong>:
+              <kbd
+                class="mr-1 p-1 px-2 border-round"
+                style="background: rgb(13 62 64 / 30%);"
+                v-text="application.talk.category.name"
+              />
+              <em v-text="application.talk.titleEn" />
+            </li>
+            <li v-if="application.workshop">
+              <strong>Workshop</strong>: <em v-text="application.workshop.titleEn" />
+            </li>
+            <li v-if="application.wantsCocktail">
+              <strong>
+                Panel
+                <i class="ml-2 pi pi-check" />
+              </strong>
+            </li>
+            <li v-if="application.wantsPanel">
+              <strong>
+                Cocktail
+                <i class="ml-2 pi pi-check" />
+              </strong>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </app-max-width-container>
 </template>
 <script lang="ts">
@@ -275,6 +318,7 @@
       return {
         industries,
         talkCategories,
+        companyApplications: res?.companyApplications || [],
         companies,
         users: sortBy<NonNullable<IAdminInitialDataQuery["users"]>[0]>((u) => new Date(u.createdAt as string), res?.users || []),
         seasons,

@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Ctx,
   Field,
   FieldResolver,
@@ -15,6 +16,8 @@ import {
   ApplicationTalk,
   ApplicationWorkshop,
   CompanyApplication,
+  Company,
+  FindManyCompanyApplicationArgs,
 } from "@generated/type-graphql";
 import {
   omit,
@@ -59,6 +62,9 @@ import {
   transformSelect as transformSelectWorkshops,
   WorkshopCreateInput,
 } from "./companyApplicationWorkshop";
+import {
+  transformSelect as transformSelectCompany,
+} from "./company";
 
 const photoMimeTypes = new Set([
   "image/png",
@@ -86,6 +92,13 @@ export class CompanyApplicationFieldResolver {
   ): ApplicationWorkshop | null {
     return application.workshop || null;
   }
+
+  @FieldResolver(() => Company, { nullable: true })
+  forCompany(
+    @Root() application: CompanyApplication,
+  ): Company {
+    return application.forCompany!;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationFieldResolver>({
@@ -100,6 +113,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
   workshop(select) {
     select.workshop = {
       select: transformSelectWorkshops(select.workshop as Record<string, unknown>),
+    };
+
+    return select;
+  },
+
+  forCompany(select) {
+    select.forCompany = {
+      select: transformSelectCompany(select.forCompany as Record<string, unknown>),
     };
 
     return select;
@@ -174,6 +195,35 @@ export class CompanyApplicationInfoResolver {
           forCompanyId: company.id,
           forSeasonId: currentSeason.id,
         },
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
+
+  @Query(() => [ CompanyApplication ], { nullable: true })
+  companyApplications(
+  @Ctx() ctx: Context,
+    @Args() args: FindManyCompanyApplicationArgs,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return null;
+    }
+
+    const now = new Date();
+
+    return ctx.prisma.companyApplication.findMany({
+      ...args,
+      where: {
+        forSeason: {
+          startsAt: {
+            lte: now,
+          },
+          endsAt: {
+            gte: now,
+          },
+        },
+        ...args.where,
       },
       select: toSelect(info, transformSelect),
     });

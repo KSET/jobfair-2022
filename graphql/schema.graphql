@@ -71,6 +71,15 @@ type ApplicationTalkCount {
   presenters: Int!
 }
 
+input ApplicationTalkOrderByWithRelationInput {
+  category: ApplicationTalkCategoryOrderByWithRelationInput
+  descriptionEn: SortOrder
+  descriptionHr: SortOrder
+  language: SortOrder
+  titleEn: SortOrder
+  titleHr: SortOrder
+}
+
 input ApplicationTalkRelationFilter {
   is: ApplicationTalkWhereInput
   isNot: ApplicationTalkWhereInput
@@ -106,6 +115,17 @@ type ApplicationWorkshop {
 
 type ApplicationWorkshopCount {
   presenters: Int!
+}
+
+input ApplicationWorkshopOrderByWithRelationInput {
+  descriptionEn: SortOrder
+  descriptionHr: SortOrder
+  goal: SortOrder
+  language: SortOrder
+  notesEn: SortOrder
+  notesHr: SortOrder
+  titleEn: SortOrder
+  titleHr: SortOrder
 }
 
 input ApplicationWorkshopRelationFilter {
@@ -163,6 +183,7 @@ type Company {
 type CompanyApplication {
   booth: String
   createdAt: DateTime!
+  forCompany: Company
   talk: ApplicationTalk
   updatedAt: DateTime!
   wantsCocktail: Boolean!
@@ -179,6 +200,11 @@ input CompanyApplicationCreateInput {
   workshop: WorkshopCreateInput = null
 }
 
+input CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput {
+  forCompanyId: Int!
+  forSeasonId: Int!
+}
+
 input CompanyApplicationListRelationFilter {
   every: CompanyApplicationWhereInput
   none: CompanyApplicationWhereInput
@@ -187,6 +213,27 @@ input CompanyApplicationListRelationFilter {
 
 input CompanyApplicationOrderByRelationAggregateInput {
   _count: SortOrder
+}
+
+input CompanyApplicationOrderByWithRelationInput {
+  booth: SortOrder
+  forCompany: CompanyOrderByWithRelationInput
+  forSeason: SeasonOrderByWithRelationInput
+  talk: ApplicationTalkOrderByWithRelationInput
+  wantsCocktail: SortOrder
+  wantsPanel: SortOrder
+  workshop: ApplicationWorkshopOrderByWithRelationInput
+}
+
+enum CompanyApplicationScalarFieldEnum {
+  booth
+  createdAt
+  forCompanyId
+  forSeasonId
+  id
+  updatedAt
+  wantsCocktail
+  wantsPanel
 }
 
 input CompanyApplicationWhereInput {
@@ -200,6 +247,10 @@ input CompanyApplicationWhereInput {
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
   workshop: ApplicationWorkshopRelationFilter
+}
+
+input CompanyApplicationWhereUniqueInput {
+  forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
 }
 
 type CompanyCount {
@@ -559,6 +610,7 @@ type Query {
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication
+  companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   currentSeason: Season
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!

@@ -96,7 +96,7 @@ class PressReleaseWhereUniqueInput {
 @ArgsType()
 class PressReleaseFindManyArgs extends FindManyPressReleaseArgs {
   @Field(() => PressReleaseWhereUniqueInput, { nullable: true })
-    cursor?: PressReleaseWhereUniqueInput = undefined;
+    cursor?: PressReleaseWhereUniqueInput;
 }
 
 const canViewRelease =

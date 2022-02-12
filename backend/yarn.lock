@@ -496,6 +496,88 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/core@npm:6.17.7"
+  dependencies:
+    "@sentry/hub": 6.17.7
+    "@sentry/minimal": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: c42cf0046b0c33131d31acfa73121ff0774c4e447dd47f4e989d0a083355280175ead99a5cc121813078bc06d22d9bfa19bba046b66e5bae9670b7d86cd68732
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/hub@npm:6.17.7"
+  dependencies:
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: 9b18cfe9f54eac2fe8e04fbfc4ed3388b875d3b486c60ec3bcd9558673dc83a070abaaea2f1810c92a863f20c629f7e38bce55a33fa7f4c30c6f63c1274add15
+  languageName: node
+  linkType: hard
+
+"@sentry/minimal@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/minimal@npm:6.17.7"
+  dependencies:
+    "@sentry/hub": 6.17.7
+    "@sentry/types": 6.17.7
+    tslib: ^1.9.3
+  checksum: 2dfbc9ee02b9e2b53e1fabdb84a1ea2cb8ce69c89b1b69e023a2c1940f1365d502be0caec1e744f46ea287f8466c9d9c190ee91f98332e15d1b35680a9b2c55a
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/node@npm:6.17.7"
+  dependencies:
+    "@sentry/core": 6.17.7
+    "@sentry/hub": 6.17.7
+    "@sentry/tracing": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: 0a80fac448f815c8e4b6e487ec226ea83bcde8972a8b83af7cbf679cd5655123d0e4e5c50c09274a569d61032156964cb1f7b59b3e406914430c0130afea61f4
+  languageName: node
+  linkType: hard
+
+"@sentry/tracing@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/tracing@npm:6.17.7"
+  dependencies:
+    "@sentry/hub": 6.17.7
+    "@sentry/minimal": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: 76f8540a331ba0180df42501deb2a4fad8ac4b5a7c469f53a0ef25d6227c765fc991bad5c28c1bfc694b9f17d6a5cf0854b3c6a4ced0f2147e2196af8a266b34
+  languageName: node
+  linkType: hard
+
+"@sentry/types@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/types@npm:6.17.7"
+  checksum: 6e6bc8c46e78f921e0c85e46946349fb7347ef0af83c0cf3086ab022b15d003780acd02f4f29beb2aefdde3b9a512bd4f31d47f0bea4cee60eab60c117a733d9
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/utils@npm:6.17.7"
+  dependencies:
+    "@sentry/types": 6.17.7
+    tslib: ^1.9.3
+  checksum: dd41419a232ae7547bbe9bd66297b197c1f6daab780e12919adcb3bb09d1c631d269ed8a65cac3a070bb8ca646006b062a5de16104fcb5a7de465238c90d04f2
+  languageName: node
+  linkType: hard
+
 "@timsuchanek/copy@npm:1.4.5":
   version: 1.4.5
   resolution: "@timsuchanek/copy@npm:1.4.5"
@@ -1431,6 +1513,7 @@ __metadata:
   resolution: "backend@workspace:."
   dependencies:
     "@prisma/client": ^3.8.1
+    "@sentry/node": ^6.17.7
     "@types/connect-redis": ^0.0.18
     "@types/content-disposition": ^0.5.4
     "@types/cookie": ^0.4.1
@@ -3978,6 +4061,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru_map@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "lru_map@npm:0.3.3"
+  checksum: ca9dd43c65ed7a4f117c548028101c5b6855e10923ea9d1f635af53ad20c5868ff428c364d454a7b57fe391b89c704982275410c3c5099cca5aeee00d76e169a
+  languageName: node
+  linkType: hard
+
 "make-dir@npm:3.1.0, make-dir@npm:^3.0.0, make-dir@npm:^3.0.2, make-dir@npm:^3.1.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -5993,6 +6083,13 @@ __metadata:
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^1.9.3":
+  version: 1.14.1
+  resolution: "tslib@npm:1.14.1"
+  checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
   languageName: node
   linkType: hard
 

@@ -1986,6 +1986,87 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/browser@npm:6.17.7, @sentry/browser@npm:^6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/browser@npm:6.17.7"
+  dependencies:
+    "@sentry/core": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: 665c5af9dbcdc54049f7e8084bedd269eea275ee3c105f5234bb5598a2f04c85053d3a9e532bf833109b10220504418428ce7fd9531024fa3bfefaf87207c60a
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/core@npm:6.17.7"
+  dependencies:
+    "@sentry/hub": 6.17.7
+    "@sentry/minimal": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: c42cf0046b0c33131d31acfa73121ff0774c4e447dd47f4e989d0a083355280175ead99a5cc121813078bc06d22d9bfa19bba046b66e5bae9670b7d86cd68732
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/hub@npm:6.17.7"
+  dependencies:
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  checksum: 9b18cfe9f54eac2fe8e04fbfc4ed3388b875d3b486c60ec3bcd9558673dc83a070abaaea2f1810c92a863f20c629f7e38bce55a33fa7f4c30c6f63c1274add15
+  languageName: node
+  linkType: hard
+
+"@sentry/minimal@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/minimal@npm:6.17.7"
+  dependencies:
+    "@sentry/hub": 6.17.7
+    "@sentry/types": 6.17.7
+    tslib: ^1.9.3
+  checksum: 2dfbc9ee02b9e2b53e1fabdb84a1ea2cb8ce69c89b1b69e023a2c1940f1365d502be0caec1e744f46ea287f8466c9d9c190ee91f98332e15d1b35680a9b2c55a
+  languageName: node
+  linkType: hard
+
+"@sentry/types@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/types@npm:6.17.7"
+  checksum: 6e6bc8c46e78f921e0c85e46946349fb7347ef0af83c0cf3086ab022b15d003780acd02f4f29beb2aefdde3b9a512bd4f31d47f0bea4cee60eab60c117a733d9
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/utils@npm:6.17.7"
+  dependencies:
+    "@sentry/types": 6.17.7
+    tslib: ^1.9.3
+  checksum: dd41419a232ae7547bbe9bd66297b197c1f6daab780e12919adcb3bb09d1c631d269ed8a65cac3a070bb8ca646006b062a5de16104fcb5a7de465238c90d04f2
+  languageName: node
+  linkType: hard
+
+"@sentry/vue@npm:^6.17.7":
+  version: 6.17.7
+  resolution: "@sentry/vue@npm:6.17.7"
+  dependencies:
+    "@sentry/browser": 6.17.7
+    "@sentry/core": 6.17.7
+    "@sentry/minimal": 6.17.7
+    "@sentry/types": 6.17.7
+    "@sentry/utils": 6.17.7
+    tslib: ^1.9.3
+  peerDependencies:
+    vue: 2.x || 3.x
+    vue-router: 3.x || 4.x
+  checksum: 8d7e426358b23e2c035bfd561aa81e52d171e15b85d0a56a577a202c921028fc59f50d0fd749dcde43389af7086f2a8a80a0249928e63d2d3a14c52db83cd777
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^0.14.0":
   version: 0.14.0
   resolution: "@sindresorhus/is@npm:0.14.0"
@@ -11929,6 +12010,8 @@ __metadata:
     "@nuxtjs/eslint-module": ^3.0.2
     "@nuxtjs/stylelint-module": ^4.1.0
     "@pinia/nuxt": ^0.1.8
+    "@sentry/browser": ^6.17.7
+    "@sentry/vue": ^6.17.7
     "@types/cssesc": ^3.0.0
     "@types/http-status-codes": ^1.2.0
     "@types/js-cookie": ^3.0.1
@@ -13320,7 +13403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1, tslib@npm:^1.9.0":
+"tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd

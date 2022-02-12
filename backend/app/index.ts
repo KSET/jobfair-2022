@@ -1,6 +1,7 @@
 import "reflect-metadata";
 
 import express from "express";
+import * as Sentry from "@sentry/node";
 import serverTiming from "server-timing";
 import withSessionMiddleware from "./middleware/session";
 import withGraphqlMiddleware from "./middleware/graphql";
@@ -39,12 +40,21 @@ export async function start() {
   app.set("query parser", "simple");
   app.set("x-powered-by", false);
 
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+  });
+  app.use(Sentry.Handlers.requestHandler({
+    ip: true,
+  }) as express.RequestHandler);
+
   app.use(serverTiming());
 
   await withSessionMiddleware(app);
   await withUserMiddleware(app);
   app.use("/api", await withGraphqlMiddleware(express.Router()));
   app.use("/api", await registerRoutesInFolderRecursive(__dirname, "routes"));
+
+  app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
 
   const PORT = Number(process.env.PORT) || 3001;
   const HOST = process.env.HOST || "localhost";

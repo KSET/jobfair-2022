@@ -41,6 +41,7 @@ export default defineNuxtConfig({
       "rambdax",
       "primevue",
       "graphql",
+      "@sentry/vue",
     ],
     publicPath: ASSETS_PATH,
   },
@@ -112,5 +113,7 @@ export default defineNuxtConfig({
 
   publicRuntimeConfig: {
     API_BASE: process.env.API_URL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    NODE_ENV: process.env.NODE_ENV,
   },
 });

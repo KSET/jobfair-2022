@@ -58,6 +58,7 @@
     computed,
     defineComponent,
     onMounted,
+    unref,
     watch,
   } from "vue";
   import Toast from "primevue/toast";
@@ -157,6 +158,25 @@
       watch(user, () => {
         translationsStore.isEditable = false;
       });
+
+      watch(
+        user,
+        () => {
+          const u = unref(user);
+
+          if (!u) {
+            return;
+          }
+
+          nuxt.$sentrySetUser({
+            id: u.uid,
+            email: u.email,
+          });
+        },
+        {
+          immediate: true,
+        },
+      );
 
       if (nuxt.ssrContext) {
         const initialData = await useQuery<IInitialDataQuery, IInitialDataQueryVariables>({

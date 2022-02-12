@@ -12,6 +12,7 @@ import {
   map,
   pipe,
 } from "rambdax";
+import * as Sentry from "@sentry/node";
 import {
   ServiceError,
 } from "../services/errors/service-error";
@@ -139,7 +140,9 @@ export const rawRoute =
 
         if (err instanceof ApiError) {
           res.set("X-Api-Error", e.message);
-        } else if ("development" === process.env.NODE_ENV) {
+        } else if ("development" !== process.env.NODE_ENV) {
+          Sentry.captureException(err);
+        } else {
           // eslint-disable-next-line no-console
           console.log("|> ERROR", "\n", e);
         }
@@ -181,7 +184,9 @@ export const apiRoute =
         });
 
         if (!(err instanceof ApiError)) {
-          if ("development" === process.env.NODE_ENV) {
+          if ("development" !== process.env.NODE_ENV) {
+            Sentry.captureException(err);
+          } else {
             // eslint-disable-next-line no-console
             console.log(err);
 

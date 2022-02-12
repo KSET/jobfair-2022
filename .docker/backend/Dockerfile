@@ -8,4 +8,6 @@ COPY .yarn/ .yarn/
 RUN yarn install --immutable --inline-builds
 COPY . .
 RUN yarn prisma generate
-CMD [ "yarn", "start" ]
+RUN yarn tsc --project tsconfig.json --outDir .output --sourceMap false --pretty
+COPY .env .output/
+CMD [ "node", ".output/index.js" ]

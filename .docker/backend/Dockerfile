@@ -10,4 +10,4 @@ COPY . .
 RUN yarn prisma generate
 RUN yarn tsc --project tsconfig.json --outDir .output --sourceMap false --pretty
 COPY .env .output/
-CMD [ "node", ".output/index.js" ]
+CMD [ "yarn", "start" ]

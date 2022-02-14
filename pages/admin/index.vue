@@ -202,8 +202,16 @@
             v-text="application.forCompany.industry.name"
           />
           <strong v-text="application.forCompany.brandName" />
-          <ul class="mt-3">
-            <li v-if="application.talk" class="mb-2">
+          <ul>
+            <li v-if="application.booth" class="mt-3 mb-2">
+              <strong>Booth</strong>:
+              <kbd
+                class="p-1 px-2 border-round"
+                style="background: rgb(62 13 64 / 30%);"
+                v-text="booths[application.booth]"
+              />
+            </li>
+            <li v-if="application.talk" class="mt-3 mb-2">
               <strong>Talk</strong>:
               <kbd
                 class="mr-1 p-1 px-2 border-round"
@@ -316,9 +324,11 @@
       const seasons = ref((res?.seasons || []).map(reactive));
 
       const companies = ref(res?.companies);
+      const booths = ref(Object.fromEntries((res?.booths || []).map((b) => [ b.key, b.name ])));
       return {
         industries,
         talkCategories,
+        booths,
         companyApplications: res?.companyApplications || [],
         companies,
         users: sortBy<NonNullable<IAdminInitialDataQuery["users"]>[0]>((u) => new Date(u.createdAt as string), res?.users || []),

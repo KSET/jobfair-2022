@@ -165,6 +165,10 @@ query AdminInitialData {
         startsAt
         endsAt
     }
+    booths {
+        key
+        name
+    }
     companyApplications {
         wantsCocktail
         wantsPanel
@@ -181,6 +185,7 @@ query AdminInitialData {
             titleEn
         }
         forCompany {
+            vat
             brandName
             industry {
                 name

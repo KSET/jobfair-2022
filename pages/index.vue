@@ -21,6 +21,15 @@
             <translated-text trans-key="button.joinNow" />
           </p-button>
         </nuxt-link>
+        <nuxt-link
+          v-if="hasCompany && currentSeason"
+          :class="$style.heroContentJoinNow"
+          :to="{ name: 'profile-me-company-signup' }"
+        >
+          <p-button :class="$style.secondary">
+            <translated-text trans-key="button.applyForSeason" />&nbsp;<strong v-text="currentSeason.name" />
+          </p-button>
+        </nuxt-link>
       </div>
     </div>
 
@@ -212,6 +221,9 @@
   import {
     useGalleryStore,
   } from "~/store/gallery";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     name: "PageIndex",
@@ -228,6 +240,7 @@
       const userStore = useUserStore();
       const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
+      const seasonsStore = useSeasonsStore();
 
       await newsStore.fetchNews();
       const news = computed(() => limitLength(3)(newsStore.items));
@@ -282,6 +295,8 @@
 
       return {
         isLoggedIn: computed(() => userStore.isLoggedIn),
+        hasCompany: computed(() => userStore.hasCompany),
+        currentSeason: computed(() => seasonsStore.currentSeason),
         news,
         gallery,
         participants,

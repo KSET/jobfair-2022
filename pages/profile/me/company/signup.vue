@@ -1,7 +1,7 @@
 <template>
   <app-user-profile-container :not-found="!isSeasonInProgress" :class="$style.container">
     <h1>
-      <translated-text trans-key="company-signup.header" />
+      <translated-text trans-key="company-signup.header" /> {{ currentSeason.name }}
     </h1>
 
     <form
@@ -382,6 +382,7 @@
 
       return {
         isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
+        currentSeason: computed(() => seasonsStore.currentSeason),
         isLoading,
         items,
         booths,

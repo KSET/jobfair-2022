@@ -1,5 +1,9 @@
 <template>
   <app-user-profile-container>
+    <h1>
+      <translated-text trans-key="profile.settings" />
+    </h1>
+
     <form
       :aria-disabled="isLoading || null"
       :class="$style.formContainer"

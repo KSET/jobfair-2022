@@ -4,10 +4,41 @@
       <translated-text trans-key="profile.header" />
     </h1>
 
-    <div
-      :class="$style.items"
-      class="grid"
-    >
+    <div :class="$style.items">
+      <div :class="$style.item">
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.user.edit.header" />
+          </h2>
+          <dl style="line-height: 1.5;">
+            <dd v-text="user.name" />
+            <dd v-text="user.email" />
+            <dd v-if="(user.companies?.length ?? 0) > 0">
+              <translated-text trans-key="profile.user.companies" />
+              <ul class="m-0" style="list-style: inside;">
+                <li v-text="user.companies[0].brandName" />
+              </ul>
+            </dd>
+          </dl>
+        </div>
+
+        <div :class="$style.itemActions">
+          <nuxt-link
+            :to="{ name: 'profile-me-settings' }"
+            class="ml-auto"
+          >
+            <p-button
+              class="p-button-secondary"
+              tabindex="-1"
+            >
+              <translated-text
+                trans-key="profile.settings"
+              />
+            </p-button>
+          </nuxt-link>
+        </div>
+      </div>
+
       <div
         v-if="currentSeason && !hasCompany && false"
         :class="$style.item"
@@ -214,6 +245,7 @@
 
       const booths = computed(() => Object.fromEntries((resp?.data?.booths || [] as QData["booths"]).map((b) => [ b.key || "", b.name ])));
       return {
+        user: computed(() => userStore.user),
         formatDate,
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason),

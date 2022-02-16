@@ -47,45 +47,50 @@
             <translated-text trans-key="profile.company.applicationsOpen.header" />
           </h2>
           <h3>
-            <translated-text trans-key="profile.season" />
-            : <em v-text="currentSeason.name" />
+            <translated-text
+              trans-key="profile.season"
+            />
+            <span>:&nbsp;</span>
+            <em v-text="currentSeason.name" />
           </h3>
           <template v-if="companyApplication">
             <h4>
               <translated-text trans-key="profile.company.applicationsOpen.subHeader" />
             </h4>
-            <ul>
+            <ul :class="$style.applicationItems">
               <li v-if="companyApplication.booth">
                 <strong>
                   <translated-text trans-key="profile.company.booth" />
-                  :
-                </strong>&nbsp;<em v-text="booths[companyApplication.booth]" />
+                </strong>
+                <em v-text="booths[companyApplication.booth]" />
               </li>
               <li v-if="companyApplication.talk">
                 <strong>
                   <translated-text trans-key="profile.company.talk" />
-                  :
-                </strong>&nbsp;<em v-text="companyApplication.talk.titleEn" />
+                </strong>
+                <em v-text="companyApplication.talk.titleEn" />
               </li>
               <li v-if="companyApplication.workshop">
                 <strong>
                   <translated-text trans-key="profile.company.workshop" />
-                  :
-                </strong>&nbsp;<em v-text="companyApplication.workshop.titleEn" />
+                </strong>
+                <em v-text="companyApplication.workshop.titleEn" />
               </li>
               <li v-if="companyApplication.wantsPanel">
                 <strong>
                   <translated-text trans-key="profile.company.panel" />
-                  :
-                </strong>&nbsp;<em>
-                  <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" /></em>
+                </strong>
+                <em>
+                  <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+                </em>
               </li>
               <li v-if="companyApplication.wantsCocktail">
                 <strong>
                   <translated-text trans-key="profile.company.cocktail" />
-                  :
-                </strong>&nbsp;<em>
-                  <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" /></em>
+                </strong>
+                <em>
+                  <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+                </em>
               </li>
             </ul>
           </template>
@@ -276,6 +281,17 @@
             padding: .875rem 1.25rem;
           }
         }
+      }
+    }
+  }
+
+  .applicationItems {
+    font-size: 1em;
+
+    li > strong {
+
+      &::after {
+        content: ": ";
       }
     }
   }

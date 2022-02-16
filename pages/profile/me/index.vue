@@ -11,7 +11,6 @@
       <div
         v-if="currentSeason && !hasCompany && false"
         :class="$style.item"
-        class="col-12 md:col-4"
       >
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
@@ -22,7 +21,7 @@
           </p>
         </div>
 
-        <div class="flex mt-2">
+        <div :class="$style.itemActions">
           <a
             :href="$router.resolve({ name: 'profile-register-company' }).href"
             class="ml-auto"
@@ -42,7 +41,6 @@
       <div
         v-if="currentSeason && hasCompany"
         :class="$style.item"
-        class="col-12 md:col-4"
       >
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
@@ -109,7 +107,7 @@
             </p>
           </template>
         </div>
-        <div class="flex mt-2">
+        <div :class="$style.itemActions">
           <a
             :href="$router.resolve({ name: 'profile-me-company-signup' }).href"
             class="ml-auto"
@@ -226,16 +224,26 @@
   @import "assets/styles/include";
 
   .items {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    @include media(lg) {
+      grid-template-columns: 1fr;
+    }
 
     .item {
       display: flex;
       flex-direction: column;
-      padding: 1rem;
+      padding: var(--item-padding);
+      transition-property: padding;
       background-color: $fer-gray;
       box-shadow: #{map.get($shadows, "shadow-3")};
 
-      @include media(md) {
-        padding: .5rem;
+      --item-padding: .875rem;
+
+      @include media(lg) {
+        --item-padding: .5rem;
       }
 
       .itemContent {
@@ -251,9 +259,23 @@
       }
 
       .itemHeader {
-        opacity: 1;
         margin: 0 0 2.5rem;
+        opacity: 1;
         color: $fer-dark-blue;
+      }
+
+      .itemActions {
+        display: flex;
+        margin-top: var(--item-padding);
+
+        :global(.p-button) {
+          padding: .625rem 1.125rem;
+          transition-property: padding;
+
+          @include media(lg) {
+            padding: .875rem 1.25rem;
+          }
+        }
       }
     }
   }

@@ -28,6 +28,11 @@ export default defineNuxtConfig({
     preset: "server",
   },
 
+  features: {
+    transitions: false,
+    store: false,
+  },
+
   buildModules: [
     "@vueuse/nuxt",
     "@nuxtjs/eslint-module",

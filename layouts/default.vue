@@ -6,7 +6,6 @@
     <main
       :class="$style.main"
       role="main"
-      v-bind="$attrs"
     >
       <slot />
     </main>
@@ -28,8 +27,6 @@
       AppFooter,
       AppHeader,
     },
-
-    inheritAttrs: false,
   });
 </script>
 

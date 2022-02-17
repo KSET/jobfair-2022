@@ -9,6 +9,8 @@ COPY .yarn/ .yarn/
 RUN yarn install --immutable --inline-builds
 
 COPY . .
+ENV NODE_OPTIONS="--max-old-space-size=1024"
+RUN node -e 'console.log("|> Memory limit", v8.getHeapStatistics().heap_size_limit/(1024*1024))'
 RUN yarn build
 
 # Copy just the built app to runner container

@@ -46,7 +46,6 @@ export default defineNuxtConfig({
       "rambdax",
       "primevue",
       "graphql",
-      "@sentry/vue",
     ],
     publicPath: ASSETS_PATH,
   },

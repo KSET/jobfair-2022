@@ -34,7 +34,8 @@ class News {
 const news = [
   {
     lang: "hr_HR",
-    date: new Date("04-02-2022"),
+    date: new Date("02-04-2022"),
+    image: "/tmp/blog.jpg",
     title: "Vraća li se Job Fair?",
     description: "Sigurno ti je već odavno iznošena sva zaliha majica koju čuvaš od zadnjeg Job Faira i pitaš se kada će biti prilika za obnovom ormara?",
     content: `<h1>Kada će Job Fair?</h1>
@@ -76,7 +77,8 @@ const news = [
   },
   {
     lang: "en_US",
-    date: new Date("04-02-2022"),
+    date: new Date("02-04-2022"),
+    image: "/tmp/blog.jpg",
     title: "Is Job Fair returning?",
     description: "Surely all the T-shirts you got since the last Job Fair has been worn out for a long time and you’re wondering when will there be an opportunity to restock your closet?",
     content: `<h1>When’s Job Fair?</h1>
@@ -118,10 +120,72 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+  {
+    lang: "hr_HR",
+    date: new Date("02-21-2022"),
+    image: "/tmp/blog2.png",
+    title: "Poduzeća - prijavite se na 15. Job Fair!",
+    description: "U tijeku su prijave poduzeća za petnaesti Job Fair, najveći sajam poslova u Hrvatskoj.",
+    content: `<p>
+            <strong>Job Fair</strong> je savršena prilika okupljanja nekoliko tisuća studenata i preko sto poduzeća. Ovaj jedinstveni događaj održat će se <strong>11. i 12. svibnja</strong> kad će predstavnici uspješnih <strong>domaćih, regionalnih i inozemnih poduzeća</strong> imati priliku studentima predstaviti svoje područje i način rada.
+          </p>
+          
+          <p>
+            Na <strong>štandovima</strong> ćete moći razgovarati sa studentima i prenijeti im informacije o <strong>otvorenim pozicijama</strong>. Kroz razgovor im otkrijte sve što ih zanima - od <strong>obaveza i zadatka</strong> koje određeno radno mjesto podrazumijeva do <strong>dodatnih prilika i pogodnosti</strong> koje različite pozicije otvaraju. Na sajmu će, uz štandove, biti organizirani <strong>talkovi, radionice</strong> te <strong>panel rasprave</strong> na kojima ćete moći predstaviti aktualne, ali i studentima zanimljive teme. 
+          </p>
+
+          <h1>Uključite se na vrijeme!</h1>
+          <p>
+            <strong>Prijave</strong> za poduzeća otvorene su <strong>do 2. ožujka</strong>, a prijaviti se možete putem <strong><a href="https://jobfair.fer.unizg.hr/profile/me/company/signup">internetske stranice</a> Job Faira</strong>.  Pozivamo poduzeća da na vrijeme osiguraju svoje mjesto na ovom dvodnevnom događaju koji okuplja perspektivne studente i uspješna poduzeća. <strong>Ponudu</strong> za ovogodišnji Job Fair možete zatražiti putem upita na e-adresu <u>jobfair@fer.hr</u>. 
+          </p>
+          <p>
+            Job Fair organizira se u skladu s trenutno važećim epidemiološkim mjerama Nacionalnog stožera civilne zaštite, a sve sudionike pozivamo na odgovorno ponašanje.
+          </p>
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("02-21-2022"),
+    image: "/tmp/blog2.png",
+    title: "Company applications are open!",
+    description: "The company's applications for the 15th Job Fair, the largest job fair in Croatia, are underway.",
+    content: `<p>
+            <strong>Job Fair</strong> is a perfect opportunity to gather several thousand students and over a hundred companies. This unique event will take place on <strong>May 11th and 12th</strong>, when representatives of successful <strong>domestic, regional and foreign companies</strong> will have the opportunity to present their field and way of working to students.
+          </p>
+          <p>
+            At the <strong>booths</strong>, you will be able to talk to students and pass on information about <strong>open positions</strong>. Through conversation, you can reveal everything that interests them - from the <strong>obligations and tasks</strong> that a certain job entails to the additional opportunities and benefits that different positions open up. In addition to the booths, <strong>talks, workshops and panel discussions</strong> will be organized at the fair, where you can present current topics of interest to students.
+          </p>
+
+          <h1>Get involved on time!</h1>
+          <p>
+            <strong>Applications</strong> for companies are open <strong>until March 2nd</strong>, and you can apply through the <a href="https://jobfair.fer.unizg.hr/profile/me/company/signup">Job Fair website</a>. Secure your place in time at this two-day event that brings together exceptional students and successful companies. You can request an <strong>offer</strong> for this year's Job Fair by inquiring at the e-mail address: <u>jobfair@fer.hr</u>.
+          </p>
+          <p>
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> will be organized in accordance with the current epidemiological measures of the National Civil Protection Headquarters that will be valid during the
+            time of the event.
+          </p>
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),
-  image: "/tmp/blog.jpg",
 }));
 
 export class NewsMockResolver {

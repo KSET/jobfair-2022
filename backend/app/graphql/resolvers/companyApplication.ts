@@ -319,6 +319,8 @@ export class CompanyApplicationCreateResolver {
       },
       select: {
         id: true,
+        applicationsFrom: true,
+        applicationsUntil: true,
       },
     });
 
@@ -331,6 +333,23 @@ export class CompanyApplicationCreateResolver {
           },
         ],
       };
+    }
+
+    {
+      const now = new Date();
+      const from = new Date(currentSeason.applicationsFrom);
+      const until = new Date(currentSeason.applicationsUntil);
+
+      if (from < now && now < until) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: "Applications closed",
+            },
+          ],
+        };
+      }
     }
 
     const entity = await ctx.prisma.$transaction(async (prisma) => {

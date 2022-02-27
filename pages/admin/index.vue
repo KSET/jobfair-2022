@@ -392,6 +392,8 @@
                   name
                   startsAt
                   endsAt
+                  applicationsFrom
+                  applicationsUntil
               }
             }
           `,

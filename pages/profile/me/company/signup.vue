@@ -1,5 +1,5 @@
 <template>
-  <app-user-profile-container :not-found="!isSeasonInProgress" :class="$style.container">
+  <app-user-profile-container :not-found="!applicationsOpen" :class="$style.container">
     <h1>
       <translated-text trans-key="company-signup.header" /> {{ currentSeason.name }}
     </h1>
@@ -381,7 +381,7 @@
       const isLoading = ref(false);
 
       return {
-        isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
+        applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         currentSeason: computed(() => seasonsStore.currentSeason),
         isLoading,
         items,

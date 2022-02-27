@@ -668,6 +668,8 @@ input RoleWhereUniqueInput {
 
 type Season {
   _count: SeasonCount
+  applicationsFrom: DateTime!
+  applicationsUntil: DateTime!
   endsAt: DateTime!
   name: String!
   startsAt: DateTime!
@@ -679,12 +681,16 @@ type SeasonCount {
 }
 
 input SeasonCreateInput {
+  applicationsFrom: DateTime = null
+  applicationsUntil: DateTime = null
   endsAt: DateTime = null
   name: String = ""
   startsAt: DateTime = null
 }
 
 input SeasonOrderByWithRelationInput {
+  applicationsFrom: SortOrder
+  applicationsUntil: SortOrder
   companies: CompanyApplicationOrderByRelationAggregateInput
   endsAt: SortOrder
   name: SortOrder
@@ -698,6 +704,8 @@ input SeasonRelationFilter {
 }
 
 enum SeasonScalarFieldEnum {
+  applicationsFrom
+  applicationsUntil
   endsAt
   id
   name
@@ -706,6 +714,8 @@ enum SeasonScalarFieldEnum {
 }
 
 input SeasonUpdateInput {
+  applicationsFrom: DateTime = null
+  applicationsUntil: DateTime = null
   endsAt: DateTime = null
   name: String = ""
   startsAt: DateTime = null
@@ -716,6 +726,8 @@ input SeasonWhereInput {
   AND: [SeasonWhereInput!]
   NOT: [SeasonWhereInput!]
   OR: [SeasonWhereInput!]
+  applicationsFrom: DateTimeFilter
+  applicationsUntil: DateTimeFilter
   companies: CompanyApplicationListRelationFilter
   endsAt: DateTimeFilter
   name: StringFilter

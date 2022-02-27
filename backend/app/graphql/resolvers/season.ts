@@ -47,6 +47,12 @@ export class SeasonCreateInput {
 
   @Field()
     endsAt: Date = null as unknown as Date;
+
+  @Field()
+    applicationsFrom: Date = null as unknown as Date;
+
+  @Field()
+    applicationsUntil: Date = null as unknown as Date;
 }
 
 @InputType()

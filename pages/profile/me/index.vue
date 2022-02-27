@@ -70,7 +70,7 @@
       </div>
 
       <div
-        v-if="currentSeason && hasCompany"
+        v-if="applicationsOpen && hasCompany"
         :class="$style.item"
       >
         <div :class="$style.itemContent">
@@ -125,20 +125,20 @@
               </li>
             </ul>
           </template>
-          <template v-else>
+          <template v-else-if="applicationsOpen">
             <p :class="$style.applicationsText">
               <translated-text trans-key="profile.company.applicationsOpen.text" />
               <translated-text trans-key="profile.company.applicationsOpen.text.from" />
               <time
-                :datetime="new Date(currentSeason.startsAt).toISOString()"
-                :title="new Date(currentSeason.startsAt).toLocaleDateString()"
-                v-text="formatDate(currentSeason.startsAt)"
+                :datetime="new Date(currentSeason.applicationsFrom).toISOString()"
+                :title="new Date(currentSeason.applicationsFrom).toLocaleDateString()"
+                v-text="formatDate(currentSeason.applicationsFrom)"
               />
               <translated-text trans-key="profile.company.applicationsOpen.text.until" />
               <time
-                :datetime="new Date(currentSeason.endsAt).toISOString()"
-                :title="new Date(currentSeason.endsAt).toLocaleDateString()"
-                v-text="formatDate(currentSeason.endsAt)"
+                :datetime="new Date(currentSeason.applicationsUntil).toISOString()"
+                :title="new Date(currentSeason.applicationsUntil).toLocaleDateString()"
+                v-text="formatDate(currentSeason.applicationsUntil)"
               />
             </p>
           </template>
@@ -162,6 +162,62 @@
               />
             </p-button>
           </a>
+        </div>
+      </div>
+      <div
+        v-else-if="!applicationsOpen && companyApplication && hasCompany"
+        :class="$style.item"
+      >
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.company.applicationsClosed.header" />
+          </h2>
+          <h3>
+            <translated-text
+              trans-key="profile.season"
+            />
+            <span>:&nbsp;</span>
+            <em v-text="currentSeason.name" />
+          </h3>
+          <h4>
+            <translated-text trans-key="profile.company.applicationsOpen.subHeader" />
+          </h4>
+          <ul :class="$style.applicationItems">
+            <li v-if="companyApplication.booth">
+              <strong>
+                <translated-text trans-key="profile.company.booth" />
+              </strong>
+              <em v-text="booths[companyApplication.booth]" />
+            </li>
+            <li v-if="companyApplication.talk">
+              <strong>
+                <translated-text trans-key="profile.company.talk" />
+              </strong>
+              <em v-text="companyApplication.talk.titleEn" />
+            </li>
+            <li v-if="companyApplication.workshop">
+              <strong>
+                <translated-text trans-key="profile.company.workshop" />
+              </strong>
+              <em v-text="companyApplication.workshop.titleEn" />
+            </li>
+            <li v-if="companyApplication.wantsPanel">
+              <strong>
+                <translated-text trans-key="profile.company.panel" />
+              </strong>
+              <em>
+                <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+              </em>
+            </li>
+            <li v-if="companyApplication.wantsCocktail">
+              <strong>
+                <translated-text trans-key="profile.company.cocktail" />
+              </strong>
+              <em>
+                <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+              </em>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -249,6 +305,7 @@
         formatDate,
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason),
+        applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
       };

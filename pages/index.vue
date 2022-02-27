@@ -22,7 +22,7 @@
           </p-button>
         </nuxt-link>
         <nuxt-link
-          v-if="hasCompany && currentSeason"
+          v-if="hasCompany && applicationsOpen"
           :class="$style.heroContentJoinNow"
           :to="{ name: 'profile-me-company-signup' }"
         >
@@ -297,6 +297,7 @@
         isLoggedIn: computed(() => userStore.isLoggedIn),
         hasCompany: computed(() => userStore.hasCompany),
         currentSeason: computed(() => seasonsStore.currentSeason),
+        applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         news,
         gallery,
         participants,

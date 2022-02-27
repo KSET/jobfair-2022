@@ -38,7 +38,7 @@
                 />
               </a>
             </li>
-            <li v-if="isSeasonInProgress">
+            <li v-if="applicationsOpen">
               <a
                 :href="$router.resolve({ name: 'profile-me-company-signup' }).href"
               >
@@ -110,6 +110,7 @@
 
       return {
         isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
+        applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),
       };

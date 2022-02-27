@@ -229,11 +229,13 @@ model ImageVariation {
 
 model Season {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id       Int      @id @default(autoincrement())
-  uid      String   @unique @default(cuid())
-  name     String
-  startsAt DateTime
-  endsAt   DateTime
+  id                Int      @id @default(autoincrement())
+  uid               String   @unique @default(cuid())
+  name              String
+  startsAt          DateTime
+  endsAt            DateTime
+  applicationsFrom  DateTime
+  applicationsUntil DateTime
 
   companies CompanyApplication[]
 }

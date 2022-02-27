@@ -52,5 +52,13 @@ export const seasonCreate =
         type: "datetime-local",
         value: season?.endsAt || tomorrow(),
       },
+      applicationsFrom: {
+        type: "datetime-local",
+        value: season?.applicationsFrom || today(),
+      },
+      applicationsUntil: {
+        type: "datetime-local",
+        value: season?.applicationsUntil || tomorrow(),
+      },
     })
 ;

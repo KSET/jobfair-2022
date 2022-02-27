@@ -186,7 +186,9 @@ const news = [
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),
-}));
+}))
+  .sort((a, b) => Number(b.date) - Number(a.date))
+;
 
 export class NewsMockResolver {
   @Query(() => [ News ])

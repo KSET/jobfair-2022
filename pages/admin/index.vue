@@ -225,13 +225,13 @@
             </li>
             <li v-if="application.wantsCocktail">
               <strong>
-                Panel
+                Cocktail
                 <i class="ml-2 pi pi-check" />
               </strong>
             </li>
             <li v-if="application.wantsPanel">
               <strong>
-                Cocktail
+                Panel
                 <i class="ml-2 pi pi-check" />
               </strong>
             </li>

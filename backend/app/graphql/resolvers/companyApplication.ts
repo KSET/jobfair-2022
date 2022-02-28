@@ -339,8 +339,9 @@ export class CompanyApplicationCreateResolver {
       const now = new Date();
       const from = new Date(currentSeason.applicationsFrom);
       const until = new Date(currentSeason.applicationsUntil);
+      const applicationsOpen = from < now && now < until;
 
-      if (from < now && now < until) {
+      if (!applicationsOpen) {
         return {
           errors: [
             {

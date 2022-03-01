@@ -233,6 +233,17 @@ export class CompanyInfoMutationsResolver {
       return null;
     }
 
+    if (ctx.user.companies.length) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "You are already part of a company",
+          },
+        ],
+      };
+    }
+
     const validation = await CompanyValidation(info);
 
     if (!validation.success) {

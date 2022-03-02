@@ -436,7 +436,6 @@
         }
       }
       statistics.company.byIndustry = sortObject((_a, _b, a, b) => b - a, statistics.company.byIndustry);
-      statistics.booths = sortObject((_a, _b, a, b) => b - a, statistics.booths);
       statistics.talks = sortObject((_a, _b, a, b) => b - a, statistics.talks);
 
       return {

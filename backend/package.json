@@ -25,6 +25,7 @@
         "content-disposition": "^0.5.4",
         "cookie": "^0.4.1",
         "dotenv": "^14.3.2",
+        "exceljs": "^4.3.0",
         "express": "^4.17.2",
         "express-session": "^1.17.2",
         "fast-glob": "^3.2.11",

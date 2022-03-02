@@ -321,6 +321,7 @@
   import Chip from "primevue/chip";
   import {
     sortBy,
+    sortObject,
   } from "rambdax";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
@@ -434,6 +435,9 @@
           statistics.panels += 1;
         }
       }
+      statistics.company.byIndustry = sortObject((_a, _b, a, b) => b - a, statistics.company.byIndustry);
+      statistics.booths = sortObject((_a, _b, a, b) => b - a, statistics.booths);
+      statistics.talks = sortObject((_a, _b, a, b) => b - a, statistics.talks);
 
       return {
         statistics,

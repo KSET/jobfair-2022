@@ -23,6 +23,72 @@ fragment frag_UserProfile on User {
     }
 }
 
+fragment frag_CompanyApplication on CompanyApplication {
+    booth
+    wantsPanel
+    wantsCocktail
+    talk {
+        titleEn
+        titleHr
+        descriptionEn
+        descriptionHr
+        language
+        category {
+            name
+        }
+        presenters {
+            firstName
+            lastName
+            bioHr
+            bioEn
+            photo {
+                name
+                uid
+                full {
+                    mimeType
+                }
+            }
+        }
+    }
+    workshop {
+        titleEn
+        titleHr
+        descriptionEn
+        descriptionHr
+        language
+        goal
+        notesEn
+        notesHr
+        presenters {
+            firstName
+            lastName
+            bioHr
+            bioEn
+            photo {
+                name
+                uid
+                full {
+                    mimeType
+                }
+            }
+        }
+    }
+}
+
+fragment frag_Company on Company {
+    uid
+    legalName
+    brandName
+    descriptionEn
+    descriptionHr
+    address
+    vat
+    website
+    industry {
+        name
+    }
+}
+
 query Profile {
     profile {
         ...frag_UserProfile
@@ -58,17 +124,7 @@ query InitialData($language: String!) {
 
 query Company($vat: String!) {
     company(vat: $vat) {
-        uid
-        legalName
-        brandName
-        descriptionEn
-        descriptionHr
-        address
-        vat
-        website
-        industry {
-            name
-        }
+        ...frag_Company
     }
 }
 
@@ -189,11 +245,32 @@ query AdminInitialData {
             titleEn
         }
         forCompany {
-            vat
+            uid
             brandName
             industry {
                 name
             }
+        }
+        forSeason {
+            uid
+        }
+    }
+}
+
+query AdminCompanyApplication($company: String!, $season: String!) {
+    talkCategories {
+        name
+    }
+
+    booths {
+        name
+        key
+    }
+
+    companyApplicationFor(company: $company, season: $season) {
+        ...frag_CompanyApplication
+        forCompany {
+            ...frag_Company
         }
     }
 }

@@ -202,6 +202,16 @@
             v-text="application.forCompany.industry.name"
           />
           <strong v-text="application.forCompany.brandName" />
+          <a
+            class="ml-2"
+            :href="$router.resolve({
+              name: 'admin-company-application-season-company-edit',
+              params: {
+                season: application.forSeason.uid,
+                company: application.forCompany.uid,
+              },
+            }).href"
+          >Edit</a>
           <ul>
             <li v-if="application.booth" class="mt-3 mb-2">
               <strong>Booth</strong>:

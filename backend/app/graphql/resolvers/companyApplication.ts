@@ -18,6 +18,7 @@ import {
   CompanyApplication,
   Company,
   FindManyCompanyApplicationArgs,
+  Season,
 } from "@generated/type-graphql";
 import {
   omit,
@@ -65,6 +66,9 @@ import {
 import {
   transformSelect as transformSelectCompany,
 } from "./company";
+import {
+  transformSelect as transformSelectSeason,
+} from "./season";
 
 const photoMimeTypes = new Set([
   "image/png",
@@ -99,6 +103,13 @@ export class CompanyApplicationFieldResolver {
   ): Company {
     return application.forCompany!;
   }
+
+  @FieldResolver(() => Season, { nullable: true })
+  forSeason(
+    @Root() application: CompanyApplication,
+  ): Season {
+    return application.forSeason!;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationFieldResolver>({
@@ -121,6 +132,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
   forCompany(select) {
     select.forCompany = {
       select: transformSelectCompany(select.forCompany as Record<string, unknown>),
+    };
+
+    return select;
+  },
+
+  forSeason(select) {
+    select.forSeason = {
+      select: transformSelectSeason(select.forSeason as Record<string, unknown>),
     };
 
     return select;
@@ -199,10 +218,15 @@ export class CompanyApplicationInfoResolver {
       select: toSelect(info, transformSelect),
     });
   }
+}
 
+
+@Resolver(() => CompanyApplication)
+export class CompanyApplicationAdminResolver {
   @Query(() => [ CompanyApplication ], { nullable: true })
   companyApplications(
   @Ctx() ctx: Context,
+    @Arg("season", { nullable: true }) seasonUid: string,
     @Args() args: FindManyCompanyApplicationArgs,
     @Info() info: GraphQLResolveInfo,
   ) {
@@ -216,17 +240,575 @@ export class CompanyApplicationInfoResolver {
       ...args,
       where: {
         forSeason: {
-          startsAt: {
-            lte: now,
-          },
-          endsAt: {
-            gte: now,
-          },
+          OR: [
+            {
+              startsAt: {
+                lte: now,
+              },
+              endsAt: {
+                gte: now,
+              },
+            },
+            {
+              uid: seasonUid,
+            },
+          ],
         },
         ...args.where,
       },
       select: toSelect(info, transformSelect),
     });
+  }
+
+  @Query(() => CompanyApplication, { nullable: true })
+  companyApplicationFor(
+  @Ctx() ctx: Context,
+    @Arg("company") companyUid: string,
+    @Arg("season") seasonUid: string,
+    @Info() info: GraphQLResolveInfo,
+  ) {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return null;
+    }
+
+    return ctx.prisma.companyApplication.findFirst({
+      where: {
+        forSeason: {
+          uid: seasonUid,
+        },
+        forCompany: {
+          uid: companyUid,
+        },
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
+
+  @Mutation(() => CreateCompanyApplicationResponse, { nullable: true })
+  async createCompanyApplicationFor(
+    @Ctx() ctx: Context,
+      @Arg("season") seasonUid: string,
+      @Arg("company") companyUid: string,
+      @Arg("info") info: CompanyApplicationCreateInput,
+  ): Promise<CreateCompanyApplicationResponse | null> {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return null;
+    }
+
+    const validation = await CompanyApplicationValidation(info);
+
+    if (!validation.success) {
+      return {
+        errors: validation.errors,
+      };
+    }
+
+    const booths = await BoothsService.fetchBooths();
+
+    if (!booths.some((booth) => info.booth === booth.key)) {
+      return {
+        errors: [
+          {
+            field: "booth",
+            message: "Unknown booth",
+          },
+        ],
+      };
+    }
+
+    const company = await ctx.prisma.company.findUnique({
+      where: {
+        uid: companyUid,
+      },
+    });
+
+    if (!company) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Company does not exist",
+          },
+        ],
+      };
+    }
+
+    const currentSeason = await ctx.prisma.season.findFirst({
+      where: {
+        uid: seasonUid,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!currentSeason) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Season is closed",
+          },
+        ],
+      };
+    }
+
+    const entity = await ctx.prisma.$transaction(async (prisma) => {
+      const oldApplication = await prisma.companyApplication.findUnique({
+        where: {
+          // eslint-disable-next-line camelcase
+          forCompanyId_forSeasonId: {
+            forCompanyId: company.id,
+            forSeasonId: currentSeason.id,
+          },
+        },
+        select: {
+          id: true,
+
+          talk: {
+            select: {
+              id: true,
+              presenters: {
+                select: {
+                  id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+
+          workshop: {
+            select: {
+              id: true,
+              presenters: {
+                select: {
+                  id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      let talkPresenter;
+      if (info.talk) {
+        talkPresenter = {
+          ...info.talk.presenter,
+          photo: {
+            connect: {
+              id: 0,
+            },
+          },
+        };
+
+        const photoFile = await info.talk.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype) ||
+            !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "talk.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/talk/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "talk.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          talkPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.talk?.presenters[0].photo) {
+          talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "talk.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
+      }
+
+      let workshopPresenter;
+      if (info.workshop) {
+        workshopPresenter = {
+          ...info.workshop.presenter,
+          photo: {
+            connect: {
+              id: 0,
+            },
+          },
+        };
+
+        const photoFile = await info.workshop.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype) ||
+            !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "workshop.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/workshop/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "workshop.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          workshopPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.workshop?.presenters[0].photo) {
+          workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "workshop.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
+      }
+
+      const chosen = {
+        booth: booths.find((booth) => booth.key === info.booth)?.name,
+        workshop: Boolean(info.workshop),
+        talk: Boolean(info.talk),
+        cocktail: info.wantsCocktail,
+        panel: info.wantsPanel,
+      } as const;
+
+      if (!oldApplication) {
+        const entity = await prisma.companyApplication.create({
+          data: {
+            booth: info.booth,
+            wantsPanel: info.wantsPanel,
+            wantsCocktail: info.wantsCocktail,
+            talk: {
+              create:
+                info.talk
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
+            workshop: {
+              create:
+                info.workshop
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      create: {
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
+            forCompany: {
+              connect: {
+                vat: info.vat,
+              },
+            },
+            forSeason: {
+              connect: {
+                id: currentSeason.id,
+              },
+            },
+          },
+          include: {
+            workshop: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+              },
+            },
+            talk: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+                category: true,
+              },
+            },
+          },
+        });
+
+        if (entity) {
+          void EventsService.logEvent(
+            "admin:company-application:create",
+            ctx.user!.id,
+            {
+              vat: company.vat,
+              chosen,
+            },
+          );
+        }
+
+        return entity;
+      }
+
+      const deleteIf =
+        (cond: unknown) =>
+          cond
+            ? {
+              delete: true,
+            }
+            : undefined
+      ;
+
+      const entity = await prisma.companyApplication.update({
+        where: {
+          // eslint-disable-next-line camelcase
+          forCompanyId_forSeasonId: {
+            forCompanyId: company.id,
+            forSeasonId: currentSeason.id,
+          },
+        },
+
+        data: {
+          booth: info.booth,
+          wantsPanel: info.wantsPanel,
+          wantsCocktail: info.wantsCocktail,
+          talk:
+            info.talk
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.talk,
+                    ),
+                    category: {
+                      connect: {
+                        name: info.talk.category,
+                      },
+                    },
+                    presenters: {
+                      deleteMany: oldApplication.talk
+                        ? {
+                          id: {
+                            in: oldApplication.talk?.presenters.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: {
+                        ...talkPresenter as NonNullable<typeof talkPresenter>,
+                      },
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.talk),
+          workshop:
+            info.workshop
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      create: {
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.workshop,
+                    ),
+                    presenters: {
+                      deleteMany: oldApplication.workshop
+                        ? {
+                          id: {
+                            in: oldApplication.workshop?.presenters.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: {
+                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
+                      },
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.workshop),
+          forCompany: {
+            connect: {
+              vat: info.vat,
+            },
+          },
+          forSeason: {
+            connect: {
+              id: currentSeason.id,
+            },
+          },
+        },
+
+        include: {
+          workshop: {
+            include: {
+              presenters: {
+                include: {
+                  photo: true,
+                },
+              },
+            },
+          },
+          talk: {
+            include: {
+              presenters: {
+                include: {
+                  photo: true,
+                },
+              },
+              category: true,
+            },
+          },
+        },
+      });
+
+      if (entity) {
+        void EventsService.logEvent(
+          "admin:company-application:update",
+          ctx.user!.id,
+          {
+            vat: company.vat,
+            chosen,
+          },
+        );
+      }
+
+      return entity;
+    }).catch((err) => {
+      console.log(err);
+
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Something went wrong",
+          },
+        ],
+      };
+    });
+
+    const errors = (entity as Record<string, unknown>).errors as FieldError[] | undefined;
+
+    if (errors) {
+      return {
+        errors,
+      };
+    }
+
+    return {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      entity,
+    };
   }
 }
 

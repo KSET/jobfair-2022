@@ -197,3 +197,23 @@ mutation CreateCompanyApplication($info: CompanyApplicationCreateInput!) {
         }
     }
 }
+
+mutation AdminCreateCompanyApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
+    createCompanyApplicationFor(company: $company, season: $season, info: $info) {
+        entity {
+            talk {
+                uid
+            }
+            workshop {
+                uid
+            }
+            wantsCocktail
+            wantsPanel
+        }
+
+        errors {
+            field
+            message
+        }
+    }
+}

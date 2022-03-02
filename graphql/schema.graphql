@@ -184,6 +184,7 @@ type CompanyApplication {
   booth: String
   createdAt: DateTime!
   forCompany: Company
+  forSeason: Season
   talk: ApplicationTalk
   updatedAt: DateTime!
   wantsCocktail: Boolean!
@@ -463,6 +464,7 @@ input IntFilter {
 
 type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
+  createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   createSeason(info: SeasonCreateInput!): Season
@@ -610,7 +612,8 @@ type Query {
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication
-  companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
+  companyApplicationFor(company: String!, season: String!): CompanyApplication
+  companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   currentSeason: Season
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!

@@ -132,7 +132,9 @@ router.getRaw("/", async (req, res) => {
 
   res
     .header("content-type", "application/vnd.ms-excel")
-    .header("cache-control", "max-age=315360000,public,immutable")
+    .header("cache-control", "no-cache")
+    .header("pragma", "no-store, private, no-cache, max-age=0, must-revalidate")
+    .header("expires", "-1")
     .header("content-disposition", contentDisposition("korisnici.xlsx"))
   ;
 

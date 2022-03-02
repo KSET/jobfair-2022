@@ -13,13 +13,13 @@ import {
   Root,
 } from "type-graphql";
 import {
-  User,
   Company,
   CompanyCreateInput,
-  FindManyCompanyArgs,
-  Industry,
-  Image,
   File,
+  FindManyCompanyArgs,
+  Image,
+  Industry,
+  User,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
@@ -621,5 +621,94 @@ export class CompanyListResolver {
 
       select: toSelect(info, transformSelect),
     });
+  }
+}
+
+@Resolver(() => Company)
+export class AdminCompanyInfoMutationsResolver {
+  @Mutation(() => CreateCompanyResponse, { nullable: true })
+  async updateCompanyMembersFor(
+    @Ctx() ctx: Context,
+      @Arg("company") companyUid: string,
+      @Arg("members", () => [ String ]) newMembers: string[],
+  ): Promise<CreateCompanyResponse | null> {
+    if (!ctx.user) {
+      return null;
+    }
+
+    const [ company ] = ctx.user.companies;
+    const isInCompany = company && company.uid === companyUid;
+
+    if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "You can not edit the company",
+          },
+        ],
+      };
+    }
+
+    type Members = { members: { uid: string, }[], };
+    let oldCompany: Members | null = null;
+    const entity = await ctx.prisma.$transaction(async (prisma) => {
+      oldCompany = await prisma.company.findUnique({
+        where: {
+          uid: companyUid,
+        },
+        select: {
+          members: {
+            select: {
+              uid: true,
+            },
+          },
+        },
+      });
+
+      if (!oldCompany) {
+        return null;
+      }
+
+      return prisma.company.update({
+        data: {
+          members: {
+            disconnect: oldCompany.members.map(({ uid }) => ({
+              uid,
+            })),
+            connect: newMembers.map((uid) => ({
+              uid,
+            })),
+          },
+        },
+        where: {
+          uid: companyUid,
+        },
+        include: {
+          industry: true,
+          members: true,
+        },
+      });
+    });
+
+    if (!entity || !oldCompany) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Company not found",
+          },
+        ],
+      };
+    }
+
+    void EventsService.logEvent("admin:company:members:update", ctx.user.id, {
+      old: (oldCompany as Members).members.map(({ uid }) => uid),
+      new: newMembers,
+    });
+
+    return {
+      entity,
+    };
   }
 }

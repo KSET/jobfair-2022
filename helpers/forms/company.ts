@@ -2,7 +2,11 @@ import {
   MaybeRef,
 } from "@vueuse/shared";
 import {
+ unref,
+} from "vue";
+import {
   ICompany,
+  IUser,
   IFile,
   IImage,
 } from "~/graphql/schema";
@@ -84,6 +88,23 @@ export const companyCreate =
           fileType: company?.rasterLogo?.full?.mimeType,
           accept: "image/png",
           type: "file",
+        },
+      })
+;
+
+type User = Pick<IUser,
+  "uid"
+  | "name"
+  | "email">
+  ;
+export const companyMembersEdit =
+  <T extends User>(members?: T[]) =>
+    (users?: MaybeRef<User[]>): Record<"members", InputEntry> =>
+      ({
+        members: {
+          type: "dropdown",
+          value: members?.map((member) => member.uid) || [],
+          options: unref(users)?.map((user) => ({ label: `${ user.name } (${ user.email })`, value: user.uid })) || [],
         },
       })
 ;

@@ -477,6 +477,7 @@ type Mutation {
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
+  updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse

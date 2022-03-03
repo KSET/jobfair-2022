@@ -1,6 +1,4 @@
-import ExcelJS, {
-  Anchor,
-} from "exceljs";
+import ExcelJS from "exceljs";
 import contentDisposition from "content-disposition";
 import {
   AuthRouter,
@@ -238,12 +236,16 @@ router.getRaw("/", async (req, res) => {
           tl: {
             col: cell.fullAddress.col - 1,
             row: cell.fullAddress.row - 1,
-          } as Anchor,
+          },
           ext: {
             width: IMAGE_SIZE,
             height: IMAGE_SIZE,
           },
           editAs: undefined,
+          hyperlinks: {
+            hyperlink: `https://jobfair.fer.unizg.hr/api/i/${ photo.uid }/full`,
+            tooltip: `https://jobfair.fer.unizg.hr/api/i/${ photo.uid }/full`,
+          },
         });
       };
 

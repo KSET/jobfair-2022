@@ -255,6 +255,7 @@ router.getRaw("/", async (req, res) => {
         row.getCell("talkCategory").value = talk.category.name;
         row.getCell("talkTitle").value = "hr_HR" === talk.language ? talk.titleHr : talk.titleEn;
         row.getCell("talkDescription").value = "hr_HR" === talk.language ? talk.descriptionHr : talk.descriptionEn;
+        row.getCell("talkPresenterName").value = `${ presenter.firstName } ${ presenter.lastName }`;
         row.getCell("talkPresenterBio").value = "hr_HR" === talk.language ? presenter.bioHr : presenter.bioEn;
         addImage(
           "talkPresenterImage",
@@ -267,6 +268,7 @@ router.getRaw("/", async (req, res) => {
 
         row.getCell("workshopTitle").value = "hr_HR" === workshop.language ? workshop.titleHr : workshop.titleEn;
         row.getCell("workshopDescription").value = "hr_HR" === workshop.language ? workshop.descriptionHr : workshop.descriptionEn;
+        row.getCell("workshopPresenterName").value = `${ presenter.firstName } ${ presenter.lastName }`;
         row.getCell("workshopPresenterBio").value = "hr_HR" === workshop.language ? presenter.bioHr : presenter.bioEn;
         addImage(
           "workshopPresenterImage",

@@ -31,6 +31,11 @@ router.getRaw("/", async (req, res) => {
           legalName: true,
           descriptionEn: true,
           descriptionHr: true,
+          industry: {
+            select: {
+              name: true,
+            },
+          },
           members: {
             select: {
               firstName: true,
@@ -161,6 +166,7 @@ router.getRaw("/", async (req, res) => {
 
     worksheet.columns = [
       { header: "Naziv poduzeća", key: "brandName" },
+      { header: "Industrija", key: "industry" },
       { header: "Ime brenda", key: "legalName" },
       { header: "Kontakt osoba", key: "contactName" },
       { header: "Email kontakt osobe", key: "contactEmail" },
@@ -197,6 +203,7 @@ router.getRaw("/", async (req, res) => {
       const row = worksheet.addRow({
         brandName: company.brandName,
         legalName: company.legalName,
+        industry: company.industry.name,
         contactName: `${ contact.firstName } ${ contact.lastName }`,
         contactEmail: contact.email,
         contactPhone: contact.phone,

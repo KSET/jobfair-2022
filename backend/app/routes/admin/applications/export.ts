@@ -82,6 +82,7 @@ router.getRaw("/", async (req, res) => {
           descriptionEn: true,
           descriptionHr: true,
           language: true,
+          goal: true,
           presenters: {
             select: {
               firstName: true,
@@ -181,6 +182,7 @@ router.getRaw("/", async (req, res) => {
       { header: "Talk predavać slika", key: "talkPresenterImage", width: IMAGE_SIZE / 6 },
       { header: "Workshop naslov", key: "workshopTitle" },
       { header: "Workshop opis", key: "workshopDescription" },
+      { header: "Workshop cilj", key: "workshopGoal" },
       { header: "Workshop predavać ime", key: "workshopPresenterName" },
       { header: "Workshop predavać bio", key: "workshopPresenterBio" },
       { header: "Workshop predavać slika", key: "workshopPresenterImage", width: IMAGE_SIZE / 6 },
@@ -217,6 +219,7 @@ router.getRaw("/", async (req, res) => {
         talkPresenterImage: "",
         workshopTitle: "",
         workshopDescription: "",
+        workshopGoal: "",
         workshopPresenterName: "",
         workshopPresenterBio: "",
         workshopPresenterImage: "",
@@ -275,6 +278,7 @@ router.getRaw("/", async (req, res) => {
 
         row.getCell("workshopTitle").value = "hr_HR" === workshop.language ? workshop.titleHr : workshop.titleEn;
         row.getCell("workshopDescription").value = "hr_HR" === workshop.language ? workshop.descriptionHr : workshop.descriptionEn;
+        row.getCell("workshopGoal").value = workshop.goal;
         row.getCell("workshopPresenterName").value = `${ presenter.firstName } ${ presenter.lastName }`;
         row.getCell("workshopPresenterBio").value = "hr_HR" === workshop.language ? presenter.bioHr : presenter.bioEn;
         addImage(

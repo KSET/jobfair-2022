@@ -183,6 +183,73 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+  {
+    lang: "hr_HR",
+    date: new Date("03-16-2022"),
+    image: "/tmp/blog3.jpg",
+    title: "Gdje se to seli Job Fair?",
+    description: "Dugoočekivani povratak Job Fair sajma odvest će te na novu lokaciju.",
+    content: `<h1>Ostajemo u kvartu!</h1>
+          <p>
+            Nakon godina i godina prepunih hodnika na Fakultetu elektrotehnike i računarstva u Zagrebu, ove ćeš godine morati  prošetati do susjedne <strong>Sportske dvorane Martinovka</strong>. 
+          </p>
+
+          <h1>Tko igra utakmicu?</h1>
+          <p>
+            Na petnaestom Job Fairu koji će se održati <strong>11. i 12. svibnja</strong> u Sportskoj dvorani Martinovka, umjesto sportskih utakmica, moći ćeš posjetiti više od <strong>130 štandova</strong>, upoznati se s ljudima iz industrije, dobiti uvid u njihov posao i saznati što su ti zanimljivo pripremili za program na pozornici.
+          </p>
+          <p>
+            Uz labirint <strong>štandova</strong>, paralelno na pozornici koja je u središtu Job Faira, moći ćeš poslušati <strong>talkove, panel raspravu</strong> i nasmijati se uz <strong>hot talk</strong> na kojima će ti gosti iz globalnih i hrvatskih tehnoloških poduzeća predstaviti aktualne i uzbudljive  teme iz mnogih područja IT-a i znanosti. Za <strong>radionice</strong> ćeš ipak ostati na dobro poznatom FER-u, dok će se na kraju prvog dana zabava, odnosno <strong>Loosen up party</strong> održati u KSET-u.
+          </p>
+  
+          <p>
+            Job Fair organizira se u skladu s trenutno važećim epidemiološkim mjerama Nacionalnog stožera civilne zaštite, a sve sudionike pozivamo na odgovorno ponašanje.
+          </p>
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("03-16-2022"),
+    image: "/tmp/blog3.png",
+    title: "Where is Job Fair moving?",
+    description: "The long-awaited return of Job Fair will take you to a new location",
+    content: `
+          <h1>We’re staying in the neighborhood!</h1>
+          <p>
+            After years and years of crowded hallways at the Faculty of Electrical Engineering and Computing in Zagreb, you will have to take a short walk to the neighboring <strong>Sports Hall Martinovka</strong>.
+          </p>
+
+          <h1>Who plays the match?</h1>
+          <p>
+            At the 15th Job Fair, which will be held on <strong>May 11th and 12th</strong> in the Martinovka Sports Hall, instead of sports matches, you will be able to visit more than <strong>130 booths</strong>, meet people from the industry, get an insight into their work and learn about various other interesting things they prepared for you for the stage program.
+          </p>
+          <p>
+            Along with the labyrinth of <strong>booths</strong>, simultaneously at the stage in the center of Job Fair, you will be able to listen to <strong>talks</strong> , <strong>panel discussion</strong> and laugh during the <strong>hot talk</strong> where guests from global and regional technology companies will present current and exciting topics from many fields of IT and science. For the <strong>workshops</strong>, you will still stay at the well-known FER, while at the end of the first day there will be a <strong>Loosen up party</strong>, held at KSET.
+          </p>
+
+          <p>
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> will be organized in accordance with the current epidemiological measures of the National Civil Protection Headquarters that will be valid during the
+            time of the event.
+          </p>
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

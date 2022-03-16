@@ -218,7 +218,7 @@ const news = [
   {
     lang: "en_US",
     date: new Date("03-16-2022"),
-    image: "/tmp/blog3.png",
+    image: "/tmp/blog3.jpg",
     title: "Where is Job Fair moving?",
     description: "The long-awaited return of Job Fair will take you to a new location",
     content: `

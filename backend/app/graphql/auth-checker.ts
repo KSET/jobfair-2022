@@ -4,27 +4,24 @@ import {
 import {
   Context,
 } from "../types/apollo-context";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../helpers/auth";
 
 export const authChecker: AuthChecker<Context> = (
   {
-    root,
-    args,
     context,
-    info,
   },
   roles,
 ) => {
-  console.log({
-    root,
-    args,
-    context,
-    info,
-    roles,
-  });
+  const {
+    user,
+  } = context;
 
-  // here we can read the user from context
-  // and check his permission in the db against the `roles` argument
-  // that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
+  if (0 === roles.length) {
+    return Boolean(user);
+  }
 
-  return true; // or false if access is denied
+  return roles.some((role) => hasAtLeastRole(role as Role, user));
 };

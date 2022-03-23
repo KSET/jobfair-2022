@@ -7,6 +7,9 @@ import {
   buildSchema,
 } from "type-graphql";
 import resolvers from "../resolvers";
+import {
+  authChecker,
+} from "../auth-checker";
 
 export const schemaPath =
   () =>
@@ -37,6 +40,7 @@ export const build =
     await buildSchema({
       resolvers,
       validate: false,
+      authChecker,
       emitSchemaFile: config,
     });
 

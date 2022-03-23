@@ -55,6 +55,12 @@ export const Templates = {
     "email",
     "register",
   ),
+  emailContent: template<{
+    content: string[],
+  }>(
+    "email",
+    "content",
+  ),
 };
 
 export type ITemplates = typeof Templates;

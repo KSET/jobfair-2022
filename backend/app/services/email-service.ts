@@ -74,7 +74,7 @@ export class EmailService {
         template.name,
         template.parameters,
       ),
-      `${ template.parameters.content.join("\n") }\n\nPozdrav,\n    Tvoj Job Fair tim`,
+      `${ template.parameters.content.join("\n") }\n\nPozdrav,\nJob Fair Tim\nUnska 3, 10000 Zagreb, Hrvatska\ne-mail: jobfair@fer.hr\nweb: jobfair.fer.unizg.hr\nsocial: jobfairfer\n#jobfair22`,
     );
   }
 

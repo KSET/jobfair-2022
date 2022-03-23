@@ -9,8 +9,9 @@ import {
   keys,
   reduce,
 } from "rambdax";
-
-type Dict = Record<string, unknown>;
+import {
+  Dict,
+} from "../../types/helpers";
 
 export const toSelect =
   (

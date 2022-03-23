@@ -23,6 +23,9 @@ import express, {
   RouterOptions,
 } from "express";
 import {
+  NonEmptyArray,
+} from "../types/helpers";
+import {
   apiRoute,
   rawRoute,
   RouteHandler,
@@ -33,7 +36,6 @@ import {
 } from "./auth";
 
 type RequestMethod = "all" | "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
-type NonEmptyArray<T> = [ T, ...T[] ];
 type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
 
 export const DEFAULT_ROUTER_OPTIONS: RouterOptions = {

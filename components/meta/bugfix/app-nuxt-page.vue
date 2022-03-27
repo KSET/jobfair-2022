@@ -41,9 +41,9 @@
       override: string | ((route: RouteLocationNormalizedLoaded) => string),
     ) => {
       const source =
-        override ??
-        route.meta.key ??
-        route.fullPath
+        override
+        ?? route.meta.key
+        ?? route.fullPath
       ;
 
       return (

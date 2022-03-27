@@ -2,7 +2,6 @@ import {
   defineStore,
 } from "pinia";
 import {
-  ICompany,
   ILoginMutation,
   ILoginMutationVariables,
   ILogoutMutation,

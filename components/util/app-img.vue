@@ -190,8 +190,8 @@
         }
 
         if (
-          "number" === typeof ratio ||
-          !ratio?.includes("/")
+          "number" === typeof ratio
+          || !ratio?.includes("/")
         ) {
           return 1 / Number(ratio);
         }

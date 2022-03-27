@@ -137,7 +137,15 @@ module.exports = {
       },
     ],
     "object-shorthand": [ "error", "always" ],
-//    "operator-linebreak": [ "error", "before" ],
+    "operator-linebreak": [
+      "error",
+      "before",
+      {
+        "overrides": {
+          "=": "after",
+        },
+      },
+    ],
     "prefer-arrow-callback": "warn",
     "prefer-const": "warn",
     "prefer-destructuring": [

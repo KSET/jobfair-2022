@@ -103,8 +103,8 @@ const fileValid = {
     }
 
     return (
-      vectorLogoMimeTypes.has(file.mimetype.toLowerCase()) ||
-      vectorLogoExtensions.some((ext) => file.filename.endsWith(ext))
+      vectorLogoMimeTypes.has(file.mimetype.toLowerCase())
+      || vectorLogoExtensions.some((ext) => file.filename.endsWith(ext))
     );
   },
 };
@@ -608,8 +608,8 @@ export class CompanyListResolver {
     }
 
     if (
-      !ctx.user.companies.some((company) => company.vat === vat) &&
-      !hasAtLeastRole(Role.Admin, ctx.user)
+      !ctx.user.companies.some((company) => company.vat === vat)
+      && !hasAtLeastRole(Role.Admin, ctx.user)
     ) {
       return null;
     }

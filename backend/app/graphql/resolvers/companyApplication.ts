@@ -1,6 +1,7 @@
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   Field,
   FieldResolver,
@@ -13,10 +14,13 @@ import {
   Root,
 } from "type-graphql";
 import {
+  ApplicationCocktail,
+  ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
-  CompanyApplication,
   Company,
+  CompanyApplication,
+  CompanyApplicationApproval,
   FindManyCompanyApplicationArgs,
   Season,
 } from "@generated/type-graphql";
@@ -26,6 +30,15 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
+import type {
+  Prisma,
+} from "@prisma/client";
+import {
+  upperFirst,
+} from "lodash";
+import {
+  FileUpload,
+} from "graphql-upload";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -38,6 +51,7 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  CompanyApplicationApprovedValidation,
   CompanyApplicationValidation,
 } from "../../services/validation-service";
 import {
@@ -56,12 +70,17 @@ import {
   ImageService,
 } from "../../services/image-service";
 import {
+  Dict,
+} from "../../types/helpers";
+import {
   TalkCreateInput,
+  TalksCreateInput,
   transformSelect as transformSelectTalks,
 } from "./companyApplicationTalk";
 import {
   transformSelect as transformSelectWorkshops,
   WorkshopCreateInput,
+  WorkshopsCreateInput,
 } from "./companyApplicationWorkshop";
 import {
   transformSelect as transformSelectCompany,
@@ -69,6 +88,17 @@ import {
 import {
   transformSelect as transformSelectSeason,
 } from "./season";
+import {
+  transformSelect as transformSelectApproval,
+} from "./companyApplicationApproval";
+import {
+  CocktailCreateInput,
+  transformSelect as transformSelectCocktail,
+} from "./companyApplicationCocktail";
+import {
+  PresenterCreateInput,
+  transformSelect as transformSelectPresenter,
+} from "./companyPresenter";
 
 const photoMimeTypes = new Set([
   "image/png",
@@ -110,6 +140,27 @@ export class CompanyApplicationFieldResolver {
   ): Season {
     return application.forSeason!;
   }
+
+  @FieldResolver(() => CompanyApplicationApproval, { nullable: true })
+  approval(
+    @Root() application: CompanyApplication,
+  ): CompanyApplicationApproval | null {
+    return application.approval || null;
+  }
+
+  @FieldResolver(() => ApplicationCocktail, { nullable: true })
+  cocktail(
+    @Root() application: CompanyApplication,
+  ): ApplicationCocktail | null {
+    return application.cocktail || null;
+  }
+
+  @FieldResolver(() => [ ApplicationPresenter ])
+  panelParticipants(
+    @Root() application: CompanyApplication,
+  ): ApplicationPresenter[] {
+    return application.panelParticipants || [];
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationFieldResolver>({
@@ -144,6 +195,30 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
 
     return select;
   },
+
+  approval(select) {
+    select.approval = {
+      select: transformSelectApproval(select.approval as Dict),
+    };
+
+    return select;
+  },
+
+  cocktail(select) {
+    select.cocktail = {
+      select: transformSelectCocktail(select.cocktail as Dict),
+    };
+
+    return select;
+  },
+
+  panelParticipants(select) {
+    select.panelParticipants = {
+      select: transformSelectPresenter(select.panelParticipants as Dict),
+    };
+
+    return select;
+  },
 });
 
 @InputType()
@@ -167,10 +242,31 @@ class CompanyApplicationCreateInput {
     wantsPanel: boolean = false;
 }
 
+@InputType()
+class CompanyApplicationApprovedEditInput {
+  @Field()
+    vat: string = "";
+
+  @Field(() => TalksCreateInput, { nullable: true })
+    talk: TalksCreateInput | null = null;
+
+  @Field(() => WorkshopsCreateInput, { nullable: true })
+    workshop: WorkshopsCreateInput | null = null;
+
+  @Field(() => CocktailCreateInput, { nullable: true })
+    cocktail: CocktailCreateInput | null = null;
+
+  @Field(() => [ PresenterCreateInput ])
+    panel: PresenterCreateInput[] = [];
+}
+
 @ObjectType()
 class CreateCompanyApplicationResponse extends ValidationResponseFor(CompanyApplication) {
 }
 
+@ObjectType()
+class EditApprovedCompanyApplicationResponse extends ValidationResponseFor(CompanyApplication) {
+}
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationInfoResolver {
@@ -1395,6 +1491,572 @@ export class CompanyApplicationCreateResolver {
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      entity,
+    };
+  }
+
+  @Mutation(() => EditApprovedCompanyApplicationResponse, { nullable: true })
+  @Authorized()
+  async editApprovedCompanyApplication(
+    @Ctx() ctx: Context,
+      @Arg("info") info: CompanyApplicationApprovedEditInput,
+  ): Promise<EditApprovedCompanyApplicationResponse | null> {
+    const user = ctx.user!;
+    const validation = await CompanyApplicationApprovedValidation(info);
+
+    if (!validation.success) {
+      return {
+        errors: validation.errors,
+      };
+    }
+
+    info.vat = info.vat.toUpperCase();
+
+    const isInCompany = user.companies.some((company) => company.vat === info.vat);
+    const isAdmin = hasAtLeastRole(Role.Admin, user);
+
+    if (!isInCompany && !isAdmin) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "You can not edit the company",
+          },
+        ],
+      };
+    }
+
+    const currentSeason = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        id: true,
+        applicationsFrom: true,
+        applicationsUntil: true,
+      },
+    });
+
+    if (!currentSeason) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Season is closed",
+          },
+        ],
+      };
+    }
+
+    const company = await ctx.prisma.company.findFirst({
+      select: {
+        applications: {
+          select: {
+            talk: {
+              select: {
+                id: true,
+                presenters: {
+                  select: {
+                    id: true,
+                    photo: {
+                      select: {
+                        id: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+
+            workshop: {
+              select: {
+                id: true,
+                presenters: {
+                  select: {
+                    id: true,
+                    photo: {
+                      select: {
+                        id: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+
+            panelParticipants: {
+              select: {
+                id: true,
+                photo: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+
+            approval: true,
+          },
+        },
+      },
+      where: {
+        vat: info.vat,
+        applications: {
+          some: {
+            forSeasonId: currentSeason.id,
+          },
+        },
+      },
+    });
+
+    if (!company) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Company does not exist",
+          },
+        ],
+      };
+    }
+
+    const [ application ] = company.applications;
+
+    if (!application) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Applications closed",
+          },
+        ],
+      };
+    }
+
+    const { approval } = application;
+
+    if (!approval) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Applications closed",
+          },
+        ],
+      };
+    }
+
+    const data: Prisma.CompanyApplicationUpdateArgs["data"] = {};
+
+    class PresenterCreateError extends Error {
+      constructor(
+        public readonly field: string,
+        message: string,
+      ) {
+        super(message);
+      }
+    }
+
+    type PresenterCreate = NonNullable<NonNullable<NonNullable<NonNullable<Prisma.CompanyApplicationUpdateArgs["data"]["workshop"]>["create"]>["presenters"]>["create"]>;
+
+    const createPhoto =
+      async (
+        eventType: string,
+        photoFile: FileUpload | null,
+        oldPhoto: { id: number, } | null,
+      ): Promise<[ string, null ] | [ null, number ]> => {
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype)
+            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+          ) {
+            return [
+              `File must have extension: ${ photoExtensions.join(", ") }`,
+              null,
+            ];
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/${ eventType }/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return [
+              "Something went wrong",
+              null,
+            ];
+          }
+
+          return [
+            null,
+            photo.id,
+          ];
+        }
+
+        if (oldPhoto) {
+          return [
+            null,
+            oldPhoto.id,
+          ];
+        }
+
+        return [
+          "Photo is required",
+          null,
+        ];
+      }
+    ;
+
+    const createPresenters =
+      async <T extends keyof typeof application>(
+        id: T,
+        presenters: PresenterCreateInput[],
+        eventName?: string,
+      ): Promise<PresenterCreate> => {
+        const presentersCreate: PresenterCreate = [];
+
+        for (const presenter of presenters) {
+          const i = presenters.indexOf(presenter);
+          const presenterCreate: PresenterCreate = {
+            ...presenter,
+            photo: {
+              connect: {
+                id: 0,
+              },
+            },
+          };
+
+          const baseId = `${ eventName || id }.presenter.${ i }`;
+
+          const photoFile = await presenter.photo;
+          const oldApplication = application[id];
+          const oldPhotoPresenters =
+            (
+              oldApplication
+              && "presenters" in oldApplication
+            )
+              ? oldApplication.presenters[i]?.photo
+              : null
+          ;
+          const oldPhotoEntries =
+            (
+              oldApplication
+              && Array.isArray(oldApplication)
+            )
+              ? oldApplication[i]?.photo
+              : null
+          ;
+          const oldPhoto = oldPhotoPresenters || oldPhotoEntries;
+
+          const [
+            err,
+            photoId,
+          ] = await createPhoto(
+            eventName || id,
+            photoFile,
+            oldPhoto,
+          );
+
+          if (err) {
+            throw new PresenterCreateError(
+              `${ baseId }.photo`,
+              err,
+            );
+          }
+
+          presenterCreate.photo = {
+            connect: {
+              id: photoId!,
+            },
+          };
+
+          presentersCreate.push(presenterCreate);
+        }
+
+        return presentersCreate;
+      };
+
+    if (0 < approval.talkParticipants) {
+      const id = "talk" as const;
+      const minPresenters = approval.talkParticipants;
+
+      const entry = info[id]!;
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      if (entry.presenter.length < minPresenters) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `At least ${ minPresenters } ${ id } presenters required`,
+            },
+          ],
+        };
+      }
+
+      try {
+        const presentersCreate: PresenterCreate = await createPresenters(
+          id,
+          entry.presenter,
+        );
+
+        data[id] = {
+          update: {
+            ...omit(
+              [
+                "presenter",
+                "category",
+              ],
+              entry,
+            ),
+            category: {
+              connect: {
+                name: entry.category,
+              },
+            },
+            presenters: {
+              deleteMany: {
+                id: {
+                  in: application[id]?.presenters.map((p) => p.id) || [],
+                },
+              },
+              create: presentersCreate,
+            },
+          },
+        };
+      } catch (e) {
+        if (e instanceof PresenterCreateError) {
+          return {
+            errors: [
+              {
+                field: e.field,
+                message: e.message,
+              },
+            ],
+          };
+        }
+
+        throw e;
+      }
+    }
+
+    if (0 < approval.workshopParticipants) {
+      const id = "workshop" as const;
+      const minPresenters = approval.workshopParticipants;
+
+      const entry = info[id]!;
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      if (entry.presenter.length < minPresenters) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `At least ${ minPresenters } ${ id } presenters required`,
+            },
+          ],
+        };
+      }
+
+      try {
+        const presentersCreate: PresenterCreate = await createPresenters(
+          id,
+          entry.presenter,
+        );
+
+        data[id] = {
+          update: {
+            ...omit(
+              [
+                "presenter",
+              ],
+              entry,
+            ),
+            presenters: {
+              deleteMany: {
+                id: {
+                  in: application[id]?.presenters.map((p) => p.id) || [],
+                },
+              },
+              create: presentersCreate,
+            },
+          },
+        };
+      } catch (e) {
+        if (e instanceof PresenterCreateError) {
+          return {
+            errors: [
+              {
+                field: e.field,
+                message: e.message,
+              },
+            ],
+          };
+        }
+
+        throw e;
+      }
+    }
+
+    if (approval.panel) {
+      const id = "panel" as const;
+      const minPresenters = 1;
+
+      const entry = info[id]!;
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      if (entry.length < minPresenters) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `At least ${ minPresenters } ${ id } presenters required`,
+            },
+          ],
+        };
+      }
+
+      try {
+        const presentersCreate: PresenterCreate = await createPresenters(
+          "panelParticipants" as const,
+          entry,
+          "panel",
+        );
+
+        data.panelParticipants = {
+          deleteMany: {
+            id: {
+              in: application.panelParticipants.map((p) => p.id) || [],
+            },
+          },
+          create: presentersCreate,
+        };
+      } catch (e) {
+        if (e instanceof PresenterCreateError) {
+          return {
+            errors: [
+              {
+                field: e.field,
+                message: e.message,
+              },
+            ],
+          };
+        }
+
+        throw e;
+      }
+    }
+
+    if (approval.cocktail) {
+      const id = "cocktail" as const;
+
+      const entry = info[id];
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      data[id] = {
+        upsert: {
+          create: {
+            ...entry,
+          },
+          update: {
+            ...entry,
+          },
+        },
+      };
+    }
+
+    const entity = await ctx.prisma.companyApplication.update({
+      data,
+      where: {
+        id: approval.forApplicationId,
+      },
+      include: {
+        workshop: {
+          include: {
+            presenters: {
+              include: {
+                photo: true,
+              },
+            },
+          },
+        },
+        talk: {
+          include: {
+            presenters: {
+              include: {
+                photo: true,
+              },
+            },
+            category: true,
+          },
+        },
+        panelParticipants: {
+          include: {
+            photo: true,
+          },
+        },
+        cocktail: true,
+      },
+    });
+
+    if (entity) {
+      void EventsService.logEvent(
+        "company-application:approved:update",
+        ctx.user!.id,
+        {
+          vat: info.vat,
+        },
+      );
+    }
+
+    return {
       entity,
     };
   }

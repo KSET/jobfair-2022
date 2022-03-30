@@ -255,6 +255,14 @@ model CompanyApplication {
   /// @TypeGraphQL.omit(input: true)
   updatedAt     DateTime             @updatedAt
 
+  panelParticipants ApplicationPresenter[]
+
+  cocktail   ApplicationCocktail? @relation(fields: [cocktailId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  cocktailId Int?                 @unique()
+
+  approval CompanyApplicationApproval?
+
   /// @TypeGraphQL.omit(output: true, input: true)
   forCompanyId Int
 
@@ -262,6 +270,21 @@ model CompanyApplication {
   forSeasonId Int
 
   @@unique([forCompanyId, forSeasonId])
+}
+
+model CompanyApplicationApproval {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id                   Int     @id @default(autoincrement())
+  booth                Boolean
+  talkParticipants     Int
+  workshopParticipants Int
+  panel                Boolean
+  cocktail             Boolean
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int                @unique()
 }
 
 model ApplicationTalk {
@@ -299,6 +322,16 @@ model ApplicationTalkCategory {
   talks ApplicationTalk[]
 }
 
+model ApplicationCocktail {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id     Int    @id @default(autoincrement())
+  name   String
+  colour String
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplication CompanyApplication[]
+}
+
 model ApplicationPresenter {
   /// @TypeGraphQL.omit(output: true, input: true)
   id        Int      @id @default(autoincrement())
@@ -316,6 +349,8 @@ model ApplicationPresenter {
   forTalks     ApplicationTalk[]
   /// @TypeGraphQL.omit(input: true)
   forWorkshops ApplicationWorkshop[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forPanels    CompanyApplication[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   photoId Int?

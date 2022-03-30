@@ -7,7 +7,11 @@ import {
 } from "~/composables/useQuery";
 import {
   Company,
+  CurrentCompanyApplication,
+  ICompanyApplicationApproval,
   ICompanyQuery,
+  ICurrentCompanyApplicationQuery,
+  ICurrentCompanyApplicationQueryVariables,
   IQueryCompanyArgs,
   IRegisterCompanyMutation,
   IRegisterCompanyMutationVariables,
@@ -19,10 +23,39 @@ import {
   UpdateCompanyInfo,
   ValidateVat,
 } from "~/graphql/schema";
+import {
+  useTalkCategoriesStore,
+} from "~/store/talkCategories";
+
+type Approval = Omit<ICompanyApplicationApproval, "forApplication"> | null | undefined;
+
+const isApplicationApproved =
+  (
+    approval: Approval,
+  ) =>
+    Object
+      .values(approval || {})
+      .some((x) => x)
+    || false
+;
 
 export const useCompanyStore = defineStore(
   "companies",
   {
+    state: () => ({
+      applicationInfo: null as (null | ICurrentCompanyApplicationQuery),
+    }),
+
+    getters: {
+      hasApplication(state) {
+        return Boolean(state.applicationInfo?.companyApplication);
+      },
+
+      hasApplicationApproved(state) {
+        return isApplicationApproved(state.applicationInfo?.companyApplication?.approval);
+      },
+    },
+
     actions: {
       async validateVat(vat: string) {
         const resp = await useMutation<IValidateVatMutation, IValidateVatMutationVariables>(ValidateVat)({
@@ -43,6 +76,21 @@ export const useCompanyStore = defineStore(
         return resp?.data?.company || null;
       },
 
+      async fetchCurrentApplication() {
+        const talkCategoriesStore = useTalkCategoriesStore();
+
+        const resp = await useQuery<ICurrentCompanyApplicationQuery, ICurrentCompanyApplicationQueryVariables>({
+          query: CurrentCompanyApplication,
+        })();
+
+        const info = resp?.data || null;
+
+        this.applicationInfo = info;
+        talkCategoriesStore.setTalkCategories(info?.talkCategories);
+
+        return info;
+      },
+
       async registerCompany(variables: IRegisterCompanyMutationVariables) {
         const resp = await useMutation<IRegisterCompanyMutation, IRegisterCompanyMutationVariables>(RegisterCompany)(variables);
 
@@ -53,6 +101,10 @@ export const useCompanyStore = defineStore(
         const resp = await useMutation<IUpdateCompanyInfoMutation, IUpdateCompanyInfoMutationVariables>(UpdateCompanyInfo)(variables);
 
         return resp?.data?.updateCompanyInfo || null;
+      },
+
+      isApplicationApproved(approval: Approval) {
+        return isApplicationApproved(approval);
       },
     },
   },

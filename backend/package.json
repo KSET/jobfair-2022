@@ -4,7 +4,7 @@
     "scripts": {
         "start": "yarn db:migration:deploy && node ./.output/index.js",
         "build": "tsc --project tsconfig.json --outDir .output --sourceMap false --pretty",
-        "dev": "ts-node-dev --clear --rs index.ts",
+        "dev": "ts-node-dev --clear --rs --inspect -- index.ts",
         "db:client:gen": "prisma generate",
         "db:schema:format": "prisma format",
         "db:migration:new": "prisma migrate dev --create-only",

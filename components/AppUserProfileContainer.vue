@@ -47,6 +47,15 @@
                 />
               </a>
             </li>
+            <li v-else-if="applicationApproved">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-application-edit' }"
+              >
+                <translated-text
+                  trans-key="profile.company.application.edit"
+                />
+              </nuxt-link>
+            </li>
           </template>
           <template v-else>
             <li>
@@ -87,6 +96,9 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import {
+    useCompanyStore,
+  } from "~/store/company";
 
   export default defineComponent({
     components: {
@@ -107,10 +119,12 @@
     setup() {
       const userStore = useUserStore();
       const seasonsStore = useSeasonsStore();
+      const companyStore = useCompanyStore();
 
       return {
         isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
+        applicationApproved: computed(() => companyStore.hasApplicationApproved),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),
       };

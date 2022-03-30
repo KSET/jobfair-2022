@@ -23,6 +23,20 @@ fragment frag_UserProfile on User {
     }
 }
 
+fragment frag_ApplicationPresenter on ApplicationPresenter {
+    firstName
+    lastName
+    bioHr
+    bioEn
+    photo {
+        name
+        uid
+        full {
+            mimeType
+        }
+    }
+}
+
 fragment frag_CompanyApplication on CompanyApplication {
     booth
     wantsPanel
@@ -37,17 +51,7 @@ fragment frag_CompanyApplication on CompanyApplication {
             name
         }
         presenters {
-            firstName
-            lastName
-            bioHr
-            bioEn
-            photo {
-                name
-                uid
-                full {
-                    mimeType
-                }
-            }
+            ...frag_ApplicationPresenter
         }
     }
     workshop {
@@ -60,18 +64,22 @@ fragment frag_CompanyApplication on CompanyApplication {
         notesEn
         notesHr
         presenters {
-            firstName
-            lastName
-            bioHr
-            bioEn
-            photo {
-                name
-                uid
-                full {
-                    mimeType
-                }
-            }
+            ...frag_ApplicationPresenter
         }
+    }
+    cocktail {
+        name
+        colour
+    }
+    panelParticipants {
+        ...frag_ApplicationPresenter
+    }
+    approval {
+        cocktail
+        panel
+        talkParticipants
+        workshopParticipants
+        booth
     }
 }
 
@@ -272,5 +280,18 @@ query AdminCompanyApplication($company: String!, $season: String!) {
         forCompany {
             ...frag_Company
         }
+    }
+}
+
+query CurrentCompanyApplication {
+    talkCategories {
+        name
+    }
+    booths {
+        name
+        key
+    }
+    companyApplication {
+        ...frag_CompanyApplication
     }
 }

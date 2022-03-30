@@ -136,6 +136,19 @@
           @delete="refreshSeasons"
           @save="refreshSeasons"
         />
+
+        <hr>
+
+        <h2>Prijave</h2>
+        <ul>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-company-application-season-approval', params: { season: season.uid } }"
+            >
+              Odobri
+            </nuxt-link>
+          </li>
+        </ul>
       </fieldset>
     </div>
 

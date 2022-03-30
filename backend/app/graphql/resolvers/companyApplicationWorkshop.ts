@@ -38,7 +38,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationWorkshopFiel
 });
 
 @InputType()
-export class WorkshopCreateInput {
+class WorkshopCreateInputBase {
   @Field()
     titleEn: string = "";
 
@@ -62,7 +62,16 @@ export class WorkshopCreateInput {
 
   @Field()
     language: string = "";
+}
 
+@InputType()
+export class WorkshopCreateInput extends WorkshopCreateInputBase {
   @Field(() => PresenterCreateInput)
     presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
+}
+
+@InputType()
+export class WorkshopsCreateInput extends WorkshopCreateInputBase {
+  @Field(() => [ PresenterCreateInput ])
+    presenter: PresenterCreateInput[] = [];
 }

@@ -54,7 +54,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldRes
 });
 
 @InputType()
-export class TalkCreateInput {
+export class TalkCreateInputBase {
   @Field()
     titleEn: string = "";
 
@@ -72,7 +72,16 @@ export class TalkCreateInput {
 
   @Field()
     language: string = "";
+}
 
+@InputType()
+export class TalkCreateInput extends TalkCreateInputBase {
   @Field(() => PresenterCreateInput)
     presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
+}
+
+@InputType()
+export class TalksCreateInput extends TalkCreateInputBase {
+  @Field(() => [ PresenterCreateInput ])
+    presenter: PresenterCreateInput[] = [];
 }

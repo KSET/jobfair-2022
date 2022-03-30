@@ -3,6 +3,35 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ApplicationCocktail {
+  _count: ApplicationCocktailCount
+  colour: String!
+  forApplication: [CompanyApplication!]!
+  name: String!
+}
+
+type ApplicationCocktailCount {
+  forApplication: Int!
+}
+
+input ApplicationCocktailOrderByWithRelationInput {
+  colour: SortOrder
+  name: SortOrder
+}
+
+input ApplicationCocktailRelationFilter {
+  is: ApplicationCocktailWhereInput
+  isNot: ApplicationCocktailWhereInput
+}
+
+input ApplicationCocktailWhereInput {
+  AND: [ApplicationCocktailWhereInput!]
+  NOT: [ApplicationCocktailWhereInput!]
+  OR: [ApplicationCocktailWhereInput!]
+  colour: StringFilter
+  name: StringFilter
+}
+
 type ApplicationPresenter {
   _count: ApplicationPresenterCount
   bioEn: String!
@@ -15,8 +44,30 @@ type ApplicationPresenter {
 }
 
 type ApplicationPresenterCount {
+  forPanels: Int!
   forTalks: Int!
   forWorkshops: Int!
+}
+
+input ApplicationPresenterListRelationFilter {
+  every: ApplicationPresenterWhereInput
+  none: ApplicationPresenterWhereInput
+  some: ApplicationPresenterWhereInput
+}
+
+input ApplicationPresenterOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ApplicationPresenterWhereInput {
+  AND: [ApplicationPresenterWhereInput!]
+  NOT: [ApplicationPresenterWhereInput!]
+  OR: [ApplicationPresenterWhereInput!]
+  bioEn: StringFilter
+  bioHr: StringFilter
+  firstName: StringFilter
+  lastName: StringFilter
+  photo: ImageRelationFilter
 }
 
 type ApplicationTalk {
@@ -147,6 +198,19 @@ input ApplicationWorkshopWhereInput {
   titleHr: StringFilter
 }
 
+input ApproveCompanyApplicationsInput {
+  parts: ApproveCompanyApplicationsInputParts = null
+  uid: String = ""
+}
+
+input ApproveCompanyApplicationsInputParts {
+  booth: Boolean = false
+  cocktail: Boolean = false
+  panel: Boolean = false
+  talkParticipants: Float = 0
+  workshopParticipants: Float = 0
+}
+
 type AuthResponse {
   entity: User
   errors: [FieldError!]
@@ -160,6 +224,11 @@ input BoolFilter {
 type Booth {
   key: String
   name: String!
+}
+
+input CocktailCreateInput {
+  colour: String = ""
+  name: String = ""
 }
 
 type Company {
@@ -181,15 +250,64 @@ type Company {
 }
 
 type CompanyApplication {
+  _count: CompanyApplicationCount
+  approval: CompanyApplicationApproval
   booth: String
+  cocktail: ApplicationCocktail
   createdAt: DateTime!
   forCompany: Company
   forSeason: Season
+  panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
   updatedAt: DateTime!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
   workshop: ApplicationWorkshop
+}
+
+type CompanyApplicationApproval {
+  booth: Boolean!
+  cocktail: Boolean!
+  forApplication: CompanyApplication!
+  panel: Boolean!
+  talkParticipants: Int!
+  workshopParticipants: Int!
+}
+
+input CompanyApplicationApprovalOrderByWithRelationInput {
+  booth: SortOrder
+  cocktail: SortOrder
+  panel: SortOrder
+  talkParticipants: SortOrder
+  workshopParticipants: SortOrder
+}
+
+input CompanyApplicationApprovalRelationFilter {
+  is: CompanyApplicationApprovalWhereInput
+  isNot: CompanyApplicationApprovalWhereInput
+}
+
+input CompanyApplicationApprovalWhereInput {
+  AND: [CompanyApplicationApprovalWhereInput!]
+  NOT: [CompanyApplicationApprovalWhereInput!]
+  OR: [CompanyApplicationApprovalWhereInput!]
+  booth: BoolFilter
+  cocktail: BoolFilter
+  panel: BoolFilter
+  talkParticipants: IntFilter
+  workshopParticipants: IntFilter
+}
+
+input CompanyApplicationApprovedEditInput {
+  cocktail: CocktailCreateInput = null
+  panel: [PresenterCreateInput!] = []
+  talk: TalksCreateInput = null
+  vat: String = ""
+  workshop: WorkshopsCreateInput = null
+}
+
+type CompanyApplicationCount {
+  panelParticipants: Int!
 }
 
 input CompanyApplicationCreateInput {
@@ -217,9 +335,12 @@ input CompanyApplicationOrderByRelationAggregateInput {
 }
 
 input CompanyApplicationOrderByWithRelationInput {
+  approval: CompanyApplicationApprovalOrderByWithRelationInput
   booth: SortOrder
+  cocktail: ApplicationCocktailOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
+  panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
   talk: ApplicationTalkOrderByWithRelationInput
   wantsCocktail: SortOrder
   wantsPanel: SortOrder
@@ -228,6 +349,7 @@ input CompanyApplicationOrderByWithRelationInput {
 
 enum CompanyApplicationScalarFieldEnum {
   booth
+  cocktailId
   createdAt
   forCompanyId
   forSeasonId
@@ -241,9 +363,12 @@ input CompanyApplicationWhereInput {
   AND: [CompanyApplicationWhereInput!]
   NOT: [CompanyApplicationWhereInput!]
   OR: [CompanyApplicationWhereInput!]
+  approval: CompanyApplicationApprovalRelationFilter
   booth: StringNullableFilter
+  cocktail: ApplicationCocktailRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
+  panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkRelationFilter
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
@@ -350,6 +475,11 @@ input DateTimeFilter {
   notIn: [DateTime!]
 }
 
+type EditApprovedCompanyApplicationResponse {
+  entity: CompanyApplication
+  errors: [FieldError!]
+}
+
 type FieldError {
   field: String!
   message: String!
@@ -410,6 +540,11 @@ type ImageCount {
   Company: Int!
 }
 
+input ImageRelationFilter {
+  is: ImageWhereInput
+  isNot: ImageWhereInput
+}
+
 type ImageVariation {
   _count: ImageVariationCount
   etag: String!
@@ -420,6 +555,30 @@ type ImageVariationCount {
   forFull: Int!
   forOriginal: Int!
   forThumb: Int!
+}
+
+input ImageVariationRelationFilter {
+  is: ImageVariationWhereInput
+  isNot: ImageVariationWhereInput
+}
+
+input ImageVariationWhereInput {
+  AND: [ImageVariationWhereInput!]
+  NOT: [ImageVariationWhereInput!]
+  OR: [ImageVariationWhereInput!]
+  etag: StringFilter
+  mimeType: StringFilter
+}
+
+input ImageWhereInput {
+  AND: [ImageWhereInput!]
+  NOT: [ImageWhereInput!]
+  OR: [ImageWhereInput!]
+  full: ImageVariationRelationFilter
+  name: StringFilter
+  original: ImageVariationRelationFilter
+  thumb: ImageVariationRelationFilter
+  uploader: UserRelationFilter
 }
 
 type Industry {
@@ -463,6 +622,7 @@ input IntFilter {
 }
 
 type Mutation {
+  approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
@@ -470,6 +630,7 @@ type Mutation {
   createSeason(info: SeasonCreateInput!): Season
   createTalkCategory(name: String!): ApplicationTalkCategory
   deleteSeason(uid: String!): Season
+  editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
@@ -609,6 +770,7 @@ input PressReleaseWithFilesCreateInput {
 
 type Query {
   allTranslationsFor(language: String!): [Translation!]!
+  approvedCompanyApplications: [CompanyApplicationApproval!]!
   booths: [Booth!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
@@ -624,6 +786,7 @@ type Query {
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
+  season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
   talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
@@ -672,6 +835,7 @@ input RoleWhereUniqueInput {
 
 type Season {
   _count: SeasonCount
+  applications: [CompanyApplication!]!
   applicationsFrom: DateTime!
   applicationsUntil: DateTime!
   endsAt: DateTime!
@@ -784,6 +948,16 @@ input TalkCreateInput {
   descriptionHr: String = ""
   language: String = ""
   presenter: PresenterCreateInput = null
+  titleEn: String = ""
+  titleHr: String = ""
+}
+
+input TalksCreateInput {
+  category: String = ""
+  descriptionEn: String = ""
+  descriptionHr: String = ""
+  language: String = ""
+  presenter: [PresenterCreateInput!] = []
   titleEn: String = ""
   titleHr: String = ""
 }
@@ -955,6 +1129,18 @@ input WorkshopCreateInput {
   notesEn: String = ""
   notesHr: String = ""
   presenter: PresenterCreateInput = null
+  titleEn: String = ""
+  titleHr: String = ""
+}
+
+input WorkshopsCreateInput {
+  descriptionEn: String = ""
+  descriptionHr: String = ""
+  goal: String = ""
+  language: String = ""
+  notesEn: String = ""
+  notesHr: String = ""
+  presenter: [PresenterCreateInput!] = []
   titleEn: String = ""
   titleHr: String = ""
 }

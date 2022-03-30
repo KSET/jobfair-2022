@@ -96,7 +96,10 @@ const companyTalkValidation = z.object({
   descriptionHr: z.optional(z.string().min(73).max(450)),
   category: z.string(),
   language: z.string(),
-  presenter: companyPresenterValidation,
+  presenter: z.union([
+    companyPresenterValidation,
+    z.array(companyPresenterValidation),
+  ]),
 });
 export const CompanyTalkValidation = <T>(talk: T) => formatValidation(companyTalkValidation, talk);
 
@@ -107,9 +110,18 @@ const companyWorkshopValidation = z.object({
   descriptionHr: z.optional(z.string().min(73).max(450)),
   goal: z.string().min(1).max(450),
   language: z.string(),
-  presenter: companyPresenterValidation,
+  presenter: z.union([
+    companyPresenterValidation,
+    z.array(companyPresenterValidation),
+  ]),
 });
 export const CompanyWorkshopValidation = <T>(workshop: T) => formatValidation(companyWorkshopValidation, workshop);
+
+const companyCocktailValidation = z.object({
+  name: z.string().min(1),
+  colour: z.string().min(1),
+});
+export const CompanyCocktailValidation = <T>(cocktail: T) => formatValidation(companyCocktailValidation, cocktail);
 
 const companyApplicationValidation = z.object({
   booth: z.nullable(z.string()),
@@ -119,3 +131,11 @@ const companyApplicationValidation = z.object({
   wantsPanel: z.boolean(),
 });
 export const CompanyApplicationValidation = <T>(application: T) => formatValidation(companyApplicationValidation, application);
+
+const companyApplicationApprovedValidation = z.object({
+  talk: z.nullable(companyTalkValidation),
+  workshop: z.nullable(companyWorkshopValidation),
+  cocktail: companyCocktailValidation,
+  panel: z.array(companyPresenterValidation),
+});
+export const CompanyApplicationApprovedValidation = <T>(application: T) => formatValidation(companyApplicationApprovedValidation, application);

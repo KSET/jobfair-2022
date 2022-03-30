@@ -165,6 +165,117 @@
         </div>
       </div>
       <div
+        v-else-if="!applicationsOpen && companyApplication && companyApplication.approval"
+        :class="[$style.item, $style.itemApproval]"
+      >
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.company.applicationsApproval.header" />
+          </h2>
+          <h3>
+            <translated-text
+              trans-key="profile.season"
+            />
+            <span>:&nbsp;</span>
+            <em v-text="currentSeason.name" />
+          </h3>
+          <h4>
+            <template
+              v-if="isApproved"
+            >
+              <translated-text
+                :class="$style.success"
+                trans-key="profile.company.applicationsApproval.status.approved"
+              />&nbsp;<i
+                :class="$style.success"
+                class="pi pi-check"
+              />
+              <div class="mt-1" />
+              <translated-text
+                class="font-normal"
+                trans-key="profile.company.applicationsApproval.status.approved.message"
+              />
+            </template>
+            <template
+              v-else
+            >
+              <translated-text
+                :class="$style.error"
+                trans-key="profile.company.applicationsApproval.status.denied"
+              />&nbsp;<i
+                :class="$style.error"
+                class="pi pi-times"
+              />
+            </template>
+          </h4>
+          <ul
+            v-if="isApproved"
+            :class="$style.applicationItems"
+          >
+            <li v-if="companyApplication.approval.booth">
+              <strong>
+                <translated-text trans-key="profile.company.booth" />
+              </strong>
+              <em v-text="booths[companyApplication.booth]" />
+            </li>
+            <li v-if="companyApplication.approval.talkParticipants">
+              <strong>
+                <translated-text trans-key="profile.company.talk" />
+              </strong>
+              <em>
+                {{ companyApplication.approval.talkParticipants }}
+                <translated-text trans-key="profile.company.talk.participants" />
+              </em>
+            </li>
+            <li v-if="companyApplication.approval.workshopParticipants">
+              <strong>
+                <translated-text trans-key="profile.company.workshop" />
+              </strong>
+              <em>
+                {{ companyApplication.approval.workshopParticipants }}
+                <translated-text trans-key="profile.company.talk.participants" />
+              </em>
+            </li>
+            <li v-if="companyApplication.approval.panel">
+              <strong>
+                <translated-text trans-key="profile.company.panel" />
+              </strong>
+              <em>
+                <i class="pi pi-check" />
+              </em>
+            </li>
+            <li v-if="companyApplication.approval.cocktail">
+              <strong>
+                <translated-text trans-key="profile.company.cocktail" />
+              </strong>
+              <em>
+                <i class="pi pi-check" />
+              </em>
+            </li>
+          </ul>
+        </div>
+        <div v-if="isApproved && isApprovedWithoutBooth" :class="$style.itemActions">
+          <nuxt-link
+            :to="{ name: 'profile-me-company-application-edit' }"
+            class="ml-auto"
+          >
+            <p-button
+              class="p-button-secondary"
+              tabindex="-1"
+            >
+              <translated-text
+                v-if="companyApplication"
+                trans-key="profile.company.application.update"
+              />
+              <translated-text
+                v-else
+                trans-key="profile.company.application.apply"
+              />
+            </p-button>
+          </nuxt-link>
+        </div>
+      </div>
+      <div
         v-else-if="!applicationsOpen && companyApplication && hasCompany"
         :class="$style.item"
       >
@@ -232,6 +343,9 @@
   import {
     gql,
   } from "@urql/core";
+  import {
+    omit,
+  } from "rambdax";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
     useQuery,
@@ -251,6 +365,9 @@
     formatDate,
   } from "~/helpers/date";
   import useTitle from "~/composables/useTitle";
+  import {
+    useCompanyStore,
+  } from "~/store/company";
 
   export default defineComponent({
     name: "PageProfileHome",
@@ -265,6 +382,7 @@
 
       const seasonsStore = useSeasonsStore();
       const userStore = useUserStore();
+      const companyStore = useCompanyStore();
 
       type QData = {
         companyApplication: {
@@ -273,6 +391,7 @@
           booth: ICompanyApplication["booth"],
           wantsPanel: ICompanyApplication["wantsPanel"],
           wantsCocktail: ICompanyApplication["wantsCocktail"],
+          approval: ICompanyApplication["approval"],
         },
         booths: Pick<IBooth, "key" | "name">[],
       };
@@ -294,12 +413,24 @@
                 booth
                 wantsPanel
                 wantsCocktail
+                approval {
+                    booth
+                    workshopParticipants
+                    talkParticipants
+                    panel
+                    cocktail
+                }
             }
         }
         `,
       })();
 
       const booths = computed(() => Object.fromEntries((resp?.data?.booths || [] as QData["booths"]).map((b) => [ b.key || "", b.name ])));
+      const approval = resp?.data?.companyApplication.approval;
+      const isApproved = companyStore.isApplicationApproved(approval);
+      const isApprovedWithoutBooth = companyStore.isApplicationApproved(omit([
+        "booth",
+      ], approval || ({} as unknown as typeof approval)) as typeof approval);
       return {
         user: computed(() => userStore.user),
         formatDate,
@@ -308,6 +439,8 @@
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
+        isApproved,
+        isApprovedWithoutBooth,
       };
     },
   });
@@ -316,6 +449,14 @@
 <style lang="scss" module>
   @use "sass:map";
   @import "assets/styles/include";
+
+  .success {
+    color: $fer-success;
+  }
+
+  .error {
+    color: $fer-error;
+  }
 
   .items {
     display: grid;
@@ -368,6 +509,19 @@
 
           @include media(lg) {
             padding: .875rem 1.25rem;
+          }
+        }
+      }
+    }
+
+    .itemApproval {
+
+      .itemContent {
+
+        .applicationItems {
+
+          :global(.pi-check) {
+            color: $fer-success;
           }
         }
       }

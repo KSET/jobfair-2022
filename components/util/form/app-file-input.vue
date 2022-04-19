@@ -113,6 +113,7 @@
     reactive,
     ref,
     unref,
+    watch,
   } from "vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useReactiveSlots from "~/composables/useReactiveSlots";
@@ -123,6 +124,7 @@
   // noinspection TypeScriptCheckImport
   import IconFileArchive from "~icons/ant-design/file-zip-outlined";
   import AppImg from "~/components/util/app-img.vue";
+  import useModelWrapper from "~/composables/useModelWrapper";
 
   const zipMimeTypes = new Set([
     "application/zip",
@@ -225,6 +227,16 @@
       const slotExists = useReactiveSlots("message", "label");
       const previewImg$ = ref(null as (HTMLInputElement | null));
 
+      const watchProp = useModelWrapper(props, emit);
+      const [
+        fileName,
+        fileType,
+        modelValue,
+      ] = [
+        watchProp("fileName"),
+        watchProp("fileType"),
+        watchProp("modelValue"),
+      ] as const;
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
 
       function elseNull<T, C>(check: C, value: T) {
@@ -262,14 +274,40 @@
           previewSrc.value = "file";
         }
       };
+      const clearPreviewSrc = () => {
+        previewSrc.value = "";
+        previewName.value = "";
+      };
 
-      if (props.fileType && props.fileName && "string" === typeof props.modelValue) {
-        setPreviewSrc(props.fileName, props.fileType, props.modelValue);
-      }
+      watch(
+        [
+          fileType,
+          fileName,
+          modelValue,
+        ],
+        () => {
+          const [
+            name,
+            type,
+            value,
+          ] = [
+            unref(fileName),
+            unref(fileType),
+            unref(modelValue),
+          ] as const;
+
+          if (type && name && "string" === typeof value) {
+            setPreviewSrc(name, type, value);
+          }
+        },
+        {
+          immediate: true,
+        },
+      );
 
       const handleInputChange = (files?: FileList | null) => {
-        if (!files) {
-          return;
+        if (!files || 0 === files.length) {
+          clearPreviewSrc();
         }
 
         const [ file ] = files || [];
@@ -278,9 +316,9 @@
         }
 
         if (props.multiple) {
-          emit("update:modelValue", files);
+          modelValue.value = (files || null) as unknown as string;
         } else {
-          emit("update:modelValue", file);
+          modelValue.value = (file || null) as unknown as string;
         }
       };
 

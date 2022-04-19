@@ -437,6 +437,7 @@
           line-height: 1;
           display: inline-block;
           overflow: hidden;
+          max-width: 16em;
           min-height: 1.2em;
           white-space: nowrap;
           text-overflow: ellipsis;

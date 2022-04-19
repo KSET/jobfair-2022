@@ -207,4 +207,68 @@ export class ImageService {
       return null;
     }
   }
+
+  public static async deleteImage(
+    uid: string,
+    user: User,
+    prisma: Pick<typeof prismaClient, "image" | "imageVariation"> = prismaClient,
+  ) {
+    const image = await prisma.image.findFirst({
+      where: {
+        uid,
+      },
+      select: {
+        original: {
+          select: {
+            id: true,
+            minioKey: true,
+          },
+        },
+        full: {
+          select: {
+            id: true,
+            minioKey: true,
+          },
+        },
+        thumb: {
+          select: {
+            id: true,
+            minioKey: true,
+          },
+        },
+      },
+    });
+
+    if (!image) {
+      return false;
+    }
+
+    const keys = [
+      image.original.minioKey,
+      image.full.minioKey,
+      image.thumb.minioKey,
+    ] as const;
+
+    const deleteFromMinio =
+      (key: string) =>
+        minio
+          .removeObject(BUCKET_NAME, key)
+          .then(() => true)
+          .catch(() => false)
+    ;
+
+    try {
+      await Promise.all(keys.map((key) => deleteFromMinio(key)));
+
+      await prisma.image.delete({
+        where: {
+          uid,
+        },
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -529,8 +529,10 @@ type Image {
   _count: ImageCount
   createdAt: DateTime!
   full: ImageVariation!
+  fullUrl: String!
   name: String!
   thumb: ImageVariation!
+  thumbUrl: String!
   uid: String!
   updatedAt: DateTime!
 }

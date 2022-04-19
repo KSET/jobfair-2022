@@ -9,7 +9,8 @@ export const useSeasonsStore = defineStore(
   "seasons",
   {
     state: () => ({
-      currentSeason: null as (ISeason | null),
+      season: null as (Partial<ISeason> | null),
+      currentSeason: null as (Partial<ISeason> | null),
     }),
 
     getters: {
@@ -27,8 +28,11 @@ export const useSeasonsStore = defineStore(
     },
 
     actions: {
-      setCurrentSeason(season?: ISeason | null) {
+      setCurrentSeason(season?: Partial<ISeason> | null) {
         this.currentSeason = season || null;
+      },
+      setSeason(season?: Partial<ISeason> | null) {
+        this.season = season || null;
       },
     },
   },

@@ -2,11 +2,12 @@ import {
   defineStore,
 } from "pinia";
 import {
+  NewsWithDate,
   NewsWithFormattedDate,
   processNewsItem,
 } from "~/helpers/news";
 import {
- useQuery,
+  useQuery,
 } from "~/composables/useQuery";
 import {
   INewsQuery,
@@ -17,7 +18,7 @@ import {
   NewsItem,
 } from "~/graphql/schema";
 import {
- useTranslationsStore,
+  useTranslationsStore,
 } from "~/store/translations";
 
 export const useNewsStore = defineStore(
@@ -28,6 +29,12 @@ export const useNewsStore = defineStore(
     }),
 
     actions: {
+      setNews<T extends NewsWithDate>(news: T[]) {
+        this.items = news.map(processNewsItem);
+
+        return this.items;
+      },
+
       async fetchNews() {
         const translationsStore = useTranslationsStore();
 
@@ -40,9 +47,7 @@ export const useNewsStore = defineStore(
 
         const news = resp?.data?.news || [];
 
-        this.items = news.map(processNewsItem);
-
-        return this.items;
+        return this.setNews(news);
       },
 
       async fetchNewsItem(slug: string) {

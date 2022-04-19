@@ -456,8 +456,18 @@ type CreateCompanyResponse {
   errors: [FieldError!]
 }
 
+type CreatePartnerResponse {
+  entity: Partner
+  errors: [FieldError!]
+}
+
 type CreatePressReleaseResponse {
   entity: PressRelease
+  errors: [FieldError!]
+}
+
+type CreateSponsorResponse {
+  entity: Sponsor
   errors: [FieldError!]
 }
 
@@ -540,6 +550,8 @@ type Image {
 type ImageCount {
   ApplicationPresenter: Int!
   Company: Int!
+  Partner: Int!
+  Sponsor: Int!
 }
 
 input ImageRelationFilter {
@@ -628,10 +640,14 @@ type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
+  createPartner(info: PartnerCreateInput!, season: String!): CreatePartnerResponse!
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   createSeason(info: SeasonCreateInput!): Season
+  createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
   createTalkCategory(name: String!): ApplicationTalkCategory
+  deletePartner(partner: String!): Boolean!
   deleteSeason(uid: String!): Season
+  deleteSponsor(sponsor: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
@@ -639,6 +655,8 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
+  swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
+  swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
@@ -715,6 +733,41 @@ type News {
   title: String!
 }
 
+type Partner {
+  name: String!
+  order: Int!
+  photo: Image
+  uid: String!
+  url: String!
+}
+
+input PartnerCreateInput {
+  name: String = ""
+  photo: Upload = null
+  url: String = ""
+}
+
+input PartnerListRelationFilter {
+  every: PartnerWhereInput
+  none: PartnerWhereInput
+  some: PartnerWhereInput
+}
+
+input PartnerOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PartnerWhereInput {
+  AND: [PartnerWhereInput!]
+  NOT: [PartnerWhereInput!]
+  OR: [PartnerWhereInput!]
+  forSeason: SeasonRelationFilter
+  name: StringFilter
+  order: IntFilter
+  photo: ImageRelationFilter
+  url: StringFilter
+}
+
 input PresenterCreateInput {
   bioEn: String = ""
   bioHr: String = ""
@@ -784,12 +837,15 @@ type Query {
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(lang: String!): [News!]!
   newsItem(slug: String!): News
+  participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
+  partners(season: String): [Partner!]!
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
+  sponsors(season: String): [Sponsor!]!
   talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
@@ -842,12 +898,20 @@ type Season {
   applicationsUntil: DateTime!
   endsAt: DateTime!
   name: String!
+  showParticipantsFrom: DateTime!
+  showParticipantsUntil: DateTime!
+  showPartnersFrom: DateTime!
+  showPartnersUntil: DateTime!
+  showSponsorsFrom: DateTime!
+  showSponsorsUntil: DateTime!
   startsAt: DateTime!
   uid: String!
 }
 
 type SeasonCount {
   companies: Int!
+  partners: Int!
+  sponsors: Int!
 }
 
 input SeasonCreateInput {
@@ -855,6 +919,12 @@ input SeasonCreateInput {
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
   name: String = ""
+  showParticipantsFrom: DateTime = null
+  showParticipantsUntil: DateTime = null
+  showPartnersFrom: DateTime = null
+  showPartnersUntil: DateTime = null
+  showSponsorsFrom: DateTime = null
+  showSponsorsUntil: DateTime = null
   startsAt: DateTime = null
 }
 
@@ -864,6 +934,14 @@ input SeasonOrderByWithRelationInput {
   companies: CompanyApplicationOrderByRelationAggregateInput
   endsAt: SortOrder
   name: SortOrder
+  partners: PartnerOrderByRelationAggregateInput
+  showParticipantsFrom: SortOrder
+  showParticipantsUntil: SortOrder
+  showPartnersFrom: SortOrder
+  showPartnersUntil: SortOrder
+  showSponsorsFrom: SortOrder
+  showSponsorsUntil: SortOrder
+  sponsors: SponsorOrderByRelationAggregateInput
   startsAt: SortOrder
   uid: SortOrder
 }
@@ -879,6 +957,12 @@ enum SeasonScalarFieldEnum {
   endsAt
   id
   name
+  showParticipantsFrom
+  showParticipantsUntil
+  showPartnersFrom
+  showPartnersUntil
+  showSponsorsFrom
+  showSponsorsUntil
   startsAt
   uid
 }
@@ -888,6 +972,12 @@ input SeasonUpdateInput {
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
   name: String = ""
+  showParticipantsFrom: DateTime = null
+  showParticipantsUntil: DateTime = null
+  showPartnersFrom: DateTime = null
+  showPartnersUntil: DateTime = null
+  showSponsorsFrom: DateTime = null
+  showSponsorsUntil: DateTime = null
   startsAt: DateTime = null
   uid: String = ""
 }
@@ -901,6 +991,14 @@ input SeasonWhereInput {
   companies: CompanyApplicationListRelationFilter
   endsAt: DateTimeFilter
   name: StringFilter
+  partners: PartnerListRelationFilter
+  showParticipantsFrom: DateTimeFilter
+  showParticipantsUntil: DateTimeFilter
+  showPartnersFrom: DateTimeFilter
+  showPartnersUntil: DateTimeFilter
+  showSponsorsFrom: DateTimeFilter
+  showSponsorsUntil: DateTimeFilter
+  sponsors: SponsorListRelationFilter
   startsAt: DateTimeFilter
   uid: StringFilter
 }
@@ -912,6 +1010,41 @@ input SeasonWhereUniqueInput {
 enum SortOrder {
   asc
   desc
+}
+
+type Sponsor {
+  name: String!
+  order: Int!
+  photo: Image
+  uid: String!
+  url: String!
+}
+
+input SponsorCreateInput {
+  name: String = ""
+  photo: Upload = null
+  url: String = ""
+}
+
+input SponsorListRelationFilter {
+  every: SponsorWhereInput
+  none: SponsorWhereInput
+  some: SponsorWhereInput
+}
+
+input SponsorOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input SponsorWhereInput {
+  AND: [SponsorWhereInput!]
+  NOT: [SponsorWhereInput!]
+  OR: [SponsorWhereInput!]
+  forSeason: SeasonRelationFilter
+  name: StringFilter
+  order: IntFilter
+  photo: ImageRelationFilter
+  url: StringFilter
 }
 
 input StringFilter {

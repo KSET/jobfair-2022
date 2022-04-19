@@ -103,7 +103,10 @@
       </div>
     </div>
 
-    <div :class="$style.sectionContainer" class="hidden">
+    <div
+      v-if="participantsShown && participants.length > 0"
+      :class="$style.sectionContainer"
+    >
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
@@ -118,15 +121,16 @@
           <div :class="$style.companyGrid">
             <div
               v-for="participant in participants"
-              :key="participant.id"
+              :key="participant.uid"
               :class="$style.companyGridCell"
             >
               <app-img
-                :alt="`${participant.name} logo`"
-                :lazy-src="participant.images.small.url"
-                :src="participant.images.default.url"
-                :title="getParticipantTitleText(participant)"
+                :alt="`${participant.brandName} logo`"
+                :lazy-src="participant.rasterLogo.thumbUrl"
+                :src="participant.rasterLogo.fullUrl"
+                :title="participant.titleText"
                 aspect-ratio="1.78"
+                contain
               />
             </div>
           </div>
@@ -134,7 +138,10 @@
       </div>
     </div>
 
-    <div :class="$style.sectionContainer" class="hidden">
+    <div
+      v-if="sponsorsShown && projectFriends.length > 0"
+      :class="$style.sectionContainer"
+    >
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
@@ -149,22 +156,32 @@
           <div :class="$style.companyGrid">
             <div
               v-for="projectFriend in projectFriends"
-              :key="projectFriend.id"
+              :key="projectFriend.uid"
               :class="$style.companyGridCell"
             >
-              <app-img
-                :alt="`${projectFriend.name} logo`"
-                :lazy-src="projectFriend.images.lazySrc"
-                :src="projectFriend.images.srcSet"
-                aspect-ratio="1.78"
-              />
+              <a
+                :href="projectFriend.url"
+                :title="projectFriend.name"
+                target="_blank"
+              >
+                <app-img
+                  :alt="`${projectFriend.name} logo`"
+                  :lazy-src="projectFriend.photo.thumbUrl"
+                  :src="projectFriend.photo.fullUrl"
+                  aspect-ratio="1.78"
+                  contain
+                />
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div :class="$style.sectionContainer" class="hidden">
+    <div
+      v-if="partnersShown && mediaPartners.length > 0"
+      :class="$style.sectionContainer"
+    >
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
@@ -179,15 +196,22 @@
           <div :class="$style.companyGrid">
             <div
               v-for="mediaPartner in mediaPartners"
-              :key="mediaPartner.id"
+              :key="mediaPartner.uid"
               :class="$style.companyGridCell"
             >
-              <app-img
-                :alt="`${mediaPartner.name} logo`"
-                :lazy-src="mediaPartner.images.lazySrc"
-                :src="mediaPartner.images.srcSet"
-                aspect-ratio="1.78"
-              />
+              <a
+                :href="mediaPartner.url"
+                :title="mediaPartner.name"
+                target="_blank"
+              >
+                <app-img
+                  :alt="`${mediaPartner.name} logo`"
+                  :lazy-src="mediaPartner.photo.thumbUrl"
+                  :src="mediaPartner.photo.fullUrl"
+                  aspect-ratio="1.78"
+                  contain
+                />
+              </a>
             </div>
           </div>
         </div>
@@ -200,7 +224,6 @@
   import {
     computed,
     defineComponent,
-    ref,
   } from "vue";
   import NewsCard from "~/components/news/news-card.vue";
   import {
@@ -224,6 +247,18 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import {
+    IPageIndexDataQuery,
+    IPageIndexDataQueryVariables,
+    PageIndexData,
+  } from "~/graphql/schema";
+  import {
+    Language,
+    useTranslationsStore,
+  } from "~/store/translations";
+  import {
+    useQuery,
+  } from "~/composables/useQuery";
 
   export default defineComponent({
     name: "PageIndex",
@@ -236,74 +271,62 @@
     },
 
     async setup() {
+      const translationsStore = useTranslationsStore();
       const newsStore = useNewsStore();
       const userStore = useUserStore();
       const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
       const seasonsStore = useSeasonsStore();
 
-      await newsStore.fetchNews();
+      const initialData = await useQuery<IPageIndexDataQuery, IPageIndexDataQueryVariables>({
+        query: PageIndexData,
+        variables: {
+          language: translationsStore.currentLanguage,
+        },
+      })().then((resp) => resp?.data);
+
+      newsStore.setNews(initialData?.news ?? []);
       const news = computed(() => limitLength(3)(newsStore.items));
-
-      const participants = ref(new Array(10).fill(0).map((_, i) => ({
-        id: `participant-${ i }`,
-        name: `Sudionik ${ i }`,
-        description: `Opis sudionika ${ i }`,
-        images: {
-          default: {
-            url: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/arch`,
-          },
-          small: {
-            url: `https://placeimg.com/${ 128 + i }/${ 72 + i }/arch`,
-          },
-        },
-      })));
-
-      const projectFriends = ref(new Array(10).fill(0).map((_, i) => ({
-        id: `friend-${ i }`,
-        link: "https://example.com",
-        name: `Project friend ${ i }`,
-        images: {
-          srcSet: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/arch/sepia`,
-          lazySrc: `https://placeimg.com/${ 128 + i }/${ 72 + i }/arch/sepia`,
-        },
-      })));
-
-      const mediaPartners = ref(new Array(10).fill(0).map((_, i) => ({
-        id: `partner-${ i }`,
-        link: "https://example.com",
-        name: `Partner ${ i }`,
-        images: {
-          srcSet: `https://placeimg.com/${ 1280 + i }/${ 720 + i }/arch/grayscale`,
-          lazySrc: `https://placeimg.com/${ 128 + i }/${ 72 + i }/arch/grayscale`,
-        },
-      })));
 
       const gallery = computed(() => galleryStore.items);
 
-      function getParticipantTitleText({
-        name,
-        description,
-      }: {
-        name: string,
-        description: string,
-      }) {
-        const separator = "----------";
+      const getParticipantTitleText =
+        ({
+          brandName,
+          descriptionEn,
+          descriptionHr,
+        }: IPageIndexDataQuery["participants"][0]) => {
+          const separator = "----------";
+          const description =
+            translationsStore.currentLanguage === Language.HR
+              ? descriptionHr
+              : descriptionEn
+          ;
 
-        return `${ name }\n${ separator }\n${ description }`;
-      }
+          return `${ brandName }\n${ separator }\n${ description }`;
+        }
+      ;
+
+      const withTitleText =
+        (item: IPageIndexDataQuery["participants"][0]) => ({
+          ...item,
+          titleText: getParticipantTitleText(item),
+        })
+      ;
 
       return {
         isLoggedIn: computed(() => userStore.isLoggedIn),
         hasCompany: computed(() => userStore.hasCompany),
         currentSeason: computed(() => seasonsStore.currentSeason),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
+        participantsShown: computed(() => seasonsStore.areParticipantsShown),
+        partnersShown: computed(() => seasonsStore.arePartnersShown),
+        sponsorsShown: computed(() => seasonsStore.areSponsorsShown),
         news,
         gallery,
-        participants,
-        projectFriends,
-        mediaPartners,
-        getParticipantTitleText,
+        participants: initialData?.participants.map(withTitleText) ?? [],
+        projectFriends: initialData?.sponsors ?? [],
+        mediaPartners: initialData?.partners ?? [],
         joinNowRoute,
         dotGet,
       };
@@ -494,6 +517,16 @@
 
       .companyGridCell {
         padding: 0;
+
+        > a {
+          display: inherit;
+          border: 1px dashed transparent;
+          border-radius: 4px;
+
+          &:hover {
+            border-color: color.adjust($fer-off-gray, $lightness: -10%);
+          }
+        }
       }
     }
   }

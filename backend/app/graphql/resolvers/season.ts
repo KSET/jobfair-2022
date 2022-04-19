@@ -120,6 +120,24 @@ export class SeasonCreateInput {
 
   @Field()
     applicationsUntil: Date = null as unknown as Date;
+
+  @Field()
+    showParticipantsFrom: Date = null as unknown as Date;
+
+  @Field()
+    showParticipantsUntil: Date = null as unknown as Date;
+
+  @Field()
+    showPartnersFrom: Date = null as unknown as Date;
+
+  @Field()
+    showPartnersUntil: Date = null as unknown as Date;
+
+  @Field()
+    showSponsorsFrom: Date = null as unknown as Date;
+
+  @Field()
+    showSponsorsUntil: Date = null as unknown as Date;
 }
 
 @InputType()

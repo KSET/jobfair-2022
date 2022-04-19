@@ -148,6 +148,13 @@
               Odobri
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season', params: { season: season.uid } }"
+            >
+              Partneri i sponzori
+            </nuxt-link>
+          </li>
         </ul>
       </fieldset>
     </div>

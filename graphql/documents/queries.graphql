@@ -1,3 +1,18 @@
+fragment frag_Season on Season {
+    uid
+    name
+    startsAt
+    endsAt
+    applicationsFrom
+    applicationsUntil
+    showParticipantsFrom
+    showParticipantsUntil
+    showPartnersFrom
+    showPartnersUntil
+    showSponsorsFrom
+    showSponsorsUntil
+}
+
 fragment frag_UserProfile on User {
     uid
     name
@@ -121,12 +136,47 @@ query InitialData($language: String!) {
     }
 
     currentSeason {
-        uid
+        ...frag_Season
+    }
+}
+
+query PageIndexData($language: String!) {
+    sponsors {
         name
-        startsAt
-        endsAt
-        applicationsFrom
-        applicationsUntil
+        url
+        photo {
+            thumbUrl
+            fullUrl
+        }
+    }
+
+    partners {
+        name
+        url
+        photo {
+            thumbUrl
+            fullUrl
+        }
+    }
+
+    news(lang: $language) {
+        slug
+        image
+        date
+        title
+        description
+    }
+
+    participants {
+        uid
+        website
+        brandName
+        descriptionEn
+        descriptionHr
+        rasterLogo {
+            thumbUrl
+            fullUrl
+        }
     }
 }
 
@@ -226,12 +276,7 @@ query AdminInitialData {
         createdAt
     }
     seasons(orderBy: { endsAt: desc }) {
-        uid
-        name
-        startsAt
-        endsAt
-        applicationsFrom
-        applicationsUntil
+        ...frag_Season
     }
     booths {
         key

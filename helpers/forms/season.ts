@@ -61,5 +61,29 @@ export const seasonCreate =
         type: "datetime-local",
         value: season?.applicationsUntil || tomorrow(),
       },
+      showParticipantsFrom: {
+        type: "datetime-local",
+        value: season?.showParticipantsFrom || today(),
+      },
+      showParticipantsUntil: {
+        type: "datetime-local",
+        value: season?.showParticipantsUntil || tomorrow(),
+      },
+      showPartnersFrom: {
+        type: "datetime-local",
+        value: season?.showPartnersFrom || today(),
+      },
+      showPartnersUntil: {
+        type: "datetime-local",
+        value: season?.showPartnersUntil || tomorrow(),
+      },
+      showSponsorsFrom: {
+        type: "datetime-local",
+        value: season?.showSponsorsFrom || today(),
+      },
+      showSponsorsUntil: {
+        type: "datetime-local",
+        value: season?.showSponsorsUntil || tomorrow(),
+      },
     })
 ;

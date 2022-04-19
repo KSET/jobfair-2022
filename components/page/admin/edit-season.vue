@@ -271,6 +271,16 @@
 
 <style lang="scss" module>
   .form {
-    gap: 1rem;
+    --columns: 2;
+
+    font-size: .75em;
+    display: grid;
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+    gap: .8em;
+
+    & > *:first-child,
+    & > *:last-child {
+      grid-column: span var(--columns);
+    }
   }
 </style>

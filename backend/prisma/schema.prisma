@@ -186,9 +186,9 @@ model Image {
   uid       String         @unique @default(cuid())
   uploader  User           @relation(fields: [uploaderId], references: [id])
   name      String
-  original  ImageVariation @relation("ImageVariationOriginal", fields: [originalImageId], references: [id])
-  full      ImageVariation @relation("ImageVariationFull", fields: [fullImageId], references: [id])
-  thumb     ImageVariation @relation("ImageVariationThumb", fields: [thumbImageId], references: [id])
+  original  ImageVariation @relation("ImageVariationOriginal", fields: [originalImageId], references: [id], onDelete: Cascade)
+  full      ImageVariation @relation("ImageVariationFull", fields: [fullImageId], references: [id], onDelete: Cascade)
+  thumb     ImageVariation @relation("ImageVariationThumb", fields: [thumbImageId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime       @default(now())
   /// @TypeGraphQL.omit(input: true)
@@ -208,6 +208,12 @@ model Image {
   ApplicationPresenter ApplicationPresenter[]
   /// @TypeGraphQL.omit(output: true, input: true)
   Company              Company[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  Sponsor Sponsor[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  Partner Partner[]
 }
 
 model ImageVariation {
@@ -237,7 +243,54 @@ model Season {
   applicationsFrom  DateTime
   applicationsUntil DateTime
 
+  showParticipantsFrom  DateTime
+  showParticipantsUntil DateTime
+
+  showPartnersFrom  DateTime
+  showPartnersUntil DateTime
+
+  showSponsorsFrom  DateTime
+  showSponsorsUntil DateTime
+
   companies CompanyApplication[]
+  sponsors  Sponsor[]
+  partners  Partner[]
+}
+
+model Sponsor {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id    Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid   String @unique @default(cuid())
+  name  String
+  url   String
+  order Int
+
+  photo   Image @relation(fields: [photoId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  photoId Int
+
+  forSeason   Season @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+}
+
+model Partner {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id    Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid   String @unique @default(cuid())
+  name  String
+  url   String
+  order Int
+
+  photo   Image @relation(fields: [photoId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  photoId Int
+
+  forSeason   Season @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
 }
 
 model CompanyApplication {

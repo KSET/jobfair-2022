@@ -597,6 +597,57 @@ export class CompanyListResolver {
     });
   }
 
+  @Query(() => [ Company ])
+  participants(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+    @Args() args: FindManyCompanyArgs,
+  ) {
+    const now = new Date();
+
+    return ctx.prisma.company.findMany({
+      ...args,
+      where: {
+        applications: {
+          some: {
+            forSeason: {
+              startsAt: {
+                lte: now,
+              },
+              endsAt: {
+                gte: now,
+              },
+            },
+            approval: {
+              OR: [
+                {
+                  booth: true,
+                },
+                {
+                  panel: true,
+                },
+                {
+                  cocktail: true,
+                },
+                {
+                  talkParticipants: {
+                    gt: 0,
+                  },
+                },
+                {
+                  workshopParticipants: {
+                    gt: 0,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
+
   @Query(() => Company, { nullable: true })
   company(
   @Ctx() ctx: Context,

@@ -73,6 +73,7 @@
   } from "rambdax";
   import {
     useRouter,
+    useRoute,
   } from "vue-router";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -81,6 +82,9 @@
   import {
     useUserStore,
   } from "~/store/user";
+  import {
+    decodeRedirectParam,
+  } from "~/helpers/url";
 
   export default defineComponent({
     name: "PageLogin",
@@ -94,6 +98,7 @@
     setup() {
       useTitle("login.header");
       const router = useRouter();
+      const route = useRoute();
       const userStore = useUserStore();
 
       const isLoading = ref(false);
@@ -135,7 +140,13 @@
           const errorList = resp.errors;
 
           if (!errorList) {
-            await router.push("/");
+            const redirectInfo = route.query?.r;
+            if (redirectInfo && "string" === typeof redirectInfo) {
+              await router.push(decodeRedirectParam(redirectInfo) || "/");
+            } else {
+              await router.push("/");
+            }
+
             await nextTick();
             window.location.reload();
 

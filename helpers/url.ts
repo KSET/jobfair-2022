@@ -1,7 +1,12 @@
+import type {
+  RouteLocationRaw,
+} from "vue-router";
 import {
   base64Decode,
   base64Encode,
 } from "~/helpers/string";
+
+type RedirectParams = RouteLocationRaw;
 
 export const fixedEncodeURIComponent =
   (str: string) =>
@@ -13,14 +18,14 @@ export const fixedEncodeURIComponent =
 ;
 
 export const encodeRedirectParam =
-  ({ name, params }: { name: string, params: unknown, }) =>
-    base64Encode(JSON.stringify({ name, params }))
+  (params: RedirectParams) =>
+    base64Encode(JSON.stringify(params))
 ;
 
 export const decodeRedirectParam =
-  (redirectParam: string, fallback: string | null = null): string | null => {
+  (redirectParam: string, fallback: RedirectParams | null = null): RedirectParams | null => {
     try {
-      return JSON.parse(base64Decode(redirectParam)) as string;
+      return JSON.parse(base64Decode(redirectParam)) as RedirectParams;
     } catch {
       return fallback;
     }

@@ -36,6 +36,7 @@ const tomorrow =
 
 type Season = Omit<ISeason,
   "uid"
+  | "applications"
   | "_count">;
 export const seasonCreate =
   <T extends Season>(season?: T | null): Record<keyof Season, InputEntry> =>

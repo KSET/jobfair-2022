@@ -19,17 +19,19 @@ import {
   minio,
 } from "../providers/minio";
 import {
-  prisma,
+  prisma as prismaClient,
 } from "../providers/prisma";
 
 export type ImageBase = Opaque<string, "MinioBaseImage">;
+
+const FullDimensionsLimit: readonly [ number, number ] = [ 1920, 1920 ];
 
 export class ImageService {
   public static async uploadImage(
     base: ImageBase,
     fileInfo: FileUpload,
     user: User,
-    fullDimensionsLimit: [ number, number ] = [ 1920, 1920 ],
+    prisma: Pick<typeof prismaClient, "image"> = prismaClient,
   ) {
     const minioBase =
       (
@@ -84,8 +86,8 @@ export class ImageService {
             return (
               sharpBase()
                 .resize({
-                  width: fullDimensionsLimit[0],
-                  height: fullDimensionsLimit[1],
+                  width: FullDimensionsLimit[0],
+                  height: FullDimensionsLimit[1],
                   fit: "inside",
                   withoutEnlargement: true,
                 })
@@ -98,8 +100,8 @@ export class ImageService {
             return (
               sharpBase()
                 .resize({
-                  width: fullDimensionsLimit[0],
-                  height: fullDimensionsLimit[1],
+                  width: FullDimensionsLimit[0],
+                  height: FullDimensionsLimit[1],
                   fit: "inside",
                   withoutEnlargement: true,
                 })
@@ -113,8 +115,8 @@ export class ImageService {
             return (
               sharpBase()
                 .resize({
-                  width: fullDimensionsLimit[0],
-                  height: fullDimensionsLimit[1],
+                  width: FullDimensionsLimit[0],
+                  height: FullDimensionsLimit[1],
                   fit: "inside",
                   withoutEnlargement: true,
                 })
@@ -201,7 +203,7 @@ export class ImageService {
           },
         },
       });
-    } catch {
+    } catch (e) {
       return null;
     }
   }

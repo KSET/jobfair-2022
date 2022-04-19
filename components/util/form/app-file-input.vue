@@ -262,6 +262,8 @@
           }
         };
 
+        clearPreviewSrc();
+
         if (supportsImageType(mimetype.toLowerCase())) {
           previewSrc.value =
             "object" === typeof file
@@ -274,7 +276,16 @@
           previewSrc.value = "file";
         }
       };
+
+      const freeFileUrl = (url: string) => {
+        try {
+          URL.revokeObjectURL(unref(url));
+        } catch {
+        }
+      };
+
       const clearPreviewSrc = () => {
+        freeFileUrl(previewSrc.value);
         previewSrc.value = "";
         previewName.value = "";
       };
@@ -296,7 +307,15 @@
             unref(modelValue),
           ] as const;
 
-          if (type && name && "string" === typeof value) {
+          if (!("string" === typeof value)) {
+            return;
+          }
+
+          if (!value) {
+            return clearPreviewSrc();
+          }
+
+          if (type && name) {
             setPreviewSrc(name, type, value);
           }
         },
@@ -339,12 +358,7 @@
         isDragOver,
         previewSrc,
         previewName: computed(() => unref(previewName) || props.fileName),
-        freeFileUrl(url: string) {
-          try {
-            URL.revokeObjectURL(unref(url));
-          } catch {
-          }
-        },
+        freeFileUrl,
         handleChange(event: Event) {
           handleInputChange((event.target as HTMLInputElement)?.files);
 

@@ -338,7 +338,7 @@
     .label {
       font-weight: bold;
       display: inline-block;
-      margin-bottom: .75rem;
+      margin-bottom: .75em;
       cursor: pointer;
       color: #{color.adjust($fer-black, $alpha: -.2)};
 
@@ -365,8 +365,8 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      height: 175px;
-      padding: .625rem;
+      height: 11em;
+      padding: .625em;
       transition-property: outline-color, border-color;
       color: $fer-black;
       border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
@@ -401,13 +401,13 @@
       }
 
       .dropAreaLabel {
-        font-size: .875rem;
+        font-size: .875em;
         font-weight: 600;
         z-index: 1;
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding: .5rem;
+        padding: .5em;
         user-select: none;
         pointer-events: none;
         color: #{color.adjust($fer-black, $alpha: -.4)};
@@ -424,7 +424,7 @@
         width: 100%;
         height: 100%;
         color: #{color.adjust($fer-black, $alpha: -.4)};
-        gap: .25rem;
+        gap: .25em;
 
         > *:first-child {
           flex: 1;
@@ -445,11 +445,11 @@
       }
 
       .dropAreaIcon {
-        $size: 2rem;
+        $size: 2em;
 
         width: $size;
         height: $size;
-        margin-bottom: .25rem;
+        margin-bottom: .25em;
         transition-timing-function: $transition-bounce-function;
         transition-duration: .5s;
         transition-property: transform;
@@ -467,7 +467,7 @@
       opacity: 0;
     }
 
-    $message-margin: .25rem;
+    $message-margin: .25em;
 
     .message {
       font-size: 80%;

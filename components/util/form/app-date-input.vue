@@ -184,7 +184,7 @@
     .label {
       font-weight: bold;
       display: inline-block;
-      margin-bottom: .75rem;
+      margin-bottom: .75em;
       cursor: pointer;
       color: #{color.adjust($fer-black, $alpha: -.2)};
 
@@ -206,7 +206,7 @@
     }
 
     .input {
-      font-size: 1rem;
+      font-size: 1em;
       width: 100%;
       transition-property: outline-color, border-color;
       color: $fer-black;
@@ -216,7 +216,7 @@
       appearance: none;
 
       :global(.p-dropdown-label) {
-        padding: .625rem;
+        padding: .625em;
       }
 
       &:focus {
@@ -233,7 +233,7 @@
       }
     }
 
-    $message-margin: .25rem;
+    $message-margin: .25em;
 
     .message {
       font-size: 80%;

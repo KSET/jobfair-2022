@@ -294,10 +294,10 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    gap: 2.5rem;
+    gap: 2.5em;
 
     @include media(lg) {
-      gap: 1.875rem;
+      gap: 1.875em;
     }
 
     .formElement {

@@ -202,7 +202,7 @@
     .label {
       font-weight: bold;
       display: inline-block;
-      margin-bottom: .75rem;
+      margin-bottom: .75em;
       cursor: pointer;
       color: #{color.adjust($fer-black, $alpha: -.2)};
 
@@ -224,9 +224,9 @@
     }
 
     .input {
-      font-size: 1rem;
+      font-size: 1em;
       width: 100%;
-      padding: .625rem;
+      padding: .625em;
       transition-property: outline-color, border-color;
       color: $fer-black;
       border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
@@ -248,7 +248,7 @@
       }
     }
 
-    $message-margin: .25rem;
+    $message-margin: .25em;
 
     .message {
       font-size: 80%;

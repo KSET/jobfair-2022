@@ -142,9 +142,9 @@
     },
 
     props: {
-      // eslint-disable-next-line vue/require-prop-types
       modelValue: {
         required: false,
+        type: [ String, FileList, File ],
         default: () => "",
       },
 
@@ -235,7 +235,7 @@
       ] = [
         watchProp("fileName"),
         watchProp("fileType"),
-        watchProp("modelValue"),
+        watchProp<"modelValue", string | FileList | File | null | undefined>("modelValue"),
       ] as const;
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
 
@@ -316,9 +316,9 @@
         }
 
         if (props.multiple) {
-          modelValue.value = (files || null) as unknown as string;
+          modelValue.value = files;
         } else {
-          modelValue.value = (file || null) as unknown as string;
+          modelValue.value = file;
         }
       };
 

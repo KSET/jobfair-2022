@@ -335,9 +335,12 @@ export class CompanyApplicationAdminResolver {
     return ctx.prisma.companyApplication.findMany({
       ...args,
       where: {
-        forSeason: {
-          OR: [
-            {
+        forSeason:
+          seasonUid
+            ? {
+              uid: seasonUid,
+            }
+            : {
               startsAt: {
                 lte: now,
               },
@@ -345,11 +348,6 @@ export class CompanyApplicationAdminResolver {
                 gte: now,
               },
             },
-            {
-              uid: seasonUid,
-            },
-          ],
-        },
         ...args.where,
       },
       select: toSelect(info, transformSelect),

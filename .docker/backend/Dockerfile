@@ -11,7 +11,7 @@ RUN yarn prisma generate
 RUN yarn tsc --project tsconfig.json --outDir .output --sourceMap false --pretty
 WORKDIR app
 # Copy the non-ts/non-compiled files back into the build directory position
-RUN find . -not -name '*.ts' -type f -exec cp --recursive --verbose --parents {} ./.output/ \; \
+RUN find . -not -name '*.ts' -type f -exec cp --recursive --verbose --parents {} ./.output/ \;
 WORKDIR ..
 COPY .env .output/
 CMD [ "yarn", "start" ]

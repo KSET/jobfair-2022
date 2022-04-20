@@ -425,12 +425,12 @@
         `,
       })();
 
-      const booths = computed(() => Object.fromEntries((resp?.data?.booths || [] as QData["booths"]).map((b) => [ b.key || "", b.name ])));
-      const approval = resp?.data?.companyApplication.approval;
+      const booths = computed(() => Object.fromEntries((resp?.data?.booths || []).map((b) => [ b.key || "", b.name ])));
+      const approval = resp?.data?.companyApplication?.approval;
       const isApproved = companyStore.isApplicationApproved(approval);
       const isApprovedWithoutBooth = companyStore.isApplicationApproved(omit([
         "booth",
-      ], approval || ({} as unknown as typeof approval)) as typeof approval);
+      ], approval || {}));
       return {
         user: computed(() => userStore.user),
         formatDate,

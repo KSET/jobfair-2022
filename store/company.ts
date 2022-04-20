@@ -27,7 +27,7 @@ import {
   useTalkCategoriesStore,
 } from "~/store/talkCategories";
 
-type Approval = Omit<ICompanyApplicationApproval, "forApplication"> | null | undefined;
+type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication">> | null | undefined;
 
 const isApplicationApproved =
   (

@@ -24,7 +24,20 @@ import {
 
 export type ImageBase = Opaque<string, "MinioBaseImage">;
 
-const FullDimensionsLimit: readonly [ number, number ] = [ 1920, 1920 ];
+const DimensionsLimit = {
+  full: {
+    width: 1920,
+    height: 1920,
+  },
+  thumb: {
+    width: 64,
+    height: 64,
+  },
+} as const;
+
+type DimensionName = keyof typeof DimensionsLimit;
+
+const Transparent = { r: 255, g: 255, b: 255, alpha: 0 } as const;
 
 export class ImageService {
   public static async uploadImage(
@@ -50,47 +63,15 @@ export class ImageService {
         `${ minioKeyPrefix }/${ name }.${ ext }`
     ;
 
-    const sharpBase =
-      () =>
-        sharp(
-          {
-            sequentialRead: true,
-            animated: true,
-          },
-        )
-          .withMetadata({
-            exif: {
-              IFD0: {
-                UploadedTo: "Job Fair",
-                UploadedBy: `${ user.firstName } ${ user.lastName }`,
-              },
-            },
-          })
-    ;
-
-    const sharpThumb =
-      sharpBase()
-        .resize({
-          width: 64,
-          height: 64,
-          fit: "inside",
-          withoutEnlargement: true,
-        })
-        .jpeg()
-    ;
-
-    const sharpFull =
-      (() => {
-        switch (fileInfo.mimetype) {
+    const withOutputType =
+      (
+        sharp: sharp.Sharp,
+        mimeType: string,
+      ) => {
+        switch (mimeType) {
           case "image/png":
             return (
-              sharpBase()
-                .resize({
-                  width: FullDimensionsLimit[0],
-                  height: FullDimensionsLimit[1],
-                  fit: "inside",
-                  withoutEnlargement: true,
-                })
+              sharp
                 .png({
                   compressionLevel: 9,
                   progressive: true,
@@ -98,31 +79,55 @@ export class ImageService {
             );
           case "image/jpeg":
             return (
-              sharpBase()
-                .resize({
-                  width: FullDimensionsLimit[0],
-                  height: FullDimensionsLimit[1],
-                  fit: "inside",
-                  withoutEnlargement: true,
-                })
+              sharp
                 .jpeg({
                   quality: 91,
                   progressive: true,
                   optimiseScans: true,
                 })
             );
-          default:
+          case "image/gif":
             return (
-              sharpBase()
-                .resize({
-                  width: FullDimensionsLimit[0],
-                  height: FullDimensionsLimit[1],
-                  fit: "inside",
-                  withoutEnlargement: true,
+              sharp
+                .gif({
+                  loop: 0,
                 })
             );
+          default:
+            return (
+              sharp
+            );
         }
-      })()
+      }
+    ;
+
+    const sharpFor =
+      <Size extends string>(size: Size, mimeType: string) =>
+        (
+          !(size in DimensionsLimit)
+            ? null
+            : withOutputType(
+              sharp({
+                sequentialRead: true,
+                animated: true,
+              })
+                .resize({
+                  ...DimensionsLimit[size as DimensionName],
+                  fit: "inside",
+                  background: Transparent,
+                  withoutEnlargement: true,
+                })
+                .withMetadata({
+                  exif: {
+                    IFD0: {
+                      UploadedTo: "Job Fair",
+                      UploadedBy: `${ user.firstName } ${ user.lastName }`,
+                    },
+                  },
+                }),
+              mimeType,
+            )
+        ) as (Size extends DimensionName ? sharp.Sharp : null)
     ;
 
     const uploadToMinio =
@@ -145,22 +150,18 @@ export class ImageService {
       }
     ;
 
+    function variation<Name extends string>(name: Name, mimeType: string) {
+      return {
+        name,
+        mimeType,
+        modifier: sharpFor(name, mimeType),
+      };
+    }
+
     const variations = [
-      {
-        name: "original",
-        mimeType: fileInfo.mimetype,
-        modifier: null,
-      },
-      {
-        name: "full",
-        mimeType: fileInfo.mimetype,
-        modifier: sharpFull,
-      },
-      {
-        name: "thumb",
-        mimeType: "image/jpeg",
-        modifier: sharpThumb,
-      },
+      variation("original", fileInfo.mimetype),
+      variation("full", fileInfo.mimetype),
+      variation("thumb", fileInfo.mimetype),
     ] as const;
 
     try {

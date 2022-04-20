@@ -253,7 +253,7 @@ const news = [
   {
     lang: "hr_HR",
     date: new Date("04-20-2022"),
-    image: "/tmp/blog4.jpg",
+    image: "/tmp/blog4.png",
     title: "Saznaj koja poduzeća dolaze na 15. Job Fair",
     description: "Upoznaj predstavnike iz Ericsson Nikola Tesla, Amazon Web Servicesa, Gideona, Infinuma i ostalih poduzeća koja dolaze na Job Fair.",
     content: `
@@ -420,7 +420,7 @@ const news = [
             <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
             
             <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
-            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b 2 match</a>,
+            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b2match</a>,
             <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
             <a href="https://www.typeqast.com/" rel="noopener noreferrer" target="_blank">TYPEQAST</a>,
             <a href="https://decode.agency/" rel="noopener noreferrer" target="_blank">DECODE</a>,
@@ -473,7 +473,7 @@ const news = [
   {
     lang: "en_US",
     date: new Date("04-20-2022"),
-    image: "/tmp/blog4.jpg",
+    image: "/tmp/blog4.png",
     title: "Which companies are coming to 15th Job Fair?",
     description: "Meet representatives from Ericsson Nikola Tesla, Amazon Web Services, Gideon, Infinum and other companies coming to Job Fair.",
     content: `
@@ -639,7 +639,7 @@ const news = [
             <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
             
             <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
-            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b 2 match</a>,
+            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b2match</a>,
             <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
             <a href="https://www.typeqast.com/" rel="noopener noreferrer" target="_blank">TYPEQAST</a>,
             <a href="https://decode.agency/" rel="noopener noreferrer" target="_blank">DECODE</a>,

@@ -250,6 +250,446 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+  {
+    lang: "hr_HR",
+    date: new Date("04-20-2022"),
+    image: "/tmp/blog4.jpg",
+    title: "Saznaj koja poduzeća dolaze na 15. Job Fair",
+    description: "Upoznaj predstavnike iz Ericsson Nikola Tesla, Amazon Web Servicesa, Gideona, Infinuma i ostalih poduzeća koja dolaze na Job Fair.",
+    content: `
+          <p>
+          Na ovogodišnjem <strong>Job Fairu</strong>, najvećem sajmu poslova u Hrvatskoj, sudjelovat će <strong>134 poduzeća</strong> iz <strong>14 različitih industrija</strong>.
+          Tijekom dva dana sajma, poslodavci će se studentima i studenticama te svima onima u potrazi za praksom i poslom moći predstaviti na štandovima te održavajući talkove i radionice. 
+          </p>
+          
+          <p>
+            <strong>Automotive</strong>:
+            <a href="https://www.avl.com/?avlregion=GLOBAL&groupId=10138&lang=en_US">AVL</a>,
+            <a href="https://www.logicbricks.com/">XYLON</a>,
+            <a href="https://intis-engineering.com/hr/">Intis Engineering</a>,
+            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
+            <a href="https://croatia.comsysto.com/">Comsysto Reply</a>,
+            <a href="https://www.mireo.hr/">Mireo</a>,
+            <a href="https://infinum.com/about/ventures/porsche-digital-croatia/">Porsche Digital Croatia</a>,
+            <a href="https://www.cetitec.com/">CETITEC</a>,
+            <a href="https://www.dspace.com/en/pub/home.cfm">dSPACE</a>,
+            <a href="https://www.greyp.com/">GREYP</a>,
+            <a href="https://rasco.hr/">RASCO</a>,
+            <a href="https://www.vertiv.com/en-emea/">VERTIV</a>,
+            <a href="https://www.rimac-technology.com/">Rimac Technology</a>
+          </p>
+          
+          <p>
+            <strong>Aviation</strong>:
+            <a href="https://www.crocontrol.hr/" rel="noopener noreferrer" target="_blank">HRVATSKA KONTROLA ZRAČNE PLOVIDBE</a>
+          </p>
+          
+          <p>
+            <strong>Big Data:</strong>
+            <a href="https://memgraph.com/" rel="noopener noreferrer" target="_blank">Memgraph</a>,
+            <a href="https://inteligencija.com/" rel="noopener noreferrer" target="_blank">Poslovna inteligencija</a>,
+            <a href="https://alfatec.hr/" rel="noopener noreferrer" target="_blank">Alfatec</a>,
+            <a href="https://bonsai.tech/" rel="noopener noreferrer" target="_blank">bonsai.tech</a>,
+            <a href="https://www.atma.io/" rel="noopener noreferrer" target="_blank">atma.io</a>
+          </p>
+          
+          <p>
+            <strong>Computer Vision:</strong>
+            <a href="https://phishar.com/" rel="noopener noreferrer" target="_blank">PhishAR</a>,
+            <a href="https://visagetechnologies.com/" rel="noopener noreferrer" target="_blank">Visage Technologies</a>,
+            <a href="https://microblink.com/" rel="noopener noreferrer" target="_blank">Microblink</a>
+          </p>
+          
+          <p>
+            <strong>Electroacoustics</strong>:
+            <a href="http://www.darh2.hr/" rel="noopener noreferrer" target="_blank">DARH 2</a>
+          </p>
+          
+          <p>
+            <strong>Electronics and embedded software:</strong>
+            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
+            <a href="https://altpro.com/hr/" rel="noopener noreferrer" target="_blank">ALTPRO</a>,
+            <a href="https://www.framos.com/en/" rel="noopener noreferrer" target="_blank">FRAMOS</a>,
+            <a href="https://spyro-soft.com/" rel="noopener noreferrer" target="_blank">Spyrosoft</a>,
+            <a href="https://www.dynatrace.com/" rel="noopener noreferrer" target="_blank">Dynatrace</a>,
+            <a href="https://www.infineon.com/" rel="noopener noreferrer" target="_blank">Infineon Technologies Austria</a>,
+            <a href="https://www.ses-imagotag.com/" rel="noopener noreferrer" target="_blank">SES - imagotag</a>,
+            <a href="https://www.byte-lab.com/" rel="noopener noreferrer" target="_blank">Byte Lab</a>,
+            <a href="https://dok-ing.hr/" rel="noopener noreferrer" target="_blank">DOK-ING</a>
+          </p>
+          
+          <p>
+            <strong>Energy</strong>:
+            <a href="https://www.koncar.hr/" rel="noopener noreferrer" target="_blank">KONČAR Grupa</a>,
+            <a href="https://www.inetec.hr/" rel="noopener noreferrer" target="_blank">INETEC</a>,
+            <a href="https://www.helb.hr/hr/" rel="noopener noreferrer" target="_blank">HELB</a>,
+            <a href="https://www.hep.hr/" rel="noopener noreferrer" target="_blank">HEP GRUPA</a>,
+            <a href="https://www.hops.hr/" rel="noopener noreferrer" target="_blank">HOPS</a>
+          </p>
+          
+          <p>
+            <strong>Financial</strong>:
+            <a href="https://www.imc.com/eu/" rel="noopener noreferrer" target="_blank">IMC Trading</a>,
+            <a href="https://www.nets.eu/" rel="noopener noreferrer" target="_blank">Nets</a>,
+            <a href="https://www.pbz.hr/" rel="noopener noreferrer" target="_blank">Privredna banka Zagreb</a>,
+            <a href="https://www.tis.hr/" rel="noopener noreferrer" target="_blank">TIS</a>,
+            <a href="https://crosig.hr/" rel="noopener noreferrer" target="_blank">Croatia osiguranje.</a>,
+            <a href="https://www.janestreet.com/" rel="noopener noreferrer" target="_blank">Jane Street Europe</a>,
+            <a href="https://www.fina.hr/" rel="noopener noreferrer" target="_blank">FINA</a>,
+            <a href="https://www.zaba.hr/home/" rel="noopener noreferrer" target="_blank">ZABA</a>
+          </p>
+          
+          <p>
+            <strong>Gaming</strong>:
+            <a href="https://gamepires.com/" rel="noopener noreferrer" target="_blank">Gamepires</a>,
+            <a href="https://www.nanobit.com/" rel="noopener noreferrer" target="_blank">NANOBIT</a>
+          </p>
+          
+          <p>
+            <strong>Geospatial and GIS</strong>:
+            <a href="https://optimoroute.com/" rel="noopener noreferrer" target="_blank">OptimoRoute</a>
+          </p>
+          
+          <p>
+            <strong>Industry automation</strong>:
+            <a href="https://www.gideonbros.ai/" rel="noopener noreferrer" target="_blank">Gideon</a>,
+            <a href="https://www.jungheinrich.com/en" rel="noopener noreferrer" target="_blank">JUNGHEINRICH</a>,
+            <a href="https://www.auc.systems/hr/" rel="noopener noreferrer" target="_blank">A&amp;C</a>,
+            <a href="https://www.duplico.hr/" rel="noopener noreferrer" target="_blank">Duplico</a>,
+            <a href="https://suprabit.eu/" rel="noopener noreferrer" target="_blank">Suprabit</a>,
+            <a href="https://www.knapp.com/en/" rel="noopener noreferrer" target="_blank">KNAPP</a>,
+            <a href="https://www.montelektro.hr/hr/" rel="noopener noreferrer" target="_blank">Montelektro</a>
+          </p>
+          
+          <p>
+            <strong>Information and communication technology</strong>:
+            <a href="https://aws.amazon.com/" rel="noopener noreferrer" target="_blank">AWS - Amazon Web Services</a>,
+            <a href="https://www.ericsson.hr/" rel="noopener noreferrer" target="_blank">Ericsson Nikola Tesla</a>,
+            <a href="https://www.megatrend.com/" rel="noopener noreferrer" target="_blank">Megatrend poslovna rješenja</a>,
+            <a href="https://www.leapbit.com/" rel="noopener noreferrer" target="_blank">Leapbit</a>,
+            <a href="https://www.span.eu/hr/" rel="noopener noreferrer" target="_blank">Span</a>,
+            <a href="https://mstart.hr/" rel="noopener noreferrer" target="_blank">mStart</a>,
+            <a href="https://www.syntio.net/" rel="noopener noreferrer" target="_blank">Syntio</a>,
+            <a href="https://www.barrage.net/" rel="noopener noreferrer" target="_blank">BARRAGE</a>,
+            <a href="https://www.biss.hr/" rel="noopener noreferrer" target="_blank">BISS</a>,
+            <a href="https://www.commondo.eu/" rel="noopener noreferrer" target="_blank">Commondo</a>,
+            <a href="https://www.deloittedigital.com/" rel="noopener noreferrer" target="_blank">Deloitte Digital</a>,
+            <a href="https://robotiq.ai/" rel="noopener noreferrer" target="_blank">Robotiq.ai</a>,
+            <a href="https://www.strabag.hr/" rel="noopener noreferrer" target="_blank">STRABAG</a>,
+            <a href="https://superology.com/" rel="noopener noreferrer" target="_blank">Superology</a>,
+            <a href="https://www.moj-posao.net/" rel="noopener noreferrer" target="_blank">MojPosao</a>,
+            <a href="https://www.true-north.hr/" rel="noopener noreferrer" target="_blank">True North</a>,
+            <a href="https://www.cloudsense.com/" rel="noopener noreferrer" target="_blank">CloudSense</a>,
+            <a href="https://hrprodigy.hr/" rel="noopener noreferrer" target="_blank">HR Prodigy</a>,
+            <a href="https://televend.eu/" rel="noopener noreferrer" target="_blank">Televend by Intis</a>,
+            <a href="https://www.laus.hr/" rel="noopener noreferrer" target="_blank">LAUS CC</a>,
+            <a href="https://www.lemax.net/" rel="noopener noreferrer" target="_blank">Lemax</a>,
+            <a href="https://www.mobilisis.hr/" rel="noopener noreferrer" target="_blank">MOBILISIS</a>,
+            <a href="https://www.carnet.hr/" rel="noopener noreferrer" target="_blank">CARNET</a>,
+            <a href="https://www.huddle.com/" rel="noopener noreferrer" target="_blank">Huddle</a>,
+            <a href="https://in2.hr/" rel="noopener noreferrer" target="_blank">IN 2 grupa</a>,
+            <a href="https://www.infoart.hr/" rel="noopener noreferrer" target="_blank">Infoart</a>,
+            <a href="https://www.spi.hr/" rel="noopener noreferrer" target="_blank">SPI - Sustav poslovnih informacija</a>,
+            <a href="https://www.spi.hr/" rel="noopener noreferrer" target="_blank">NEOS</a>,
+            <a href="https://oiv.hr/hr/naslovnica/" rel="noopener noreferrer" target="_blank">OIV</a>,
+            <a href="https://stype.tv/" rel="noopener noreferrer" target="_blank">STYPE</a>,
+            <a href="https://www.syskit.com/" rel="noopener noreferrer" target="_blank">SysKit</a>,
+            <a href="https://see.asseco.com/" rel="noopener noreferrer" target="_blank">ASEE</a>,
+            <a href="https://atos.net/hr/hrvatska" rel="noopener noreferrer" target="_blank">Atos</a>,
+            <a href="https://www.infodom.hr/" rel="noopener noreferrer" target="_blank">InfoDom</a>,
+            <a href="https://king-ict.hr/" rel="noopener noreferrer" target="_blank">KING ICT</a>,
+            <a href="https://koios.hr/hr/" rel="noopener noreferrer" target="_blank">Koios</a>,
+            <a href="https://www.mediatoolkit.com/" rel="noopener noreferrer" target="_blank">Mediatoolkit</a>,
+            <a href="https://chainsafe.io/" rel="noopener noreferrer" target="_blank">ChainSafe Systems</a>,
+            <a href="https://www.sedamit.hr/" rel="noopener noreferrer" target="_blank">Sedam IT</a>,
+            <a href="https://www.srce.unizg.hr/" rel="noopener noreferrer" target="_blank">Srce</a>,
+            <a href="https://www.axilis.com/" rel="noopener noreferrer" target="_blank">Axilis</a>,
+            <a href="https://realnetworks.com/" rel="noopener noreferrer" target="_blank">RealNetworks</a>,
+            <a href="https://www.infobip.com/" rel="noopener noreferrer" target="_blank">Infobip</a>,
+            <a href="https://five.agency/" rel="noopener noreferrer" target="_blank">FIVE</a>,
+            <a href="https://www.mindsmiths.com/" rel="noopener noreferrer" target="_blank">Mindsmiths</a>
+          </p>
+          
+          <p>
+            <strong>Mobile and web development:</strong>
+            <a href="https://www.trikoder.net/" rel="noopener noreferrer" target="_blank">Trikoder</a>,
+            <a href="https://infinum.com/" rel="noopener noreferrer" target="_blank">Infinum</a>,
+            <a href="https://www.ingemark.com/" rel="noopener noreferrer" target="_blank">Ingemark</a>,
+            <a href="https://corporate.sofascore.com/" rel="noopener noreferrer" target="_blank">SofaScore</a>,
+            <a href="https://arsfutura.com/" rel="noopener noreferrer" target="_blank">Ars Futura</a>,
+            <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
+            
+            <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
+            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b 2 match</a>,
+            <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
+            <a href="https://www.typeqast.com/" rel="noopener noreferrer" target="_blank">TYPEQAST</a>,
+            <a href="https://decode.agency/" rel="noopener noreferrer" target="_blank">DECODE</a>,
+            <a href="https://www.2e-systems.com/" rel="noopener noreferrer" target="_blank">2e Systems</a>,
+            <a href="https://www.bornfight.com/" rel="noopener noreferrer" target="_blank">Bornfight</a>,
+            <a href="https://ekobit.com/hr" rel="noopener noreferrer" target="_blank">Ekobit</a>,
+            <a href="https://verybigthings.com/" rel="noopener noreferrer" target="_blank">Very Big Things</a>,
+            <a href="https://minus5.hr/" rel="noopener noreferrer" target="_blank">minus 5</a>,
+            <a href="https://netgen.io/" rel="noopener noreferrer" target="_blank">Netgen</a>,
+            <a href="https://q.agency/" rel="noopener noreferrer" target="_blank">Q agency</a>,
+            <a href="https://www.shape404.agency/" rel="noopener noreferrer" target="_blank">SHAPE</a>,
+            <a href="https://croz.net/" rel="noopener noreferrer" target="_blank">CROZ</a>,
+            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
+            <a href="https://undabot.com/" rel="noopener noreferrer" target="_blank">UNDABOT</a>
+          </p>
+          
+          <p>
+            <strong>Network &amp; security:</strong>
+            <a href="https://www.infigo.hr/" rel="noopener noreferrer" target="_blank">INFIGO IS</a>,
+            <a href="https://tbtl.com/" rel="noopener noreferrer" target="_blank">Blockhouse Technology</a>,
+            <a href="https://www.conet.de/HR/conet" rel="noopener noreferrer" target="_blank">CONET Hrvatska</a>,
+            <a href="https://www.cs.hr/" rel="noopener noreferrer" target="_blank">CS Computer Systems</a>,
+            <a href="https://www.reversinglabs.com/" rel="noopener noreferrer" target="_blank">REVERSINGLABS</a>
+          </p>
+          
+          <p>
+            <strong>Telecommunications</strong>:
+            <a href="https://www.axiros.com/" rel="noopener noreferrer" target="_blank">AXIROS</a>,
+            <a href="https://maxtena.com/" rel="noopener noreferrer" target="_blank">Maxtena</a>,
+            <a href="https://www.a1.hr/" rel="noopener noreferrer" target="_blank">A1 HRVATSKA</a>
+          </p>
+          
+          <p>
+            <strong>Prijave za 15. Job Fair otvaramo uskoro</strong>, što znači da je krajnje vrijeme za pisanje i poliranje životopisa!
+          </p>
+          
+          <p>
+            Prijave će biti omogućene putem naše <strong>internetske stranice</strong> gdje ćeš moći predati svoj životopis u bazu životopisa i tako primiti svoju ulaznicu, odnosno QR kod koji će ti služiti i kao posjetnica. 
+          </p>
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("04-20-2022"),
+    image: "/tmp/blog4.jpg",
+    title: "Which companies are coming to 15th Job Fair?",
+    description: "Meet representatives from Ericsson Nikola Tesla, Amazon Web Services, Gideon, Infinum and other companies coming to Job Fair.",
+    content: `
+          <p>
+            In this year’s Job Fair, <strong>134 companies</strong> from <strong>14</strong> different <strong>industries</strong> will take part at the largest job fair in Croatia. During the two days of the fair, company representatives will be able to present themselves to thousand of students looking for jobs or internships. They will also hold different talks, workshops and participate in the panel discussion or Hot talk. 
+          </p>
+          
+          <p>
+            <strong>Automotive</strong>:
+            <a href="https://www.avl.com/?avlregion=GLOBAL&groupId=10138&lang=en_US">AVL</a>,
+            <a href="https://www.logicbricks.com/">XYLON</a>,
+            <a href="https://intis-engineering.com/hr/">Intis Engineering</a>,
+            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
+            <a href="https://croatia.comsysto.com/">Comsysto Reply</a>,
+            <a href="https://www.mireo.hr/">Mireo</a>,
+            <a href="https://infinum.com/about/ventures/porsche-digital-croatia/">Porsche Digital Croatia</a>,
+            <a href="https://www.cetitec.com/">CETITEC</a>,
+            <a href="https://www.dspace.com/en/pub/home.cfm">dSPACE</a>,
+            <a href="https://www.greyp.com/">GREYP</a>,
+            <a href="https://rasco.hr/">RASCO</a>,
+            <a href="https://www.vertiv.com/en-emea/">VERTIV</a>,
+            <a href="https://www.rimac-technology.com/">Rimac Technology</a>
+          </p>
+          
+          <p>
+            <strong>Aviation</strong>:
+            <a href="https://www.crocontrol.hr/" rel="noopener noreferrer" target="_blank">HRVATSKA KONTROLA ZRAČNE PLOVIDBE</a>
+          </p>
+          
+          <p>
+            <strong>Big Data:</strong>
+            <a href="https://memgraph.com/" rel="noopener noreferrer" target="_blank">Memgraph</a>,
+            <a href="https://inteligencija.com/" rel="noopener noreferrer" target="_blank">Poslovna inteligencija</a>,
+            <a href="https://alfatec.hr/" rel="noopener noreferrer" target="_blank">Alfatec</a>,
+            <a href="https://bonsai.tech/" rel="noopener noreferrer" target="_blank">bonsai.tech</a>,
+            <a href="https://www.atma.io/" rel="noopener noreferrer" target="_blank">atma.io</a>
+          </p>
+          
+          <p>
+            <strong>Computer Vision:</strong>
+            <a href="https://phishar.com/" rel="noopener noreferrer" target="_blank">PhishAR</a>,
+            <a href="https://visagetechnologies.com/" rel="noopener noreferrer" target="_blank">Visage Technologies</a>,
+            <a href="https://microblink.com/" rel="noopener noreferrer" target="_blank">Microblink</a>
+          </p>
+          
+          <p>
+            <strong>Electroacoustics</strong>:
+            <a href="http://www.darh2.hr/" rel="noopener noreferrer" target="_blank">DARH 2</a>
+          </p>
+          
+          <p>
+            <strong>Electronics and embedded software:</strong>
+            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
+            <a href="https://altpro.com/hr/" rel="noopener noreferrer" target="_blank">ALTPRO</a>,
+            <a href="https://www.framos.com/en/" rel="noopener noreferrer" target="_blank">FRAMOS</a>,
+            <a href="https://spyro-soft.com/" rel="noopener noreferrer" target="_blank">Spyrosoft</a>,
+            <a href="https://www.dynatrace.com/" rel="noopener noreferrer" target="_blank">Dynatrace</a>,
+            <a href="https://www.infineon.com/" rel="noopener noreferrer" target="_blank">Infineon Technologies Austria</a>,
+            <a href="https://www.ses-imagotag.com/" rel="noopener noreferrer" target="_blank">SES - imagotag</a>,
+            <a href="https://www.byte-lab.com/" rel="noopener noreferrer" target="_blank">Byte Lab</a>,
+            <a href="https://dok-ing.hr/" rel="noopener noreferrer" target="_blank">DOK-ING</a>
+          </p>
+          
+          <p>
+            <strong>Energy</strong>:
+            <a href="https://www.koncar.hr/" rel="noopener noreferrer" target="_blank">KONČAR Grupa</a>,
+            <a href="https://www.inetec.hr/" rel="noopener noreferrer" target="_blank">INETEC</a>,
+            <a href="https://www.helb.hr/hr/" rel="noopener noreferrer" target="_blank">HELB</a>,
+            <a href="https://www.hep.hr/" rel="noopener noreferrer" target="_blank">HEP GRUPA</a>,
+            <a href="https://www.hops.hr/" rel="noopener noreferrer" target="_blank">HOPS</a>
+          </p>
+          
+          <p>
+            <strong>Financial</strong>:
+            <a href="https://www.imc.com/eu/" rel="noopener noreferrer" target="_blank">IMC Trading</a>,
+            <a href="https://www.nets.eu/" rel="noopener noreferrer" target="_blank">Nets</a>,
+            <a href="https://www.pbz.hr/" rel="noopener noreferrer" target="_blank">Privredna banka Zagreb</a>,
+            <a href="https://www.tis.hr/" rel="noopener noreferrer" target="_blank">TIS</a>,
+            <a href="https://crosig.hr/" rel="noopener noreferrer" target="_blank">Croatia osiguranje.</a>,
+            <a href="https://www.janestreet.com/" rel="noopener noreferrer" target="_blank">Jane Street Europe</a>,
+            <a href="https://www.fina.hr/" rel="noopener noreferrer" target="_blank">FINA</a>,
+            <a href="https://www.zaba.hr/home/" rel="noopener noreferrer" target="_blank">ZABA</a>
+          </p>
+          
+          <p>
+            <strong>Gaming</strong>:
+            <a href="https://gamepires.com/" rel="noopener noreferrer" target="_blank">Gamepires</a>,
+            <a href="https://www.nanobit.com/" rel="noopener noreferrer" target="_blank">NANOBIT</a>
+          </p>
+          
+          <p>
+            <strong>Geospatial and GIS</strong>:
+            <a href="https://optimoroute.com/" rel="noopener noreferrer" target="_blank">OptimoRoute</a>
+          </p>
+          
+          <p>
+            <strong>Industry automation</strong>:
+            <a href="https://www.gideonbros.ai/" rel="noopener noreferrer" target="_blank">Gideon</a>,
+            <a href="https://www.jungheinrich.com/en" rel="noopener noreferrer" target="_blank">JUNGHEINRICH</a>,
+            <a href="https://www.auc.systems/hr/" rel="noopener noreferrer" target="_blank">A&amp;C</a>,
+            <a href="https://www.duplico.hr/" rel="noopener noreferrer" target="_blank">Duplico</a>,
+            <a href="https://suprabit.eu/" rel="noopener noreferrer" target="_blank">Suprabit</a>,
+            <a href="https://www.knapp.com/en/" rel="noopener noreferrer" target="_blank">KNAPP</a>,
+            <a href="https://www.montelektro.hr/hr/" rel="noopener noreferrer" target="_blank">Montelektro</a>
+          </p>
+          
+          <p>
+            <strong>Information and communication technology</strong>:
+            <a href="https://aws.amazon.com/" rel="noopener noreferrer" target="_blank">AWS - Amazon Web Services</a>,
+            <a href="https://www.ericsson.hr/" rel="noopener noreferrer" target="_blank">Ericsson Nikola Tesla</a>,
+            <a href="https://www.megatrend.com/" rel="noopener noreferrer" target="_blank">Megatrend poslovna rješenja</a>,
+            <a href="https://www.leapbit.com/" rel="noopener noreferrer" target="_blank">Leapbit</a>,
+            <a href="https://www.span.eu/hr/" rel="noopener noreferrer" target="_blank">Span</a>,
+            <a href="https://mstart.hr/" rel="noopener noreferrer" target="_blank">mStart</a>,
+            <a href="https://www.syntio.net/" rel="noopener noreferrer" target="_blank">Syntio</a>,
+            <a href="https://www.barrage.net/" rel="noopener noreferrer" target="_blank">BARRAGE</a>,
+            <a href="https://www.biss.hr/" rel="noopener noreferrer" target="_blank">BISS</a>,
+            <a href="https://www.commondo.eu/" rel="noopener noreferrer" target="_blank">Commondo</a>,
+            <a href="https://www.deloittedigital.com/" rel="noopener noreferrer" target="_blank">Deloitte Digital</a>,
+            <a href="https://robotiq.ai/" rel="noopener noreferrer" target="_blank">Robotiq.ai</a>,
+            <a href="https://www.strabag.hr/" rel="noopener noreferrer" target="_blank">STRABAG</a>,
+            <a href="https://superology.com/" rel="noopener noreferrer" target="_blank">Superology</a>,
+            <a href="https://www.moj-posao.net/" rel="noopener noreferrer" target="_blank">MojPosao</a>,
+            <a href="https://www.true-north.hr/" rel="noopener noreferrer" target="_blank">True North</a>,
+            <a href="https://www.cloudsense.com/" rel="noopener noreferrer" target="_blank">CloudSense</a>,
+            <a href="https://hrprodigy.hr/" rel="noopener noreferrer" target="_blank">HR Prodigy</a>,
+            <a href="https://televend.eu/" rel="noopener noreferrer" target="_blank">Televend by Intis</a>,
+            <a href="https://www.laus.hr/" rel="noopener noreferrer" target="_blank">LAUS CC</a>,
+            <a href="https://www.lemax.net/" rel="noopener noreferrer" target="_blank">Lemax</a>,
+            <a href="https://www.mobilisis.hr/" rel="noopener noreferrer" target="_blank">MOBILISIS</a>,
+            <a href="https://www.carnet.hr/" rel="noopener noreferrer" target="_blank">CARNET</a>,
+            <a href="https://www.huddle.com/" rel="noopener noreferrer" target="_blank">Huddle</a>,
+            <a href="https://in2.hr/" rel="noopener noreferrer" target="_blank">IN 2 grupa</a>,
+            <a href="https://www.infoart.hr/" rel="noopener noreferrer" target="_blank">Infoart</a>,
+            <a href="https://www.spi.hr/" rel="noopener noreferrer" target="_blank">SPI - Sustav poslovnih informacija</a>,
+            <a href="https://www.spi.hr/" rel="noopener noreferrer" target="_blank">NEOS</a>,
+            <a href="https://oiv.hr/hr/naslovnica/" rel="noopener noreferrer" target="_blank">OIV</a>,
+            <a href="https://stype.tv/" rel="noopener noreferrer" target="_blank">STYPE</a>,
+            <a href="https://www.syskit.com/" rel="noopener noreferrer" target="_blank">SysKit</a>,
+            <a href="https://see.asseco.com/" rel="noopener noreferrer" target="_blank">ASEE</a>,
+            <a href="https://atos.net/hr/hrvatska" rel="noopener noreferrer" target="_blank">Atos</a>,
+            <a href="https://www.infodom.hr/" rel="noopener noreferrer" target="_blank">InfoDom</a>,
+            <a href="https://king-ict.hr/" rel="noopener noreferrer" target="_blank">KING ICT</a>,
+            <a href="https://koios.hr/hr/" rel="noopener noreferrer" target="_blank">Koios</a>,
+            <a href="https://www.mediatoolkit.com/" rel="noopener noreferrer" target="_blank">Mediatoolkit</a>,
+            <a href="https://chainsafe.io/" rel="noopener noreferrer" target="_blank">ChainSafe Systems</a>,
+            <a href="https://www.sedamit.hr/" rel="noopener noreferrer" target="_blank">Sedam IT</a>,
+            <a href="https://www.srce.unizg.hr/" rel="noopener noreferrer" target="_blank">Srce</a>,
+            <a href="https://www.axilis.com/" rel="noopener noreferrer" target="_blank">Axilis</a>,
+            <a href="https://realnetworks.com/" rel="noopener noreferrer" target="_blank">RealNetworks</a>,
+            <a href="https://www.infobip.com/" rel="noopener noreferrer" target="_blank">Infobip</a>,
+            <a href="https://five.agency/" rel="noopener noreferrer" target="_blank">FIVE</a>,
+            <a href="https://www.mindsmiths.com/" rel="noopener noreferrer" target="_blank">Mindsmiths</a>
+          </p>
+          
+          <p>
+            <strong>Mobile and web development:</strong>
+            <a href="https://www.trikoder.net/" rel="noopener noreferrer" target="_blank">Trikoder</a>,
+            <a href="https://infinum.com/" rel="noopener noreferrer" target="_blank">Infinum</a>,
+            <a href="https://www.ingemark.com/" rel="noopener noreferrer" target="_blank">Ingemark</a>,
+            <a href="https://corporate.sofascore.com/" rel="noopener noreferrer" target="_blank">SofaScore</a>,
+            <a href="https://arsfutura.com/" rel="noopener noreferrer" target="_blank">Ars Futura</a>,
+            <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
+            
+            <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
+            <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b 2 match</a>,
+            <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
+            <a href="https://www.typeqast.com/" rel="noopener noreferrer" target="_blank">TYPEQAST</a>,
+            <a href="https://decode.agency/" rel="noopener noreferrer" target="_blank">DECODE</a>,
+            <a href="https://www.2e-systems.com/" rel="noopener noreferrer" target="_blank">2e Systems</a>,
+            <a href="https://www.bornfight.com/" rel="noopener noreferrer" target="_blank">Bornfight</a>,
+            <a href="https://ekobit.com/hr" rel="noopener noreferrer" target="_blank">Ekobit</a>,
+            <a href="https://verybigthings.com/" rel="noopener noreferrer" target="_blank">Very Big Things</a>,
+            <a href="https://minus5.hr/" rel="noopener noreferrer" target="_blank">minus 5</a>,
+            <a href="https://netgen.io/" rel="noopener noreferrer" target="_blank">Netgen</a>,
+            <a href="https://q.agency/" rel="noopener noreferrer" target="_blank">Q agency</a>,
+            <a href="https://www.shape404.agency/" rel="noopener noreferrer" target="_blank">SHAPE</a>,
+            <a href="https://croz.net/" rel="noopener noreferrer" target="_blank">CROZ</a>,
+            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
+            <a href="https://undabot.com/" rel="noopener noreferrer" target="_blank">UNDABOT</a>
+          </p>
+          
+          <p>
+            <strong>Network &amp; security:</strong>
+            <a href="https://www.infigo.hr/" rel="noopener noreferrer" target="_blank">INFIGO IS</a>,
+            <a href="https://tbtl.com/" rel="noopener noreferrer" target="_blank">Blockhouse Technology</a>,
+            <a href="https://www.conet.de/HR/conet" rel="noopener noreferrer" target="_blank">CONET Hrvatska</a>,
+            <a href="https://www.cs.hr/" rel="noopener noreferrer" target="_blank">CS Computer Systems</a>,
+            <a href="https://www.reversinglabs.com/" rel="noopener noreferrer" target="_blank">REVERSINGLABS</a>
+          </p>
+          
+          <p>
+            <strong>Telecommunications</strong>:
+            <a href="https://www.axiros.com/" rel="noopener noreferrer" target="_blank">AXIROS</a>,
+            <a href="https://maxtena.com/" rel="noopener noreferrer" target="_blank">Maxtena</a>,
+            <a href="https://www.a1.hr/" rel="noopener noreferrer" target="_blank">A1 HRVATSKA</a>
+          </p>
+          
+          <p>
+            <strong>Applications</strong> for the 15th Job Fair <strong>are opening soon</strong>, which means it’s high time to write and polish your resume!
+          </p>
+          
+          <p>
+            When applications start on our <strong>website</strong>, there you will be able to submit your resume to the resume database and thus receive your entry ticket in a form of a QR code that will also serve as a digital business card. Company representatives will be able to scan it and save your resume in their <em>Favorites</em> tab so they can find it easier in the database after the fair.
+          </p>
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

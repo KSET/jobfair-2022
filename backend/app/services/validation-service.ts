@@ -135,7 +135,7 @@ export const CompanyApplicationValidation = <T>(application: T) => formatValidat
 const companyApplicationApprovedValidation = z.object({
   talk: z.nullable(companyTalkValidation),
   workshop: z.nullable(companyWorkshopValidation),
-  cocktail: companyCocktailValidation,
+  cocktail: z.nullable(companyCocktailValidation),
   panel: z.array(companyPresenterValidation),
 });
 export const CompanyApplicationApprovedValidation = <T>(application: T) => formatValidation(companyApplicationApprovedValidation, application);

@@ -137,7 +137,7 @@
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
     InputEntry,
-    } from "~/components/util/form/app-formgroup.vue";
+  } from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     EditApprovedCompanyApplication,
@@ -364,10 +364,16 @@
                   presenter: items[FormFor.Workshop].forms.presenter?.map((p) => toData<Presenter>(p)),
                 }
                 : null,
-            cocktail: toData(items[FormFor.Cocktail].forms.info),
-            panel: [
-              toData(items[FormFor.Panel].forms.presenter[0]),
-            ],
+            cocktail:
+              items[FormFor.Cocktail]
+                ? toData(items[FormFor.Cocktail].forms.info)
+                : null,
+            panel:
+              items[FormFor.Panel]
+                ? [
+                  toData(items[FormFor.Panel].forms.presenter[0]),
+                ]
+                : [],
           };
 
           for (const presenter of (info[FormFor.Talk]?.presenter || [])) {

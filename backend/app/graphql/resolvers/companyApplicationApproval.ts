@@ -33,7 +33,7 @@ import {
 } from "../../helpers/auth";
 import {
   transformSelect as transformSelectApplication,
-} from "./company";
+} from "./companyApplication";
 
 @Resolver(() => CompanyApplicationApproval)
 export class CompanyApplicationApprovalFieldResolver {

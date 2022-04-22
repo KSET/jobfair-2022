@@ -296,6 +296,7 @@ const news = [
           <p>
             <strong>Computer Vision:</strong>
             <a href="https://phishar.com/" rel="noopener noreferrer" target="_blank">PhishAR</a>,
+            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
             <a href="https://visagetechnologies.com/" rel="noopener noreferrer" target="_blank">Visage Technologies</a>,
             <a href="https://microblink.com/" rel="noopener noreferrer" target="_blank">Microblink</a>
           </p>
@@ -418,7 +419,6 @@ const news = [
             <a href="https://corporate.sofascore.com/" rel="noopener noreferrer" target="_blank">SofaScore</a>,
             <a href="https://arsfutura.com/" rel="noopener noreferrer" target="_blank">Ars Futura</a>,
             <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
-            
             <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
             <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b2match</a>,
             <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
@@ -433,7 +433,6 @@ const news = [
             <a href="https://q.agency/" rel="noopener noreferrer" target="_blank">Q agency</a>,
             <a href="https://www.shape404.agency/" rel="noopener noreferrer" target="_blank">SHAPE</a>,
             <a href="https://croz.net/" rel="noopener noreferrer" target="_blank">CROZ</a>,
-            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
             <a href="https://undabot.com/" rel="noopener noreferrer" target="_blank">UNDABOT</a>
           </p>
           
@@ -515,6 +514,7 @@ const news = [
           <p>
             <strong>Computer Vision:</strong>
             <a href="https://phishar.com/" rel="noopener noreferrer" target="_blank">PhishAR</a>,
+            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
             <a href="https://visagetechnologies.com/" rel="noopener noreferrer" target="_blank">Visage Technologies</a>,
             <a href="https://microblink.com/" rel="noopener noreferrer" target="_blank">Microblink</a>
           </p>
@@ -637,7 +637,6 @@ const news = [
             <a href="https://corporate.sofascore.com/" rel="noopener noreferrer" target="_blank">SofaScore</a>,
             <a href="https://arsfutura.com/" rel="noopener noreferrer" target="_blank">Ars Futura</a>,
             <a href="https://agency04.com/" rel="noopener noreferrer" target="_blank">Agency 04</a>,
-            
             <a href="https://deegloo.com/" rel="noopener noreferrer" target="_blank">Deegloo</a>,
             <a href="https://www.b2match.com/" rel="noopener noreferrer" target="_blank">b2match</a>,
             <a href="https://www.freshbooks.com/" rel="noopener noreferrer" target="_blank">FreshBooks</a>,
@@ -652,7 +651,6 @@ const news = [
             <a href="https://q.agency/" rel="noopener noreferrer" target="_blank">Q agency</a>,
             <a href="https://www.shape404.agency/" rel="noopener noreferrer" target="_blank">SHAPE</a>,
             <a href="https://croz.net/" rel="noopener noreferrer" target="_blank">CROZ</a>,
-            <a href="https://photomath.com/" rel="noopener noreferrer" target="_blank">Photomath</a>,
             <a href="https://undabot.com/" rel="noopener noreferrer" target="_blank">UNDABOT</a>
           </p>
           

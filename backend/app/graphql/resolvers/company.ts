@@ -20,6 +20,7 @@ import {
   Image,
   Industry,
   User,
+  CompanyApplication,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
@@ -64,6 +65,7 @@ import {
   ImageService,
 } from "../../services/image-service";
 import {
+  Dict,
   GQLResponse,
 } from "../../types/helpers";
 import {
@@ -72,6 +74,10 @@ import {
 import {
   transformSelect as transformSelectImage,
 } from "./image";
+import {
+  transformSelect as transformSelectProgram,
+  CompanyProgram,
+} from "./companyProgram";
 
 const rasterLogoMimeTypes = new Set([
   "image/png",
@@ -141,6 +147,13 @@ export class CompanyFieldResolver {
   ): GQLResponse<File, "nullable"> {
     return Promise.resolve(company.vectorLogo || null);
   }
+
+  @FieldResolver((_type) => CompanyProgram, { nullable: true })
+  program(
+    @Root() company: Company,
+  ): GQLResponse<CompanyApplication, "nullable"> {
+    return Promise.resolve(company.applications?.[0] || null);
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyFieldResolver>({
@@ -172,6 +185,16 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
     select.vectorLogo = {
       select: select.vectorLogo,
     };
+
+    return select;
+  },
+
+  program(select) {
+    const result = transformSelectProgram(select.program as Dict);
+
+    delete select.program;
+
+    Object.assign(select, result);
 
     return select;
   },

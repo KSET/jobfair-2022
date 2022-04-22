@@ -241,6 +241,7 @@ type Company {
   industry: Industry
   legalName: String!
   members: [User!]
+  program: CompanyProgram
   rasterLogo: Image
   uid: String!
   updatedAt: DateTime!
@@ -392,6 +393,18 @@ input CompanyOrderByWithRelationInput {
   legalName: SortOrder
   vat: SortOrder
   website: SortOrder
+}
+
+type CompanyProgram {
+  booth: String
+  cocktail: ApplicationCocktail
+  panel: CompanyProgramPanel
+  talk: ApplicationTalk
+  workshop: ApplicationWorkshop
+}
+
+type CompanyProgramPanel {
+  companyPresenters: [ApplicationPresenter!]!
 }
 
 input CompanyRelationFilter {

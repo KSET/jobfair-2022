@@ -670,11 +670,14 @@ export class CompanyListResolver {
           },
         },
       },
-      select: toSelect(info, transformSelect),
+      select: {
+        ...toSelect(info, transformSelect),
+        brandName: true,
+      },
       orderBy: {
         brandName: "asc",
       },
-    });
+    }).then((x) => x.sort((a, b) => a.brandName.localeCompare(b.brandName)));
   }
 
   @Query(() => Company, { nullable: true })

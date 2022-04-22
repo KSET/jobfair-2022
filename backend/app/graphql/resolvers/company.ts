@@ -64,6 +64,9 @@ import {
   ImageService,
 } from "../../services/image-service";
 import {
+  GQLResponse,
+} from "../../types/helpers";
+import {
   transformSelect as transformSelectMembers,
 } from "./user";
 import {
@@ -113,30 +116,30 @@ const fileValid = {
 export class CompanyFieldResolver {
   @FieldResolver((_type) => Industry, { nullable: true })
   industry(
-  @Root() company: Company,
-  ) {
-    return company.industry;
+    @Root() company: Company,
+  ): GQLResponse<Industry, "nullable"> {
+    return Promise.resolve(company.industry || null);
   }
 
   @FieldResolver((_type) => [ User ], { nullable: true })
   members(
-  @Root() company: Company,
-  ) {
-    return company.members;
+    @Root() company: Company,
+  ): GQLResponse<User[], "nullable"> {
+    return Promise.resolve(company.members || null);
   }
 
   @FieldResolver((_type) => Image, { nullable: true })
   rasterLogo(
     @Root() company: Company,
-  ): Image | null {
-    return company.rasterLogo || null;
+  ): GQLResponse<Image, "nullable"> {
+    return Promise.resolve(company.rasterLogo || null);
   }
 
   @FieldResolver((_type) => File, { nullable: true })
   vectorLogo(
     @Root() company: Company,
-  ): File | null {
-    return company.vectorLogo || null;
+  ): GQLResponse<File, "nullable"> {
+    return Promise.resolve(company.vectorLogo || null);
   }
 }
 
@@ -217,7 +220,7 @@ export class CompanyValidationResolver {
   validateVat(
     @Ctx() ctx: Context,
       @Arg("vat") vat: string,
-  ): Promise<ValidateVatResponse> {
+  ): GQLResponse<ValidateVatResponse> {
     return CompanyService.validateVat(vat);
   }
 }
@@ -228,7 +231,7 @@ export class CompanyInfoMutationsResolver {
   async registerCompany(
     @Ctx() ctx: Context,
       @Arg("info", () => CreateCompanyInput) info: CreateCompanyInput,
-  ): Promise<CreateCompanyResponse | null> {
+  ): GQLResponse<CreateCompanyResponse, "nullable"> {
     if (!ctx.user) {
       return null;
     }
@@ -417,7 +420,7 @@ export class CompanyInfoMutationsResolver {
   async updateCompanyInfo(
     @Ctx() ctx: Context,
       @Arg("info", () => CreateCompanyInput) info: CreateCompanyInput,
-  ): Promise<CreateCompanyResponse | null> {
+  ): GQLResponse<CreateCompanyResponse, "nullable"> {
     if (!ctx.user) {
       return null;
     }
@@ -583,12 +586,12 @@ export class CompanyInfoMutationsResolver {
 export class CompanyListResolver {
   @Query(() => [ Company ])
   companies(
-  @Ctx() ctx: Context,
-    @Info() info: GraphQLResolveInfo,
-    @Args() args: FindManyCompanyArgs,
-  ) {
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+      @Args() args: FindManyCompanyArgs,
+  ): GQLResponse<Company[]> {
     if (!ctx.user) {
-      return [];
+      return Promise.resolve([]);
     }
 
     return ctx.prisma.company.findMany({

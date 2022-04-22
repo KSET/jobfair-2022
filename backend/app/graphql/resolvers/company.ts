@@ -671,6 +671,9 @@ export class CompanyListResolver {
         },
       },
       select: toSelect(info, transformSelect),
+      orderBy: {
+        brandName: "asc",
+      },
     });
   }
 

@@ -22,6 +22,8 @@ const cssClassNameBlacklist = new Set([
   "fc",
 ]);
 
+const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
+
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
   nitro: {
@@ -79,7 +81,7 @@ export default defineNuxtConfig({
             let id;
             do {
               id = uid.sequentialUUID();
-            } while (cssClassNameBlacklist.has(id) || id.startsWith("p-"));
+            } while (cssClassNameBlacklist.has(id) || id.startsWith("p-") || !CssNameValid.test(id));
 
             identNameMap.set(
               idScope,
@@ -92,7 +94,7 @@ export default defineNuxtConfig({
           return cssesc(
             isProd
               ? className
-              : `$${ relativeFilePath }::${ name }::${ className }`
+              : `${ className }$${ relativeFilePath }::${ name }`
             ,
             {
               isIdentifier: true,

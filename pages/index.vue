@@ -124,14 +124,20 @@
               :key="participant.uid"
               :class="$style.companyGridCell"
             >
-              <app-img
-                :alt="`${participant.brandName} logo`"
-                :lazy-src="participant.rasterLogo.thumbUrl"
-                :src="participant.rasterLogo.fullUrl"
-                :title="participant.titleText"
-                aspect-ratio="1.78"
-                contain
-              />
+              <a
+                :href="participant.website"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <app-img
+                  :alt="`${participant.brandName} logo`"
+                  :lazy-src="participant.rasterLogo.thumbUrl"
+                  :src="participant.rasterLogo.fullUrl"
+                  :title="participant.titleText"
+                  aspect-ratio="1.78"
+                  contain
+                />
+              </a>
             </div>
           </div>
         </div>

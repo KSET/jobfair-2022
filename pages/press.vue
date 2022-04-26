@@ -24,7 +24,7 @@
           </span>
           <a
             :class="$style.pressKitDownload"
-            href="/Job%20Fair%20-%20Press%20kit.zip"
+            href="/Job_Fair_-_Press_kit.zip"
             target="_blank"
           >
             <icon-download
@@ -214,7 +214,7 @@
           {
             name: "press.press-kit.item.jobfair-logo",
             image: previewIcons.JobFair,
-            file: "/tmp/press/jf logo.jpg",
+            file: "/tmp/press/jf_logo.jpg",
           },
           {
             name: "press.press-kit.item.fer-logo",
@@ -224,7 +224,7 @@
           {
             name: "press.press-kit.item.kset-logo",
             image: previewIcons.KSET,
-            file: "/tmp/press/KSET logo crni.png",
+            file: "/tmp/press/KSET_logo_crni.png",
           },
           {
             name: "press.press-kit.item.ckf-logo",
@@ -239,7 +239,7 @@
           {
             name: "press.press-kit.item.description-logo",
             image: previewIcons.opis,
-            file: "/tmp/press/Job Fair - Opće informacije.pdf",
+            file: "/tmp/press/Job_Fair_-_Opce_informacije.pdf",
           },
         ].map((x) => ({ ...x, file: encodeURI(x.file) })),
       };

@@ -45,7 +45,7 @@
       String(text)
         .trim()
         .replace(/<br>/gi, `${ brKey }br${ brKey }`)
-        .replaceAll("\n", `${ brKey }br${ brKey }`)
+        .replace(/\n/gi, `${ brKey }br${ brKey }`)
     ;
     const div = document.createElement("div");
     div.innerHTML = html;

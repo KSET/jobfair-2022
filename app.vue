@@ -121,8 +121,8 @@
 
       translationsStore.setLanguageFromCookie();
 
-      const currentLanguage = computed(() => translationsStore.currentLanguage.replaceAll("_", "-"));
-      const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replaceAll("_", "-")));
+      const currentLanguage = computed(() => translationsStore.currentLanguage.replace(/_/gi, "-"));
+      const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replace(/_/gi, "-")));
       const isTranslationsLoading = useThrottle(computed(() => translationsStore.isLoading), 500);
 
       onMounted(() => {

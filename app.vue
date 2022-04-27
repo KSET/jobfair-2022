@@ -69,9 +69,6 @@
   } from "~/store/cookieConsent";
   import CookieConsent from "~/components/nav/CookieConsent.vue";
   import {
-    useMeta,
-  } from "#meta";
-  import {
     generateMetadata,
   } from "~/helpers/head";
   import FacebookShareImage from "~/assets/images/share/facebook.png";
@@ -83,6 +80,7 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
+    useHead,
     useNuxtApp,
   } from "#app";
   import {
@@ -139,7 +137,7 @@
         window.scrollTo(0, 0);
       });
 
-      useMeta({
+      useHead({
         title: "Job Fair",
         charset: "utf-8",
         meta: [
@@ -170,7 +168,7 @@
             return;
           }
 
-          nuxt.$sentrySetUser({
+          (nuxt.$sentrySetUser as (user: Record<string, unknown>) => void)({
             id: u.uid,
             email: u.email,
           });

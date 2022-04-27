@@ -10,8 +10,8 @@ import {
   useTranslationsStore,
 } from "~/store/translations";
 import {
-  useMeta,
-} from "#meta";
+  useHead,
+} from "#app";
 import {
   generateMetadata,
   generateTitle,
@@ -28,7 +28,7 @@ export default function(title: MaybeRef<string>, translate = true) {
     ,
   );
 
-  useMeta({
+  useHead({
     title: computed(() => generateTitle(unref(translation))),
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

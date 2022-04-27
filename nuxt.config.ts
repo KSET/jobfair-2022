@@ -5,7 +5,7 @@ import ShortUniqueId from "short-unique-id";
 import cssesc from "cssesc";
 import {
   defineNuxtConfig,
-} from "nuxt3";
+} from "nuxt";
 import StylelintPlugin from "@frsource/vite-plugin-stylelint";
 import SvgLoader from "vite-svg-loader";
 
@@ -104,6 +104,8 @@ export default defineNuxtConfig({
       },
     },
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     plugins: [
       Icons({
         compiler: "vue3",

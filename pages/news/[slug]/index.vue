@@ -72,8 +72,8 @@
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
   import {
-    useMeta,
-  } from "#meta";
+    useHead,
+  } from "#app";
   import {
     generateMetadata,
   } from "~/helpers/head";
@@ -107,7 +107,7 @@
         description: "",
       });
       const title = ref("");
-      useMeta({
+      useHead({
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         meta: computed(() => generateMetadata({

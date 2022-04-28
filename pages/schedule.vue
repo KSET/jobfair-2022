@@ -10,36 +10,38 @@
         :dblclick-to-navigate="false"
         :disable-views="['years', 'year', 'month', 'day']"
         :events="events"
-        :time-from="10 * 60"
-        :time-step="30"
-        :time-to="21 * 60"
+        :hide-weekdays="[ 0, 1, 2, 5, 6 ]"
+        :split-days="splitDays"
+        :time-from="9.5 * 60"
+        :time-step="15"
+        :time-to="17.5 * 60"
         :watch-real-time="false"
         active-view="week"
         hide-title-bar
         hide-view-selector
         hide-weekends
-        selected-date="2018-11-19"
+        selected-date="2022-05-11"
       >
         <template #event="{ event, isLastDay }">
           <dropdown-menu
             :direction="isLastDay ? 'left' : 'right'"
+            :with-arrow="false"
             arrow-border-color="var(--event-border-color)"
             arrow-color="var(--calendar-event-color-background)"
             hover
-            with-arrow
           >
             <template #trigger>
               <div
                 :class="$style.eventContainer"
               >
                 <strong
-                  :class="$style.title"
+                  :class="$style.eventTitle"
                   :data-event="JSON.stringify(event)"
                   v-text="event.title"
                 />
                 <br>
                 <span
-                  :class="$style.time"
+                  :class="$style.eventTime"
                 >
                   <time
                     :datetime="event.start.toISOString()"
@@ -51,15 +53,27 @@
                     v-text="formatEventTime(event.end)"
                   />
                 </span>
+                <div
+                  v-if="event.location"
+                  :class="$style.eventLocation"
+                >
+                  <i class="pi pi-map-marker" /> {{ event.location }}
+                </div>
+                <span
+                  v-if="event.text"
+                  :class="$style.eventText"
+                  v-text="event.text"
+                />
               </div>
             </template>
-            <template #contents>
+            <template v-if="false" #contents>
               <div
                 :class="$style.eventDropdownContainer"
               >
                 <div :class="$style.eventDropdown">
                   <div :class="$style.header">
                     <span v-text="event.title" />
+                    <!--
                     <p-button
                       :class="{
                         [$style.star]: true,
@@ -70,6 +84,7 @@
                     >
                       <icon-star />
                     </p-button>
+                    -->
                   </div>
                   <div :class="$style.contentContainer">
                     <div :class="$style.content">
@@ -123,84 +138,309 @@
       VueCalendar,
       TranslatedText,
       AppMaxWidthContainer,
+      // eslint-disable-next-line vue/no-unused-components
       IconStar,
     },
 
     setup() {
       useTitle("schedule.header");
+
+      const talks1 = [
+        {
+          start: "2022-05-11 10:00",
+          end: "2022-05-11 10:30",
+          title: "Ericsson",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 10:30",
+          end: "2022-05-11 11:00",
+          title: "Syntio",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-11 11:00",
+          end: "2022-05-11 11:30",
+          title: "Memgraph",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 11:30",
+          end: "2022-05-11 12:00",
+          title: "Končar",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-11 12:00",
+          end: "2022-05-11 12:30",
+          title: "Srce",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 12:30",
+          end: "2022-05-11 13:00",
+          title: "RealNetworks",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-11 14:00",
+          end: "2022-05-11 14:30",
+          title: "Ingemark",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 14:30",
+          end: "2022-05-11 15:00",
+          title: "A1",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-11 15:00",
+          end: "2022-05-11 15:30",
+          title: "Trikoder",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 15:30",
+          end: "2022-05-11 16:00",
+          title: "Microblink",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-11 16:00",
+          end: "2022-05-11 16:30",
+          title: "DECODE",
+          class: "talk",
+        },
+        {
+          start: "2022-05-11 16:30",
+          end: "2022-05-11 17:00",
+          title: "Infobip",
+          class: "talk",
+        },
+      ];
+      const talks2 = [
+        {
+          start: "2022-05-12 10:00",
+          end: "2022-05-12 10:30",
+          title: "mStart",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 10:30",
+          end: "2022-05-12 11:00",
+          title: "INETEC",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-12 11:00",
+          end: "2022-05-12 11:30",
+          title: "Gideon",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 11:30",
+          end: "2022-05-12 12:00",
+          title: "Arsfutura",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-12 12:00",
+          end: "2022-05-12 12:30",
+          title: "Poslovna inteligencija",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 12:30",
+          end: "2022-05-12 13:00",
+          title: "FIVE",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-12 14:00",
+          end: "2022-05-12 14:30",
+          title: "Xylon",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 14:30",
+          end: "2022-05-12 15:00",
+          title: "Span",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-12 15:00",
+          end: "2022-05-12 15:30",
+          title: "Deegloo",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 15:30",
+          end: "2022-05-12 16:00",
+          title: "minus5",
+          class: "talk",
+        },
+
+        {
+          start: "2022-05-12 16:00",
+          end: "2022-05-12 16:30",
+          title: "Photomath",
+          class: "talk",
+        },
+        {
+          start: "2022-05-12 16:30",
+          end: "2022-05-12 17:00",
+          title: "Rimac Automobili",
+          class: "talk",
+        },
+      ];
+      const talks = [
+        ...talks1,
+        ...talks2,
+      ];
+
+      const workshops1 = [
+        {
+          start: "2022-05-11 10:00",
+          end: "2022-05-11 12:00",
+          title: "dSpace",
+          class: "workshop",
+          location: "FER - A201",
+        },
+        {
+          start: "2022-05-11 13:00",
+          end: "2022-05-11 15:00",
+          title: "CROZ",
+          class: "workshop",
+          location: "FER - A201",
+        },
+        {
+          start: "2022-05-11 16:00",
+          end: "2022-05-11 18:00",
+          title: "SedamIT",
+          class: "workshop",
+          location: "FER - A201",
+        },
+
+        {
+          start: "2022-05-11 10:00",
+          end: "2022-05-11 12:00",
+          title: "Agency04",
+          class: "workshop",
+          location: "FER - A301",
+        },
+        {
+          start: "2022-05-11 13:00",
+          end: "2022-05-11 15:00",
+          title: "Alfatec",
+          class: "workshop",
+          location: "FER - A301",
+        },
+        {
+          start: "2022-05-11 16:00",
+          end: "2022-05-11 18:00",
+          title: "Rimac Automobili",
+          class: "workshop",
+          location: "FER - A301",
+        },
+
+        {
+          start: "2022-05-11 10:00",
+          end: "2022-05-11 12:00",
+          title: "TrueNorth",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+        {
+          start: "2022-05-11 13:00",
+          end: "2022-05-11 15:00",
+          title: "Greyp",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+        {
+          start: "2022-05-11 16:00",
+          end: "2022-05-11 18:00",
+          title: "CARNET",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+      ];
+      const workshops2 = [
+        {
+          start: "2022-05-12 10:00",
+          end: "2022-05-12 12:00",
+          title: "Comsysto Reply",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+        {
+          start: "2022-05-12 13:00",
+          end: "2022-05-12 15:00",
+          title: "Undabot",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+        {
+          start: "2022-05-12 16:00",
+          end: "2022-05-12 18:00",
+          title: "Ericsson",
+          class: "workshop",
+          location: "FER - Bijela",
+        },
+
+        {
+          start: "2022-05-12 10:00",
+          end: "2022-05-12 12:00",
+          title: "KONČAR",
+          class: "workshop",
+          location: "FER - SPOCK",
+        },
+        {
+          start: "2022-05-12 13:00",
+          end: "2022-05-12 15:00",
+          title: "ByteLab",
+          class: "workshop",
+          location: "FER - SPOCK",
+        },
+        {
+          start: "2022-05-12 16:00",
+          end: "2022-05-12 18:00",
+          title: "Arsfutura",
+          class: "workshop",
+          location: "FER - SPOCK",
+        },
+
+        {
+          start: "2022-05-12 16:00",
+          end: "2022-05-12 18:00",
+          title: "Televend by Intis",
+          class: "workshop",
+          location: "FER - A211",
+        },
+      ];
+      const workshops = [
+        ...workshops1,
+        ...workshops2,
+      ];
+
+      const splitDays = [
+        { id: 1, label: "Talk", class: "talk-split" },
+        { id: 2, label: "Workshop", class: "workshop-split" },
+      ];
+
       const events = [
-        {
-          start: "2018-10-30 10:30",
-          end: "2018-10-30 11:30",
-          title: "Doctor appointment",
-          class: "talk",
-        },
-        {
-          start: "2018-11-16 10:30",
-          end: "2018-11-16 11:30",
-          title: "Doctor appointment",
-          class: "talk",
-        },
-        {
-          start: "2018-11-19 10:35",
-          end: "2018-11-19 11:30",
-          title: "Doctor appointment",
-          class: "talk",
-        },
-        {
-          start: "2018-11-19 18:30",
-          end: "2018-11-19 19:15",
-          title: "Dentist appointment",
-          class: "talk",
-        },
-        {
-          start: "2018-11-20 18:30",
-          end: "2018-11-20 20:30",
-          title: "Crossfit",
-          class: "hot-talk",
-        },
-        {
-          start: "2018-11-21 11:00",
-          end: "2018-11-21 13:00",
-          title: "Brunch with Jane",
-          class: "panel",
-        },
-        {
-          start: "2018-11-21 16:30",
-          end: "2018-11-21 17:40",
-          title: "Swimming lesson",
-          class: "workshop",
-        },
-        {
-          start: "2018-11-23 12:30",
-          end: "2018-11-23 13:00",
-          title: "Macca's with Mark",
-          class: "panel",
-        },
-        {
-          start: "2018-11-24 12:30",
-          end: "2018-11-24 13:00",
-          title: "Macca's with Mark",
-          class: "workshop",
-        },
-        {
-          start: "2018-11-25 12:30",
-          end: "2018-11-25 13:00",
-          title: "Macca's with Mark",
-          class: "workshop",
-        },
-        {
-          start: "2018-11-23 16:00",
-          end: "2018-11-23 18:30",
-          title: "Movie time",
-          class: "workshop",
-        },
-        {
-          start: "2018-11-30 16:00",
-          end: "2018-11-30 18:30",
-          title: "Another movie tonight",
-          class: "workshop",
-        },
+        ...talks.map((item) => ({ ...item, split: 1 })),
+        ...workshops.map((item) => ({ ...item, split: 2 })),
       ].map((event) => Object.assign(event, { selected: 0.5 < Math.random() }));
       const eventTimeFormatter = new Intl.DateTimeFormat(
         undefined,
@@ -212,6 +452,7 @@
 
       return {
         events,
+        splitDays,
 
         formatEventTime: (date: Date): string => eventTimeFormatter.format(date),
       };
@@ -230,8 +471,13 @@
     .calendarContainer {
       $cell-shrink-by: 10px;
       $cell-offset-left: 3px;
+      $calendar-width: 95vw;
 
+      position: relative;
+      left: calc(.5 * #{$content-max-width} - #{$calendar-width});
+      width: #{$calendar-width};
       height: calc(min(#{$content-max-width - math.div($content-padding, 2)}, 100vw) * .65);
+      transform: translateX(50%);
 
       @include media(md) {
         display: none;
@@ -246,6 +492,17 @@
           .vuecal__event.#{$event} {
             --calendar-event-color-background: #{$color};
             --calendar-event-color-text: #{pick-visible-color($color, $fer-black, $fer-white)};
+          }
+
+          .vuecal__cell-split.#{$event}-split {
+            background-color: #{color.adjust($color, $alpha: -.85)};
+
+            .split-label {
+              font-weight: bold;
+              background-color: #{$color};
+              border-bottom-left-radius: 4px;
+              border-bottom-right-radius: 4px;
+            }
           }
 
         }
@@ -266,6 +523,10 @@
           width: calc(100% - #{$cell-shrink-by});
           margin-left: $cell-offset-left;
         }
+
+        .vuecal__heading + .vuecal__heading {
+          border-left: 1px solid rgb(0 0 0 / 10%);
+        }
       }
     }
 
@@ -278,7 +539,7 @@
       position: absolute;
       top: 0;
       right: 0;
-      bottom: 0;
+      bottom: 5px;
       left: 0;
       overflow: hidden;
       padding: 4px;
@@ -291,8 +552,8 @@
 
       &::before {
         position: absolute;
-        bottom: .5rem;
         right: .5rem;
+        bottom: .5rem;
         width: 1.5rem;
         height: 100%;
         content: "";
@@ -303,16 +564,32 @@
         filter: drop-shadow(0 0 0 black) invert(1);
       }
 
-      .title {
+      .eventTitle {
         color: $fer-white;
       }
 
-      .time {
+      .eventTime {
         display: inline-block;
       }
 
-      .title + .time {
+      .eventTitle + .eventTime {
         margin-left: 1ch;
+      }
+
+      .eventLocation {
+        font-size: .8em;
+        margin: .5em 0;
+      }
+
+      .eventText {
+        font-size: 1em;
+      }
+    }
+
+    :global(.vuecal__cell-split) {
+
+      .eventContainer {
+        right: 4px;
       }
     }
 

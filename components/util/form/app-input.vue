@@ -80,7 +80,7 @@
     props: {
       modelValue: {
         required: false,
-        type: [ String, Number ],
+        type: [ String, Number, Date ],
         default: () => "",
       },
 

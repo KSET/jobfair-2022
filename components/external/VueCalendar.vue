@@ -2,6 +2,8 @@
   <div :class="$style.container">
     <client-only>
       <vue-cal
+        :hide-weekdays="hideWeekdays"
+        :hide-weekends="hideWeekends"
         disable-date-prototypes
         v-bind="$attrs"
       >
@@ -12,7 +14,7 @@
         <template #event="{ event }">
           <slot
             :event="event"
-            :is-last-day="isLastDay(event.start, $attrs['hide-weekends'] !== undefined || $attrs['hideWeekends'] !== undefined)"
+            :is-last-day="isLastDay(event.start)"
             name="event"
           />
         </template>
@@ -26,9 +28,17 @@
     defineAsyncComponent,
     defineComponent,
   } from "vue";
+  import type {
+    PropType,
+  } from "vue";
   import {
     Component,
   } from "@nuxt/schema";
+  import {
+    computed,
+    unref,
+    useModelWrapper,
+  } from "#imports";
 
   // noinspection TypeScriptCheckImport
   export default defineComponent({
@@ -39,6 +49,19 @@
     },
 
     inheritAttrs: false,
+
+    props: {
+      hideWeekdays: {
+        type: Array as PropType<number[]>,
+        required: false,
+        default: () => [],
+      },
+      hideWeekends: {
+        type: Boolean as PropType<boolean>,
+        required: false,
+        default: false,
+      },
+    },
 
     /*
      props: {
@@ -295,7 +318,7 @@
      },
      */
 
-    setup() {
+    setup(props, { emit }) {
       const dateFormatter = new Intl.DateTimeFormat(
         undefined,
         {
@@ -305,19 +328,30 @@
         },
       );
 
+      const hideWeekdays = useModelWrapper(props, emit)("hideWeekdays");
+      const hideWeekends = useModelWrapper(props, emit)("hideWeekends");
+
+      const weekdays = [ 1, 2, 3, 4, 5, 6, 0 ] as const;
+      const availableDays = computed(() => {
+        const withoutWeekends =
+          unref(hideWeekends)
+            ? weekdays.filter((day) => 6 !== day && 0 !== day)
+            : weekdays
+        ;
+
+        return withoutWeekends.filter((day) => !unref(hideWeekdays)?.includes(day));
+      });
+      const lastAvailableDay = computed(() => unref(availableDays)?.[unref(availableDays).length - 1]);
+
       return {
         formatWeekdayHeading(date: Date): string {
           return dateFormatter.format(date);
         },
 
-        isLastDay(date: Date, considerWeekends: unknown): boolean {
+        isLastDay(date: Date): boolean {
           const day = date.getDay();
 
-          if (considerWeekends) {
-            return 0 === day || 5 <= day;
-          }
-
-          return 0 === day;
+          return unref(lastAvailableDay) === day;
         },
       };
     },

@@ -19,7 +19,7 @@
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
-        :label-key="`form.${inputName}`"
+        :label-key="`form.${prefix}${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
         :required="input.required ?? true"
@@ -44,7 +44,7 @@
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
-        :label-key="`form.${inputName}`"
+        :label-key="`form.${prefix}${inputName}`"
         :name="inputName"
         :options="input.options"
         :placeholder="input.placeholder"
@@ -73,7 +73,7 @@
         :file-name="input.fileName"
         :file-type="input.fileType"
         :invalid="errors[inputName].length > 0"
-        :label-key="`form.${inputName}`"
+        :label-key="`form.${prefix}${inputName}`"
         :multiple="input.multiple ?? false"
         :name="inputName"
         :placeholder="input.placeholder"
@@ -99,7 +99,7 @@
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
-        :label-key="`form.${inputName}`"
+        :label-key="`form.${prefix}${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
         :required="input.required ?? true"
@@ -124,7 +124,7 @@
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
-        :label-key="`form.${inputName}`"
+        :label-key="`form.${prefix}${inputName}`"
         :name="inputName"
         :placeholder="input.placeholder"
         :required="input.required ?? true"
@@ -155,6 +155,10 @@
     MaybeRef,
   } from "@vueuse/shared";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import useModelWrapper from "~/composables/useModelWrapper";
+  import {
+    computed,
+  } from "#imports";
 
   type ClassDefinition = Record<string, boolean> | string;
 
@@ -253,11 +257,36 @@
         type: Boolean,
         default: () => false,
       },
+      labelPrefix: {
+        required: false,
+        type: String,
+        default: () => "",
+      },
     },
 
     emits: [
       "submit",
     ],
+
+    setup(props, { emit }) {
+      const labelPrefix = useModelWrapper(props, emit)("labelPrefix");
+
+      return {
+        prefix: computed(() => {
+          const prefix = labelPrefix.value;
+
+          if (!prefix) {
+            return "";
+          }
+
+          if ("." !== prefix[prefix.length - 1]) {
+            return `${ prefix }.`;
+          }
+
+          return prefix;
+        }),
+      };
+    },
   });
 </script>
 

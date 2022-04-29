@@ -11,11 +11,11 @@
         :dblclick-to-navigate="false"
         :disable-views="['years', 'year', 'month', 'day']"
         :events="events"
-        :hide-weekdays="[ 0, 1, 2, 5, 6 ]"
+        :hide-weekdays="unusedDays"
         :split-days="splitDays"
-        :time-from="9.5 * 60"
+        :time-from="(minHours - 0.5) * 60"
         :time-step="15"
-        :time-to="17.5 * 60"
+        :time-to="(maxHours + 0.5) * 60"
         :watch-real-time="false"
         active-view="week"
         hide-title-bar
@@ -116,69 +116,17 @@
       </vue-calendar>
       <template v-else>
         <vue-calendar
+          v-for="day in usedDays"
+          :key="day"
           :click-to-navigate="false"
           :dblclick-to-navigate="false"
           :disable-views="['years', 'year', 'month', 'day']"
           :events="events"
-          :hide-weekdays="[ 0, 1, 2, 4, 5, 6 ]"
+          :hide-weekdays="[ ...unusedDays, day ]"
           :split-days="splitDays"
-          :time-from="9.5 * 60"
+          :time-from="(minHours - 0.5) * 60"
           :time-step="15"
-          :time-to="17.5 * 60"
-          :watch-real-time="false"
-          active-view="week"
-          hide-title-bar
-          hide-view-selector
-          hide-weekends
-          selected-date="2022-05-11"
-        >
-          <template #event="{ event }">
-            <div
-              :class="$style.eventContainer"
-            >
-              <strong
-                :class="$style.eventTitle"
-                :data-event="JSON.stringify(event)"
-                v-text="event.title"
-              />
-              <br>
-              <span
-                :class="$style.eventTime"
-              >
-                <time
-                  :datetime="event.start.toISOString()"
-                  v-text="formatEventTime(event.start)"
-                />
-                &ndash;
-                <time
-                  :datetime="event.end.toISOString()"
-                  v-text="formatEventTime(event.end)"
-                />
-              </span>
-              <div
-                v-if="event.location"
-                :class="$style.eventLocation"
-              >
-                <i class="pi pi-map-marker" /> {{ event.location }}
-              </div>
-              <span
-                v-if="event.text"
-                :class="$style.eventText"
-                v-text="event.text"
-              />
-            </div>
-          </template>
-        </vue-calendar>
-        <vue-calendar
-          :click-to-navigate="false"
-          :dblclick-to-navigate="false"
-          :disable-views="['years', 'year', 'month', 'day']"
-          :events="events"
-          :hide-weekdays="[ 0, 1, 2, 3, 5, 6 ]"
-          :split-days="splitDays"
-          :time-from="9.5 * 60"
-          :time-step="15"
-          :time-to="17.5 * 60"
+          :time-to="(maxHours + 0.5) * 60"
           :watch-real-time="false"
           active-view="week"
           hide-title-bar
@@ -232,16 +180,27 @@
   import {
     defineComponent,
   } from "vue";
+  import {
+    groupBy,
+    map,
+  } from "rambda";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import VueCalendar from "~/components/external/VueCalendar.vue";
   import useTitle from "~/composables/useTitle";
   import DropdownMenu from "~/components/util/dropdown-menu.vue";
+  // noinspection TypeScriptCheckImport
   import IconStar from "~icons/grommet-icons/star";
   import AppImg from "~/components/util/app-img.vue";
   import {
     useBreakpoints,
   } from "~/composables/useBreakpoints";
+  import {
+    useStyleTag,
+  } from "#imports";
+  import {
+    capitalize,
+  } from "~/helpers/string";
 
   export default defineComponent({
     name: "PageSchedule",
@@ -547,15 +506,65 @@
         ...workshops2,
       ];
 
-      const splitDays = [
-        { id: 1, label: "Talk", class: "talk-split" },
-        { id: 2, label: "Workshop", class: "workshop-split" },
+      const events = [
+        ...talks,
+        ...workshops,
+        {
+          start: "2022-05-11 13:00",
+          end: "2022-05-11 14:00",
+          title: "Panel",
+          class: "panel",
+          noGroup: true,
+        },
+        {
+          start: "2022-05-12 13:00",
+          end: "2022-05-12 14:00",
+          title: "Hot Talk",
+          class: "hot-talk",
+          noGroup: true,
+        },
+        {
+          start: "2022-05-11 18:00",
+          end: "2022-05-11 23:00",
+          title: "Loosen Up party",
+          class: "loosen-up",
+          noGroup: true,
+        },
       ];
 
-      const events = [
-        ...talks.map((item) => ({ ...item, split: 1 })),
-        ...workshops.map((item) => ({ ...item, split: 2 })),
-      ].map((event) => Object.assign(event, { selected: 0.5 < Math.random() }));
+      const groupedEvents = groupBy((event) => event.class, events.filter((event) => !(event as { noGroup: true | unknown, })?.noGroup));
+
+      const splitDays =
+        Object
+          .entries(groupedEvents)
+          .map(([ rawKey, events ], i) => {
+            const key = rawKey.replace(/-/g, " ");
+            const id = i + 1;
+
+            for (const event of events) {
+              (event as Record<string, unknown>).split = id;
+            }
+
+            return {
+              id,
+              label: capitalize(key),
+              class: `${ key }-split`,
+            };
+          })
+      ;
+
+      splitDays.push({
+        id: splitDays.length + 1,
+        label: "",
+        class: "other-split",
+      });
+
+      for (const event of events) {
+        if (!(event as Record<string, unknown>).split) {
+          (event as Record<string, unknown>).split = splitDays.length;
+        }
+      }
+
       const eventTimeFormatter = new Intl.DateTimeFormat(
         undefined,
         {
@@ -564,12 +573,74 @@
         },
       );
 
+      const availableDays = [ 0, 1, 2, 3, 4, 5, 6 ] as const;
+      const unusedDays = new Set<number>(availableDays);
+      const usedDays = new Set<number>();
+      let minHours = 24;
+      let maxHours = 0;
+      for (const event of events) {
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+        unusedDays.delete(start.getDay());
+        unusedDays.delete(end.getDay());
+        usedDays.add(start.getDay());
+        usedDays.add(end.getDay());
+        minHours = Math.min(minHours, start.getHours(), end.getHours());
+        maxHours = Math.max(maxHours, start.getHours(), end.getHours());
+      }
+
+      const maxOverlapping =
+        (
+          ranges: { start: Date | string, end: Date | string, }[],
+        ) =>
+          ranges
+            .flatMap(
+              (range) => [
+                [ new Date(range.start), "x" ],
+                [ new Date(range.end), "y" ],
+              ] as const
+              ,
+            )
+            .sort((a, b) => a[0].getTime() - b[0].getTime())
+            .reduce(
+              ([ ans, count ], [ , type ]) => {
+                const step = "x" === type ? 1 : -1;
+                const newCount = count + step;
+
+                return [ Math.max(ans, newCount), newCount ];
+              },
+              [ 0, 0 ],
+            )
+            .shift()!
+      ;
+
+      const maxOverlappingByEvent = map(maxOverlapping, groupedEvents);
+
+      useStyleTag(
+        Object
+          .entries(maxOverlappingByEvent)
+          .map(([ type, maxOverlapping ]) =>
+            `
+            .vuecal__cell-split.${ type }-split {
+              flex-grow: ${ maxOverlapping } !important;
+            }
+            `,
+          )
+          .join("\n")
+        ,
+      );
+
       const isMd = useBreakpoints().smaller("md");
 
       return {
         events,
         splitDays,
         isMd,
+        unusedDays: Array.from(unusedDays),
+        usedDays: Array.from(usedDays).sort((a, b) => b - a),
+        minHours,
+        maxHours,
+        maxOverlappingByEvent,
 
         formatEventTime: (date: Date): string => eventTimeFormatter.format(date),
       };
@@ -620,6 +691,7 @@
             .split-label {
               font-weight: bold;
               background-color: #{$color};
+              color: #{pick-visible-color($color, $fer-black, $fer-white)};
               border-bottom-left-radius: 4px;
               border-bottom-right-radius: 4px;
             }
@@ -648,10 +720,10 @@
           border-left: 1px solid rgb(0 0 0 / 10%);
         }
 
-        .talk-split {
-          @include media(md) {
-            flex: 1 3 auto;
-          }
+        .vuecal__cell-split {
+          flex-basis: 0;
+          flex-grow: 1;
+          flex-shrink: 1;
         }
       }
     }

@@ -60,11 +60,13 @@
                 >
                   <i class="pi pi-map-marker" /> {{ event.location }}
                 </div>
-                <span
-                  v-if="event.text"
-                  :class="$style.eventText"
-                  v-text="event.text"
-                />
+                <template v-if="event.text">
+                  <div :class="$style.eventSpacer" />
+                  <span
+                    :class="$style.eventText"
+                    v-text="event.text"
+                  />
+                </template>
               </div>
             </template>
             <template v-if="false" #contents>
@@ -163,11 +165,13 @@
               >
                 <i class="pi pi-map-marker" /> {{ event.location }}
               </div>
-              <span
-                v-if="event.text"
-                :class="$style.eventText"
-                v-text="event.text"
-              />
+              <template v-if="event.text">
+                <div :class="$style.eventSpacer" />
+                <span
+                  :class="$style.eventText"
+                  v-text="event.text"
+                />
+              </template>
             </div>
           </template>
         </vue-calendar>
@@ -779,8 +783,13 @@
         margin: .5em 0;
       }
 
+      .eventSpacer {
+        margin-top: .5em;
+      }
+
       .eventText {
-        font-size: 1em;
+        font-size: .9em;
+        font-style: italic;
       }
     }
 

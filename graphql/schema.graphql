@@ -226,6 +226,15 @@ type Booth {
   name: String!
 }
 
+type CalendarEvent {
+  class: String!
+  end: DateTime!
+  noGroup: Boolean!
+  start: DateTime!
+  text: String!
+  title: String!
+}
+
 input CocktailCreateInput {
   colour: String = ""
   name: String = ""
@@ -840,6 +849,7 @@ type Query {
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
   booths: [Booth!]!
+  calendar: [CalendarEvent!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication

@@ -13,15 +13,15 @@
         :events="events"
         :hide-weekdays="unusedDays"
         :split-days="splitDays"
-        :time-from="(minHours - 0.5) * 60"
-        :time-step="15"
-        :time-to="(maxHours + 0.5) * 60"
+        :time-from="(minHours - (timeStepMinutes / 60)) * 60"
+        :time-step="timeStepMinutes"
+        :time-to="(maxHours + (timeStepMinutes / 60)) * 60"
         :watch-real-time="false"
         active-view="week"
         hide-title-bar
         hide-view-selector
         hide-weekends
-        selected-date="2022-05-11"
+        :selected-date="events[0].start"
       >
         <template #event="{ event, isLastDay }">
           <dropdown-menu
@@ -126,15 +126,15 @@
           :events="events"
           :hide-weekdays="[ ...unusedDays, day ]"
           :split-days="splitDays"
-          :time-from="(minHours - 0.5) * 60"
-          :time-step="15"
-          :time-to="(maxHours + 0.5) * 60"
+          :time-from="(minHours - (timeStepMinutes / 60)) * 60"
+          :time-step="timeStepMinutes"
+          :time-to="(maxHours + (timeStepMinutes / 60)) * 60"
           :watch-real-time="false"
           active-view="week"
           hide-title-bar
           hide-view-selector
           hide-weekends
-          selected-date="2022-05-11"
+          :selected-date="events[0].start"
         >
           <template #event="{ event }">
             <div
@@ -188,6 +188,9 @@
     groupBy,
     map,
   } from "rambda";
+  import {
+    gql,
+  } from "@urql/core";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import VueCalendar from "~/components/external/VueCalendar.vue";
@@ -200,11 +203,15 @@
     useBreakpoints,
   } from "~/composables/useBreakpoints";
   import {
+    useQuery,
     useStyleTag,
   } from "#imports";
   import {
     capitalize,
   } from "~/helpers/string";
+  import {
+    ICalendarEvent,
+  } from "~/graphql/schema";
 
   export default defineComponent({
     name: "PageSchedule",
@@ -219,324 +226,53 @@
       IconStar,
     },
 
-    setup() {
+    async setup() {
       useTitle("schedule.header");
 
-      const talks1 = [
-        {
-          start: "2022-05-11 10:00",
-          end: "2022-05-11 10:30",
-          title: "Ericsson",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 10:30",
-          end: "2022-05-11 11:00",
-          title: "Syntio",
-          class: "talk",
-        },
+      type QData = {
+        calendar: (Pick<ICalendarEvent,
+                        "title"
+                          | "text"
+                          | "class"
+                          | "noGroup"> & {
+          split?: number,
+          start: string,
+          end: string,
+        })[],
+      };
+      type QArgs = never;
+      const events = await useQuery<QData, QArgs>({
+        query: gql`
+          query {
+            calendar {
+              title
+              text
+              start
+              end
+              class
+              noGroup
+            }
+          }
+        `,
+      })()
+        .then((resp) => resp?.data?.calendar || [])
+        .then(
+          (resp) =>
+            map(
+              (x) => ({
+                ...x,
+                start: new Date(x.start),
+                end: new Date(x.end),
+              }),
+              resp,
+            ).sort(
+              (a, b) => a.start.getTime() - b.start.getTime(),
+            )
+          ,
+        )
+      ;
 
-        {
-          start: "2022-05-11 11:00",
-          end: "2022-05-11 11:30",
-          title: "Memgraph",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 11:30",
-          end: "2022-05-11 12:00",
-          title: "Končar",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-11 12:00",
-          end: "2022-05-11 12:30",
-          title: "Srce",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 12:30",
-          end: "2022-05-11 13:00",
-          title: "RealNetworks",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-11 14:00",
-          end: "2022-05-11 14:30",
-          title: "Ingemark",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 14:30",
-          end: "2022-05-11 15:00",
-          title: "A1",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-11 15:00",
-          end: "2022-05-11 15:30",
-          title: "Trikoder",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 15:30",
-          end: "2022-05-11 16:00",
-          title: "Microblink",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-11 16:00",
-          end: "2022-05-11 16:30",
-          title: "DECODE",
-          class: "talk",
-        },
-        {
-          start: "2022-05-11 16:30",
-          end: "2022-05-11 17:00",
-          title: "Infobip",
-          class: "talk",
-        },
-      ];
-      const talks2 = [
-        {
-          start: "2022-05-12 10:00",
-          end: "2022-05-12 10:30",
-          title: "mStart",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 10:30",
-          end: "2022-05-12 11:00",
-          title: "INETEC",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-12 11:00",
-          end: "2022-05-12 11:30",
-          title: "Gideon",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 11:30",
-          end: "2022-05-12 12:00",
-          title: "Arsfutura",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-12 12:00",
-          end: "2022-05-12 12:30",
-          title: "Poslovna inteligencija",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 12:30",
-          end: "2022-05-12 13:00",
-          title: "FIVE",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-12 14:00",
-          end: "2022-05-12 14:30",
-          title: "Xylon",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 14:30",
-          end: "2022-05-12 15:00",
-          title: "Span",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-12 15:00",
-          end: "2022-05-12 15:30",
-          title: "Deegloo",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 15:30",
-          end: "2022-05-12 16:00",
-          title: "minus5",
-          class: "talk",
-        },
-
-        {
-          start: "2022-05-12 16:00",
-          end: "2022-05-12 16:30",
-          title: "Photomath",
-          class: "talk",
-        },
-        {
-          start: "2022-05-12 16:30",
-          end: "2022-05-12 17:00",
-          title: "Rimac Automobili",
-          class: "talk",
-        },
-      ];
-      const talks = [
-        ...talks1,
-        ...talks2,
-      ];
-
-      const workshops1 = [
-        {
-          start: "2022-05-11 10:00",
-          end: "2022-05-11 12:00",
-          title: "dSpace",
-          class: "workshop",
-          location: "FER - A201",
-        },
-        {
-          start: "2022-05-11 13:00",
-          end: "2022-05-11 15:00",
-          title: "CROZ",
-          class: "workshop",
-          location: "FER - A201",
-        },
-        {
-          start: "2022-05-11 16:00",
-          end: "2022-05-11 18:00",
-          title: "SedamIT",
-          class: "workshop",
-          location: "FER - A201",
-        },
-
-        {
-          start: "2022-05-11 10:00",
-          end: "2022-05-11 12:00",
-          title: "Agency04",
-          class: "workshop",
-          location: "FER - A301",
-        },
-        {
-          start: "2022-05-11 13:00",
-          end: "2022-05-11 15:00",
-          title: "Alfatec",
-          class: "workshop",
-          location: "FER - A301",
-        },
-        {
-          start: "2022-05-11 16:00",
-          end: "2022-05-11 18:00",
-          title: "Rimac Automobili",
-          class: "workshop",
-          location: "FER - A301",
-        },
-
-        {
-          start: "2022-05-11 10:00",
-          end: "2022-05-11 12:00",
-          title: "TrueNorth",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-        {
-          start: "2022-05-11 13:00",
-          end: "2022-05-11 15:00",
-          title: "Greyp",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-        {
-          start: "2022-05-11 16:00",
-          end: "2022-05-11 18:00",
-          title: "CARNET",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-      ];
-      const workshops2 = [
-        {
-          start: "2022-05-12 10:00",
-          end: "2022-05-12 12:00",
-          title: "Comsysto Reply",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-        {
-          start: "2022-05-12 13:00",
-          end: "2022-05-12 15:00",
-          title: "Undabot",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-        {
-          start: "2022-05-12 16:00",
-          end: "2022-05-12 18:00",
-          title: "Ericsson",
-          class: "workshop",
-          location: "FER - Bijela",
-        },
-
-        {
-          start: "2022-05-12 10:00",
-          end: "2022-05-12 12:00",
-          title: "KONČAR",
-          class: "workshop",
-          location: "FER - SPOCK",
-        },
-        {
-          start: "2022-05-12 13:00",
-          end: "2022-05-12 15:00",
-          title: "ByteLab",
-          class: "workshop",
-          location: "FER - SPOCK",
-        },
-        {
-          start: "2022-05-12 16:00",
-          end: "2022-05-12 18:00",
-          title: "Arsfutura",
-          class: "workshop",
-          location: "FER - SPOCK",
-        },
-
-        {
-          start: "2022-05-12 16:00",
-          end: "2022-05-12 18:00",
-          title: "Televend by Intis",
-          class: "workshop",
-          location: "FER - A211",
-        },
-      ];
-      const workshops = [
-        ...workshops1,
-        ...workshops2,
-      ];
-
-      const events = [
-        ...talks,
-        ...workshops,
-        {
-          start: "2022-05-11 13:00",
-          end: "2022-05-11 14:00",
-          title: "Panel",
-          class: "panel",
-          noGroup: true,
-        },
-        {
-          start: "2022-05-12 13:00",
-          end: "2022-05-12 14:00",
-          title: "Hot Talk",
-          class: "hot-talk",
-          noGroup: true,
-        },
-        {
-          start: "2022-05-11 18:00",
-          end: "2022-05-11 23:00",
-          title: "Loosen Up party",
-          class: "loosen-up",
-          noGroup: true,
-        },
-      ];
-
-      const groupedEvents = groupBy((event) => event.class, events.filter((event) => !(event as { noGroup: true | unknown, })?.noGroup));
+      const groupedEvents = groupBy((event) => event.class, events.filter((event) => !event.noGroup));
 
       const splitDays =
         Object
@@ -546,7 +282,7 @@
             const id = i + 1;
 
             for (const event of events) {
-              (event as Record<string, unknown>).split = id;
+              event.split = id;
             }
 
             return {
@@ -564,8 +300,8 @@
       });
 
       for (const event of events) {
-        if (!(event as Record<string, unknown>).split) {
-          (event as Record<string, unknown>).split = splitDays.length;
+        if (!event.split) {
+          event.split = splitDays.length;
         }
       }
 
@@ -644,6 +380,7 @@
         usedDays: Array.from(usedDays).sort((a, b) => b - a),
         minHours,
         maxHours,
+        timeStepMinutes: Math.round(Math.min(...events.map((event) => (event.end.getTime() - event.start.getTime()) / 1000 / 60)) / 2),
         maxOverlappingByEvent,
 
         formatEventTime: (date: Date): string => eventTimeFormatter.format(date),

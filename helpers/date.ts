@@ -19,3 +19,37 @@ export const parseDate = (formattedDate: string): Date => {
 
   return new Date(`${ year }-${ month }-${ day }`);
 };
+
+export const withoutTime =
+  (date: ConstructorParameters<typeof Date>[0]) => {
+    const d = new Date(date);
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+    d.setMilliseconds(0);
+    return d;
+  }
+;
+
+export const today =
+  () =>
+    withoutTime(new Date())
+;
+
+export const fromToday =
+  (days: number) => {
+    const now = today();
+    now.setDate(new Date().getDate() + days);
+    return now;
+  }
+;
+
+export const yesterday =
+  () =>
+    fromToday(-1)
+;
+
+export const tomorrow =
+  () =>
+    fromToday(1)
+;

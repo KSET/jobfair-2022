@@ -4,35 +4,10 @@ import {
 import {
   ISeason,
 } from "~/graphql/schema";
-
-const withoutTime =
-  (date: ConstructorParameters<typeof Date>[0]) => {
-    const d = new Date(date);
-    d.setHours(0);
-    d.setMinutes(0);
-    d.setSeconds(0);
-    d.setMilliseconds(0);
-    return d;
-  }
-;
-
-const today =
-  () =>
-    withoutTime(new Date())
-;
-
-const fromToday =
-  (days: number) => {
-    const now = today();
-    now.setDate(new Date().getDate() + days);
-    return now;
-  }
-;
-
-const tomorrow =
-  () =>
-    fromToday(1)
-;
+import {
+  today,
+  tomorrow,
+} from "~/helpers/date";
 
 type Season = Omit<ISeason,
   "uid"

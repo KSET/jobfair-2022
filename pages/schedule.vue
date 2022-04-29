@@ -6,6 +6,7 @@
 
     <div :class="$style.calendarContainer">
       <vue-calendar
+        v-if="!isMd"
         :click-to-navigate="false"
         :dblclick-to-navigate="false"
         :disable-views="['years', 'year', 'month', 'day']"
@@ -113,6 +114,116 @@
           </dropdown-menu>
         </template>
       </vue-calendar>
+      <template v-else>
+        <vue-calendar
+          :click-to-navigate="false"
+          :dblclick-to-navigate="false"
+          :disable-views="['years', 'year', 'month', 'day']"
+          :events="events"
+          :hide-weekdays="[ 0, 1, 2, 4, 5, 6 ]"
+          :split-days="splitDays"
+          :time-from="9.5 * 60"
+          :time-step="15"
+          :time-to="17.5 * 60"
+          :watch-real-time="false"
+          active-view="week"
+          hide-title-bar
+          hide-view-selector
+          hide-weekends
+          selected-date="2022-05-11"
+        >
+          <template #event="{ event }">
+            <div
+              :class="$style.eventContainer"
+            >
+              <strong
+                :class="$style.eventTitle"
+                :data-event="JSON.stringify(event)"
+                v-text="event.title"
+              />
+              <br>
+              <span
+                :class="$style.eventTime"
+              >
+                <time
+                  :datetime="event.start.toISOString()"
+                  v-text="formatEventTime(event.start)"
+                />
+                &ndash;
+                <time
+                  :datetime="event.end.toISOString()"
+                  v-text="formatEventTime(event.end)"
+                />
+              </span>
+              <div
+                v-if="event.location"
+                :class="$style.eventLocation"
+              >
+                <i class="pi pi-map-marker" /> {{ event.location }}
+              </div>
+              <span
+                v-if="event.text"
+                :class="$style.eventText"
+                v-text="event.text"
+              />
+            </div>
+          </template>
+        </vue-calendar>
+        <vue-calendar
+          :click-to-navigate="false"
+          :dblclick-to-navigate="false"
+          :disable-views="['years', 'year', 'month', 'day']"
+          :events="events"
+          :hide-weekdays="[ 0, 1, 2, 3, 5, 6 ]"
+          :split-days="splitDays"
+          :time-from="9.5 * 60"
+          :time-step="15"
+          :time-to="17.5 * 60"
+          :watch-real-time="false"
+          active-view="week"
+          hide-title-bar
+          hide-view-selector
+          hide-weekends
+          selected-date="2022-05-11"
+        >
+          <template #event="{ event }">
+            <div
+              :class="$style.eventContainer"
+            >
+              <strong
+                :class="$style.eventTitle"
+                :data-event="JSON.stringify(event)"
+                v-text="event.title"
+              />
+              <br>
+              <span
+                :class="$style.eventTime"
+              >
+                <time
+                  :datetime="event.start.toISOString()"
+                  v-text="formatEventTime(event.start)"
+                />
+                &ndash;
+                <time
+                  :datetime="event.end.toISOString()"
+                  v-text="formatEventTime(event.end)"
+                />
+              </span>
+              <div
+                v-if="event.location"
+                :class="$style.eventLocation"
+              >
+                <i class="pi pi-map-marker" /> {{ event.location }}
+              </div>
+              <span
+                v-if="event.text"
+                :class="$style.eventText"
+                v-text="event.text"
+              />
+            </div>
+          </template>
+        </vue-calendar>
+      </template>
     </div>
   </app-max-width-container>
 </template>
@@ -128,6 +239,9 @@
   import DropdownMenu from "~/components/util/dropdown-menu.vue";
   import IconStar from "~icons/grommet-icons/star";
   import AppImg from "~/components/util/app-img.vue";
+  import {
+    useBreakpoints,
+  } from "~/composables/useBreakpoints";
 
   export default defineComponent({
     name: "PageSchedule",
@@ -450,9 +564,12 @@
         },
       );
 
+      const isMd = useBreakpoints().smaller("md");
+
       return {
         events,
         splitDays,
+        isMd,
 
         formatEventTime: (date: Date): string => eventTimeFormatter.format(date),
       };
@@ -468,20 +585,23 @@
   .container {
     $off-black: #8f9296;
 
+    max-width: 90vw;
+
+    @include media(lg) {
+      max-width: 95vw;
+    }
+
+    @include media(md) {
+      min-height: calc(2.5 * min(#{$content-max-width - math.div($content-padding, 2)}, 100vw) * .65);
+    }
+
     .calendarContainer {
       $cell-shrink-by: 10px;
       $cell-offset-left: 3px;
-      $calendar-width: 95vw;
 
       position: relative;
-      left: calc(.5 * #{$content-max-width} - #{$calendar-width});
-      width: #{$calendar-width};
+      width: 100%;
       height: calc(min(#{$content-max-width - math.div($content-padding, 2)}, 100vw) * .65);
-      transform: translateX(50%);
-
-      @include media(md) {
-        display: none;
-      }
 
       :global {
         --calendar-event-color-background: #{$fer-yellow};
@@ -526,6 +646,12 @@
 
         .vuecal__heading + .vuecal__heading {
           border-left: 1px solid rgb(0 0 0 / 10%);
+        }
+
+        .talk-split {
+          @include media(md) {
+            flex: 1 3 auto;
+          }
         }
       }
     }

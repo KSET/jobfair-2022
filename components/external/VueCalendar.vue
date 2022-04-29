@@ -39,6 +39,12 @@
     unref,
     useModelWrapper,
   } from "#imports";
+  import {
+    useTranslationsStore,
+  } from "~/store/translations";
+  import {
+    capitalize,
+  } from "~/helpers/string";
 
   // noinspection TypeScriptCheckImport
   export default defineComponent({
@@ -319,14 +325,16 @@
      */
 
     setup(props, { emit }) {
-      const dateFormatter = new Intl.DateTimeFormat(
-        undefined,
+      const translationsStore = useTranslationsStore();
+
+      const dateFormatter = computed(() => new Intl.DateTimeFormat(
+        translationsStore.currentLanguageIso,
         {
           weekday: "short",
           month: "numeric",
           day: "numeric",
         },
-      );
+      ));
 
       const hideWeekdays = useModelWrapper(props, emit)("hideWeekdays");
       const hideWeekends = useModelWrapper(props, emit)("hideWeekends");
@@ -345,7 +353,9 @@
 
       return {
         formatWeekdayHeading(date: Date): string {
-          return dateFormatter.format(date);
+          const format = unref(dateFormatter).format(date);
+
+          return capitalize(format);
         },
 
         isLastDay(date: Date): boolean {

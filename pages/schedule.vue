@@ -203,6 +203,8 @@
     useBreakpoints,
   } from "~/composables/useBreakpoints";
   import {
+    computed,
+    unref,
     useQuery,
     useStyleTag,
   } from "#imports";
@@ -212,6 +214,9 @@
   import {
     ICalendarEvent,
   } from "~/graphql/schema";
+  import {
+    useTranslationsStore,
+  } from "~/store/translations";
 
   export default defineComponent({
     name: "PageSchedule",
@@ -228,6 +233,8 @@
 
     async setup() {
       useTitle("schedule.header");
+
+      const translationsStore = useTranslationsStore();
 
       type QData = {
         calendar: (Pick<ICalendarEvent,
@@ -305,13 +312,13 @@
         }
       }
 
-      const eventTimeFormatter = new Intl.DateTimeFormat(
-        undefined,
+      const eventTimeFormatter = computed(() => new Intl.DateTimeFormat(
+        translationsStore.currentLanguageIso,
         {
           hour: "2-digit",
           minute: "2-digit",
         },
-      );
+      ));
 
       const availableDays = [ 0, 1, 2, 3, 4, 5, 6 ] as const;
       const unusedDays = new Set<number>(availableDays);
@@ -383,7 +390,9 @@
         timeStepMinutes: Math.round(Math.min(...events.map((event) => (event.end.getTime() - event.start.getTime()) / 1000 / 60)) / 2),
         maxOverlappingByEvent,
 
-        formatEventTime: (date: Date): string => eventTimeFormatter.format(date),
+        formatEventTime: (date: Date): string =>
+          unref(eventTimeFormatter).format(date)
+        ,
       };
     },
   });

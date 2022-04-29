@@ -26,10 +26,6 @@ const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
 
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
-  nitro: {
-    preset: "server",
-  },
-
   features: {
     transitions: false,
     store: false,

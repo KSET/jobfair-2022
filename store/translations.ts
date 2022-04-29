@@ -37,6 +37,11 @@ export enum Language {
 
 const LanguageToName = Object.fromEntries(Object.entries(Language).map(([ a, b ]) => [ b, a ])) as Record<Language, keyof Language>;
 
+const LanguageISO: Record<Language, string> = {
+  [Language.EN]: "en-US",
+  [Language.HR]: "hr-HR",
+};
+
 const cookieLanguage = () => useCookie<Language>(
   "jobfair-lang",
   {
@@ -59,6 +64,8 @@ export const useTranslationsStore = defineStore(
     }),
 
     getters: {
+      currentLanguageIso: (state) => LanguageISO[state.currentLanguage],
+
       translation(state): (key: string, language?: Language) => string {
         return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] || key;
       },

@@ -509,7 +509,6 @@
         background-repeat: no-repeat;
         background-position: bottom;
         background-size: contain;
-        filter: drop-shadow(0 0 0 black) invert(1);
       }
 
       .eventTitle {

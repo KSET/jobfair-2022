@@ -22,9 +22,6 @@ class CalendarEvent {
     text: string = "";
 
   @Field()
-    location: string = "";
-
-  @Field()
     class: string = "";
 
   @Field()
@@ -37,12 +34,14 @@ const talks1 = [
     end: "2022-05-11 10:30",
     title: "Ericsson",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 10:30",
     end: "2022-05-11 11:00",
     title: "Syntio",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -50,12 +49,14 @@ const talks1 = [
     end: "2022-05-11 11:30",
     title: "Memgraph",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 11:30",
     end: "2022-05-11 12:00",
     title: "KONČAR",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -63,12 +64,14 @@ const talks1 = [
     end: "2022-05-11 12:30",
     title: "Srce",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 12:30",
     end: "2022-05-11 13:00",
     title: "RealNetworks",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -76,12 +79,14 @@ const talks1 = [
     end: "2022-05-11 14:30",
     title: "Ingemark",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 14:30",
     end: "2022-05-11 15:00",
     title: "A1",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -89,12 +94,14 @@ const talks1 = [
     end: "2022-05-11 15:30",
     title: "Trikoder",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 15:30",
     end: "2022-05-11 16:00",
     title: "Microblink",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -102,12 +109,14 @@ const talks1 = [
     end: "2022-05-11 16:30",
     title: "DECODE",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-11 16:30",
     end: "2022-05-11 17:00",
     title: "Infobip",
     class: "talk",
+    location: "SD Martinovka",
   },
 ];
 const talks2 = [
@@ -116,12 +125,14 @@ const talks2 = [
     end: "2022-05-12 10:30",
     title: "mStart",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 10:30",
     end: "2022-05-12 11:00",
     title: "INETEC",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -129,12 +140,14 @@ const talks2 = [
     end: "2022-05-12 11:30",
     title: "Gideon",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 11:30",
     end: "2022-05-12 12:00",
     title: "Ars Futura",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -142,12 +155,14 @@ const talks2 = [
     end: "2022-05-12 12:30",
     title: "Poslovna inteligencija",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 12:30",
     end: "2022-05-12 13:00",
     title: "FIVE",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -155,12 +170,14 @@ const talks2 = [
     end: "2022-05-12 14:30",
     title: "Xylon",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 14:30",
     end: "2022-05-12 15:00",
     title: "Span",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -168,12 +185,14 @@ const talks2 = [
     end: "2022-05-12 15:30",
     title: "Deegloo",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 15:30",
     end: "2022-05-12 16:00",
     title: "minus5",
     class: "talk",
+    location: "SD Martinovka",
   },
 
   {
@@ -181,12 +200,14 @@ const talks2 = [
     end: "2022-05-12 16:30",
     title: "Photomath",
     class: "talk",
+    location: "SD Martinovka",
   },
   {
     start: "2022-05-12 16:30",
     end: "2022-05-12 17:00",
     title: "Rimac Automobili",
     class: "talk",
+    location: "SD Martinovka",
   },
 ];
 const talks = [
@@ -198,7 +219,7 @@ const workshops1 = [
   {
     start: "2022-05-11 10:00",
     end: "2022-05-11 12:00",
-    title: "dSpace",
+    title: "dSPACE",
     class: "workshop",
     location: "FER - A201",
   },
@@ -244,21 +265,21 @@ const workshops1 = [
     end: "2022-05-11 12:00",
     title: "True North",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
   {
     start: "2022-05-11 13:00",
     end: "2022-05-11 15:00",
     title: "Greyp",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
   {
     start: "2022-05-11 16:00",
     end: "2022-05-11 18:00",
     title: "CARNET",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
 ];
 const workshops2 = [
@@ -267,21 +288,21 @@ const workshops2 = [
     end: "2022-05-12 12:00",
     title: "Comsysto Reply",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
   {
     start: "2022-05-12 13:00",
     end: "2022-05-12 15:00",
     title: "Undabot",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
   {
     start: "2022-05-12 16:00",
     end: "2022-05-12 18:00",
     title: "Ericsson",
     class: "workshop",
-    location: "FER - Bijela",
+    location: "FER - Bijela vjećnica",
   },
 
   {
@@ -294,7 +315,7 @@ const workshops2 = [
   {
     start: "2022-05-12 13:00",
     end: "2022-05-12 15:00",
-    title: "ByteLab",
+    title: "Byte Lab",
     class: "workshop",
     location: "FER - SPOCK",
   },
@@ -338,6 +359,7 @@ const events = [
     end: "2022-05-11 14:00",
     title: "Panel",
     class: "panel",
+    location: "SD Martinovka",
     noGroup: true,
   },
   {
@@ -345,6 +367,7 @@ const events = [
     end: "2022-05-12 14:00",
     title: "Hot Talk",
     class: "hot-talk",
+    location: "SD Martinovka",
     noGroup: true,
   },
   {
@@ -352,6 +375,7 @@ const events = [
     end: "2022-05-11 20:00",
     title: "Loosen Up party",
     class: "loosen-up",
+    location: "KSET",
     noGroup: true,
   },
 ].map((event) => ({
@@ -360,7 +384,6 @@ const events = [
   end: toIsoDate(event.end),
   text: (event as unknown as { text: string | undefined, }).text ?? "",
   noGroup: (event as { noGroup: true | undefined, }).noGroup ?? false,
-  location: (event as unknown as { location: string | undefined, }).location ?? "",
 }));
 
 export class CalendarMockResolver {

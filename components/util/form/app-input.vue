@@ -45,6 +45,7 @@
       :placeholder="orNull(placeholder)"
       :required="required"
       :type="type"
+      v-bind="$attrs || {}"
     >
     <transition name="input-message">
       <small
@@ -76,6 +77,8 @@
     components: {
       TranslatedText,
     },
+
+    inheritAttrs: false,
 
     props: {
       modelValue: {

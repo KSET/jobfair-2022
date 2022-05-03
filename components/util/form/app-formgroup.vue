@@ -104,6 +104,7 @@
         :placeholder="input.placeholder"
         :required="input.required ?? true"
         type="datetime-local"
+        v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
           <translated-text
@@ -129,6 +130,7 @@
         :placeholder="input.placeholder"
         :required="input.required ?? true"
         :type="input.type || 'text'"
+        v-bind="input.attrs || {}"
       >
         <template v-if="errors[inputName].length > 0" #message>
           <translated-text

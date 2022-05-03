@@ -14,7 +14,19 @@ type ApplicationCocktailCount {
   forApplication: Int!
 }
 
-input ApplicationCocktailOrderByWithRelationInput {
+enum ApplicationCocktailOrderByRelevanceFieldEnum {
+  colour
+  name
+}
+
+input ApplicationCocktailOrderByRelevanceInput {
+  fields: [ApplicationCocktailOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ApplicationCocktailOrderByRelevanceInput
   colour: SortOrder
   name: SortOrder
 }
@@ -93,7 +105,18 @@ type ApplicationTalkCategoryCount {
   talks: Int!
 }
 
-input ApplicationTalkCategoryOrderByWithRelationInput {
+enum ApplicationTalkCategoryOrderByRelevanceFieldEnum {
+  name
+}
+
+input ApplicationTalkCategoryOrderByRelevanceInput {
+  fields: [ApplicationTalkCategoryOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ApplicationTalkCategoryOrderByRelevanceInput
   name: SortOrder
 }
 
@@ -122,8 +145,24 @@ type ApplicationTalkCount {
   presenters: Int!
 }
 
-input ApplicationTalkOrderByWithRelationInput {
-  category: ApplicationTalkCategoryOrderByWithRelationInput
+enum ApplicationTalkOrderByRelevanceFieldEnum {
+  descriptionEn
+  descriptionHr
+  language
+  titleEn
+  titleHr
+  uid
+}
+
+input ApplicationTalkOrderByRelevanceInput {
+  fields: [ApplicationTalkOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ApplicationTalkOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ApplicationTalkOrderByRelevanceInput
+  category: ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput
   descriptionEn: SortOrder
   descriptionHr: SortOrder
   language: SortOrder
@@ -168,7 +207,26 @@ type ApplicationWorkshopCount {
   presenters: Int!
 }
 
-input ApplicationWorkshopOrderByWithRelationInput {
+enum ApplicationWorkshopOrderByRelevanceFieldEnum {
+  descriptionEn
+  descriptionHr
+  goal
+  language
+  notesEn
+  notesHr
+  titleEn
+  titleHr
+  uid
+}
+
+input ApplicationWorkshopOrderByRelevanceInput {
+  fields: [ApplicationWorkshopOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ApplicationWorkshopOrderByRelevanceInput
   descriptionEn: SortOrder
   descriptionHr: SortOrder
   goal: SortOrder
@@ -284,7 +342,7 @@ type CompanyApplicationApproval {
   workshopParticipants: Int!
 }
 
-input CompanyApplicationApprovalOrderByWithRelationInput {
+input CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput {
   booth: SortOrder
   cocktail: SortOrder
   panel: SortOrder
@@ -344,17 +402,28 @@ input CompanyApplicationOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
-input CompanyApplicationOrderByWithRelationInput {
-  approval: CompanyApplicationApprovalOrderByWithRelationInput
+enum CompanyApplicationOrderByRelevanceFieldEnum {
+  booth
+}
+
+input CompanyApplicationOrderByRelevanceInput {
+  fields: [CompanyApplicationOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input CompanyApplicationOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: CompanyApplicationOrderByRelevanceInput
+  approval: CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput
   booth: SortOrder
-  cocktail: ApplicationCocktailOrderByWithRelationInput
-  forCompany: CompanyOrderByWithRelationInput
-  forSeason: SeasonOrderByWithRelationInput
+  cocktail: ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput
+  forCompany: CompanyOrderByWithRelationAndSearchRelevanceInput
+  forSeason: SeasonOrderByWithRelationAndSearchRelevanceInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
-  talk: ApplicationTalkOrderByWithRelationInput
+  talk: ApplicationTalkOrderByWithRelationAndSearchRelevanceInput
   wantsCocktail: SortOrder
   wantsPanel: SortOrder
-  workshop: ApplicationWorkshopOrderByWithRelationInput
+  workshop: ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput
 }
 
 enum CompanyApplicationScalarFieldEnum {
@@ -394,7 +463,25 @@ type CompanyCount {
   members: Int!
 }
 
-input CompanyOrderByWithRelationInput {
+enum CompanyOrderByRelevanceFieldEnum {
+  address
+  brandName
+  descriptionEn
+  descriptionHr
+  legalName
+  uid
+  vat
+  website
+}
+
+input CompanyOrderByRelevanceInput {
+  fields: [CompanyOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input CompanyOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: CompanyOrderByRelevanceInput
   address: SortOrder
   brandName: SortOrder
   descriptionEn: SortOrder
@@ -526,19 +613,36 @@ type File {
   size: Int!
   uid: String!
   updatedAt: DateTime!
+  url: String!
 }
 
 type FileCount {
   forCompany: Int!
   forPressRelease: Int!
+  forResume: Int!
 }
 
-input FileOrderByWithRelationInput {
+enum FileOrderByRelevanceFieldEnum {
+  etag
+  mimeType
+  minioKey
+  name
+  uid
+}
+
+input FileOrderByRelevanceInput {
+  fields: [FileOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input FileOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: FileOrderByRelevanceInput
   etag: SortOrder
   mimeType: SortOrder
   name: SortOrder
   size: SortOrder
-  uploader: UserOrderByWithRelationInput
+  uploader: UserOrderByWithRelationAndSearchRelevanceInput
 }
 
 input FileRelationFilter {
@@ -626,7 +730,18 @@ type IndustryCount {
   company: Int!
 }
 
-input IndustryOrderByWithRelationInput {
+enum IndustryOrderByRelevanceFieldEnum {
+  name
+}
+
+input IndustryOrderByRelevanceInput {
+  fields: [IndustryOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input IndustryOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: IndustryOrderByRelevanceInput
   name: SortOrder
 }
 
@@ -684,6 +799,7 @@ type Mutation {
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
+  updateResume(info: ResumeCreateInput!): ResumeCreateResponse
   updateSeason(info: SeasonUpdateInput!): Season
   updateTranslation(data: TranslationCreateInput!): Translation
   updateUser(info: UserUpdateInput!, uid: String!): UpdateProfileResponse
@@ -728,6 +844,7 @@ input NestedStringFilter {
   lte: String
   not: NestedStringFilter
   notIn: [String!]
+  search: String
   startsWith: String
 }
 
@@ -742,6 +859,7 @@ input NestedStringNullableFilter {
   lte: String
   not: NestedStringNullableFilter
   notIn: [String!]
+  search: String
   startsWith: String
 }
 
@@ -807,9 +925,21 @@ type PressRelease {
   updatedAt: DateTime!
 }
 
-input PressReleaseOrderByWithRelationInput {
-  creator: UserOrderByWithRelationInput
-  file: FileOrderByWithRelationInput
+enum PressReleaseOrderByRelevanceFieldEnum {
+  title
+  uid
+}
+
+input PressReleaseOrderByRelevanceInput {
+  fields: [PressReleaseOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input PressReleaseOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: PressReleaseOrderByRelevanceInput
+  creator: UserOrderByWithRelationAndSearchRelevanceInput
+  file: FileOrderByWithRelationAndSearchRelevanceInput
   published: SortOrder
   title: SortOrder
 }
@@ -850,35 +980,148 @@ type Query {
   approvedCompanyApplications: [CompanyApplicationApproval!]!
   booths: [Booth!]!
   calendar: [CalendarEvent!]!
-  companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
+  companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication
   companyApplicationFor(company: String!, season: String!): CompanyApplication
-  companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
+  companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   currentSeason: Season
-  findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
-  industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
+  findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
+  industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(lang: String!): [News!]!
   newsItem(slug: String!): News
-  participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
+  participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   partners(season: String): [Partner!]!
   pressRelease(uid: String!): PressRelease
-  pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
+  pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
-  roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
+  resumeInterests(index: Int, query: String!): SearchResponseStringArray!
+  resumeTechnologies(index: Int, query: String!): SearchResponseStringArray!
+  roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   season(uid: String!): Season
-  seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
+  seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
   sponsors(season: String): [Sponsor!]!
-  talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
+  talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
-  translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
+  translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
   user(uid: String!): User
-  users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
+  users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+type Resume {
+  _count: ResumeCount
+  city: String!
+  createdAt: DateTime!
+  cv: File
+  faculty: ResumeFaculty
+  interests: [String!]!
+  projects: [ResumeProject!]!
+  studyYears: [ResumeStudyYear!]!
+  technologies: [String!]!
+  uid: String!
+  updatedAt: DateTime!
+  user: User!
+  volunteerExperiences: [ResumeVolunteerExperience!]!
+  workExperiences: [ResumeWorkExperience!]!
+}
+
+type ResumeCount {
+  interests: Int!
+  projects: Int!
+  studyYears: Int!
+  technologies: Int!
+  volunteerExperiences: Int!
+  workExperiences: Int!
+}
+
+input ResumeCreateCvInput {
+  cv: Upload
+  keepOld: Boolean = true
+}
+
+input ResumeCreateInput {
+  city: String = ""
+  faculty: ResumeFacultyCreateInput
+  interests: [String!] = []
+  pdf: ResumeCreateCvInput
+  projects: [ResumeProjectCreateInput!] = []
+  studyYears: [ResumeStudyYearCreateInput!] = []
+  technologies: [String!] = []
+  volunteerExperiences: [ResumeVolunteerExperienceCreateInput!] = []
+  workExperiences: [ResumeWorkExperienceCreateInput!] = []
+}
+
+type ResumeCreateResponse {
+  entity: Resume
+  errors: [FieldError!]
+}
+
+type ResumeFaculty {
+  module: String!
+  name: String!
+  specialization: String!
+}
+
+input ResumeFacultyCreateInput {
+  module: String = ""
+  name: String = ""
+}
+
+type ResumeProject {
+  position: String!
+  project: String!
+  start: DateTime!
+  until: DateTime
+}
+
+input ResumeProjectCreateInput {
+  position: String = ""
+  project: String = ""
+  start: DateTime = "2022-05-03T07:24:18.576Z"
+  until: DateTime = null
+}
+
+type ResumeStudyYear {
+  studyType: String!
+  studyYear: Int!
+}
+
+input ResumeStudyYearCreateInput {
+  studyType: String = ""
+  studyYear: Float = 0
+}
+
+type ResumeVolunteerExperience {
+  organisation: String!
+  position: String!
+  start: DateTime!
+  until: DateTime
+}
+
+input ResumeVolunteerExperienceCreateInput {
+  organisation: String = ""
+  position: String = ""
+  start: DateTime = "2022-05-03T07:24:18.576Z"
+  until: DateTime = null
+}
+
+type ResumeWorkExperience {
+  company: String!
+  position: String!
+  start: DateTime!
+  until: DateTime
+}
+
+input ResumeWorkExperienceCreateInput {
+  company: String = ""
+  position: String = ""
+  start: DateTime = "2022-05-03T07:24:18.576Z"
+  until: DateTime = null
 }
 
 type Role {
@@ -892,7 +1135,18 @@ type RoleCount {
   users: Int!
 }
 
-input RoleOrderByWithRelationInput {
+enum RoleOrderByRelevanceFieldEnum {
+  name
+}
+
+input RoleOrderByRelevanceInput {
+  fields: [RoleOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input RoleOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: RoleOrderByRelevanceInput
   name: SortOrder
 }
 
@@ -912,6 +1166,11 @@ input RoleWhereInput {
 
 input RoleWhereUniqueInput {
   name: String
+}
+
+type SearchResponseStringArray {
+  entities: [String!]!
+  index: Float!
 }
 
 type Season {
@@ -951,7 +1210,19 @@ input SeasonCreateInput {
   startsAt: DateTime = null
 }
 
-input SeasonOrderByWithRelationInput {
+enum SeasonOrderByRelevanceFieldEnum {
+  name
+  uid
+}
+
+input SeasonOrderByRelevanceInput {
+  fields: [SeasonOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input SeasonOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: SeasonOrderByRelevanceInput
   applicationsFrom: SortOrder
   applicationsUntil: SortOrder
   companies: CompanyApplicationOrderByRelationAggregateInput
@@ -1082,6 +1353,7 @@ input StringFilter {
   mode: QueryMode
   not: NestedStringFilter
   notIn: [String!]
+  search: String
   startsWith: String
 }
 
@@ -1097,6 +1369,7 @@ input StringNullableFilter {
   mode: QueryMode
   not: NestedStringNullableFilter
   notIn: [String!]
+  search: String
   startsWith: String
 }
 
@@ -1139,7 +1412,20 @@ input TranslationKeyLanguageCompoundUniqueInput {
   language: String!
 }
 
-input TranslationOrderByWithRelationInput {
+enum TranslationOrderByRelevanceFieldEnum {
+  key
+  language
+  value
+}
+
+input TranslationOrderByRelevanceInput {
+  fields: [TranslationOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input TranslationOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: TranslationOrderByRelevanceInput
   key: SortOrder
   language: SortOrder
   value: SortOrder
@@ -1188,6 +1474,7 @@ type User {
   lastName: String!
   name: String!
   phone: String!
+  resume: Resume
   roles: [Role!]!
   uid: String!
   updatedAt: DateTime!
@@ -1210,7 +1497,23 @@ input UserCreateInput {
   phone: String!
 }
 
-input UserOrderByWithRelationInput {
+enum UserOrderByRelevanceFieldEnum {
+  email
+  firstName
+  lastName
+  password
+  phone
+  uid
+}
+
+input UserOrderByRelevanceInput {
+  fields: [UserOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input UserOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: UserOrderByRelevanceInput
   email: SortOrder
   firstName: SortOrder
   lastName: SortOrder
@@ -1240,6 +1543,7 @@ enum UserScalarFieldEnum {
   lastName
   password
   phone
+  resumeId
   uid
   updatedAt
 }

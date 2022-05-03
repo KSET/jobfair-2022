@@ -235,3 +235,15 @@ mutation AdminCreateCompanyApplication($company: String!, $season: String!, $inf
         }
     }
 }
+
+mutation UpdateResume($info: ResumeCreateInput!) {
+    updateResume(info: $info) {
+        errors {
+            field
+            message
+        }
+        entity {
+            uid
+        }
+    }
+}

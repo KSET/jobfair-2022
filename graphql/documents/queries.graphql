@@ -340,3 +340,47 @@ query CurrentCompanyApplication {
         ...frag_CompanyApplication
     }
 }
+
+query MyResume {
+    profile {
+        resume {
+            uid
+            updatedAt
+            city
+            cv {
+                url
+                name
+                mimeType
+            }
+            faculty {
+                name
+                module
+                specialization
+            }
+            interests
+            technologies
+            projects {
+                project
+                position
+                start
+                until
+            }
+            volunteerExperiences {
+                organisation
+                position
+                start
+                until
+            }
+            workExperiences {
+                company
+                position
+                start
+                until
+            }
+            studyYears {
+                studyType
+                studyYear
+            }
+        }
+    }
+}

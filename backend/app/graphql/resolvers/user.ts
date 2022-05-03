@@ -1,5 +1,6 @@
 import {
   User,
+  Resume,
   Company,
   FindManyUserArgs,
   Role as QRole,
@@ -8,6 +9,7 @@ import {
 import {
   Arg,
   Args,
+  Authorized,
   Ctx,
   Field,
   FieldResolver,
@@ -50,11 +52,19 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  Dict,
+  GQLField,
+  GQLResponse,
+} from "../../types/helpers";
+import {
   transformSelect as transformSelectCompanies,
 } from "./company";
 import {
   transformSelect as transformSelectRoles,
 } from "./role";
+import {
+  transformSelect as transformSelectResume,
+} from "./resume";
 
 @Resolver((_of) => User)
 export class UserFieldResolver {
@@ -77,6 +87,13 @@ export class UserFieldResolver {
   @Root() user: User,
   ) {
     return user.companies;
+  }
+
+  @FieldResolver((_type) => Resume, { nullable: true })
+  resume(
+    @Root() user: User,
+  ): GQLField<Resume, "nullable"> {
+    return user.resume;
   }
 }
 
@@ -102,6 +119,13 @@ export const transformSelect = transformSelectFor<UserFieldResolver>({
     select.lastName = true;
     delete select.name;
 
+    return select;
+  },
+
+  resume(select) {
+    select.resume = {
+      select: transformSelectResume(select.resume as Dict),
+    };
     return select;
   },
 });
@@ -161,15 +185,18 @@ export class UserInfoResolver {
 
 @Resolver((_of) => User)
 export class UserProfileResolver {
+  @Authorized()
   @Query(() => User, { nullable: true })
-  profile(@Ctx() ctx: Context) {
-    return ctx.user
-      ? {
-        ...ctx.user,
-        roles: ctx.user.roles.map((name) => ({ name })),
-      }
-      : null
-    ;
+  profile(
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+  ): GQLResponse<User, "nullable"> {
+    return ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.user!.id,
+      },
+      select: toSelect(info, transformSelect),
+    });
   }
 
   @Mutation(() => UpdateProfileResponse, { nullable: true })

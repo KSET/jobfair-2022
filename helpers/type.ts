@@ -9,3 +9,5 @@ export type WithoutSuffix<SuffixedKey, Suffix extends string> =
     ? Key
     : never
   ;
+
+export type Dict<Values = unknown, Keys extends (string | number | symbol) = string> = Record<Keys, Values>;

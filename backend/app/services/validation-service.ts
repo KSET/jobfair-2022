@@ -139,3 +139,78 @@ const companyApplicationApprovedValidation = z.object({
   panel: z.array(companyPresenterValidation),
 });
 export const CompanyApplicationApprovedValidation = <T>(application: T) => formatValidation(companyApplicationApprovedValidation, application);
+
+const resumeFacultyValidation = z.union([
+  z.object({
+    name: z.string().min(1),
+    specialization: z.optional(z.string()),
+    module: z.string().min(1),
+  }),
+  z.object({
+    name: z.string().length(0),
+    specialization: z.optional(z.string()),
+    module: z.string().length(0),
+  }),
+]);
+export const ResumeFacultyValidation = <T>(faculty: T) => formatValidation(resumeFacultyValidation, faculty);
+
+const resumeTechnologyValidation = z.object({
+  name: z.string().min(1),
+});
+export const ResumeTechnologyValidation = <T>(technology: T) => formatValidation(resumeTechnologyValidation, technology);
+
+const resumeInterestValidation = z.object({
+  name: z.string().min(1),
+});
+export const ResumeInterestValidation = <T>(technology: T) => formatValidation(resumeInterestValidation, technology);
+
+const resumeWorkExperienceValidation = z.object({
+  position: z.string().min(1),
+  company: z.string().min(1),
+  start: z.union([ z.date(), z.string() ]),
+  until: z.union([ z.date(), z.string().min(1), z.null() ]),
+});
+export const ResumeWorkExperienceValidation = <T>(workExperience: T) => formatValidation(resumeWorkExperienceValidation, workExperience);
+
+const resumeProjectValidation = z.object({
+  position: z.string().min(1),
+  project: z.string().min(1),
+  start: z.union([ z.date(), z.string() ]),
+  until: z.union([ z.date(), z.string().min(1), z.null() ]),
+});
+export const ResumeProjectValidation = <T>(workExperience: T) => formatValidation(resumeProjectValidation, workExperience);
+
+const resumeVolunteerExperienceValidation = z.object({
+  position: z.string().min(1),
+  organisation: z.string().min(1),
+  start: z.union([ z.date(), z.string() ]),
+  until: z.union([ z.date(), z.string().min(1), z.null() ]),
+});
+export const ResumeVolunteerExperienceValidation = <T>(workExperience: T) => formatValidation(resumeVolunteerExperienceValidation, workExperience);
+
+const resumeCvValidation = z.object({
+  cv: z.any(),
+});
+export const ResumeCvValidation = <T>(cv: T) => formatValidation(resumeCvValidation, cv);
+
+const resumeStudyYearsValidation = z.object({
+  studyYear: z.number().gte(0).lte(6),
+  studyType: z.string().min(1),
+});
+export const ResumeStudyYearsValidation = <T>(cv: T) => formatValidation(resumeStudyYearsValidation, cv);
+
+const resumeValidation = z.object({
+  pdf: z.optional(resumeCvValidation),
+  studyYears: z.array(resumeStudyYearsValidation),
+  faculty: resumeFacultyValidation,
+  workExperiences: z.array(resumeWorkExperienceValidation),
+  projects: z.array(resumeProjectValidation),
+  volunteerExperiences: z.array(resumeVolunteerExperienceValidation),
+  technologies: z.array(z.string().min(1)),
+  interests: z.array(z.string().min(1)),
+  city: z.union([
+    z.string().min(1),
+    z.string().length(0),
+  ]),
+});
+export const ResumeValidation = <T>(resume: T) => formatValidation(resumeValidation, resume);

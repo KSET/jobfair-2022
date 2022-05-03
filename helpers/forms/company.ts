@@ -18,6 +18,7 @@ type Company = Omit<ICompany,
   "_count"
   | "industryId"
   | "members"
+  | "program"
   | "createdAt"
   | "updatedAt"
   | "uid"> & {

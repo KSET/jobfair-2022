@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
+  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
 }
 
 generator typegraphql {
@@ -44,6 +44,11 @@ model User {
   pressReleases PressRelease[]
   /// @TypeGraphQL.omit(output: true, input: true)
   images        Image[]
+
+  /// @TypeGraphQL.omit(input: true)
+  resume   Resume? @relation(fields: [resumeId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumeId Int?    @unique
 }
 
 model Translation {
@@ -174,6 +179,8 @@ model File {
   forPressRelease PressRelease[]
   /// @TypeGraphQL.omit(output: true, input: true)
   forCompany      Company[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume       Resume[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   uploaderId Int
@@ -433,4 +440,131 @@ model ApplicationWorkshop {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplicationId Int @unique
+}
+
+model Resume {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int      @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid       String   @unique @default(cuid())
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  faculty   ResumeFaculty @relation(fields: [facultyId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  facultyId Int           @unique
+
+  technologies ResumeTechnology[]
+
+  interests ResumeInterest[]
+
+  studyYears ResumeStudyYear[]
+
+  city String
+
+  workExperiences ResumeWorkExperience[]
+
+  projects ResumeProject[]
+
+  volunteerExperiences ResumeVolunteerExperience[]
+
+  /// @TypeGraphQL.omit(input: true)
+  cv   File? @relation(fields: [cvId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  cvId Int?
+
+  /// @TypeGraphQL.omit(input: true)
+  user User?
+}
+
+model ResumeFaculty {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id             Int    @id @default(autoincrement())
+  name           String
+  specialization String @default("")
+  module         String @default("")
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume Resume?
+}
+
+model ResumeTechnology {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumes Resume[]
+}
+
+model ResumeInterest {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumes Resume[]
+}
+
+model ResumeWorkExperience {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  position String
+  company  String
+
+  start DateTime @db.Date
+  until DateTime? @db.Date
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResumeId Int
+}
+
+model ResumeProject {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  position String
+  project  String
+
+  start DateTime @db.Date
+  until DateTime? @db.Date
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResumeId Int
+}
+
+model ResumeVolunteerExperience {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  position     String
+  organisation String
+
+  start DateTime @db.Date
+  until DateTime? @db.Date
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResumeId Int
+}
+
+model ResumeStudyYear {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  studyType String
+  studyYear Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResumeId Int
 }

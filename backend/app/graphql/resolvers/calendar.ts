@@ -22,6 +22,9 @@ class CalendarEvent {
     text: string = "";
 
   @Field()
+    location: string = "";
+
+  @Field()
     class: string = "";
 
   @Field()
@@ -384,6 +387,7 @@ const events = [
   end: toIsoDate(event.end),
   text: (event as unknown as { text: string | undefined, }).text ?? "",
   noGroup: (event as { noGroup: true | undefined, }).noGroup ?? false,
+  location: (event as unknown as { location: string | undefined, }).location ?? "",
 }));
 
 export class CalendarMockResolver {

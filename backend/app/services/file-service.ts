@@ -11,7 +11,7 @@ import {
   tap,
 } from "rambdax";
 import {
-  prisma,
+  prisma as prismaClient,
 } from "../providers/prisma";
 import {
   BUCKET_NAME,
@@ -24,7 +24,12 @@ import {
 export type MinioBase = Opaque<string, "MinioBase">;
 
 export class FileService {
-  public static async uploadFile(base: MinioBase, fileInfo: FileUpload, user: User) {
+  public static async uploadFile(
+    base: MinioBase,
+    fileInfo: FileUpload,
+    user: User,
+    prisma: Pick<typeof prismaClient, "file"> = prismaClient,
+  ) {
     try {
       const minioBase = (base.endsWith("/") ? base : `${ base }/`).replace(/\/+$/g, "/").replace(/^\/*/g, "");
       const minioKey = `${ minioBase }${ Date.now().toString(36) }.${ process.hrtime.bigint().toString(36) }.${ fileInfo.filename }`;

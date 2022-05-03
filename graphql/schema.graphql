@@ -287,6 +287,7 @@ type Booth {
 type CalendarEvent {
   class: String!
   end: DateTime!
+  location: String!
   noGroup: Boolean!
   start: DateTime!
   text: String!
@@ -1082,7 +1083,7 @@ type ResumeProject {
 input ResumeProjectCreateInput {
   position: String = ""
   project: String = ""
-  start: DateTime = "2022-05-03T07:24:18.576Z"
+  start: DateTime = "2022-05-03T17:26:50.810Z"
   until: DateTime = null
 }
 
@@ -1106,7 +1107,7 @@ type ResumeVolunteerExperience {
 input ResumeVolunteerExperienceCreateInput {
   organisation: String = ""
   position: String = ""
-  start: DateTime = "2022-05-03T07:24:18.576Z"
+  start: DateTime = "2022-05-03T17:26:50.810Z"
   until: DateTime = null
 }
 
@@ -1120,7 +1121,7 @@ type ResumeWorkExperience {
 input ResumeWorkExperienceCreateInput {
   company: String = ""
   position: String = ""
-  start: DateTime = "2022-05-03T07:24:18.576Z"
+  start: DateTime = "2022-05-03T17:26:50.810Z"
   until: DateTime = null
 }
 

@@ -258,6 +258,7 @@
               end
               class
               noGroup
+              location
             }
           }
         `,

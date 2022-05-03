@@ -12,6 +12,7 @@
         :disable-views="['years', 'year', 'month', 'day']"
         :events="events"
         :hide-weekdays="unusedDays"
+        :selected-date="events[0].start"
         :split-days="splitDays"
         :time-from="(minHours - (timeStepMinutes / 60)) * 60"
         :time-step="timeStepMinutes"
@@ -21,7 +22,6 @@
         hide-title-bar
         hide-view-selector
         hide-weekends
-        :selected-date="events[0].start"
       >
         <template #event="{ event, isLastDay }">
           <dropdown-menu
@@ -125,6 +125,7 @@
           :disable-views="['years', 'year', 'month', 'day']"
           :events="events"
           :hide-weekdays="[ ...unusedDays, day ]"
+          :selected-date="events[0].start"
           :split-days="splitDays"
           :time-from="(minHours - (timeStepMinutes / 60)) * 60"
           :time-step="timeStepMinutes"
@@ -134,7 +135,6 @@
           hide-title-bar
           hide-view-selector
           hide-weekends
-          :selected-date="events[0].start"
         >
           <template #event="{ event }">
             <div
@@ -510,6 +510,10 @@
         background-repeat: no-repeat;
         background-position: bottom;
         background-size: contain;
+
+        @include media(md) {
+          display: none;
+        }
       }
 
       .eventTitle {

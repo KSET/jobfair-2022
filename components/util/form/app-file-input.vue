@@ -70,6 +70,13 @@
         />
         <translated-text trans-key="form.file.uploadFile" />
       </span>
+      <span
+        v-if="visible.clearButton"
+        :class="$style.clearButton"
+        @click.prevent.capture="clearInput"
+      >
+        <i class="pi pi-times" />
+      </span>
     </label>
     <input
       :id="id.input"
@@ -218,6 +225,12 @@
         type: Boolean,
         default: () => false,
       },
+
+      clearable: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
     },
 
     emits: [ "update:modelValue" ],
@@ -351,6 +364,7 @@
         visible: reactive({
           label: computed(() => Boolean(props.label || props.labelKey || slotExists.label.value)),
           message: computed(() => slotExists.message.value),
+          clearButton: computed(() => props.clearable && (Array.isArray(unref(modelValue)) ? 0 < (unref(modelValue) as unknown as unknown[]).length : Boolean(unref(modelValue)))),
         }),
         labelTranslated: ref(""),
         elseNull,
@@ -367,6 +381,11 @@
         handleDrop(event: DragEvent) {
           isDragOver.value = false;
           handleInputChange(event.dataTransfer?.files);
+
+          return false;
+        },
+        clearInput() {
+          handleInputChange(null);
 
           return false;
         },
@@ -506,6 +525,27 @@
         transition-duration: .5s;
         transition-property: transform;
         transform: none;
+      }
+
+      .clearButton {
+        position: absolute;
+        top: .5em;
+        right: .5em;
+        display: flex;
+        padding: .75em;
+        transition-property: background-color;
+        color: $fer-black;
+        border-radius: 100%;
+        background-color: transparent;
+
+        &:hover {
+          background-color: #{color.adjust($fer-black, $alpha: -.9125)};
+        }
+
+        > i {
+          margin-right: -1px;
+          margin-bottom: -1px;
+        }
       }
     }
 

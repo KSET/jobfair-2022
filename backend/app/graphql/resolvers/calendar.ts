@@ -51,7 +51,7 @@ const talks1 = [
   {
     start: "2022-05-11 11:30",
     end: "2022-05-11 12:00",
-    title: "Končar",
+    title: "KONČAR",
     class: "talk",
   },
 
@@ -130,7 +130,7 @@ const talks2 = [
   {
     start: "2022-05-12 11:30",
     end: "2022-05-12 12:00",
-    title: "Arsfutura",
+    title: "Ars Futura",
     class: "talk",
   },
 
@@ -224,7 +224,7 @@ const workshops1 = [
   {
     start: "2022-05-11 13:00",
     end: "2022-05-11 15:00",
-    title: "Alfatec",
+    title: "ALFATEC",
     class: "workshop",
     location: "FER - A301",
   },
@@ -239,7 +239,7 @@ const workshops1 = [
   {
     start: "2022-05-11 10:00",
     end: "2022-05-11 12:00",
-    title: "TrueNorth",
+    title: "True North",
     class: "workshop",
     location: "FER - Bijela",
   },
@@ -298,7 +298,7 @@ const workshops2 = [
   {
     start: "2022-05-12 16:00",
     end: "2022-05-12 18:00",
-    title: "Arsfutura",
+    title: "Ars Futura",
     class: "workshop",
     location: "FER - SPOCK",
   },

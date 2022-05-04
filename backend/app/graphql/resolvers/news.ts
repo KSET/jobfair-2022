@@ -688,6 +688,135 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+  {
+    lang: "hr_HR",
+    date: new Date("05-04-2022"),
+    image: "/tmp/blog5.png",
+    title: "Poznat raspored za 15. Job Fair!",
+    description: "Posjetitelje 15. Job Faira unutar dva dana očekuje 134 poduzeća, 25 talkova, 16 radionica, panel rasprava i Hot talk.",
+    content: `
+          <p>
+            Sajam poslova Job Fair uspješno nastavlja svoju tradiciju kao žarišna točka sastajališta vrhunskih studenata i najzanimljivijih domaćih te inozemnih tehnoloških poduzeća.
+            Ove godine, uz štandove, <strong>11. i 12. svibnja na pozornici u SD Martinovka</strong> predstavnici poduzeća će održati 25 talkova na kojima će zainteresiranim studentima predstavit svoje projekte,
+            tehnologije i znanja stečena kroz dugogodišnji rad u različitim industrijama. Istovremeno na Fakultetu elektrotehnike i računarstva će se održati 16 radionica. 
+          </p>
+          
+          <h1>Prvi dan obilježit će umrežavanje i zabava</h1>
+          
+          <p>
+            Prvi dan 15. Job Faira će započeti u 10 sati u dvoranama A201, A301 te u Bijeloj vijećnici na FER-u s poduzećima TrueNorth, Agency04 i dSPACEom koja će održati svoje radionice. Paralelno u SD Martinovka program započinje u 1o sati gdje će nas dočekati talkovi poduzeća: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks te panel rasprava, s početkom u 14 sati, na temu kako AI utječe na naše društvo.
+          </p>
+          
+          <p>
+            Stručnjaci iz Gideona, OptimoRoutea, RealNetworksa i studentica FER-a Lucija Arambašić će odgovoriti na pitanja: zašto nam je život lakši uz umjetnu inteligenciju, koje su loše strane masovne primjene umjetne inteligencije te ima li razloga za brigu.
+          </p>
+          
+          <p>
+            Nakon panel rasprave uslijedit će talkovi Ingenmarka, A1, Trikodera, Microblinka, DECODE-a te Infobipa. Dan ćemo zaokružiti u neformalnom okruženju na Loosen Up Partiju u KSET-u uz razne zabavne igre i besplatne koktele.
+          </p>
+          
+          <h1>Drugi dan začinit će se ljutim razgovorima</h1>
+          
+          <p>
+            Drugi dan započinjemo u 10 sati s radionicama koje će voditi predstavnici poduzeća Končar i Comsysto Replya u Bijeloj vijećnici i u SPOCK-u na FER-u. Istovremeno, u SD Martinovka će započeti prvi blok talkova gdje nas očekuju mStart, INETEC, Gideon, Arsfutura, Poslovna inteligencija i FIVE.
+          </p>
+          
+          <p>
+            U 13 sati započinje Hot Talk, neformalni intervju uz vruća pitanja i još ljuće umake. U pohod na titulu prvaka Hot Talka na pozornicu će stupiti <strong>Luka Drezga, Chief Operating Officer Ars Future</strong>.
+          </p>
+          
+          <p>
+            U trenutku dok će se Luka znojiti na pozornici, na FER-u će se održavati drugi blok radionica koje uključuju ByteLab i Undabot. Nakon Hot Talka, program u SD Martinovka ćemo nastaviti s nizom talkova koje će održati predstavnici iz Xylona, Spana, Deglooa, minus5, Photomatha te Rimac Automobila. 
+          </p>
+          
+          <p>
+            Dan ćemo zatvoriti s radionicama koje će se održati u A201 dvorani, SPOCK-u te u Bijeloj vijećnici na FER-u, a održat će ih predstavnici iz poduzeća Televend by Intis, Arsfutura i Ericsson Nikola Tesla. 
+          </p>
+          
+          <p>
+            Svi zaineresirani za sudjelovanje trebaju se prijaviti na Job Fair <a href="/profile/me/cv">ispunjavanjem baze životopisa</a> i tako rezervirati svoje mjesto.
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-04-2022"),
+    image: "/tmp/blog5.png",
+    title: "Schedule for the 15th Job Fair finally released!",
+    description: "Visitors of the 15th Job Fair can expect 134 companies, 25 talks, 16 workshops, a panel talk and a Hot talk during two days of the Fair.",
+    content: `
+          <p>
+            The Job Fair successfully continues its tradition as a meeting hotspot for top students and the most interesting local and foreign tech companies. This year, in addition to booths, the Fair will host 25 talks on the 11th and 12th of May on the main stage at Matrinovka Sports Hall where company representatives will present projects, new technologies and knowledge gathered through years of experience in different industries to interested students. At the same time, 16 workshops will take place in the classrooms of the Faculty of Electrical Engineering and Computing (FER).
+          </p>
+          
+          <h1>Networking and fun mark the first day</h1>
+
+          <p>
+            The first day of the Job Fair starts at 10.00 in A201, A301 and the White Hall (Bijela vijećnica) at the Faculty of Electrical Engineering and Computing with workshops by TrueNorth, Agency04 and dSPACE.
+          </p>
+          
+          <p>
+            At the same time, at 10.00, the program at Martinovka Sports Hall starts with talks by: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks and a panel talk at 14.00 about how AI is impacting society.
+          </p>
+          
+          <p>
+            Experts from Gideon, OptimoRoute and RealNetworks, and Lucija Arambašić, student at FER, will answer questions such as why life is easier with AI , what the bad sides of mass-application AI are and if there are reasons to worry. 
+          </p>
+          
+          <p>
+            After the panel talk, talks by Ingemark, A1, Trikoder, Microblink, DECODE and Infobip will ensue. 
+          </p>
+          
+          <p>
+            The day will come to an end on an informal note with the Loosen Up Party at KSET with loads of fun games and free cocktails.
+          </p>
+          
+          <h1>Hot talks for a spicy second day</h1>
+          
+          <p>
+            The second day begins at 10.00 with workshops by Končar and Comsysto Reply in the White Hall (Bijela vijećnica) and SPOCK and FER. At the same time, the first block of talks at Martinovka Sport Hall starts with mStart, INETEC, Gideon, Ars Futura, Poslovna inteligencija and FIVE. 
+          </p>
+          
+          <p>
+            The Hot Talk, an informal interview with spicy questions and even spicier sauces, starts at 13. Rushing for the crown of the Hot Talk, <strong>Luka Drezga, Chief Operating Officer at Ars Futura</strong> will take the stage. 
+          </p>
+          
+          <p>
+            While Luka is sweating on the stage, the second block of talks by ByteLab and Undabot will take place at FER.
+          </p>
+          
+          <p>
+            After the Hot Talk, the program at Martinovka Sports Hall continues with a series of talks by Xylon, Span, Degloo, minus5, Photomath and Rimac Automobili.
+          </p>
+          
+          <p>
+            Thuday finishes off with workshops by Televend by Intis, Ars Futura and Ericsson Nikola Tesla in A201, SPOCK and the White Hall (Bijela vijećnica) at FER.
+          </p>
+          
+          <p>
+            People interested in participating should apply to Job Fair by <a href="/profile/me/cv">filling out the participation form CV</a> and thus reserving their place.
+          </p>
+          
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

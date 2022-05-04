@@ -265,6 +265,8 @@
       const previewSrc = ref("");
       const previewName = ref("");
       const setPreviewSrc = (name: string, mimetype: string, file: File | string) => {
+        clearPreviewSrc();
+
         previewName.value = name;
 
         const supportsImageType = (type: string) => {
@@ -274,8 +276,6 @@
             return false;
           }
         };
-
-        clearPreviewSrc();
 
         if (supportsImageType(mimetype.toLowerCase())) {
           previewSrc.value =

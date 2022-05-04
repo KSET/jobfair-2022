@@ -90,6 +90,18 @@ label {
   animation: p-component-overlay-leave-animation 150ms forwards;
 }
 
+@keyframes spin {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
 @keyframes p-component-overlay-enter-animation {
 
   from {

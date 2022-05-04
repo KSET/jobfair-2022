@@ -487,4 +487,61 @@ export class ResumeModifyResolver {
       entity: newResume,
     };
   }
+
+  @Mutation(() => Boolean)
+  @Authorized()
+  deleteResume(
+    @Ctx() ctx: Context,
+  ): GQLResponse<boolean> {
+    const user = ctx.user!;
+
+    return ctx.prisma.$transaction(async (prisma) => {
+      const oldResume = await prisma.resume.findFirst({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+        select: {
+          id: true,
+          cv: {
+            select: {
+              id: true,
+              minioKey: true,
+            },
+          },
+        },
+      });
+
+      if (!oldResume) {
+        return true;
+      }
+
+      const deleted = await prisma.resume.delete({
+        where: {
+          id: oldResume.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!deleted) {
+        throw new Error("Failed to delete resume");
+      }
+
+      if (oldResume.cv) {
+        await Promise.all([
+          prisma.file.delete({
+            where: {
+              id: oldResume.cv.id,
+            },
+          }),
+          FileService.deleteFile(oldResume.cv.minioKey, user),
+        ]).then(() => true).catch(() => false);
+      }
+
+      return true;
+    }).catch(() => false);
+  }
 }

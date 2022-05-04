@@ -784,6 +784,7 @@ type Mutation {
   createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
   createTalkCategory(name: String!): ApplicationTalkCategory
   deletePartner(partner: String!): Boolean!
+  deleteResume: Boolean!
   deleteSeason(uid: String!): Season
   deleteSponsor(sponsor: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse

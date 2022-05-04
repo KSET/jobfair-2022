@@ -120,10 +120,22 @@
         </template>
       </div>
 
-      <div class="text-right mt-3">
+      <div class="mt-3 flex">
+        <p-button
+          v-if="resume"
+          :loading="isLoading"
+          class="p-button-danger"
+          @click.prevent="handleDelete"
+        >
+          <i class="pi pi-trash p-button-icon p-button-icon-left" />
+          <span class="p-button-label">
+            <translated-text trans-key="form.delete" />
+          </span>
+        </p-button>
+
         <p-button
           :loading="isLoading"
-          class="p-button-secondary font-bold"
+          class="p-button-secondary font-bold ml-auto"
           type="submit"
         >
           <translated-text trans-key="form.save" />
@@ -563,6 +575,30 @@
         },
         removeAutocompleted(name: Autocompetable, selection: string) {
           infoFor[name].selected.delete(selection);
+        },
+        async handleDelete() {
+          if (!confirm("Delete?")) {
+            return;
+          }
+
+          isLoading.value = true;
+          const success = await useMutation<{ deleteResume: boolean, }, never>(gql`
+          mutation DeleteResume {
+            deleteResume
+          }
+          `)().then((resp) => resp?.data?.deleteResume ?? false);
+          isLoading.value = false;
+
+          if (success) {
+            return window.location.reload();
+          }
+
+          toast.add({
+            severity: "error",
+            summary: "Something went wrong",
+            closable: true,
+            life: 3000,
+          });
         },
       };
     },

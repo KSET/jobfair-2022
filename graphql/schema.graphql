@@ -1047,7 +1047,7 @@ input ResumeCreateCvInput {
 
 input ResumeCreateInput {
   city: String = ""
-  faculty: ResumeFacultyCreateInput
+  faculty: ResumeFacultyCreateInput!
   interests: [String!] = []
   pdf: ResumeCreateCvInput
   projects: [ResumeProjectCreateInput!] = []

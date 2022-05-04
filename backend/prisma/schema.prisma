@@ -452,9 +452,7 @@ model Resume {
   /// @TypeGraphQL.omit(input: true)
   updatedAt DateTime @updatedAt
 
-  faculty   ResumeFaculty @relation(fields: [facultyId], references: [id])
-  /// @TypeGraphQL.omit(output: true, input: true)
-  facultyId Int           @unique
+  faculty   ResumeFaculty?
 
   technologies ResumeTechnology[]
 
@@ -487,7 +485,9 @@ model ResumeFaculty {
   module         String @default("")
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forResume Resume?
+  forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forResumeId Int    @unique
 }
 
 model ResumeTechnology {
@@ -515,11 +515,11 @@ model ResumeWorkExperience {
   position String
   company  String
 
-  start DateTime @db.Date
+  start DateTime  @db.Date
   until DateTime? @db.Date
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forResumeId Int
 }
@@ -531,11 +531,11 @@ model ResumeProject {
   position String
   project  String
 
-  start DateTime @db.Date
+  start DateTime  @db.Date
   until DateTime? @db.Date
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forResumeId Int
 }
@@ -547,11 +547,11 @@ model ResumeVolunteerExperience {
   position     String
   organisation String
 
-  start DateTime @db.Date
+  start DateTime  @db.Date
   until DateTime? @db.Date
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forResumeId Int
 }
@@ -564,7 +564,7 @@ model ResumeStudyYear {
   studyYear Int
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forResume   Resume @relation(fields: [forResumeId], references: [id])
+  forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forResumeId Int
 }

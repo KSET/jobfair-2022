@@ -207,7 +207,7 @@ class ResumeCreateInput {
   @Field(() => [ ResumeStudyYearCreateInput ])
     studyYears: ResumeStudyYearCreateInput[] = [];
 
-  @Field(() => ResumeFacultyCreateInput, { nullable: true })
+  @Field(() => ResumeFacultyCreateInput)
     faculty?: ResumeFacultyCreateInput;
 
   @Field(() => [ ResumeWorkExperienceCreateInput ])

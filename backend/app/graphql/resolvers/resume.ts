@@ -282,6 +282,8 @@ export class ResumeModifyResolver {
           workExperiences: onlyId,
           projects: onlyId,
           volunteerExperiences: onlyId,
+          technologies: onlyId,
+          interests: onlyId,
           cv: {
             select: {
               id: true,
@@ -383,6 +385,11 @@ export class ResumeModifyResolver {
             },
           },
           technologies: {
+            deleteMany: {
+              id: {
+                in: oldResume.technologies.map((x) => x.id),
+              },
+            },
             connectOrCreate: info.technologies.map((name) => ({
               where: {
                 name,
@@ -393,6 +400,11 @@ export class ResumeModifyResolver {
             })),
           },
           interests: {
+            deleteMany: {
+              id: {
+                in: oldResume.interests.map((x) => x.id),
+              },
+            },
             connectOrCreate: info.interests.map((name) => ({
               where: {
                 name,

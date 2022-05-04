@@ -16,6 +16,12 @@
     useUserStore,
   } from "~/store/user";
   import PageNotFound from "~/components/page-not-found.vue";
+  import {
+    onBeforeMount,
+    unref,
+    useRouter,
+  } from "#imports";
+  import useJoinNowRoute from "~/composables/useJoinNowRoute";
 
   export default defineComponent({
     name: "PageProfileHandler",
@@ -25,9 +31,19 @@
     },
 
     setup() {
+      const router = useRouter();
       const userStore = useUserStore();
+      const joinNowRoute = useJoinNowRoute();
 
       const isLoggedIn = computed(() => userStore.isLoggedIn);
+
+      onBeforeMount(() => {
+        if (unref(isLoggedIn)) {
+          return;
+        }
+
+        return router.push(unref(joinNowRoute));
+      });
 
       return {
         isLoggedIn,

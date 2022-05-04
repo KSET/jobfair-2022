@@ -129,7 +129,7 @@ type MutationExecutionOptions = {
 export function useMutation<TData, TVars extends object>(query: Operation<TVars>["query"], opts?: Partial<MutationExecutionOptions>) {
   return (
     (
-      variables: QueryCompositeOptions<TVars>["variables"],
+      variables?: QueryCompositeOptions<TVars>["variables"],
     ) =>
       doMutation<TData, TVars>(
         unref(query),

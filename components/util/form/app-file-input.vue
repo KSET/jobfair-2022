@@ -43,9 +43,11 @@
       >
         <icon-file-generic
           v-if="previewSrc === 'file'"
+          :aria-label="previewName"
         />
         <icon-file-archive
           v-else-if="previewSrc === 'archive'"
+          :aria-label="previewName"
         />
         <app-img
           v-else

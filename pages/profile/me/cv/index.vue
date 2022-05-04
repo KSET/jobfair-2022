@@ -334,7 +334,7 @@
                   }
                 `,
                 variables: {
-                  query: (items[FormFor.Interests].fields as Dict<Dict>).name.value as string,
+                  query: String((items[FormFor.Interests].fields as Dict<Dict>).name.value || "").trim(),
                   index,
                 },
               })().then((resp) => resp?.data?.resumeInterests)
@@ -355,7 +355,7 @@
                   }
                 `,
                 variables: {
-                  query: (items[FormFor.Technologies].fields as Dict<Dict>).name.value as string,
+                  query: String((items[FormFor.Technologies].fields as Dict<Dict>).name.value || "").trim(),
                   index,
                 },
               })().then((resp) => resp?.data?.resumeTechnologies)

@@ -37,20 +37,10 @@ export class ResumeTechnologyResolver {
   ): GQLResponse<SearchResponseStringArray> {
     const results = await ctx.prisma.resumeTechnology.findMany({
       where: {
-        OR: [
-          {
-            name: {
-              search: query,
-              mode: "insensitive",
-            },
-          },
-          {
-            name: {
-              contains: query,
-              mode: "insensitive",
-            },
-          },
-        ],
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
       },
       select: {
         name: true,

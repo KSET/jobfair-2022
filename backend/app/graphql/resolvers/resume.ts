@@ -293,10 +293,29 @@ export class ResumeModifyResolver {
         },
       });
 
+      const newCvFile =
+        // eslint-disable-next-line no-nested-ternary
+        info.pdf?.cv
+          ? await FileService.uploadFile(
+            `user/${ user.id }/resume` as MinioBase,
+            await info.pdf.cv,
+            user,
+            prisma,
+          )
+          : (info.pdf?.keepOld ? oldResume?.cv : null)
+      ;
 
       if (!oldResume) {
         return prisma.resume.create({
           data: {
+            cv:
+              newCvFile
+                ? {
+                  connect: {
+                    id: newCvFile.id,
+                  },
+                }
+                : undefined,
             faculty: {
               create: info.faculty,
             },
@@ -350,18 +369,6 @@ export class ResumeModifyResolver {
           select: resumeSelect,
         });
       }
-
-      const newCvFile =
-        // eslint-disable-next-line no-nested-ternary
-        info.pdf?.cv
-          ? await FileService.uploadFile(
-            `user/${ user.id }/resume` as MinioBase,
-            await info.pdf.cv,
-            user,
-            prisma,
-          )
-          : (info.pdf?.keepOld ? oldResume?.cv : null)
-      ;
 
       const newResume = await prisma.resume.update({
         where: {

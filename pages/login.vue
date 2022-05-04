@@ -52,7 +52,7 @@
         </p-button>
         <div :class="$style.registerText">
           <translated-text trans-key="login.no-account" />
-          <nuxt-link :to="{ name: 'register' }">
+          <nuxt-link :to="{ name: 'register', query: { r: redirectInfo, }, }">
             <translated-text trans-key="login.register" />
           </nuxt-link>
         </div>
@@ -85,6 +85,9 @@
   import {
     decodeRedirectParam,
   } from "~/helpers/url";
+  import {
+    computed,
+  } from "#imports";
 
   export default defineComponent({
     name: "PageLogin",
@@ -121,6 +124,7 @@
         info,
         errors,
         isLoading,
+        redirectInfo: computed(() => route.query?.r || ""),
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;

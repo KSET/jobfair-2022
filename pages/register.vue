@@ -182,6 +182,12 @@
   import {
     useUserStore,
   } from "~/store/user";
+  import {
+    decodeRedirectParam,
+  } from "~/helpers/url";
+  import {
+    useRoute,
+  } from "#imports";
 
   export default defineComponent({
     name: "PageRegister",
@@ -195,6 +201,7 @@
     setup() {
       useTitle("register.header");
 
+      const route = useRoute();
       const router = useRouter();
       const userStore = useUserStore();
 
@@ -240,7 +247,12 @@
           const errorList = resp.errors;
 
           if (!errorList) {
-            await router.push("/");
+            const redirectInfo = route.query?.r;
+            if (redirectInfo && "string" === typeof redirectInfo) {
+              await router.push(decodeRedirectParam(redirectInfo) || "/");
+            } else {
+              await router.push("/");
+            }
 
             await nextTick();
             window.location.reload();

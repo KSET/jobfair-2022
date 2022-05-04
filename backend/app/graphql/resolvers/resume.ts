@@ -361,8 +361,6 @@ export class ResumeModifyResolver {
           : (info.pdf?.keepOld ? oldResume?.cv : null)
       ;
 
-      console.log(newCvFile);
-
       const newResume = await prisma.resume.update({
         where: {
           id: oldResume.id,

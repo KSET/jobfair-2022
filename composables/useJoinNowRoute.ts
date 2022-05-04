@@ -11,6 +11,7 @@ import {
 export default function() {
   return computed(() => {
     const $route = useRoute();
+    const redirectInfo = $route.query.r;
     const fallbackRouteName = "index";
 
     const routeName = String($route.name ?? fallbackRouteName);
@@ -18,7 +19,7 @@ export default function() {
     return {
       name: "login",
       query: {
-        r: encodeRedirectParam({
+        r: redirectInfo ?? encodeRedirectParam({
           name: "login" !== routeName ? routeName : fallbackRouteName,
           params: $route.params,
         }),

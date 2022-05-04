@@ -49,7 +49,10 @@ export class ResumeInterestResolver {
     });
 
     const names = results.map((result) => result.name);
-    names.push(query);
+
+    if (query) {
+      names.push(query);
+    }
 
     return ({
       index,

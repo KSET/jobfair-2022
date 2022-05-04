@@ -690,9 +690,18 @@
       }
 
       .autocompleteChips {
-        display: flex;
-        justify-content: center;
-        gap: .5rem;
+        $gap: .5rem;
+
+        margin-top: calc(-1 * #{$gap});
+        text-align: center;
+
+        > * {
+          margin-top: $gap;
+        }
+
+        > * + * {
+          margin-left: $gap;
+        }
       }
     }
   }

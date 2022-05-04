@@ -45,6 +45,7 @@ export class ResumeInterestResolver {
       select: {
         name: true,
       },
+      take: 10,
     });
 
     const names = results.map((result) => result.name);

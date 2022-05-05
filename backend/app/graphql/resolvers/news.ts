@@ -817,6 +817,91 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-05-2022"),
+    image: "/tmp/blog6.png",
+    title: "Prijave studenata za 15. Job Fair su otvorene!",
+    description: "Ispuni bazu životopisa i upoznaj se s predstavnicima preko 130 različitih poduzeća!",
+    content: `
+          <p>
+            Prijave za 15. Job Fair službeno su otvorene! Osiguraj svoj ulaz u SD Martinovka gdje će od <strong>11. do 12. svibnja 2022.</strong> godine cirkulirati
+            preko <strong>130 tehnoloških poduzeća</strong>. Upoznaj njihove predstavnike u opuštenoj atmosferi na <strong>štandovima</strong>, poslušaj njihove <strong><em>talkove</em></strong>
+            i <strong>panel raspravu</strong> koji se odvijajaju na pozornici u sredini Martinovke, posjeti njihove <strong>radionice</strong> na FER-u i zabavi se nakon prvog dana na
+            <strong>Loosen Up</strong> partyju u KSET-u. Uz sve to, prijava je vrlo jednostavna i potrebno je samo <strong>par klikova</strong>.
+          </p>
+          
+          <h3>Kako se prijaviti?</h3>
+          
+          <p>
+            Prijavi se putem <a href="/login">internetske stranice</a> Job Faira. <strong>Registriraj se</strong> i predaj svoj <strong>životopis</strong>.
+            Tada će se na <a href="/profile/me">tvojem profilu</a> pojaviti <strong>QR kod</strong> koji će ti služiti kao <strong>ulaznica</strong>.
+            Prilikom dolaska na Job Fair, trebat ćeš pokazati svoj važeći QR kod koji će skenirati volonteri na ulazu u <strong>Martinovku</strong>,
+            ili učionicu na <strong>FER-u</strong>. Taj isti QR kod će ti poslužiti i kao <strong>posjetnica</strong> jer će ga moći skenirati i predstavnici
+            poduzeća koje upoznaš na štandovima. Tako će te jednostavnije pronaći u bazi među svim životopisima čime ćeš se <strong>više istaknuti</strong>
+            od ostalih studenata koji posjete sajam.
+          </p>
+          
+          <h3>Zašto se prijaviti?</h3>
+          
+          <p>
+            Osim kao ulaznica na događaj, predajom svojeg životopisa u bazu, on će nakon sajma postati vidljiv i dostupan <strong>svim poduzećima</strong> koja sudjeluju
+            na Job Fairu zbog čega ćeš bez obzira na upoznavanje uživo ili ne, možda dobiti poziv na <strong>razgovor za praksu ili posao</strong>.
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-05-2022"),
+    image: "/tmp/blog6.png",
+    title: "Student applications for the 15th Job Fair are now open!",
+    description: "Fill out the CV form and meet representatives from over 130 different companies!",
+    content: `
+          <p>
+            Applications for the 15th Job Fair are officially open! Secure your entry to SD Martinovka where over <strong>130 tech companies</strong> will present
+            on <strong>May 11th and 12th</strong>. Meet their representatives in a relaxed environment at company <strong>booths</strong>, listen to their <strong>talks</strong>
+            and <strong>the panel talk</strong> which take place on the stage in the centre of Martinovka Sports Hall, visit their workshops at FER and have fun after
+            the first day at the <strong>Loosen Up Party</strong> at KSET. Besides that, the application process is straight-forward and you only need <strong>a couple of clicks</strong>.
+          </p>
+          
+          <h3>How to apply?</h3>
+          
+          <p>
+            Apply via the Job Fair website. <strong>Register</strong> with your <strong>CV</strong>. <a href="/profile/me">Your profile</a> will then show a <strong>QR code</strong>
+            which serves as an entry ticket. You will have to show your valid QR code upon arrival to <strong>Martinovka</strong> or <strong>classrooms at FER</strong> where
+            volunteers will scan it. The same QR code serves as a <strong>business card</strong> because company representatives you meet at the booths can also scan it.
+            It’s an easier way to find you in the CV database which makes you <strong>stand out</strong> from the crowd of visitors.
+          </p>
+          
+          <h3>Why apply?</h3>
+          
+          <p>
+            In addition to being an entry ticket, by submitting your CV to the database, it becomes visible to all the companies participating in the Job Fair which is why you may
+            get a <strong>job or internship offering</strong> regardless of whether you met them live or not.
+          </p>
+          
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

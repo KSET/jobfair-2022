@@ -10,6 +10,7 @@ import {
 import {
   tap,
 } from "rambdax";
+import * as Sentry from "@sentry/node";
 import {
   prisma as prismaClient,
 } from "../providers/prisma";
@@ -58,7 +59,9 @@ export class FileService {
           },
         },
       }).then(tap(() => void EventsService.logEvent("file:upload", user.id, { key: minioKey })));
-    } catch {
+    } catch (e) {
+      Sentry.captureException(e);
+
       return null;
     }
   }
@@ -71,7 +74,7 @@ export class FileService {
 
       return true;
     } catch (e) {
-      console.log(e);
+      Sentry.captureException(e);
 
       return false;
     }

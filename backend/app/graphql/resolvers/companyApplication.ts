@@ -39,6 +39,7 @@ import {
 import {
   FileUpload,
 } from "graphql-upload";
+import * as Sentry from "@sentry/node";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -878,7 +879,7 @@ export class CompanyApplicationAdminResolver {
 
       return entity;
     }).catch((err) => {
-      console.log(err);
+      Sentry.captureException(err);
 
       return {
         errors: [

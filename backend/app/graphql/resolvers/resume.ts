@@ -28,6 +28,7 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
+import * as Sentry from "@sentry/node";
 import {
   toSelect,
   transformSelectDefaults,
@@ -481,7 +482,21 @@ export class ResumeModifyResolver {
       }
 
       return newResume;
-    }) as Resume;
+    }).catch((e) => {
+      Sentry.captureException(e);
+      return null;
+    }) as Resume | null;
+
+    if (!newResume) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Something went wrong",
+          },
+        ],
+      };
+    }
 
     return {
       entity: newResume,

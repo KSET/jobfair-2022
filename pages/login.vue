@@ -87,6 +87,7 @@
   } from "~/helpers/url";
   import {
     computed,
+    onBeforeMount,
   } from "#imports";
 
   export default defineComponent({
@@ -119,6 +120,26 @@
         user: "",
       }));
       const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
+
+      onBeforeMount(async () => {
+        if (!userStore.isLoggedIn) {
+          return;
+        }
+
+        const redirectInfo = route.query?.r;
+
+        if (!redirectInfo || !("string" === typeof redirectInfo)) {
+          return;
+        }
+
+        const redirect = decodeRedirectParam(redirectInfo);
+
+        if (!redirect) {
+          return;
+        }
+
+        await router.push(redirect);
+      });
 
       return {
         info,

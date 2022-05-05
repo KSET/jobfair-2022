@@ -124,7 +124,7 @@
         info,
         errors,
         isLoading,
-        redirectInfo: computed(() => route.query?.r || ""),
+        redirectInfo: computed(() => route.query?.r),
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;

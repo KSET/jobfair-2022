@@ -16,6 +16,7 @@ import {
   INewsItemQuery,
   INewsItemQueryVariables,
   NewsItem,
+  INewsFilter,
 } from "~/graphql/schema";
 import {
   useTranslationsStore,
@@ -35,13 +36,14 @@ export const useNewsStore = defineStore(
         return this.items;
       },
 
-      async fetchNews() {
+      async fetchNews(filter: INewsFilter = {}) {
         const translationsStore = useTranslationsStore();
 
         const resp = await useQuery<INewsQuery, INewsQueryVariables>({
           query: News,
           variables: {
             lang: translationsStore.currentLanguage,
+            filter,
           },
         })();
 
@@ -50,21 +52,34 @@ export const useNewsStore = defineStore(
         return this.setNews(news);
       },
 
-      async fetchNewsItem(slug: string) {
+      async fetchNewsItem(slug: string, filter: INewsFilter = {}) {
+        const translationsStore = useTranslationsStore();
+
         const resp = await useQuery<INewsItemQuery, INewsItemQueryVariables>({
           query: NewsItem,
           variables: {
             slug,
+            lang: translationsStore.currentLanguage,
+            filter,
           },
-        })();
+        })().then((resp) => resp?.data || null);
 
-        const news = resp?.data?.newsItem || null;
+        if (!resp) {
+          return {
+            newsItem: null,
+            news: [],
+          };
+        }
 
-        return (
-          news
-            ? processNewsItem(news)
-            : null
-        );
+        const {
+          newsItem,
+          news,
+        } = resp;
+
+        return {
+          newsItem: newsItem ? processNewsItem(newsItem) : null,
+          news: this.setNews(news),
+        };
       },
     },
   },

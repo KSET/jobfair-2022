@@ -68,7 +68,6 @@
   } from "~/store/news";
   import {
     ensureArray,
-    limitLength,
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
   import {
@@ -117,13 +116,13 @@
       });
       useTitle(title, false);
 
-      const [
+      const {
+        news,
         newsItem,
-        last3News,
-      ] = await Promise.all([
-        newsStore.fetchNewsItem($route.params.slug as string),
-        newsStore.fetchNews().then(ensureArray).then(limitLength(3)),
-      ]);
+      } = await newsStore.fetchNewsItem(
+        $route.params.slug as string,
+        { take: 3 },
+      );
 
       if (newsItem) {
         title.value = newsItem.title;
@@ -134,7 +133,7 @@
 
       return {
         newsItem: newsItem as NewsWithFormattedDate<INews>,
-        last3News,
+        last3News: ensureArray(news),
       };
     },
   });

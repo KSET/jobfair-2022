@@ -221,8 +221,8 @@ query PressReleases {
     }
 }
 
-query News($lang: String!) {
-    news(lang: $lang) {
+query News($lang: String!, $filter: NewsFilter) {
+    news(lang: $lang, filter: $filter) {
         slug
         image
         date
@@ -231,13 +231,21 @@ query News($lang: String!) {
     }
 }
 
-query NewsItem($slug: String!) {
+query NewsItem($slug: String!, $lang: String!, $filter: NewsFilter) {
     newsItem(slug: $slug) {
         date
         image
         title
         description
         content
+    }
+
+    news(lang: $lang, filter: $filter) {
+        slug
+        image
+        date
+        title
+        description
     }
 }
 

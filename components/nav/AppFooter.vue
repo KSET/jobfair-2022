@@ -57,6 +57,28 @@
                 @click.native.prevent="clearConsent"
               />
             </div>
+            <div
+              :class="$style.afterJobfairText"
+            >
+              <translated-text
+                style="cursor: pointer;"
+                trans-key="footer.legal.privacyPolicy"
+                @click.native.prevent="privacyPolicyOpen = true"
+              />
+            </div>
+            <Dialog
+              v-model:visible="privacyPolicyOpen"
+              :class="$style.dialog"
+              dismissable-mask
+              maximizable
+              modal
+              position="bottom"
+            >
+              <template #header>
+                <strong><translated-text trans-key="footer.legal.privacyPolicy.header" /></strong>
+              </template>
+              <translated-text trans-key="footer.legal.privacyPolicy.text" />
+            </Dialog>
           </client-only>
         </div>
         <div
@@ -126,6 +148,7 @@
     useCssModule,
   } from "vue";
   import Divider from "primevue/divider";
+  import Dialog from "primevue/dialog";
   import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
@@ -134,6 +157,9 @@
   } from "~/store/settings";
   import AppImg from "~/components/util/app-img.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import {
+    ref,
+  } from "#imports";
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore: Type declaration stuff
   const SocialIconLogos = import.meta.globEager("../../assets/images/component/AppFooter/icons/socials/*.png");
@@ -146,6 +172,7 @@
       TranslatedText,
       AppImg,
       PDivider: Divider,
+      Dialog,
     },
 
     props: {
@@ -181,11 +208,14 @@
 
       const getSetting = computed(() => settingsStore.getSetting);
 
+      const privacyPolicyOpen = ref(false);
+
       const style = useCssModule();
 
       return {
         clearConsent: () => cookieConsentStore.clearConsent(),
         showConsent: computed(() => cookieConsentStore.showConsent),
+        privacyPolicyOpen,
         socialIcons: [
           {
             name: "Instagram",
@@ -237,6 +267,10 @@
   @import "assets/styles/include/all";
 
   $breakpoint: md;
+
+  .dialog:not(:global(.p-dialog-maximized)) {
+    max-width: 700px;
+  }
 
   .container {
     overflow: hidden;

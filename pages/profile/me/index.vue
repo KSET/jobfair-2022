@@ -39,6 +39,21 @@
         </div>
       </div>
 
+      <div v-if="resume" :class="$style.item">
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.resume.qr" />
+          </h2>
+          <div :class="$style.qrCode">
+            <app-img
+              :alt="`${user.name} QR`"
+              :src="`/api/user/${user.uid}/qr.svg`"
+              contain
+            />
+          </div>
+        </div>
+      </div>
+
       <div
         v-if="currentSeason && !hasCompany && false"
         :class="$style.item"
@@ -346,6 +361,7 @@
   import {
     omit,
   } from "rambdax";
+  import AppImg from "../../../components/util/app-img.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
     useQuery,
@@ -353,6 +369,7 @@
   import {
     IBooth,
     ICompanyApplication,
+    IResume,
   } from "~/graphql/schema";
   import {
     useSeasonsStore,
@@ -373,6 +390,7 @@
     name: "PageProfileHome",
 
     components: {
+      AppImg,
       TranslatedText,
       AppUserProfileContainer,
     },
@@ -394,6 +412,9 @@
           approval: ICompanyApplication["approval"],
         },
         booths: Pick<IBooth, "key" | "name">[],
+        profile: {
+          resume: Pick<IResume, "uid">,
+        },
       };
       type QArgs = never;
       const resp = await useQuery<QData, QArgs>({
@@ -421,6 +442,11 @@
                     cocktail
                 }
             }
+            profile {
+                resume {
+                    uid
+                }
+            }
         }
         `,
       })();
@@ -431,8 +457,10 @@
       const isApprovedWithoutBooth = companyStore.isApplicationApproved(omit([
         "booth",
       ], approval || {}));
+      const resume = resp?.data?.profile?.resume;
       return {
         user: computed(() => userStore.user),
+        resume,
         formatDate,
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason),
@@ -490,6 +518,10 @@
 
         > * {
           opacity: .7;
+        }
+
+        .qrCode {
+          opacity: 1;
         }
       }
 

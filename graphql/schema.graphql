@@ -875,6 +875,10 @@ type News {
   title: String!
 }
 
+input NewsFilter {
+  take: Float = 0
+}
+
 type Partner {
   name: String!
   order: Int!
@@ -990,7 +994,7 @@ type Query {
   currentSeason: Season
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
-  news(lang: String!): [News!]!
+  news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
   participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   partners(season: String): [Partner!]!

@@ -1,6 +1,7 @@
 import {
   Arg,
   Field,
+  InputType,
   MaybePromise,
   ObjectType,
   Query,
@@ -909,12 +910,22 @@ const news = [
   .sort((a, b) => Number(b.date) - Number(a.date))
 ;
 
+@InputType()
+class NewsFilter {
+  @Field(() => Number, { nullable: true })
+    take: number = 0;
+}
+
 export class NewsMockResolver {
   @Query(() => [ News ])
   news(
     @Arg("lang") lang: string,
+      @Arg("filter", { nullable: true }) filter?: NewsFilter,
   ): MaybePromise<News[]> {
-    return news.filter((n) => n.lang === lang);
+    const baseNews = news.filter((n) => n.lang === lang);
+    const lastNNews = baseNews.slice(0, filter?.take || baseNews.length);
+
+    return lastNNews;
   }
 
   @Query(() => News, { nullable: true })

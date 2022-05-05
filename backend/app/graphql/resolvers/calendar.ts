@@ -268,21 +268,21 @@ const workshops1 = [
     end: "2022-05-11 12:00",
     title: "True North",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
   {
     start: "2022-05-11 13:00",
     end: "2022-05-11 15:00",
     title: "Greyp",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
   {
     start: "2022-05-11 16:00",
     end: "2022-05-11 18:00",
     title: "CARNET",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
 ];
 const workshops2 = [
@@ -291,21 +291,21 @@ const workshops2 = [
     end: "2022-05-12 12:00",
     title: "Comsysto Reply",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
   {
     start: "2022-05-12 13:00",
     end: "2022-05-12 15:00",
     title: "Undabot",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
   {
     start: "2022-05-12 16:00",
     end: "2022-05-12 18:00",
     title: "Ericsson",
     class: "workshop",
-    location: "FER - Bijela vjećnica",
+    location: "FER - Bijela vijećnica",
   },
 
   {

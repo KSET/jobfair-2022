@@ -560,6 +560,16 @@
           ;
 
           for (const { field, message } of errorList) {
+            if ("entity.errors" === field) {
+              toast.add({
+                severity: "error",
+                summary: message,
+                closable: true,
+                life: 3000,
+              });
+              continue;
+            }
+
             const errors = path<AuthError[]>(field, items) || [];
 
             errors.push({

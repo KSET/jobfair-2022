@@ -52,6 +52,47 @@
             />
           </div>
         </div>
+        <div :class="$style.itemActions">
+          <nuxt-link
+            :to="{ name: 'profile-me-cv' }"
+            class="ml-auto"
+          >
+            <p-button
+              class="p-button-secondary"
+              tabindex="-1"
+            >
+              <translated-text
+                trans-key="profile.resume.update"
+              />
+            </p-button>
+          </nuxt-link>
+        </div>
+      </div>
+      <div v-else-if="!hasCompany" :class="$style.item">
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.resume.header" />
+          </h2>
+
+          <div>
+            <translated-text trans-key="profile.resume.text" />
+          </div>
+        </div>
+        <div :class="$style.itemActions">
+          <nuxt-link
+            :to="{ name: 'profile-me-cv' }"
+            class="ml-auto"
+          >
+            <p-button
+              class="p-button-secondary"
+              tabindex="-1"
+            >
+              <translated-text
+                trans-key="profile.resume.create"
+              />
+            </p-button>
+          </nuxt-link>
+        </div>
       </div>
 
       <div

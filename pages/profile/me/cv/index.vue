@@ -121,6 +121,20 @@
       </div>
 
       <div class="mt-3 flex">
+        <label>
+          <Checkbox
+            v-model="gdprCheckbox"
+            binary
+            required
+          />
+
+          <span class="ml-2">
+            <translated-text trans-key="form.cv.gdpr" />
+          </span>
+        </label>
+      </div>
+
+      <div class="mt-3 flex">
         <p-button
           v-if="resume"
           :loading="isLoading"
@@ -135,6 +149,7 @@
 
         <p-button
           :loading="isLoading"
+          :disabled="!gdprCheckbox"
           class="p-button-secondary font-bold ml-auto"
           type="submit"
         >
@@ -169,6 +184,7 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import Checkbox from "primevue/checkbox";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import useTitle from "~/composables/useTitle";
@@ -230,6 +246,7 @@
     name: "PageProfileMeCv",
 
     components: {
+      Checkbox,
       AppTime,
       AppFormgroup,
       AppUserProfileContainer,
@@ -251,6 +268,7 @@
 
       const resumeData = await resumeQuery();
       const resume = ref(resumeData);
+      const gdprCheckbox = ref(false);
 
       type AuthError = {
         message: string,
@@ -435,6 +453,7 @@
         isLoading,
         FormFor,
         resume,
+        gdprCheckbox,
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         searchFields: useThrottleFn(async (name: Autocompetable) => {
           const info = infoFor[name];

@@ -694,7 +694,7 @@ const news = [
     date: new Date("05-04-2022"),
     image: "/tmp/blog5.png",
     title: "Poznat raspored za 15. Job Fair!",
-    description: "Posjetitelje 15. Job Faira unutar dva dana očekuje 134 poduzeća, 25 talkova, 16 radionica, panel rasprava i Hot talk.",
+    description: "Posjetitelje 15. Job Faira unutar dva dana očekuje 134 poduzeća, 24 talkova, 16 radionica, panel rasprava i Hot talk.",
     content: `
           <p>
             Sajam poslova Job Fair uspješno nastavlja svoju tradiciju kao žarišna točka sastajališta vrhunskih studenata i najzanimljivijih domaćih te inozemnih tehnoloških poduzeća.
@@ -705,7 +705,7 @@ const news = [
           <h1>Prvi dan obilježit će umrežavanje i zabava</h1>
           
           <p>
-            Prvi dan 15. Job Faira će započeti u 10 sati u dvoranama A201, A301 te u Bijeloj vijećnici na FER-u s poduzećima TrueNorth, Agency04 i dSPACEom koja će održati svoje radionice. Paralelno u SD Martinovka program započinje u 1o sati gdje će nas dočekati talkovi poduzeća: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks te panel rasprava, s početkom u 14 sati, na temu kako AI utječe na naše društvo.
+            Prvi dan 15. Job Faira će započeti u 10 sati u dvoranama A201, A301 te u Bijeloj vijećnici na FER-u s poduzećima TrueNorth, Agency04 i dSPACEom koja će održati svoje radionice. Paralelno u SD Martinovka program započinje u 1o sati gdje će nas dočekati talkovi poduzeća: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks te panel rasprava, s početkom u 13 sati, na temu kako AI utječe na naše društvo.
           </p>
           
           <p>
@@ -753,7 +753,7 @@ const news = [
     date: new Date("05-04-2022"),
     image: "/tmp/blog5.png",
     title: "Schedule for the 15th Job Fair finally released!",
-    description: "Visitors of the 15th Job Fair can expect 134 companies, 25 talks, 16 workshops, a panel talk and a Hot talk during two days of the Fair.",
+    description: "Visitors of the 15th Job Fair can expect 134 companies, 24 talks, 16 workshops, a panel talk and a Hot talk during two days of the Fair.",
     content: `
           <p>
             The Job Fair successfully continues its tradition as a meeting hotspot for top students and the most interesting local and foreign tech companies. This year, in addition to booths, the Fair will host 25 talks on the 11th and 12th of May on the main stage at Matrinovka Sports Hall where company representatives will present projects, new technologies and knowledge gathered through years of experience in different industries to interested students. At the same time, 16 workshops will take place in the classrooms of the Faculty of Electrical Engineering and Computing (FER).
@@ -766,7 +766,7 @@ const news = [
           </p>
           
           <p>
-            At the same time, at 10.00, the program at Martinovka Sports Hall starts with talks by: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks and a panel talk at 14.00 about how AI is impacting society.
+            At the same time, at 10.00, the program at Martinovka Sports Hall starts with talks by: Ericsson Nikola Tesla, Syntio, Memgraph, Končar, Srce, RealNetworks and a panel talk at 13.00 about how AI is impacting society.
           </p>
           
           <p>

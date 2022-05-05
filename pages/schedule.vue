@@ -4,7 +4,7 @@
       <translated-text trans-key="schedule.header" />
     </h1>
 
-    <div :class="$style.calendarContainer">
+    <div v-if="events.length > 0" :class="$style.calendarContainer">
       <vue-calendar
         v-if="!isMd"
         :click-to-navigate="false"
@@ -176,6 +176,11 @@
           </template>
         </vue-calendar>
       </template>
+    </div>
+    <div v-else>
+      <h2>
+        <translated-text trans-key="schedule.no-events" />
+      </h2>
     </div>
   </app-max-width-container>
 </template>

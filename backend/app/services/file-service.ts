@@ -19,6 +19,9 @@ import {
   minio,
 } from "../providers/minio";
 import {
+  encodeRFC5987ValueChars,
+} from "../helpers/string";
+import {
   EventsService,
 } from "./events-service";
 
@@ -40,7 +43,7 @@ export class FileService {
         minioKey,
         fileInfo.createReadStream(),
         {
-          name: fileInfo.filename,
+          name: encodeRFC5987ValueChars(fileInfo.filename),
           mimeType: fileInfo.mimetype,
         },
       );

@@ -286,11 +286,38 @@ query AdminInitialData {
     seasons(orderBy: { endsAt: desc }) {
         ...frag_Season
     }
+}
+
+query AdminCompanyApplication($company: String!, $season: String!) {
+    talkCategories {
+        name
+    }
+
+    booths {
+        name
+        key
+    }
+
+    companyApplicationFor(company: $company, season: $season) {
+        ...frag_CompanyApplication
+        forCompany {
+            ...frag_Company
+        }
+    }
+}
+
+query AdminCompanyApplications($season: String!) {
+    industries {
+        name
+    }
+    talkCategories {
+        name
+    }
     booths {
         key
         name
     }
-    companyApplications {
+    companyApplications(season: $season) {
         wantsCocktail
         wantsPanel
         booth
@@ -314,24 +341,6 @@ query AdminInitialData {
         }
         forSeason {
             uid
-        }
-    }
-}
-
-query AdminCompanyApplication($company: String!, $season: String!) {
-    talkCategories {
-        name
-    }
-
-    booths {
-        name
-        key
-    }
-
-    companyApplicationFor(company: $company, season: $season) {
-        ...frag_CompanyApplication
-        forCompany {
-            ...frag_Company
         }
     }
 }

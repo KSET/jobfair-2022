@@ -214,7 +214,7 @@
           {
             name: "press.press-kit.item.jobfair-logo",
             image: previewIcons.JobFair,
-            file: "/tmp/press/jf_logo.jpg",
+            file: "/tmp/press/jf_logo.png",
           },
           {
             name: "press.press-kit.item.fer-logo",

@@ -165,7 +165,7 @@
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
     InputEntry,
-    } from "~/components/util/form/app-formgroup.vue";
+  } from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
 
   enum FormFor {

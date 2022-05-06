@@ -143,7 +143,7 @@
         <ul>
           <li>
             <nuxt-link
-              :to="{ name: 'admin-company-application-season-approval', params: { season: season.uid } }"
+              :to="{ name: 'admin-season-season-applications-approval', params: { season: season.uid } }"
             >
               Odobri
             </nuxt-link>
@@ -168,7 +168,7 @@
         >
           <p-chip :label="company.industry.name" class="mr-2" />
           <strong v-tooltip.top="company.legalName" v-text="company.brandName" />
-          <a :href="$router.resolve({ name: 'admin-company-vat-edit', params: { vat: company.vat } }).href">
+          <a :href="$router.resolve({ name: 'admin-companies-vat-edit', params: { vat: company.vat } }).href">
             Edit
           </a>
           <ul>
@@ -279,7 +279,7 @@
           <strong v-text="application.forCompany.brandName" />
           <a
             :href="$router.resolve({
-              name: 'admin-company-application-season-company-edit',
+              name: 'admin-season-season-application-company-edit',
               params: {
                 season: application.forSeason.uid,
                 company: application.forCompany.uid,

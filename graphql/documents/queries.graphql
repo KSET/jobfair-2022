@@ -256,19 +256,6 @@ query AdminInitialData {
     talkCategories {
         name
     }
-    companies(orderBy: { legalName: asc }) {
-        vat
-        legalName
-        brandName
-        industry {
-            name
-        }
-        members {
-            uid
-            name
-            email
-        }
-    }
     pressReleases(orderBy: { published: desc }) {
         uid
         title

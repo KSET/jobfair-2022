@@ -33,6 +33,20 @@
     </div>
 
     <div>
+      <h2>Firme</h2>
+
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-companies' }">
+              Uredi
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
       <h2>Press</h2>
       <ul>
         <li>
@@ -179,36 +193,6 @@
         </ul>
       </fieldset>
     </div>
-
-    <div>
-      <h2>Firme ({{ (companies || []).length }})</h2>
-      <ul>
-        <li
-          v-for="company of companies"
-          :key="company.uid"
-        >
-          <p-chip :label="company.industry.name" class="mr-2" />
-          <strong v-tooltip.top="company.legalName" v-text="company.brandName" />
-          <a :href="$router.resolve({ name: 'admin-companies-vat-edit', params: { vat: company.vat } }).href">
-            Edit
-          </a>
-          <ul>
-            <li
-              v-for="member in company.members"
-              :key="member.uid"
-            >
-              <span v-text="member.name" />
-              -
-              <em v-text="member.email" />
-              &nbsp;
-              <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: member.uid } }">
-                Edit
-              </nuxt-link>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
   </app-max-width-container>
 </template>
 <script lang="ts">
@@ -222,7 +206,6 @@
     gql,
   } from "@urql/core";
   import Tooltip from "primevue/tooltip";
-  import Chip from "primevue/chip";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import {
@@ -249,7 +232,6 @@
       EditSeason,
       EditableField,
       AppMaxWidthContainer,
-      PChip: Chip,
     },
 
     directives: {
@@ -290,12 +272,9 @@
 
       const seasons = ref((res?.seasons || []).map(reactive));
 
-      const companies = ref(res?.companies);
-
       return {
         industries,
         talkCategories,
-        companies,
         seasons,
         pressReleases: (res?.pressReleases || [] as NonNullable<IAdminInitialDataQuery["pressReleases"]>).map((item) => ({
           ...item,

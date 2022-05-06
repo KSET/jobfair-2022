@@ -25,7 +25,7 @@
           </div>
 
           <div :class="$style.column2" class="flex -mt-3">
-            <a :href="$router.resolve({ name: 'admin' }).href">
+            <a :href="$router.resolve({ name: 'admin-companies' }).href">
               <p-button>Cancel</p-button>
             </a>
 
@@ -72,7 +72,7 @@
             </div>
 
             <div :class="$style.column2" class="flex -mt-3">
-              <a :href="$router.resolve({ name: 'admin' }).href">
+              <a :href="$router.resolve({ name: 'admin-companies' }).href">
                 <p-button>Cancel</p-button>
               </a>
 

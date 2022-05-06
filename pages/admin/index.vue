@@ -19,6 +19,20 @@
     </div>
 
     <div>
+      <h2>Korisnici</h2>
+
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-users' }">
+              Uredi
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
       <h2>Press</h2>
       <ul>
         <li>
@@ -195,25 +209,6 @@
         </li>
       </ul>
     </div>
-
-    <div>
-      <h2>Korisnici ({{ (users || []).length }})</h2>
-
-      <ul>
-        <li
-          v-for="user in users"
-          :key="user.uid"
-        >
-          <span v-text="user.name" />
-          -
-          <em v-text="user.email" />
-          &nbsp;
-          <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: user.uid } }">
-            Edit
-          </nuxt-link>
-        </li>
-      </ul>
-    </div>
   </app-max-width-container>
 </template>
 <script lang="ts">
@@ -228,9 +223,6 @@
   } from "@urql/core";
   import Tooltip from "primevue/tooltip";
   import Chip from "primevue/chip";
-  import {
-    sortBy,
-  } from "rambdax";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import {
@@ -304,7 +296,6 @@
         industries,
         talkCategories,
         companies,
-        users: sortBy<NonNullable<IAdminInitialDataQuery["users"]>[0]>((u) => new Date(u.createdAt as string), res?.users || []),
         seasons,
         pressReleases: (res?.pressReleases || [] as NonNullable<IAdminInitialDataQuery["pressReleases"]>).map((item) => ({
           ...item,

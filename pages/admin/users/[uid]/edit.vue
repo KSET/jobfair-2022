@@ -23,7 +23,7 @@
           </div>
 
           <div class="flex -mt-3">
-            <a :href="$router.resolve({ name: 'admin' }).href">
+            <a :href="$router.resolve({ name: 'admin-users' }).href">
               <p-button>Cancel</p-button>
             </a>
 

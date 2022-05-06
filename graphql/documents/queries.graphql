@@ -277,12 +277,6 @@ query AdminInitialData {
             uid
         }
     }
-    users {
-        uid
-        name
-        email
-        createdAt
-    }
     seasons(orderBy: { endsAt: desc }) {
         ...frag_Season
     }

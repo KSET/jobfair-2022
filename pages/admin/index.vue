@@ -187,7 +187,7 @@
               -
               <em v-text="member.email" />
               &nbsp;
-              <nuxt-link :to="{ name: 'admin-user-uid-edit', params: { uid: member.uid } }">
+              <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: member.uid } }">
                 Edit
               </nuxt-link>
             </li>
@@ -208,7 +208,7 @@
           -
           <em v-text="user.email" />
           &nbsp;
-          <nuxt-link :to="{ name: 'admin-user-uid-edit', params: { uid: user.uid } }">
+          <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: user.uid } }">
             Edit
           </nuxt-link>
         </li>

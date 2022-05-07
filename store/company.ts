@@ -1,5 +1,5 @@
 import {
-  defineStore,
+ defineStore,
 } from "pinia";
 import {
   useMutation,
@@ -7,12 +7,15 @@ import {
 } from "~/composables/useQuery";
 import {
   Company,
+  CompanyInfo,
   CurrentCompanyApplication,
   ICompanyApplicationApproval,
+  ICompanyInfoQuery,
   ICompanyQuery,
   ICurrentCompanyApplicationQuery,
   ICurrentCompanyApplicationQueryVariables,
   IQueryCompanyArgs,
+  IQueryCompanyInfoArgs,
   IRegisterCompanyMutation,
   IRegisterCompanyMutationVariables,
   IUpdateCompanyInfoMutation,
@@ -24,7 +27,7 @@ import {
   ValidateVat,
 } from "~/graphql/schema";
 import {
-  useTalkCategoriesStore,
+ useTalkCategoriesStore,
 } from "~/store/talkCategories";
 
 type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication">> | null | undefined;
@@ -44,6 +47,7 @@ export const useCompanyStore = defineStore(
   {
     state: () => ({
       applicationInfo: null as (null | ICurrentCompanyApplicationQuery),
+      companyInfo: null as (null | ICompanyInfoQuery["companyInfo"]),
     }),
 
     getters: {
@@ -74,6 +78,17 @@ export const useCompanyStore = defineStore(
         })();
 
         return resp?.data?.company || null;
+      },
+
+      async fetchCompanyInfo(uid: string) {
+        this.companyInfo = await useQuery<ICompanyInfoQuery, IQueryCompanyInfoArgs>({
+          query: CompanyInfo,
+          variables: {
+            uid,
+          },
+        })().then((resp) => resp?.data?.companyInfo);
+
+        return this.companyInfo;
       },
 
       async fetchCurrentApplication() {

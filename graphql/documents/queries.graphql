@@ -186,6 +186,71 @@ query Company($vat: String!) {
     }
 }
 
+query CompanyInfo($uid: String!) {
+    companyInfo(uid: $uid) {
+        brandName
+        descriptionEn
+        descriptionHr
+        rasterLogo {
+            thumbUrl
+            fullUrl
+        }
+        program {
+            booth
+            talk {
+                uid
+                titleHr
+                titleEn
+                descriptionHr
+                descriptionEn
+                language
+                presenters {
+                    bioHr
+                    bioEn
+                    firstName
+                    lastName
+                    photo {
+                        thumbUrl
+                        fullUrl
+                    }
+                }
+            }
+            workshop {
+                uid
+                titleHr
+                titleEn
+                descriptionHr
+                descriptionEn
+                language
+                notesHr
+                notesEn
+                presenters {
+                    firstName
+                    lastName
+                    bioHr
+                    bioEn
+                    photo {
+                        thumbUrl
+                        fullUrl
+                    }
+                }
+            }
+            panel {
+                companyPresenters {
+                    firstName
+                    lastName
+                    bioHr
+                    bioEn
+                    photo {
+                        thumbUrl
+                        fullUrl
+                    }
+                }
+            }
+        }
+    }
+}
+
 query Industries {
     industries {
         name

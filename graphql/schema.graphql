@@ -991,12 +991,13 @@ type Query {
   companyApplication: CompanyApplication
   companyApplicationFor(company: String!, season: String!): CompanyApplication
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
+  companyInfo(uid: String!): Company
   currentSeason: Season
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
-  participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
+  participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   partners(season: String): [Partner!]!
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!

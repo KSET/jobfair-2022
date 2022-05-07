@@ -1,6 +1,7 @@
 import {
   Arg,
   Args,
+  ArgsType,
   Ctx,
   Field,
   FieldResolver,
@@ -210,6 +211,12 @@ class CreateCompanyInput extends CompanyCreateInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
     rasterLogo: FileUpload | null = null;
+}
+
+@ArgsType()
+class FindManyParticipantsArgs extends FindManyCompanyArgs {
+  @Field(() => String, { nullable: true })
+    season?: string | undefined = undefined;
 }
 
 @ObjectType()
@@ -627,23 +634,29 @@ export class CompanyListResolver {
   participants(
   @Ctx() ctx: Context,
     @Info() info: GraphQLResolveInfo,
-    @Args() args: FindManyCompanyArgs,
+    @Args() args: FindManyParticipantsArgs,
   ) {
     const now = new Date();
 
+    const seasonUid = args.season;
+
     return ctx.prisma.company.findMany({
-      ...args,
+      ...omit([ "season" ], args),
       where: {
         applications: {
           some: {
-            forSeason: {
-              startsAt: {
-                lte: now,
+            forSeason: seasonUid
+              ? {
+                uid: seasonUid,
+              }
+              : {
+                startsAt: {
+                  lte: now,
+                },
+                endsAt: {
+                  gte: now,
+                },
               },
-              endsAt: {
-                gte: now,
-              },
-            },
             approval: {
               OR: [
                 {
@@ -704,6 +717,42 @@ export class CompanyListResolver {
 
       select: toSelect(info, transformSelect),
     });
+  }
+
+  @Query(() => Company, { nullable: true })
+  async companyInfo(
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+      @Arg("uid") uid: string,
+  ): GQLResponse<Company, "nullable"> {
+    const select = toSelect(info, transformSelect);
+
+    const hasMembers = Boolean(select.members);
+    const hasVat = Boolean(select.vat);
+
+    delete select.members;
+    delete select.vat;
+
+    const company = await ctx.prisma.company.findUnique({
+      where: {
+        uid,
+      },
+      select,
+    }) as Company | null;
+
+    if (!company) {
+      return company;
+    }
+
+    if (hasMembers) {
+      company.members = [];
+    }
+
+    if (hasVat) {
+      company.vat = "";
+    }
+
+    return company;
   }
 }
 

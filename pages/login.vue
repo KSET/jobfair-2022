@@ -126,19 +126,17 @@
           return;
         }
 
-        const redirectInfo = route.query?.r;
+        const redirectInfo = (() => {
+          const queryRedirect = route.query?.r;
 
-        if (!redirectInfo || !("string" === typeof redirectInfo)) {
-          return;
-        }
+          if (!queryRedirect || !("string" === typeof queryRedirect)) {
+            return null;
+          }
 
-        const redirect = decodeRedirectParam(redirectInfo);
+          return decodeRedirectParam(queryRedirect);
+        })();
 
-        if (!redirect) {
-          return;
-        }
-
-        await router.push(redirect);
+        await router.push(redirectInfo || { name: "profile-me" });
       });
 
       return {

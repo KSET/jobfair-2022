@@ -186,6 +186,7 @@
     decodeRedirectParam,
   } from "~/helpers/url";
   import {
+    onBeforeMount,
     useRoute,
   } from "#imports";
 
@@ -222,6 +223,24 @@
         user: "",
       }));
       const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
+
+      onBeforeMount(async () => {
+        if (!userStore.isLoggedIn) {
+          return;
+        }
+
+        const redirectInfo = (() => {
+          const queryRedirect = route.query?.r;
+
+          if (!queryRedirect || !("string" === typeof queryRedirect)) {
+            return null;
+          }
+
+          return decodeRedirectParam(queryRedirect);
+        })();
+
+        await router.push(redirectInfo || { name: "profile-me" });
+      });
 
       const isLoading = ref(false);
 

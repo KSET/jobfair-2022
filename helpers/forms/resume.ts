@@ -14,45 +14,11 @@ import {
   IResumeWorkExperience,
 } from "~/graphql/schema";
 import {
+  asDate,
+  asOptionalDate,
   today,
   yesterday,
 } from "~/helpers/date";
-
-const asDate =
-  (
-    value: unknown,
-    fallback = () => new Date(),
-  ) => {
-    const date =
-      (
-        value instanceof Date
-        || "string" === typeof value
-      )
-        ? new Date(value)
-        : fallback()
-    ;
-
-    return date.toISOString().split("T")[0];
-  }
-;
-
-const asOptionalDate =
-  <T, F>(
-    value: T,
-    fallback = (): F => "" as unknown as F,
-  ) => {
-    const date =
-      (
-        value instanceof Date
-        || "string" === typeof value
-      )
-        ? new Date(value)
-        : null
-    ;
-
-    return date ? date.toISOString().split("T")[0] : fallback();
-  }
-;
 
 type Maybe<T> = T | null | undefined;
 

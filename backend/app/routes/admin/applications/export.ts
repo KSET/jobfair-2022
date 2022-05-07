@@ -125,11 +125,11 @@ router.getRaw("/", async (req, res) => {
         const ret = [];
 
         if (app.talk) {
-          ret.push(app.talk.presenters[0].photo!);
+          ret.push(...app.talk.presenters.map((x) => x.photo!));
         }
 
         if (app.workshop) {
-          ret.push(app.workshop.presenters[0].photo!);
+          ret.push(...app.workshop.presenters.map((x) => x.photo!));
         }
 
         return ret;
@@ -164,6 +164,8 @@ router.getRaw("/", async (req, res) => {
     const worksheet = workbook.addWorksheet("Prijave");
 
     const IMAGE_SIZE = 80 as const;
+    const MAX_PRESENTERS_TALK = Math.max(...applications.map((x) => x.talk?.presenters.length || 0));
+    const MAX_PRESENTERS_WORKSHOP = Math.max(...applications.map((x) => x.workshop?.presenters.length || 0));
 
     worksheet.columns = [
       { header: "Naziv poduzeća", key: "brandName" },
@@ -177,15 +179,19 @@ router.getRaw("/", async (req, res) => {
       { header: "Talk kategorija", key: "talkCategory" },
       { header: "Talk naslov", key: "talkTitle" },
       { header: "Talk opis", key: "talkDescription" },
-      { header: "Talk predavać ime", key: "talkPresenterName" },
-      { header: "Talk predavać bio", key: "talkPresenterBio" },
-      { header: "Talk predavać slika", key: "talkPresenterImage", width: IMAGE_SIZE / 6 },
+      ...Array.from({ length: MAX_PRESENTERS_TALK }, (_, i) => [
+        { header: `Talk predavać ime ${ i + 1 }`, key: `talkPresenterName${ i }` },
+        { header: `Talk predavać bio ${ i + 1 }`, key: `talkPresenterBio${ i }` },
+        { header: `Talk predavać slika ${ i + 1 }`, key: `talkPresenterImage${ i }`, width: IMAGE_SIZE / 6 },
+      ]).flat(),
       { header: "Workshop naslov", key: "workshopTitle" },
       { header: "Workshop opis", key: "workshopDescription" },
       { header: "Workshop cilj", key: "workshopGoal" },
-      { header: "Workshop predavać ime", key: "workshopPresenterName" },
-      { header: "Workshop predavać bio", key: "workshopPresenterBio" },
-      { header: "Workshop predavać slika", key: "workshopPresenterImage", width: IMAGE_SIZE / 6 },
+      ...Array.from({ length: MAX_PRESENTERS_WORKSHOP }, (_, i) => [
+        { header: `Workshop predavać ime ${ i + 1 }`, key: `workshopPresenterName${ i }` },
+        { header: `Workshop predavać bio ${ i + 1 }`, key: `workshopPresenterBio${ i }` },
+        { header: `Workshop predavać slika ${ i + 1 }`, key: `workshopPresenterImage${ i }`, width: IMAGE_SIZE / 6 },
+      ]).flat(),
       { header: "Panel", key: "panel" },
       { header: "King of Cocktails", key: "cocktail" },
     ];
@@ -214,15 +220,23 @@ router.getRaw("/", async (req, res) => {
         talkCategory: "",
         talkTitle: "",
         talkDescription: "",
-        talkPresenterName: "",
-        talkPresenterBio: "",
-        talkPresenterImage: "",
+        ...Object.fromEntries(
+          Array.from({ length: MAX_PRESENTERS_TALK }, (_, i) => [
+            [ `talkPresenterName${ i }`, "" ],
+            [ `talkPresenterBio${ i }`, "" ],
+            [ `talkPresenterImage${ i }`, "" ],
+          ] as const).flat(),
+        ),
         workshopTitle: "",
         workshopDescription: "",
         workshopGoal: "",
-        workshopPresenterName: "",
-        workshopPresenterBio: "",
-        workshopPresenterImage: "",
+        ...Object.fromEntries(
+          Array.from({ length: MAX_PRESENTERS_WORKSHOP }, (_, i) => [
+            [ `workshopPresenterName${ i }`, "" ],
+            [ `workshopPresenterBio${ i }`, "" ],
+            [ `workshopPresenterImage${ i }`, "" ],
+          ] as const).flat(),
+        ),
         panel: "Ne",
         cocktail: "Ne",
       });
@@ -260,31 +274,31 @@ router.getRaw("/", async (req, res) => {
       };
 
       if (talk) {
-        const [ presenter ] = talk.presenters;
-
         row.getCell("talkCategory").value = talk.category.name;
         row.getCell("talkTitle").value = "hr_HR" === talk.language ? talk.titleHr : talk.titleEn;
         row.getCell("talkDescription").value = "hr_HR" === talk.language ? talk.descriptionHr : talk.descriptionEn;
-        row.getCell("talkPresenterName").value = `${ presenter.firstName } ${ presenter.lastName }`;
-        row.getCell("talkPresenterBio").value = "hr_HR" === talk.language ? presenter.bioHr : presenter.bioEn;
-        addImage(
-          "talkPresenterImage",
-          presenter.photo,
-        );
+        talk.presenters.forEach((presenter, i) => {
+          row.getCell(`talkPresenterName${ i }`).value = `${ presenter.firstName } ${ presenter.lastName }`;
+          row.getCell(`talkPresenterBio${ i }`).value = "hr_HR" === talk.language ? presenter.bioHr : presenter.bioEn;
+          addImage(
+            `talkPresenterImage${ i }`,
+            presenter.photo,
+          );
+        });
       }
 
       if (workshop) {
-        const [ presenter ] = workshop.presenters;
-
         row.getCell("workshopTitle").value = "hr_HR" === workshop.language ? workshop.titleHr : workshop.titleEn;
         row.getCell("workshopDescription").value = "hr_HR" === workshop.language ? workshop.descriptionHr : workshop.descriptionEn;
         row.getCell("workshopGoal").value = workshop.goal;
-        row.getCell("workshopPresenterName").value = `${ presenter.firstName } ${ presenter.lastName }`;
-        row.getCell("workshopPresenterBio").value = "hr_HR" === workshop.language ? presenter.bioHr : presenter.bioEn;
-        addImage(
-          "workshopPresenterImage",
-          presenter.photo,
-        );
+        workshop.presenters.forEach((presenter, i) => {
+          row.getCell(`workshopPresenterName${ i }`).value = `${ presenter.firstName } ${ presenter.lastName }`;
+          row.getCell(`workshopPresenterBio${ i }`).value = "hr_HR" === workshop.language ? presenter.bioHr : presenter.bioEn;
+          addImage(
+            `workshopPresenterImage${ i }`,
+            presenter.photo,
+          );
+        });
       }
 
       if (wantsPanel) {

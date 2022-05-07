@@ -903,6 +903,56 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-07-2022"),
+    image: "/tmp/blog7.jpg",
+    title: "Luka Drezga iz Ars Future odvažio se na Hot Talk na15. Job Fairu!",
+    description: "Saznaj tko je ovogodišnji sudionik Hot Talka te hoće li oboriti prošlogodišnji rekord!",
+    content: `
+          <h3>Što je <em>Hot Talk</em>?</h3>
+
+          <p>
+            Drugi dan, <strong>12. svibnja</strong>, program u <strong>SD Martinovka</strong> začinit ćemo ljutim razgovorom! U <strong>13 sati</strong> ponovno će se održati
+            <strong><em>Hot Talk</em></strong> - neformalni oblik <strong>intervjua</strong> u kojem, uz postavljanje pitanja iz formalne i neformalne sfere života, sudionici
+            konzumiraju <strong>ljute umake</strong> koje nam je omogućio prijatelj sajma, <strong>Volim ljuto</strong>. Prije nego sudionik <em>Hot Talka</em> odgovori na pitanje,
+            konzumira jedan ljuti umak koji predstavlja <strong>razinu zanimljivosti</strong> tog pitanja. Cilj je izdržati do kraja intervjua, skupiti bodove i oboriti rekord
+            našeg zadnjeg <strong>prvaka</strong> ljutih razgovora - <strong>Tomislava Cara iz Infinuma</strong>.
+          </p>
+
+          <h3>Od egzistencijalne krize do ljutih umaka</h3>
+
+          <p>
+            Ovogodišnji sudionik drugog Hot Talka jest <strong>Luka Drezga</strong>, COO (Chief Operating Officer) iz <strong>Ars Future</strong>. Nakon 7 godina studiranja
+            i par egzistencijalnih kriza, Luka je nakon posla ušao prvo u marketinške vode koje su ga doplovile do dizajna proizvoda, nakon čega je napokon završio u IT-u.
+          </p>
+
+          <h3>Kako je u Ars Futuri?</h3>
+
+          <p>
+            <strong>Ars Futura</strong> je agencija za softver dizajn i razvoj. Iz Zagreba su, a trenutno s njima radi oko <strong>50 opuštenih, mladih</strong> i marljivih ljudi
+            (koji su većinom Dalmatinci).  Podijeljeni su u nekoliko <strong>multi-disciplinarnih timova</strong> koji rade na dugoročnim projektima svih veličina, za klijente
+            s pretežno Američkog tržišta.
+          </p>
+
+          <h3>Prijavi se i dobro zabavi!</h3>
+
+          <p>
+            <strong><a href="/register">Prijavi se</a></strong> na 15. Job Fair u samo 3 koraka koristeći svoj životopis i osiguraj si ulaz na najveći regionalni sajam poslova.
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

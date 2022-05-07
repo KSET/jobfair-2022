@@ -35,7 +35,7 @@ const talks1 = [
   {
     start: "2022-05-11 10:00",
     end: "2022-05-11 10:30",
-    title: "Ericsson",
+    title: "Ericsson Nikola Tesla",
     class: "talk",
     location: "SD Martinovka",
   },

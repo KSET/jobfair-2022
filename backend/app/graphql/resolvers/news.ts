@@ -909,7 +909,7 @@ const news = [
     lang: "hr_HR",
     date: new Date("05-07-2022"),
     image: "/tmp/blog7.jpg",
-    title: "Luka Drezga iz Ars Future odvažio se na Hot Talk na15. Job Fairu!",
+    title: "Luka Drezga iz Ars Future odvažio se na Hot Talk na 15. Job Fairu!",
     description: "Saznaj tko je ovogodišnji sudionik Hot Talka te hoće li oboriti prošlogodišnji rekord!",
     content: `
           <h3>Što je <em>Hot Talk</em>?</h3>
@@ -951,6 +951,55 @@ const news = [
             <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
             <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-07-2022"),
+    image: "/tmp/blog7.jpg",
+    title: "Luka Drezga from Ars Futura dared to participate in the Hot Talk at the 15th Job Fair!",
+    description: "Find out who this year’s Hot Talk interviewee is and if he will break last year’s record!",
+    content: `
+          <h3>What is the <em>Hot Talk</em>?</h3>
+
+          <p>
+            We will spice up the programme at <strong>Martinovka Sports Hall</strong> on the second day, <strong>May 12th</strong>, with a spicy conversation!
+            At <strong>13.00</strong> the <strong><em>Hot Talk</em></strong> will take place - an informal interview where, in addition to asking questions about
+            the formal and informal parts of life, participants try <strong>hot sauces</strong> provided by the Fair’s partner, <strong>Volim ljuto</strong>.
+            Before a participant answers the question, they try a hot sauce which matches <strong>how interesting</strong> they find the question. The goal is
+            to manage to finish the interview, collect points and break the record of the Champion of our last Hot Talk - <strong>Tomislav Car from Infinum</strong>.
+          </p>
+
+          <h3>From existential crisis to hot sauces</h3>
+
+          <p>
+            This year’s participant in the second edition of the Hot Talk is <strong>Luka Drezga</strong>, COO (Chief Operating Officer) at <strong>Ars Futura</strong>.
+            After 7 years of studying and a couple of existential crises, Luka dived into marketing, which landed him at product design, so he could finally find himself in IT.
+          </p>
+
+          <h3>What is it like at Ars Futura?</h3>
+
+          <p>
+            <strong>Ars Futura</strong> is a software design and development agency. They are from Zagreb and currently employ around <strong>50 young, easy-going</strong>
+            and hard-working people (who are mostly from Dalmatia). They are divided into <strong>multi-disciplinary teams</strong> which work on long-term projects
+            of different durations for, for the most part, American clients.
+          </p>
+
+          <h3>Apply and have fun!</h3>
+
+          <p>
+            <strong><a href="/register">Apply</a></strong> to the 15th Job Fair in just 3 easy steps using your CV and secure your place at the biggest job fair in the region.
+          </p>
+
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
 ].map((obj) => ({

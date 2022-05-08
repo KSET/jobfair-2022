@@ -211,7 +211,7 @@
     display: grid;
     padding-top: 4rem;
     grid-template-columns: minmax(0, 3fr) minmax(0, 5fr);
-    gap: 3rem;
+    gap: $gap-size;
 
     h2,
     h4 {
@@ -298,6 +298,10 @@
           padding: 0;
         }
 
+        :global(.p-tabview-nav-link) {
+          padding: .5rem 1rem;
+        }
+
         :global(.p-tabview-panel) {
           $presenter-photo-size: 4rem;
           $presenter-bio-offset: .75rem;
@@ -350,6 +354,33 @@
           .presenterDescription {
             margin-top: .5rem;
             white-space: break-spaces;
+          }
+        }
+      }
+    }
+
+    @include media(md) {
+      $gap-size: 1.5rem;
+
+      padding-top: $gap-size;
+      grid-template-columns: 1fr;
+      gap: $gap-size;
+
+      .companyDescriptionContainer {
+        display: none;
+      }
+
+      .companyInfo {
+        gap: $gap-size;
+      }
+
+      .eventContainer {
+
+        .eventItems {
+          margin-top: 0;
+
+          :global(.p-tabview-panels) {
+            margin-top: $gap-size;
           }
         }
       }

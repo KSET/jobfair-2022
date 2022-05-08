@@ -25,52 +25,54 @@
         />
       </slot>
     </label>
-    <p-multi-select
-      v-if="isMultiple"
-      v-model="input"
-      :input-id="id.input"
-      :aria-describedby="elseNull(visible.message, id.message)"
-      :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-      :aria-invalid="orNull(invalid)"
-      :aria-label="orNull(label || labelTranslated)"
-      :aria-labelledby="elseNull(visible.label, id.label)"
-      :aria-required="orNull(required)"
-      :class="{
-        [$style.input]: true,
-        [$style.invalid]: invalid,
-      }"
-      :disabled="disabled"
-      :filter="!noFilter"
-      :name="name"
-      :options="options"
-      :placeholder="orNull(placeholder)"
-      :required="required"
-      option-label="label"
-      option-value="value"
-    />
-    <p-dropdown
-      v-else
-      v-model="input"
-      :input-id="id.input"
-      :aria-describedby="elseNull(visible.message, id.message)"
-      :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-      :aria-invalid="orNull(invalid)"
-      :aria-label="orNull(label || labelTranslated)"
-      :aria-labelledby="elseNull(visible.label, id.label)"
-      :aria-required="orNull(required)"
-      :class="{
-        [$style.input]: true,
-        [$style.invalid]: invalid,
-      }"
-      :disabled="disabled"
-      :filter="!noFilter"
-      :name="name"
-      :options="options"
-      :placeholder="orNull(placeholder)"
-      :required="required"
-      option-label="label"
-      option-value="value"
-    />
+    <client-only>
+      <p-multi-select
+        v-if="isMultiple"
+        v-model="input"
+        :input-id="id.input"
+        :aria-describedby="elseNull(visible.message, id.message)"
+        :aria-errormessage="elseNull(visible.label && invalid, id.label)"
+        :aria-invalid="orNull(invalid)"
+        :aria-label="orNull(label || labelTranslated)"
+        :aria-labelledby="elseNull(visible.label, id.label)"
+        :aria-required="orNull(required)"
+        :class="{
+          [$style.input]: true,
+          [$style.invalid]: invalid,
+        }"
+        :disabled="disabled"
+        :filter="!noFilter"
+        :name="name"
+        :options="options"
+        :placeholder="orNull(placeholder)"
+        :required="required"
+        option-label="label"
+        option-value="value"
+      />
+      <p-dropdown
+        v-else
+        v-model="input"
+        :input-id="id.input"
+        :aria-describedby="elseNull(visible.message, id.message)"
+        :aria-errormessage="elseNull(visible.label && invalid, id.label)"
+        :aria-invalid="orNull(invalid)"
+        :aria-label="orNull(label || labelTranslated)"
+        :aria-labelledby="elseNull(visible.label, id.label)"
+        :aria-required="orNull(required)"
+        :class="{
+          [$style.input]: true,
+          [$style.invalid]: invalid,
+        }"
+        :disabled="disabled"
+        :filter="!noFilter"
+        :name="name"
+        :options="options"
+        :placeholder="orNull(placeholder)"
+        :required="required"
+        option-label="label"
+        option-value="value"
+      />
+    </client-only>
     <transition name="input-message">
       <small
         v-if="visible.message"

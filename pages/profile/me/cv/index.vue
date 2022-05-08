@@ -121,12 +121,12 @@
       </div>
 
       <div class="mt-3 flex">
-        <label>
-          <Checkbox
+        <label class="flex align-items-center">
+          <input
             v-model="gdprCheckbox"
-            binary
             required
-          />
+            type="checkbox"
+          >
 
           <span class="ml-2">
             <translated-text trans-key="form.cv.gdpr" />
@@ -148,8 +148,8 @@
         </p-button>
 
         <p-button
-          :loading="isLoading"
           :disabled="!gdprCheckbox"
+          :loading="isLoading"
           class="p-button-secondary font-bold ml-auto"
           type="submit"
         >
@@ -184,7 +184,6 @@
   import {
     useToast,
   } from "primevue/usetoast";
-  import Checkbox from "primevue/checkbox";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import useTitle from "~/composables/useTitle";
@@ -246,7 +245,6 @@
     name: "PageProfileMeCv",
 
     components: {
-      Checkbox,
       AppTime,
       AppFormgroup,
       AppUserProfileContainer,

@@ -406,6 +406,7 @@
 
 <style lang="scss" module>
   @use "sass:color";
+  @use "sass:math";
   @import "assets/styles/include";
 
   .container {
@@ -565,8 +566,8 @@
         $font-size: 1.25em;
 
         font-size: $font-size;
-        bottom: calc(#{.5em / $font-size} * 1em);
-        left: calc(#{.5em / $font-size} * 1em);
+        bottom: calc(#{math.div(.5em, $font-size)} * 1em);
+        left: calc(#{math.div(.5em, $font-size)} * 1em);
       }
     }
 

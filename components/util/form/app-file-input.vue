@@ -74,11 +74,19 @@
       </span>
       <span
         v-if="visible.clearButton"
-        :class="$style.clearButton"
+        :class="[ $style.actionButton, $style.clearButton]"
         @click.prevent.capture="clearInput"
       >
         <i class="pi pi-times" />
       </span>
+      <a
+        v-if="'string' === typeof modelValue && modelValue"
+        :class="[ $style.actionButton, $style.downloadButton]"
+        :href="modelValue"
+        download
+      >
+        <i class="pi pi-cloud-download" />
+      </a>
     </label>
     <input
       :id="id.input"
@@ -529,10 +537,8 @@
         transform: none;
       }
 
-      .clearButton {
+      .actionButton {
         position: absolute;
-        top: .5em;
-        right: .5em;
         display: flex;
         padding: .75em;
         transition-property: background-color;
@@ -548,6 +554,19 @@
           margin-right: -1px;
           margin-bottom: -1px;
         }
+      }
+
+      .clearButton {
+        top: .5em;
+        right: .5em;
+      }
+
+      .downloadButton {
+        $font-size: 1.25em;
+
+        font-size: $font-size;
+        bottom: calc(#{.5em / $font-size} * 1em);
+        left: calc(#{.5em / $font-size} * 1em);
       }
     }
 

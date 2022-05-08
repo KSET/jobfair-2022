@@ -1011,8 +1011,6 @@ const news = [
     title: "Otkrij koje se radionice održavaju na 15. Job Fairu!",
     description: "Čak 16 poduzeća je ove godine za tebe pripremilo zanimljive radionice na kojima možeš sudjelovati na Fakultetu elektrotehnike i računarstva.",
     content: `
-          <h3>Što je <em>Hot Talk</em>?</h3>
-
           <p>
             Za vrijeme trajanja Job Faira, <strong>11. i 12. 5. od 10 do 18 sati na Fakultetu elektrotehnike i računarstva</strong> paralelno se održavaju
             po 3 zanimljive radionice. Prijavi se za sudjelovanje i u 90 minuta praktičnog rada saznaj kako problemske izazove današnjice rješavaju stručnjaci iz industrije.

@@ -85,7 +85,7 @@
         :href="modelValue"
         download
       >
-        <i class="pi pi-cloud-download" />
+        <i class="pi pi-download" />
       </a>
     </label>
     <input

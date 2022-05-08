@@ -1,7 +1,7 @@
 <template>
   <div
     :aria-disabled="orNull(disabled)"
-    :class="$style.container"
+    :class="[$style.container, { [$style.checkbox]: type === 'checkbox' }]"
   >
     <label
       v-if="visible.label"
@@ -83,7 +83,7 @@
     props: {
       modelValue: {
         required: false,
-        type: [ String, Number, Date ],
+        type: [ String, Number, Date, Boolean ],
         default: () => "",
       },
 
@@ -285,6 +285,32 @@
           transform: translateY(calc(-1 * #{$message-margin}));
           opacity: 0;
         }
+      }
+    }
+
+    &.checkbox {
+      display: inline-grid;
+      align-items: center;
+      width: fit-content;
+      grid-template: "input label";
+      gap: .5em;
+
+      .label {
+        margin-bottom: 0;
+        grid-area: label;
+      }
+
+      .label.withColon {
+
+        &::after {
+          content: "";
+        }
+      }
+
+      .input {
+        width: 1rem;
+        grid-area: input;
+        appearance: auto;
       }
     }
   }

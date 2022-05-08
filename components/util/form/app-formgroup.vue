@@ -199,6 +199,11 @@
         "date",
       value: string | Date,
     }
+    | {
+      type:
+        "checkbox",
+      value: boolean,
+    }
   );
 
   type InputDropdown = InputBase & {

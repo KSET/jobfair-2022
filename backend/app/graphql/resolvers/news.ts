@@ -1002,6 +1002,78 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-08-2022"),
+    image: "/tmp/blog8.jpg",
+    title: "Otkrij koje se radionice održavaju na 15. Job Fairu!",
+    description: "Čak 16 poduzeća je ove godine za tebe pripremilo zanimljive radionice na kojima možeš sudjelovati na Fakultetu elektrotehnike i računarstva.",
+    content: `
+          <h3>Što je <em>Hot Talk</em>?</h3>
+
+          <p>
+            Za vrijeme trajanja Job Faira, <strong>11. i 12. 5. od 10 do 18 sati na Fakultetu elektrotehnike i računarstva</strong> paralelno se održavaju
+            po 3 zanimljive radionice. Prijavi se za sudjelovanje i u 90 minuta praktičnog rada saznaj kako problemske izazove današnjice rješavaju stručnjaci iz industrije.
+          </p>
+
+          <h3>U srijedu fokus je na automobilima i sigurnosti</h3>
+
+          <p>
+            <strong>U 10 sati, True North</strong> otkriva "Vodič za autostopere kroz DevOps" koji predstavlja praktičan pregled kroz DevOps prakse, principe,
+            tehnologije i cloud nativni razvoj. <strong>dSPACE</strong> će odgovoriti na pitanje: "Kako ubrzati razvoj automobila korištenjem dSPACE simulacijskih alata?"
+            i pojasniti kako simuliraju testne sustave za vozilo s motorom s unutarnjim sagorijevanjem i s električnim motorom. <strong>AG04</strong> će te uvesti
+            u priču Kubernetesa uz njihov "Kubernetes Crash Course".
+          </p>
+
+          <p>
+            <strong>U 13 sati</strong>, kod <strong>Greyp</strong>a svrati i "Osmisli anti-theft system za e-bicikle pomoću Design Thinkinga". Također, možeš izgraditi
+            aplikaciju s <strong>CROZ</strong>-om tijekom "Dođoh, vidjeh, programirah" ili uz <strong>Alfatec</strong> saznati proces "Od podataka do znanja korištenjem
+            strojnog učenja i poslovne analitike".
+          </p>
+
+          <p>
+            <strong>U 16 sati</strong>, saznaj kako <strong>CARNET</strong> održava svoju visoku razinu kvalitete uz "CARNET mreža i kibernetička sigurnost".
+            Upoznaj sa se mikroservisnim sustavima uz ekipu iz <strong>Sedam IT</strong>-a i "Put od baze do ekrana u mikroservisnoj arhitekturi" ili kod
+            <strong>Rimac Technology</strong> otkrij "Zašto je test hardvera važan i izvan automobilske industrije?".
+          </p>
+
+          <h3>Četvrtak obilježava fina elektronika</h3>
+
+          <p>
+            <strong>Od 10 sati Končar</strong> će pokazivati "Multifunkcionalni numerički zaštitni relej generacije KONPRO 2", dok će se kod <strong>Comsysto Reply</strong>a
+            moći upoznati s alatom "Terraform - upoznajte najpopularniji alat za Infrastrukturu kao Kod".
+          </p>
+
+          <p>
+            <strong>Od 13 sati Byte Lab</strong> dijeli tajne za "Dizajn proizvoda tijekom nestašice čipova" npr. kako dizjanirati uređaje koji su dugoročno otporni na ovakve krize
+            i sl. U isto vrijeme <strong>Undabot</strong> tijekom "Pošto kila aplikacije?" dijeli smjernice o analizi i procjeni inženjerskog posla odnosno spojnici biznisa,
+            prodaje i tehnologije.
+          </p>
+
+          <p>
+            <strong>Od 16 sati Ars Futura</strong> pokazivat će kako možeš koristiti javno dostupne informacije preko tzv. API-ja na primjeru  “React Crypto Trackera”.
+            Također, <strong>Ericsson Nikola Tesla</strong> pokazat će "Full stack izrada aplikacije". Osim njih i <strong>Televend by INTIS</strong>  nudi svoju vrstu zanimacije:
+            "Hack&Snack - Programiranje IoT proizvoda". Imat ćeš priliku i za programiranje pomoću Televend IoT uređaj kojim ćeš "hackirati" mašinu za snack.
+          </p>
+
+          <h3>Kako se možeš prijaviti na radionicu?</h3>
+
+          <p>
+            Ako već nisi, prijavi se na našoj <a href="/">internetskoj stranici</a></strong>, predaj svoj životopis u bazu životopisa kako bi se na tvom profilu stvorio gumb za prijavu na radionice.
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

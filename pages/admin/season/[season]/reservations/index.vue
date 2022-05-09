@@ -2,10 +2,15 @@
   <app-max-width-container>
     <h1>Rezervacije</h1>
 
-    <DataTable :value="reservations">
+    <DataTable
+      :value="reservations"
+      data-key="uid"
+      row-hover
+      sort-mode="multiple"
+    >
       <Column field="event.company.brandName" header="Firma" sortable />
       <Column field="type" header="Event" sortable />
-      <Column field="event.titleHr" header="Naslov" />
+      <Column field="event.titleHr" header="Naslov" sortable />
       <Column field="count" header="Broj prijava" sortable />
     </DataTable>
   </app-max-width-container>

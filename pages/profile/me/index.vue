@@ -103,7 +103,7 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
-              :to="{ name: 'profile-me-cv' }"
+              :to="{ name: 'schedule' }"
               class="ml-auto"
             >
               <p-button

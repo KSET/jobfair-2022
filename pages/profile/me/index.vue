@@ -79,6 +79,7 @@
               <dt
                 v-for="item in calendar"
                 :key="item.uid"
+                :class="$style.reservationItem"
               >
                 <p-button
                   :loading="item.loading"
@@ -90,7 +91,12 @@
                 <strong
                   :title="translateFor(item.forWorkshop, 'description').value"
                 >
-                  [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
+                  <nuxt-link
+                    :to="{ name: 'calendar-event-uid', params: { uid: item.uid } }"
+                    target="_blank"
+                  >
+                    [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
+                  </nuxt-link>
                 </strong>
               </dt>
             </dl>
@@ -757,10 +763,18 @@
     opacity: 1 !important;
     gap: 1em;
 
-    dt {
+    .reservationItem {
       display: flex;
       align-items: center;
       gap: 1em;
+
+      a {
+        color: $fer-black;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 </style>

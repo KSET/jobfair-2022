@@ -54,7 +54,7 @@
               <span
                 v-if="programItems.talk.event"
                 :class="$style.itemLocation"
-                v-text="formatLocation(programItems.talk.event)"
+                v-text="formatLocation(programItems.talk.event).value"
               />
             </div>
 
@@ -97,7 +97,7 @@
               <span
                 v-if="programItems.workshop.event"
                 :class="$style.itemLocation"
-                v-text="formatLocation(programItems.workshop.event)"
+                v-text="formatLocation(programItems.workshop.event).value"
               />
               <p-button
                 v-if="loggedIn"
@@ -161,7 +161,7 @@
               <span
                 v-if="programItems.panel.event"
                 :class="$style.itemLocation"
-                v-text="formatLocation(programItems.panel.event)"
+                v-text="formatLocation(programItems.panel.event).value"
               />
             </div>
 
@@ -351,12 +351,13 @@
         },
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
         formatLocation(event: { start: string, end?: string, location?: string, }) {
-          const t = unref(eventTimeFormatter);
-          const d = unref(eventDayFormatter);
-
           const start = new Date(event.start);
 
-          return [ d.format(start), t.format(start), event.location ].filter((x) => x).join(" | ");
+          return computed(() => [
+            unref(eventDayFormatter).format(start),
+            unref(eventTimeFormatter).format(start),
+            event.location,
+          ].filter((x) => x).join(" | "));
         },
         async handleSignup() {
           const loggedIn = userStore.isLoggedIn;

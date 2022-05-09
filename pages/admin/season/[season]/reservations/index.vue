@@ -1,11 +1,13 @@
 <template>
   <app-max-width-container>
     <h1>Rezervacije</h1>
-    <ul>
-      <li v-for="reservation in reservations" :key="reservation.uid">
-        [{{ reservation.event.company.brandName }}] <strong v-text="reservation.event.titleHr" />: <em v-text="reservation.count" />
-      </li>
-    </ul>
+
+    <DataTable :value="reservations">
+      <Column field="event.company.brandName" header="Firma" sortable />
+      <Column field="type" header="Event" sortable />
+      <Column field="event.titleHr" header="Naslov" />
+      <Column field="count" header="Broj prijava" sortable />
+    </DataTable>
   </app-max-width-container>
 </template>
 
@@ -19,6 +21,8 @@
     map,
     toPairs,
   } from "rambdax";
+  import DataTable from "primevue/datatable";
+  import Column from "primevue/column";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
@@ -38,6 +42,8 @@
 
     components: {
       AppMaxWidthContainer,
+      DataTable,
+      Column,
     },
 
     async setup() {

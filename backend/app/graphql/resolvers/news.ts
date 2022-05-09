@@ -268,7 +268,6 @@ const news = [
             <a href="https://www.avl.com/?avlregion=GLOBAL&groupId=10138&lang=en_US">AVL</a>,
             <a href="https://www.logicbricks.com/">XYLON</a>,
             <a href="https://intis-engineering.com/hr/">Intis Engineering</a>,
-            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
             <a href="https://croatia.comsysto.com/">Comsysto Reply</a>,
             <a href="https://www.mireo.hr/">Mireo</a>,
             <a href="https://infinum.com/about/ventures/porsche-digital-croatia/">Porsche Digital Croatia</a>,
@@ -309,7 +308,6 @@ const news = [
           
           <p>
             <strong>Electronics and embedded software:</strong>
-            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
             <a href="https://altpro.com/hr/" rel="noopener noreferrer" target="_blank">ALTPRO</a>,
             <a href="https://www.framos.com/en/" rel="noopener noreferrer" target="_blank">FRAMOS</a>,
             <a href="https://spyro-soft.com/" rel="noopener noreferrer" target="_blank">Spyrosoft</a>,
@@ -374,6 +372,8 @@ const news = [
             <a href="https://www.syntio.net/" rel="noopener noreferrer" target="_blank">Syntio</a>,
             <a href="https://www.barrage.net/" rel="noopener noreferrer" target="_blank">BARRAGE</a>,
             <a href="https://www.biss.hr/" rel="noopener noreferrer" target="_blank">BISS</a>,
+            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
+            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
             <a href="https://www.commondo.eu/" rel="noopener noreferrer" target="_blank">Commondo</a>,
             <a href="https://www.deloittedigital.com/" rel="noopener noreferrer" target="_blank">Deloitte Digital</a>,
             <a href="https://robotiq.ai/" rel="noopener noreferrer" target="_blank">Robotiq.ai</a>,
@@ -486,7 +486,6 @@ const news = [
             <a href="https://www.avl.com/?avlregion=GLOBAL&groupId=10138&lang=en_US">AVL</a>,
             <a href="https://www.logicbricks.com/">XYLON</a>,
             <a href="https://intis-engineering.com/hr/">Intis Engineering</a>,
-            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
             <a href="https://croatia.comsysto.com/">Comsysto Reply</a>,
             <a href="https://www.mireo.hr/">Mireo</a>,
             <a href="https://infinum.com/about/ventures/porsche-digital-croatia/">Porsche Digital Croatia</a>,
@@ -527,7 +526,6 @@ const news = [
           
           <p>
             <strong>Electronics and embedded software:</strong>
-            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
             <a href="https://altpro.com/hr/" rel="noopener noreferrer" target="_blank">ALTPRO</a>,
             <a href="https://www.framos.com/en/" rel="noopener noreferrer" target="_blank">FRAMOS</a>,
             <a href="https://spyro-soft.com/" rel="noopener noreferrer" target="_blank">Spyrosoft</a>,
@@ -592,6 +590,8 @@ const news = [
             <a href="https://www.syntio.net/" rel="noopener noreferrer" target="_blank">Syntio</a>,
             <a href="https://www.barrage.net/" rel="noopener noreferrer" target="_blank">BARRAGE</a>,
             <a href="https://www.biss.hr/" rel="noopener noreferrer" target="_blank">BISS</a>,
+            <a href="https://www.versoaltima.com/">VERSO ALTIMA</a>,
+            <a href="https://productive.io/" rel="noopener noreferrer" target="_blank">Productive</a>,
             <a href="https://www.commondo.eu/" rel="noopener noreferrer" target="_blank">Commondo</a>,
             <a href="https://www.deloittedigital.com/" rel="noopener noreferrer" target="_blank">Deloitte Digital</a>,
             <a href="https://robotiq.ai/" rel="noopener noreferrer" target="_blank">Robotiq.ai</a>,

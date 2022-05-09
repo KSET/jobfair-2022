@@ -153,6 +153,10 @@ export class SeasonFieldResolver {
       }
 
       for (const [ , entry ] of entries) {
+        if (!entry?.id) {
+          continue;
+        }
+
         eventToUid[event][entry.id] = entry.uid;
       }
     }

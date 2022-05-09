@@ -106,6 +106,17 @@
 
             <p :class="$style.itemDescription" v-text="translateFor(programItems.workshop, 'description').value" />
 
+            <template v-for="note in [ translateFor(programItems.workshop, 'notes').value ]">
+              <template v-if="note">
+                <div :key="note">
+                  <h4>
+                    <translated-text trans-key="company.info.program.notes" />
+                  </h4>
+                  <p v-text="note" />
+                </div>
+              </template>
+            </template>
+
             <h4>
               <translated-text trans-key="company.info.program.about-presenters" />
             </h4>

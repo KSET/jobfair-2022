@@ -99,7 +99,7 @@
         .then((resp) => resp?.data?.users || [])
         .then(sortBy<QUser>((u) => new Date(u.createdAt as string)))
         .then(map<QUser, QUser & { isStudent: boolean, }>((x) => Object.assign(x, {
-          isStudent: 0 < (x.companies?.length ?? 0),
+          isStudent: 0 === (x.companies?.length ?? 0),
         })))
       ;
 

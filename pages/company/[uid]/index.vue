@@ -182,11 +182,16 @@
                 :to="{ name: 'company-uid', params: { uid: otherCompany.uid }, query: { tab: 'panel' } }"
                 target="_blank"
               >
-                <Chip
-                  :class="$style.companyChip"
-                  :image="otherCompany.rasterLogo.fullUrl"
-                  :label="otherCompany.brandName"
-                />
+                <div :class="$style.companyChip">
+                  <app-img
+                    :alt="`${otherCompany.brandName} logo`"
+                    :class="$style.companyChipImage"
+                    :lazy-src="otherCompany.rasterLogo.thumbUrl"
+                    :src="otherCompany.rasterLogo.fullUrl"
+                    contain
+                  />
+                  <div class="p-chip-text" v-text="otherCompany.brandName" />
+                </div>
               </nuxt-link>
             </div>
           </TabPanel>
@@ -202,7 +207,6 @@
   } from "rambdax";
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
-  import Chip from "primevue/chip";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     computed,
@@ -237,7 +241,6 @@
       AppMaxWidthContainer,
       TabView,
       TabPanel,
-      Chip,
     },
 
     setup() {
@@ -474,11 +477,28 @@
             display: flex;
             margin-top: 1rem;
             gap: 1rem;
+
+            > a {
+              display: inline-flex;
+            }
           }
 
           .companyChip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 .75rem;
             transition-property: background-color;
+            color: $fer-black;
+            border-radius: 16px;
             background-color: transparent;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+
+            .companyChipImage {
+              width: 2.5rem;
+              height: 2.5rem;
+              margin-right: .5rem;
+            }
 
             &:hover {
               background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};

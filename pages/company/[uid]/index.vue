@@ -112,7 +112,7 @@
                   <h4>
                     <translated-text trans-key="company.info.program.notes" />
                   </h4>
-                  <p v-text="note" />
+                  <p :class="$style.itemDescription" v-text="note" />
                 </div>
               </template>
             </template>

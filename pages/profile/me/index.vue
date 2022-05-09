@@ -385,7 +385,7 @@
         </div>
 
         <div
-          v-if="isApprovedWithoutBooth"
+          v-if="isApprovedWithEvents"
           :class="[$style.item, $style.itemApproval]"
         >
           <div :class="$style.itemContent">
@@ -399,9 +399,7 @@
                 <strong>
                   <translated-text trans-key="profile.company.workshop" />
                 </strong>
-                <em>
-                  5
-                </em>
+                <em v-text="companyApplication.userApplications.workshop" />
               </li>
             </ul>
           </div>
@@ -477,6 +475,7 @@
   } from "@urql/core";
   import {
     omit,
+    pick,
   } from "rambdax";
   import AppImg from "../../../components/util/app-img.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
@@ -489,6 +488,7 @@
     IBooth,
     ICalendarItem,
     ICompanyApplication,
+    IEventUserApplications,
     IMutationUpdateEventReservationArgs,
     IResume,
   } from "~/graphql/schema";
@@ -543,7 +543,7 @@
           wantsPanel: ICompanyApplication["wantsPanel"],
           wantsCocktail: ICompanyApplication["wantsCocktail"],
           approval: ICompanyApplication["approval"],
-          userApplications: number,
+          userApplications: IEventUserApplications,
         },
         booths: Pick<IBooth, "key" | "name">[],
         profile: {
@@ -635,6 +635,9 @@
       const isApprovedWithoutBooth = companyStore.isApplicationApproved(omit([
         "booth",
       ], approval || {}));
+      const isApprovedWithEvents = companyStore.isApplicationApproved(pick([
+        "workshopParticipants",
+      ], approval || {}));
       const resume = resp?.data?.profile?.resume;
       const calendar = reactive((resp?.data?.calendar || []).map((x) => ({
         ...x,
@@ -654,6 +657,7 @@
         companyApplication: computed(() => resp?.data?.companyApplication),
         isApproved,
         isApprovedWithoutBooth,
+        isApprovedWithEvents,
         async handleSignupFor(item: (typeof calendar)[0]) {
           item.loading = true;
           const resp = await signupQuery({

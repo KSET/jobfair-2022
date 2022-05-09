@@ -290,6 +290,7 @@ export class CalendarUpdateResolver {
     const data = {
       ...pick([
         "title",
+        "text",
         "location",
         "grouped",
         "start",

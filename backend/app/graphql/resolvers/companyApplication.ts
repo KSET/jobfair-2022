@@ -25,6 +25,8 @@ import {
   Season,
 } from "@generated/type-graphql";
 import {
+  groupBy,
+  mapObject,
   omit,
 } from "rambdax";
 import {
@@ -72,6 +74,7 @@ import {
 } from "../../services/image-service";
 import {
   Dict,
+  GQLField,
 } from "../../types/helpers";
 import {
   TalkCreateInput,
@@ -111,6 +114,12 @@ const photoExtensions = [
   ".jpg",
   ".png",
 ];
+
+@ObjectType()
+export class EventUserApplications {
+  @Field()
+    workshop?: number;
+}
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationFieldResolver {
@@ -161,6 +170,44 @@ export class CompanyApplicationFieldResolver {
     @Root() application: CompanyApplication,
   ): ApplicationPresenter[] {
     return application.panelParticipants || [];
+  }
+
+  @FieldResolver(() => EventUserApplications)
+  async userApplications(
+    @Root() application: CompanyApplication,
+      @Ctx() ctx: Context,
+  ): Promise<GQLField<EventUserApplications>> {
+    const [
+      workshop,
+    ] = await Promise.all([
+      ctx.prisma.applicationWorkshop.findFirst({
+        where: {
+          forApplicationId: application.id,
+        },
+        select: {
+          id: true,
+        },
+      }),
+    ] as const);
+
+    type Row = { eventId: number, eventType: string, status: number, count: number, };
+    const items = await ctx.prisma.$queryRaw<Row[]>`
+      select
+        "eventId", "eventType", "status", count("status")
+      from
+        "EventReservation"
+      where
+        "status" <> 0 and "eventId" = ${ workshop?.id || -1 }
+      group by
+        "eventId", "eventType", "status"
+    `;
+
+    const byType = groupBy((x) => x.eventType, items);
+    const summed = mapObject((rows: Row[]) => rows.reduce((acc, row) => acc + row.count, 0), byType);
+
+    return {
+      workshop: summed.workshop || 0,
+    };
   }
 }
 
@@ -217,6 +264,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     select.panelParticipants = {
       select: transformSelectPresenter(select.panelParticipants as Dict),
     };
+
+    return select;
+  },
+
+  userApplications(select) {
+    select.id = true;
+
+    delete select.userApplications;
 
     return select;
   },

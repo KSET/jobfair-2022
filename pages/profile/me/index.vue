@@ -270,117 +270,143 @@
           </a>
         </div>
       </div>
-      <div
+      <template
         v-else-if="!applicationsOpen && companyApplication && companyApplication.approval"
-        :class="[$style.item, $style.itemApproval]"
       >
-        <div :class="$style.itemContent">
-          <h2 :class="$style.itemHeader">
-            <translated-text trans-key="profile.company.applicationsApproval.header" />
-          </h2>
-          <h3>
-            <translated-text
-              trans-key="profile.season"
-            />
-            <span>:&nbsp;</span>
-            <em v-text="currentSeason.name" />
-          </h3>
-          <h4>
-            <template
-              v-if="isApproved"
-            >
+        <div
+          :class="[$style.item, $style.itemApproval]"
+        >
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.company.applicationsApproval.header" />
+            </h2>
+            <h3>
               <translated-text
-                :class="$style.success"
-                trans-key="profile.company.applicationsApproval.status.approved"
-              />&nbsp;<i
-                :class="$style.success"
-                class="pi pi-check"
+                trans-key="profile.season"
               />
-              <div class="mt-1" />
-              <translated-text
-                class="font-normal"
-                trans-key="profile.company.applicationsApproval.status.approved.message"
-              />
-            </template>
-            <template
-              v-else
-            >
-              <translated-text
-                :class="$style.error"
-                trans-key="profile.company.applicationsApproval.status.denied"
-              />&nbsp;<i
-                :class="$style.error"
-                class="pi pi-times"
-              />
-            </template>
-          </h4>
-          <ul
-            v-if="isApproved"
-            :class="$style.applicationItems"
-          >
-            <li v-if="companyApplication.approval.booth">
-              <strong>
-                <translated-text trans-key="profile.company.booth" />
-              </strong>
-              <em v-text="booths[companyApplication.booth]" />
-            </li>
-            <li v-if="companyApplication.approval.talkParticipants">
-              <strong>
-                <translated-text trans-key="profile.company.talk" />
-              </strong>
-              <em>
-                {{ companyApplication.approval.talkParticipants }}
-                <translated-text trans-key="profile.company.talk.participants" />
-              </em>
-            </li>
-            <li v-if="companyApplication.approval.workshopParticipants">
-              <strong>
-                <translated-text trans-key="profile.company.workshop" />
-              </strong>
-              <em>
-                {{ companyApplication.approval.workshopParticipants }}
-                <translated-text trans-key="profile.company.talk.participants" />
-              </em>
-            </li>
-            <li v-if="companyApplication.approval.panel">
-              <strong>
-                <translated-text trans-key="profile.company.panel" />
-              </strong>
-              <em>
-                <i class="pi pi-check" />
-              </em>
-            </li>
-            <li v-if="companyApplication.approval.cocktail">
-              <strong>
-                <translated-text trans-key="profile.company.cocktail" />
-              </strong>
-              <em>
-                <i class="pi pi-check" />
-              </em>
-            </li>
-          </ul>
-        </div>
-        <div v-if="isApproved && isApprovedWithoutBooth" :class="$style.itemActions">
-          <nuxt-link
-            :to="{ name: 'profile-me-company-application-edit' }"
-            class="ml-auto"
-          >
-            <p-button
-              class="p-button-secondary"
-              tabindex="-1"
-            >
-              <translated-text
-                v-if="companyApplication"
-                trans-key="profile.company.application.update"
-              />
-              <translated-text
+              <span>:&nbsp;</span>
+              <em v-text="currentSeason.name" />
+            </h3>
+            <h4>
+              <template
+                v-if="isApproved"
+              >
+                <translated-text
+                  :class="$style.success"
+                  trans-key="profile.company.applicationsApproval.status.approved"
+                />&nbsp;<i
+                  :class="$style.success"
+                  class="pi pi-check"
+                />
+                <div class="mt-1" />
+                <translated-text
+                  class="font-normal"
+                  trans-key="profile.company.applicationsApproval.status.approved.message"
+                />
+              </template>
+              <template
                 v-else
-                trans-key="profile.company.application.apply"
-              />
-            </p-button>
-          </nuxt-link>
+              >
+                <translated-text
+                  :class="$style.error"
+                  trans-key="profile.company.applicationsApproval.status.denied"
+                />&nbsp;<i
+                  :class="$style.error"
+                  class="pi pi-times"
+                />
+              </template>
+            </h4>
+            <ul
+              v-if="isApproved"
+              :class="$style.applicationItems"
+            >
+              <li v-if="companyApplication.approval.booth">
+                <strong>
+                  <translated-text trans-key="profile.company.booth" />
+                </strong>
+                <em v-text="booths[companyApplication.booth]" />
+              </li>
+              <li v-if="companyApplication.approval.talkParticipants">
+                <strong>
+                  <translated-text trans-key="profile.company.talk" />
+                </strong>
+                <em>
+                  {{ companyApplication.approval.talkParticipants }}
+                  <translated-text trans-key="profile.company.talk.participants" />
+                </em>
+              </li>
+              <li v-if="companyApplication.approval.workshopParticipants">
+                <strong>
+                  <translated-text trans-key="profile.company.workshop" />
+                </strong>
+                <em>
+                  {{ companyApplication.approval.workshopParticipants }}
+                  <translated-text trans-key="profile.company.talk.participants" />
+                </em>
+              </li>
+              <li v-if="companyApplication.approval.panel">
+                <strong>
+                  <translated-text trans-key="profile.company.panel" />
+                </strong>
+                <em>
+                  <i class="pi pi-check" />
+                </em>
+              </li>
+              <li v-if="companyApplication.approval.cocktail">
+                <strong>
+                  <translated-text trans-key="profile.company.cocktail" />
+                </strong>
+                <em>
+                  <i class="pi pi-check" />
+                </em>
+              </li>
+            </ul>
+          </div>
+          <div v-if="isApproved && isApprovedWithoutBooth" :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-company-application-edit' }"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  v-if="companyApplication"
+                  trans-key="profile.company.application.update"
+                />
+                <translated-text
+                  v-else
+                  trans-key="profile.company.application.apply"
+                />
+              </p-button>
+            </nuxt-link>
+          </div>
         </div>
-      </div>
+
+        <div
+          v-if="isApprovedWithoutBooth"
+          :class="[$style.item, $style.itemApproval]"
+        >
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.company.userApplications.header" />
+            </h2>
+            <ul
+              :class="$style.applicationItems"
+            >
+              <li>
+                <strong>
+                  <translated-text trans-key="profile.company.workshop" />
+                </strong>
+                <em>
+                  5
+                </em>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </template>
       <div
         v-else-if="!applicationsOpen && companyApplication && hasCompany"
         :class="$style.item"
@@ -517,6 +543,7 @@
           wantsPanel: ICompanyApplication["wantsPanel"],
           wantsCocktail: ICompanyApplication["wantsCocktail"],
           approval: ICompanyApplication["approval"],
+          userApplications: number,
         },
         booths: Pick<IBooth, "key" | "name">[],
         profile: {
@@ -556,6 +583,9 @@
                     talkParticipants
                     panel
                     cocktail
+                }
+                userApplications {
+                  workshop
                 }
             }
             profile {

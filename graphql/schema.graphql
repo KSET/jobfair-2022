@@ -421,6 +421,7 @@ type CompanyApplication {
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
   updatedAt: DateTime!
+  userApplications: EventUserApplications!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
   workshop: ApplicationWorkshop
@@ -811,6 +812,10 @@ input EventReservationWhereInput {
 
 input EventReservationWhereUniqueInput {
   eventId_eventType_userId: EventReservationEventIdEventTypeUserIdCompoundUniqueInput
+}
+
+type EventUserApplications {
+  workshop: Float!
 }
 
 type FieldError {

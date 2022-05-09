@@ -97,9 +97,17 @@
               <span
                 v-if="programItems.workshop.event"
                 :class="$style.itemLocation"
-                contain
                 v-text="formatLocation(programItems.workshop.event)"
               />
+              <p-button
+                v-if="loggedIn"
+                :class="$style.signupButton"
+                :loading="signupLoading"
+                @click="handleSignup"
+              >
+                <translated-text v-if="programItems.workshop.reservation" trans-key="company.event.user.sign-off" />
+                <translated-text v-else trans-key="company.event.user.sign-up" />
+              </p-button>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.workshop, 'title').value" />
@@ -218,12 +226,16 @@
   } from "rambdax";
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
+  import {
+    gql,
+  } from "@urql/core";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     computed,
     defineComponent,
     ref,
     unref,
+    useMutation,
     useRoute,
     useTitle,
   } from "#imports";
@@ -242,6 +254,16 @@
   import {
     Dict,
   } from "~/helpers/type";
+  import {
+    useUserStore,
+  } from "~/store/user";
+  import {
+    IMutationUpdateEventReservationArgs,
+  } from "~/graphql/schema";
+  import {
+    EventType,
+    statusFromEventList,
+  } from "~/helpers/event-status";
 
   export default defineComponent({
     name: "PageCompanyInfo",
@@ -258,6 +280,7 @@
       const route = useRoute();
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
+      const userStore = useUserStore();
 
       const company = computed(() => companyStore.companyInfo!);
       const translateFor =
@@ -306,7 +329,17 @@
         },
       ));
 
+      const signupQuery = useMutation<{ updateEventReservation: number | null, }, IMutationUpdateEventReservationArgs>(gql`
+        mutation Signup($input: EventReservationUpdateInput!) {
+          updateEventReservation(input: $input)
+        }
+      `);
+
+      const signupLoading = ref(false);
+
       return {
+        loggedIn: computed(() => userStore.isLoggedIn),
+        signupLoading,
         activeIndex,
         company,
         translateFor,
@@ -324,6 +357,37 @@
           const start = new Date(event.start);
 
           return [ d.format(start), t.format(start), event.location ].filter((x) => x).join(" | ");
+        },
+        async handleSignup() {
+          const loggedIn = userStore.isLoggedIn;
+
+          if (!loggedIn) {
+            return;
+          }
+
+          const workshop = unref(company).program?.workshop;
+
+          if (!workshop) {
+            return;
+          }
+
+          signupLoading.value = true;
+          const resp = await signupQuery({
+            input: {
+              id: unref(programItems)?.workshop?.uid,
+              type: EventType.workshop,
+              status: statusFromEventList(workshop.reservation ? [] : [ "event" ]),
+            },
+          }).then((resp) => resp?.data?.updateEventReservation);
+          signupLoading.value = false;
+
+          if ("number" !== typeof resp) {
+            alert("Something went wrong");
+          }
+
+          if (workshop) {
+            workshop.reservation = resp!;
+          }
         },
       };
     },
@@ -514,6 +578,12 @@
             &:hover {
               background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};
             }
+          }
+
+          .signupButton {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: .85rem 1rem;
           }
         }
       }

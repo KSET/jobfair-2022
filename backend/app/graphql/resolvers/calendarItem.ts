@@ -1,5 +1,6 @@
 import {
   CalendarItem,
+  ApplicationWorkshop,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -15,6 +16,7 @@ import {
   Root,
 } from "type-graphql";
 import {
+  mergeDeepRight,
   pick,
 } from "rambdax";
 import {
@@ -35,6 +37,9 @@ import {
 import {
   Role,
 } from "../../helpers/auth";
+import {
+  transformSelect as transformSelectWorkshop,
+} from "./companyApplicationWorkshop";
 
 @Resolver(() => CalendarItem)
 export class CalendarItemFieldResolver {
@@ -48,6 +53,13 @@ export class CalendarItemFieldResolver {
       || calendarItem.forPanelId
       ,
     );
+  }
+
+  @FieldResolver(() => ApplicationWorkshop, { nullable: true })
+  forWorkshop(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<ApplicationWorkshop, "nullable"> {
+    return calendarItem.forWorkshop;
   }
 }
 
@@ -90,6 +102,14 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
 
     return select;
   },
+
+  forWorkshop(select) {
+    select.forWorkshop = {
+      select: transformSelectWorkshop(select.forWorkshop as Dict),
+    };
+
+    return select;
+  },
 });
 
 @InputType()
@@ -123,6 +143,12 @@ class CalendarUpdateInput {
 
   @Field(() => String)
     season: string = "";
+}
+
+@InputType()
+class CalendarFilterInput {
+  @Field(() => String, { nullable: true })
+    type?: string | undefined;
 }
 
 @Resolver(() => CalendarItem)
@@ -203,30 +229,33 @@ export class CalendarItemInfoResolver {
   calendar(
   @Ctx() ctx: Context,
     @Arg("season", () => String, { nullable: true }) season: string | undefined,
+    @Arg("filter", () => CalendarFilterInput, { nullable: true }) filter: CalendarFilterInput | undefined,
     @Info() gqlInfo: GraphQLResolveInfo,
   ) {
     const now = new Date();
 
-    return ctx.prisma.calendarItem.findMany({
-      where:
-        season
-          ? {
-            forSeason: {
-              uid: season,
+    const seasonFilter =
+      season
+        ? {
+          forSeason: {
+            uid: season,
+          },
+        }
+        : {
+          forSeason: {
+            startsAt: {
+              lte: now,
             },
-          }
-          : {
-            forSeason: {
-              startsAt: {
-                lte: now,
-              },
-              endsAt: {
-                gte: now,
-              },
+            endsAt: {
+              gte: now,
             },
           },
-      select: {
-        ...toSelect(gqlInfo, transformSelect),
+        }
+    ;
+
+    const select: Dict = mergeDeepRight(
+      toSelect(gqlInfo, transformSelect),
+      {
         forTalk: {
           select: {
             titleEn: true,
@@ -272,6 +301,22 @@ export class CalendarItemInfoResolver {
           },
         },
       },
+    );
+
+    console.log(select);
+
+    return ctx.prisma.calendarItem.findMany({
+      where: {
+        ...seasonFilter,
+        ...(
+          filter?.type
+            ? {
+              type: filter.type,
+            }
+            : {}
+        ),
+      },
+      select,
     });
   }
 }

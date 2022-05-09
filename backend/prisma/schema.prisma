@@ -49,6 +49,8 @@ model User {
   resume   Resume? @relation(fields: [resumeId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
   resumeId Int?    @unique
+
+  reservations EventReservation[]
 }
 
 model Translation {
@@ -633,4 +635,25 @@ model CalendarItem {
   forPanel   CompanyPanel? @relation(fields: [forPanelId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forPanelId Int?          @unique
+}
+
+model EventReservation {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  userId Int
+
+  status    Int
+  eventId   Int
+  eventType String
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, eventType, userId])
+  @@index([userId])
 }

@@ -230,6 +230,7 @@ query CompanyInfo($uid: String!) {
                 language
                 notesHr
                 notesEn
+                reservation
                 presenters {
                     firstName
                     lastName

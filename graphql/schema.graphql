@@ -201,6 +201,7 @@ type ApplicationWorkshop {
   notesEn: String!
   notesHr: String!
   presenters: [ApplicationPresenter!]!
+  reservation: Float!
   titleEn: String!
   titleHr: String!
   uid: String!
@@ -300,8 +301,13 @@ type CalendarEvent {
   title: String!
 }
 
+input CalendarFilterInput {
+  type: String
+}
+
 type CalendarItem {
   end: DateTime!
+  forWorkshop: ApplicationWorkshop
   grouped: Boolean!
   hasEvent: Boolean!
   location: String
@@ -742,6 +748,71 @@ type EditApprovedCompanyApplicationResponse {
   errors: [FieldError!]
 }
 
+input EventReservationCreateManyUserInput {
+  eventId: Int!
+  eventType: String!
+  status: Int!
+}
+
+input EventReservationCreateManyUserInputEnvelope {
+  data: [EventReservationCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input EventReservationCreateNestedManyWithoutUserInput {
+  connect: [EventReservationWhereUniqueInput!]
+  connectOrCreate: [EventReservationCreateOrConnectWithoutUserInput!]
+  create: [EventReservationCreateWithoutUserInput!]
+  createMany: EventReservationCreateManyUserInputEnvelope
+}
+
+input EventReservationCreateOrConnectWithoutUserInput {
+  create: EventReservationCreateWithoutUserInput!
+  where: EventReservationWhereUniqueInput!
+}
+
+input EventReservationCreateWithoutUserInput {
+  eventId: Int!
+  eventType: String!
+  status: Int!
+}
+
+input EventReservationEventIdEventTypeUserIdCompoundUniqueInput {
+  eventId: Int!
+  eventType: String!
+  userId: Int!
+}
+
+input EventReservationListRelationFilter {
+  every: EventReservationWhereInput
+  none: EventReservationWhereInput
+  some: EventReservationWhereInput
+}
+
+input EventReservationOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input EventReservationUpdateInput {
+  id: String = ""
+  status: Float = 0
+  type: String = ""
+}
+
+input EventReservationWhereInput {
+  AND: [EventReservationWhereInput!]
+  NOT: [EventReservationWhereInput!]
+  OR: [EventReservationWhereInput!]
+  eventId: IntFilter
+  eventType: StringFilter
+  status: IntFilter
+  user: UserRelationFilter
+}
+
+input EventReservationWhereUniqueInput {
+  eventId_eventType_userId: EventReservationEventIdEventTypeUserIdCompoundUniqueInput
+}
+
 type FieldError {
   field: String!
   message: String!
@@ -944,6 +1015,7 @@ type Mutation {
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updateCompanyPanel(input: CompanyPanelUpdateInput!): CompanyPanel
+  updateEventReservation(input: EventReservationUpdateInput!): Float
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
@@ -1131,7 +1203,7 @@ type Query {
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
   booths: [Booth!]!
-  calendar(season: String): [CalendarItem!]!
+  calendar(filter: CalendarFilterInput, season: String): [CalendarItem!]!
   calendarItem(uid: String!): CalendarItem
   calendarItemCompanyUid(uid: String!): String
   calendarOld: [CalendarEvent!]!
@@ -1647,6 +1719,7 @@ type UserCount {
   files: Int!
   images: Int!
   pressReleases: Int!
+  reservations: Int!
   roles: Int!
 }
 
@@ -1656,6 +1729,7 @@ input UserCreateInput {
   lastName: String!
   password: String!
   phone: String!
+  reservations: EventReservationCreateNestedManyWithoutUserInput
 }
 
 enum UserOrderByRelevanceFieldEnum {
@@ -1680,6 +1754,7 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
   lastName: SortOrder
   password: SortOrder
   phone: SortOrder
+  reservations: EventReservationOrderByRelationAggregateInput
 }
 
 input UserRegisterInput {
@@ -1689,6 +1764,7 @@ input UserRegisterInput {
   password: String!
   passwordRepeat: String = ""
   phone: String!
+  reservations: EventReservationCreateNestedManyWithoutUserInput
 }
 
 input UserRelationFilter {
@@ -1715,6 +1791,7 @@ input UserUpdateInput {
   lastName: String!
   password: String!
   phone: String!
+  reservations: EventReservationCreateNestedManyWithoutUserInput
   roles: [String!] = []
 }
 
@@ -1727,6 +1804,7 @@ input UserWhereInput {
   lastName: StringFilter
   password: StringFilter
   phone: StringFilter
+  reservations: EventReservationListRelationFilter
 }
 
 input UserWhereUniqueInput {

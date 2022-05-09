@@ -39,35 +39,79 @@
         </div>
       </div>
 
-      <div v-if="resume" :class="$style.item">
-        <div :class="$style.itemContent">
-          <h2 :class="$style.itemHeader">
-            <translated-text trans-key="profile.resume.qr" />
-          </h2>
-          <div :class="$style.qrCode">
-            <app-img
-              :alt="`${user.name} QR`"
-              :src="`/api/user/${user.uid}/qr.svg`"
-              contain
-            />
+      <template v-if="resume">
+        <div :class="$style.item">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.resume.qr" />
+            </h2>
+            <div :class="$style.qrCode">
+              <app-img
+                :alt="`${user.name} QR`"
+                :src="`/api/user/${user.uid}/qr.svg`"
+                contain
+              />
+            </div>
+          </div>
+          <div :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-cv' }"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.resume.update"
+                />
+              </p-button>
+            </nuxt-link>
           </div>
         </div>
-        <div :class="$style.itemActions">
-          <nuxt-link
-            :to="{ name: 'profile-me-cv' }"
-            class="ml-auto"
-          >
-            <p-button
-              class="p-button-secondary"
-              tabindex="-1"
+
+        <div :class="$style.item">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.events.sign-up" />
+            </h2>
+            <dl :class="$style.reservationItems">
+              <dt
+                v-for="item in calendar"
+                :key="item.uid"
+              >
+                <p-button
+                  :loading="item.loading"
+                  @click="handleSignupFor(item)"
+                >
+                  <translated-text v-if="item.forWorkshop.reservation" trans-key="company.event.user.sign-off" />
+                  <translated-text v-else trans-key="company.event.user.sign-up" />
+                </p-button>
+                <strong
+                  :title="translateFor(item.forWorkshop, 'description').value"
+                >
+                  [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
+                </strong>
+              </dt>
+            </dl>
+          </div>
+          <div :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-cv' }"
+              class="ml-auto"
             >
-              <translated-text
-                trans-key="profile.resume.update"
-              />
-            </p-button>
-          </nuxt-link>
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="page.name.schedule"
+                />
+              </p-button>
+            </nuxt-link>
+          </div>
         </div>
-      </div>
+      </template>
       <div v-else-if="!hasCompany" :class="$style.item">
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
@@ -405,11 +449,15 @@
   import AppImg from "../../../components/util/app-img.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
+    useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
+    IApplicationWorkshop,
     IBooth,
+    ICalendarItem,
     ICompanyApplication,
+    IMutationUpdateEventReservationArgs,
     IResume,
   } from "~/graphql/schema";
   import {
@@ -426,6 +474,17 @@
   import {
     useCompanyStore,
   } from "~/store/company";
+  import {
+    reactive,
+  } from "#imports";
+  import {
+    EventType,
+    statusFromEventList,
+  } from "~/helpers/event-status";
+  import {
+    Language,
+    useTranslationsStore,
+  } from "~/store/translations";
 
   export default defineComponent({
     name: "PageProfileHome",
@@ -442,6 +501,7 @@
       const seasonsStore = useSeasonsStore();
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
+      const translationsStore = useTranslationsStore();
 
       type QData = {
         companyApplication: {
@@ -456,6 +516,15 @@
         profile: {
           resume: Pick<IResume, "uid">,
         },
+        calendar: (Pick<ICalendarItem, "uid" | "title"> & {
+          forWorkshop: Pick<IApplicationWorkshop,
+                            "uid"
+                              | "titleEn"
+                              | "titleHr"
+                              | "descriptionEn"
+                              | "descriptionHr"
+                              | "reservation">,
+        })[],
       };
       type QArgs = never;
       const resp = await useQuery<QData, QArgs>({
@@ -488,9 +557,41 @@
                     uid
                 }
             }
+            calendar(filter: { type: "workshop" }) {
+                uid
+                title
+                forWorkshop {
+                    uid
+                    titleHr
+                    titleEn
+                    descriptionHr
+                    descriptionEn
+                    reservation
+                }
+            }
         }
         `,
       })();
+
+      const signupQuery = useMutation<{ updateEventReservation: number | null, }, IMutationUpdateEventReservationArgs>(gql`
+        mutation Signup($input: EventReservationUpdateInput!) {
+          updateEventReservation(input: $input)
+        }
+      `);
+
+      const translateFor =
+        <Key extends string, Item extends Record<`${ Key }En` | `${ Key }Hr`, any>>(
+          item: Item,
+          key: Key,
+          ) =>
+          computed<Item[`${ Key }Hr` | `${ Key }En`]>(
+            () =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+              translationsStore.currentLanguage === Language.HR
+                ? item[`${ key }Hr`]
+                : item[`${ key }En`],
+          )
+      ;
 
       const booths = computed(() => Object.fromEntries((resp?.data?.booths || []).map((b) => [ b.key || "", b.name ])));
       const approval = resp?.data?.companyApplication?.approval;
@@ -499,7 +600,14 @@
         "booth",
       ], approval || {}));
       const resume = resp?.data?.profile?.resume;
+      const calendar = reactive((resp?.data?.calendar || []).map((x) => ({
+        ...x,
+        loading: false,
+      })));
+
       return {
+        calendar,
+        translateFor,
         user: computed(() => userStore.user),
         resume,
         formatDate,
@@ -510,6 +618,23 @@
         companyApplication: computed(() => resp?.data?.companyApplication),
         isApproved,
         isApprovedWithoutBooth,
+        async handleSignupFor(item: (typeof calendar)[0]) {
+          item.loading = true;
+          const resp = await signupQuery({
+            input: {
+              id: item.forWorkshop.uid,
+              type: EventType.workshop,
+              status: statusFromEventList(item.forWorkshop.reservation ? [] : [ "event" ]),
+            },
+          }).then((resp) => resp?.data?.updateEventReservation);
+          item.loading = false;
+
+          if ("number" !== typeof resp) {
+            alert("Something went wrong");
+          }
+
+          item.forWorkshop.reservation = resp!;
+        },
       };
     },
   });
@@ -551,6 +676,7 @@
       }
 
       .itemContent {
+        display: inline-block;
         height: 100%;
         padding: 1rem;
         border-radius: 4px;
@@ -619,6 +745,19 @@
       &::before {
         content: " ";
       }
+    }
+  }
+
+  .reservationItems {
+    overflow-y: scroll;
+    height: 100%;
+    max-height: 25em;
+    opacity: 1 !important;
+
+    dt {
+      display: flex;
+      align-items: center;
+      gap: 1em;
     }
   }
 </style>

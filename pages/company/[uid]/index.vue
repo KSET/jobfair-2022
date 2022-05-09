@@ -95,8 +95,9 @@
                 aspect-ratio="1"
               />
               <span
-                v-if="programItems.talk.event"
+                v-if="programItems.workshop.event"
                 :class="$style.itemLocation"
+                contain
                 v-text="formatLocation(programItems.workshop.event)"
               />
             </div>
@@ -119,6 +120,7 @@
                 :class="$style.presenterPhoto"
                 :lazy-src="presenter.photo.thumbUrl"
                 :src="presenter.photo.fullUrl"
+                contain
               />
               <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
             </div>
@@ -132,12 +134,13 @@
             <div :class="$style.itemHeader">
               <app-img
                 :class="$style.itemIcon"
-                :src="eventIcons.workshop"
+                :src="eventIcons.panel"
                 alt="Workshop"
                 aspect-ratio="1"
+                contain
               />
               <span
-                v-if="programItems.talk.event"
+                v-if="programItems.panel.event"
                 :class="$style.itemLocation"
                 v-text="formatLocation(programItems.panel.event)"
               />

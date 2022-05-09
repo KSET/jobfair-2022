@@ -23,6 +23,12 @@
           <span v-else>Ne</span>
         </template>
       </Column>
+      <Column field="hasResume" header="Životopis?" sortable>
+        <template #body="{ data }">
+          <span v-if="data.hasResume">Da</span>
+          <span v-else>Ne</span>
+        </template>
+      </Column>
       <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
         <template #body="{ data }">
           <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: data.uid } }">
@@ -52,6 +58,7 @@
   import useTitle from "~/composables/useTitle";
   import {
     ICompany,
+    IResume,
     IRole,
     IUser,
   } from "~/graphql/schema";
@@ -73,6 +80,7 @@
       type QUser = Pick<IUser, "uid" | "name" | "email" | "createdAt"> & {
         companies: Pick<ICompany, "uid">[],
         roles: Pick<IRole, "name">[],
+        resume: Pick<IResume, "uid"> | null,
       };
       type QData = {
         users: QUser[],
@@ -91,6 +99,9 @@
               companies {
                 uid
               }
+              resume {
+                uid
+              }
               createdAt
             }
           }
@@ -100,6 +111,7 @@
         .then(sortBy<QUser>((u) => new Date(u.createdAt as string)))
         .then(map<QUser, QUser & { isStudent: boolean, }>((x) => Object.assign(x, {
           isStudent: 0 === (x.companies?.length ?? 0),
+          hasResume: Boolean(x.resume),
         })))
       ;
 

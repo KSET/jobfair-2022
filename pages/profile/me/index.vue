@@ -749,10 +749,13 @@
   }
 
   .reservationItems {
+    display: flex;
     overflow-y: scroll;
+    flex-direction: column;
     height: 100%;
     max-height: 25em;
     opacity: 1 !important;
+    gap: 1em;
 
     dt {
       display: flex;

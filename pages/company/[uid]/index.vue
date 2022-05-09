@@ -26,7 +26,11 @@
     <div :class="$style.eventContainer">
       <h2 :class="$style.companyName" v-text="company.brandName" />
       <template v-if="programItems">
-        <TabView :class="$style.eventItems" lazy>
+        <TabView
+          v-model:activeIndex="activeIndex"
+          :class="$style.eventItems"
+          lazy
+        >
           <!--          <TabPanel v-if="programItems.booth">
             <template #header>
               <translated-text trans-key="company.info.program.booth" />
@@ -139,7 +143,9 @@
   import {
     computed,
     defineComponent,
+    ref,
     unref,
+    useRoute,
     useTitle,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
@@ -167,6 +173,7 @@
     },
 
     setup() {
+      const route = useRoute();
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
 
@@ -185,10 +192,19 @@
           )
       ;
 
+      let i = 0;
+      const tabs: Record<string, number> = {
+        talk: i++,
+        workshop: i++,
+      };
+
+      const preselectedTab = route.hash.split("#")[1] ?? "talk";
+      const activeIndex = ref(tabs[preselectedTab] ?? 0);
 
       useTitle(computed(() => `${ unref(company).brandName } - Info`));
 
       return {
+        activeIndex,
         company,
         translateFor,
         programItems: computed<NonNullable<typeof companyStore.companyInfo>["program"]>(() => filterObject((x) => Boolean(x), unref(company).program || {})),

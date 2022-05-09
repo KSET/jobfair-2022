@@ -1,7 +1,5 @@
 <template>
-  <div>
-    Loading...
-  </div>
+  <span style="display: none;" />
 </template>
 
 <script lang="ts">

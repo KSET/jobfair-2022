@@ -9,34 +9,59 @@
       <li>Admini: {{ stats.admins }}</li>
     </ul>
 
-    <DataTable :value="users" data-key="uid" row-hover sort-mode="multiple">
-      <Column field="name" header="Ime" sortable style="min-width: 3em;" />
-      <Column field="email" header="Email" sortable style="min-width: 3em;" />
-      <Column data-type="date" field="createdAt" header="Registriran" sortable>
-        <template #body="{ data }">
-          <app-time :time="data.createdAt" />
+    <client-only>
+      <DataTable
+        ref="dt"
+        v-model:filters="filters"
+        :value="users"
+        data-key="uid"
+        filter-display="menu"
+        row-hover
+        sort-mode="multiple"
+      >
+        <template #header>
+          <div style="text-align: left;">
+            <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+          </div>
         </template>
-      </Column>
-      <Column field="isStudent" header="Student?" sortable>
-        <template #body="{ data }">
-          <span v-if="data.isStudent">Da</span>
-          <span v-else>Ne</span>
-        </template>
-      </Column>
-      <Column field="hasResume" header="Životopis?" sortable>
-        <template #body="{ data }">
-          <span v-if="data.hasResume">Da</span>
-          <span v-else>Ne</span>
-        </template>
-      </Column>
-      <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
-        <template #body="{ data }">
-          <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: data.uid } }">
-            Edit
-          </nuxt-link>
-        </template>
-      </Column>
-    </DataTable>
+        <Column field="name" header="Ime" sortable style="min-width: 3em;" />
+        <Column field="email" header="Email" sortable style="min-width: 3em;" />
+        <Column data-type="date" field="createdAt" header="Registriran" sortable>
+          <template #body="{ data }">
+            <app-time :time="data.createdAt" />
+          </template>
+        </Column>
+        <Column field="isStudent" header="Student?" sortable>
+          <template #filter="{ filterModel }">
+            <label>
+              <input v-model="filterModel.value" class="p-column-filter" type="checkbox"> Student
+            </label>
+          </template>
+          <template #body="{ data }">
+            <span v-if="data.isStudent">Da</span>
+            <span v-else>Ne</span>
+          </template>
+        </Column>
+        <Column field="hasResume" header="Životopis?" sortable>
+          <template #filter="{ filterModel }">
+            <label>
+              <input v-model="filterModel.value" class="p-column-filter" type="checkbox"> Životopis
+            </label>
+          </template>
+          <template #body="{ data }">
+            <span v-if="data.hasResume">Da</span>
+            <span v-else>Ne</span>
+          </template>
+        </Column>
+        <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
+          <template #body="{ data }">
+            <nuxt-link :to="{ name: 'admin-users-uid-edit', params: { uid: data.uid } }">
+              Edit
+            </nuxt-link>
+          </template>
+        </Column>
+      </DataTable>
+    </client-only>
   </app-max-width-container>
 </template>
 
@@ -50,9 +75,14 @@
   } from "@urql/core";
   import DataTable from "primevue/datatable";
   import Column from "primevue/column";
+  import {
+    FilterMatchMode,
+  } from "primevue/api";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
+    ref,
+    unref,
     useQuery,
   } from "#imports";
   import useTitle from "~/composables/useTitle";
@@ -124,9 +154,27 @@
         nonStudents: users.length - studentCount - adminCount,
       };
 
+      const filters = ref({
+        isStudent: { value: null, matchMode: FilterMatchMode.EQUALS },
+        hasResume: { value: null, matchMode: FilterMatchMode.EQUALS },
+      });
+
+      const dt = ref<DataTable | null>(null);
+
       return {
+        dt,
         users,
         stats,
+        filters,
+        exportCSV() {
+          const $dt = unref(dt);
+
+          if (!$dt) {
+            return;
+          }
+
+          $dt.exportCSV();
+        },
       };
     },
   });

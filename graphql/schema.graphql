@@ -1246,6 +1246,12 @@ enum QueryMode {
   insensitive
 }
 
+type ReservationItem {
+  count: Float!
+  type: String!
+  uid: String!
+}
+
 type Resume {
   _count: ResumeCount
   city: String!
@@ -1415,6 +1421,7 @@ type Season {
   endsAt: DateTime!
   name: String!
   panel: CompanyPanel
+  reservations: [ReservationItem!]!
   showParticipantsFrom: DateTime!
   showParticipantsUntil: DateTime!
   showPartnersFrom: DateTime!

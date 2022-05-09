@@ -14,6 +14,7 @@ import {
   Info,
   InputType,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   Root,
@@ -22,8 +23,16 @@ import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
+  groupBy,
+  map,
   omit,
+  piped,
+  toPairs,
+  values,
 } from "rambdax";
+import {
+  Prisma,
+} from "@prisma/client";
 import {
   toSelect,
   transformSelectFor,
@@ -61,6 +70,18 @@ import {
   transformSelect as transformSelectCalendarItem,
 } from "./calendarItem";
 
+@ObjectType()
+export class ReservationItem {
+  @Field(() => String)
+    type: string = "";
+
+  @Field(() => String)
+    uid: string = "";
+
+  @Field(() => Number)
+    count: number = 0;
+}
+
 @Resolver(() => Season)
 export class SeasonFieldResolver {
   @FieldResolver(() => [ CompanyApplication ])
@@ -87,6 +108,78 @@ export class SeasonFieldResolver {
     @Root() season: Season,
   ): GQLField<CalendarItem[]> {
     return season.calendar || [];
+  }
+
+  @FieldResolver(() => [ ReservationItem ])
+  async reservations(
+    @Root() season: Season,
+      @Ctx() ctx: Context,
+  ): Promise<GQLField<ReservationItem[]>> {
+    const info = await ctx.prisma.companyApplication.findMany({
+      where: {
+        forSeasonId: season.id,
+      },
+      select: {
+        workshop: {
+          select: {
+            id: true,
+            uid: true,
+          },
+        },
+      },
+    });
+
+    const eventToUid2 =
+      groupBy(
+        (x) => x[0],
+        info
+          ?.flatMap(
+            (company) =>
+              piped(
+                company,
+                toPairs,
+                map(([ key, value ]) => [ key, value as { uid: string, id: number, } ] as const),
+              )
+            ,
+          ) || [],
+      )
+    ;
+    const eventToUid: Record<string, Record<number, string>> = {};
+    for (const item of toPairs(eventToUid2)) {
+      const [ event, entries ] = item;
+
+      if (!(event in eventToUid)) {
+        eventToUid[event] = {};
+      }
+
+      for (const [ , entry ] of entries) {
+        eventToUid[event][entry.id] = entry.uid;
+      }
+    }
+
+    const eventIds = info?.flatMap((company) => piped(
+      company,
+      values,
+      map((x) => x?.id as number),
+    )).filter((x) => x) || [];
+
+    type Row = { eventId: number, eventType: string, status: number, count: number, };
+    const items = await ctx.prisma.$queryRaw<Row[]>`
+      select
+        "eventId", "eventType", "status", count("status")
+      from
+        "EventReservation"
+      where
+        "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) }) 
+      group by
+        "eventId", "eventType", "status"
+    `;
+
+    return items.map((row) => ({
+      type: row.eventType,
+      uid: eventToUid[row.eventType][row.eventId],
+      count: row.count,
+    }));
   }
 }
 
@@ -138,6 +231,13 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
     select.calendar = {
       select: transformSelectCalendarItem(select.calendar as Dict),
     };
+
+    return select;
+  },
+
+  reservations(select) {
+    select.id = true;
+    delete select.reservations;
 
     return select;
   },

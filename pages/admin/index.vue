@@ -197,6 +197,13 @@
               Raspored
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-reservations', params: { season: season.uid } }"
+            >
+              Rezervacije
+            </nuxt-link>
+          </li>
         </ul>
       </fieldset>
     </div>

@@ -1,5 +1,7 @@
 <template>
-  <span style="display: none;" />
+  <div>
+    Loading...
+  </div>
 </template>
 
 <script lang="ts">
@@ -8,9 +10,10 @@
   } from "@urql/core";
   import {
     defineComponent,
-    navigateTo,
+    onBeforeMount,
     useQuery,
     useRoute,
+    useRouter,
   } from "#imports";
   import {
     ICalendarItem,
@@ -19,10 +22,30 @@
   export default defineComponent({
     name: "PageCalendarEventRedirector",
 
-    setup() {
+    async setup() {
       const route = useRoute();
+      const router = useRouter();
 
-      return useQuery<{ calendarItem: Pick<ICalendarItem, "hasEvent" | "type">, calendarItemCompanyUid: string | null, }, { uid: string, }>({
+      onBeforeMount(async () => {
+        const route =
+          resp
+            ? router.resolve({
+              name: "company-uid",
+              params: {
+                uid: resp.calendarItemCompanyUid,
+              },
+              query: {
+                tab: resp.calendarItem.type,
+              },
+            })
+            : router.resolve({
+              name: "schedule",
+            })
+        ;
+        await router.replace(route);
+      });
+
+      const resp = await useQuery<{ calendarItem: Pick<ICalendarItem, "hasEvent" | "type">, calendarItemCompanyUid: string | null, }, { uid: string, }>({
         query: gql`
           query Data($uid: String!) {
             calendarItem(uid: $uid) {
@@ -35,23 +58,9 @@
         variables: {
           uid: route.params.uid as string,
         },
-      })().then((resp) => resp?.data).then(async (resp) => {
-        if (!resp) {
-          await navigateTo({
-            name: "schedule",
-          });
-        } else {
-          await navigateTo({
-            name: "company-uid",
-            params: {
-              uid: resp.calendarItemCompanyUid,
-            },
-            query: {
-              tab: resp.calendarItem.type,
-            },
-          });
-        }
-      });
+      })().then((resp) => resp?.data);
+
+      return {};
     },
   });
 </script>

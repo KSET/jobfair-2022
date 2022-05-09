@@ -2,6 +2,7 @@ import {
   ApplicationTalk,
   ApplicationPresenter,
   ApplicationTalkCategory,
+  CalendarItem,
 } from "@generated/type-graphql";
 import {
   Field,
@@ -14,9 +15,16 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  Dict,
+  GQLField,
+} from "../../types/helpers";
+import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
+import {
+  transformSelect as transformSelectEvent,
+} from "./calendarItem";
 
 @Resolver(() => ApplicationTalk)
 export class CompanyApplicationTalkFieldResolver {
@@ -33,6 +41,13 @@ export class CompanyApplicationTalkFieldResolver {
   ) {
     return application.category;
   }
+
+  @FieldResolver(() => CalendarItem, { nullable: true })
+  event(
+    @Root() application: ApplicationTalk,
+  ): GQLField<CalendarItem, "nullable"> {
+    return application.event;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldResolver>({
@@ -47,6 +62,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldRes
   category(select) {
     select.category = {
       select: select.category,
+    };
+
+    return select;
+  },
+
+  event(select) {
+    select.event = {
+      select: transformSelectEvent(select.event as Dict),
     };
 
     return select;

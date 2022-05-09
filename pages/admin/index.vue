@@ -190,6 +190,13 @@
               Partneri i sponzori
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-schedule', params: { season: season.uid } }"
+            >
+              Raspored
+            </nuxt-link>
+          </li>
         </ul>
       </fieldset>
     </div>

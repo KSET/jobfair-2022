@@ -89,3 +89,19 @@ export const asOptionalDate =
     return date ? date.toISOString().split("T")[0] : fallback();
   }
 ;
+
+export const toDatetimeString =
+  (date: ConstructorParameters<typeof Date>[0]) => {
+    const zeroPad = (i: number) => i.toString().padStart(2, "0");
+
+    const d = new Date(date);
+    const YYYY = d.getFullYear();
+    const MM = zeroPad(d.getMonth() + 1);
+    const DD = zeroPad(d.getDate());
+    const HH = zeroPad(d.getHours());
+    const II = zeroPad(d.getMinutes());
+    const SS = zeroPad(d.getSeconds());
+
+    return `${ YYYY }-${ MM }-${ DD }T${ HH }:${ II }:${ SS }`;
+  }
+;

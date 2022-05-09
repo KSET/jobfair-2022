@@ -21,99 +21,44 @@
         active-view="week"
         hide-title-bar
         hide-view-selector
-        hide-weekends
       >
-        <template #event="{ event, isLastDay }">
-          <dropdown-menu
-            :direction="isLastDay ? 'left' : 'right'"
-            :with-arrow="false"
-            arrow-border-color="var(--event-border-color)"
-            arrow-color="var(--calendar-event-color-background)"
-            hover
+        <template #event="{ event }">
+          <component
+            :is="event.hasEvent ? 'a' : 'div'"
+            :class="$style.eventContainer"
+            :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
+            target="_blank"
           >
-            <template #trigger>
-              <div
-                :class="$style.eventContainer"
-              >
-                <strong
-                  :class="$style.eventTitle"
-                  :data-event="JSON.stringify(event)"
-                  v-text="event.title"
-                />
-                <br>
-                <span
-                  :class="$style.eventTime"
-                >
-                  <time
-                    :datetime="event.start.toISOString()"
-                    v-text="formatEventTime(event.start)"
-                  />
-                  &ndash;
-                  <time
-                    :datetime="event.end.toISOString()"
-                    v-text="formatEventTime(event.end)"
-                  />
-                </span>
-                <div
-                  v-if="event.location"
-                  :class="$style.eventLocation"
-                >
-                  <i class="pi pi-map-marker" /> {{ event.location }}
-                </div>
-                <template v-if="event.text">
-                  <div :class="$style.eventSpacer" />
-                  <span
-                    :class="$style.eventText"
-                    v-text="event.text"
-                  />
-                </template>
-              </div>
-            </template>
-            <template v-if="false" #contents>
-              <div
-                :class="$style.eventDropdownContainer"
-              >
-                <div :class="$style.eventDropdown">
-                  <div :class="$style.header">
-                    <span v-text="event.title" />
-                    <!--
-                    <p-button
-                      :class="{
-                        [$style.star]: true,
-                        [$style.starSelected]: event.selected,
-                      }"
-                      class="p-button-rounded p-button-text"
-                      @click="event.selected = !event.selected"
-                    >
-                      <icon-star />
-                    </p-button>
-                    -->
-                  </div>
-                  <div :class="$style.contentContainer">
-                    <div :class="$style.content">
-                      <app-img
-                        :class="$style.image"
-                        :src="`https://placeimg.com/${ 80 + 1 }/${ 80 + 2 }/tech`"
-                        alt="image"
-                        aspect-ratio="2"
-                        contain
-                      />
-
-                      <div
-                        :class="$style.divider"
-                      />
-
-                      <div
-                        :class="$style.text"
-                      >
-                        Ivan Horvat
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </dropdown-menu>
+            <strong
+              :class="$style.eventTitle"
+              v-text="event.title"
+            />
+            <br>
+            <span
+              :class="$style.eventTime"
+            >
+              <time
+                :datetime="event.start.toISOString()"
+                v-text="formatEventTime(event.start)"
+              />
+              &ndash;
+              <time
+                :datetime="event.end.toISOString()"
+                v-text="formatEventTime(event.end)"
+              />
+            </span>
+            <div
+              v-if="event.location"
+              :class="$style.eventLocation"
+            >
+              <i class="pi pi-map-marker" /> {{ event.location }}
+            </div>
+            <div
+              v-if="event.text"
+              :class="$style.eventText"
+              v-text="event.text"
+            />
+          </component>
         </template>
       </vue-calendar>
       <template v-else>
@@ -137,8 +82,11 @@
           hide-weekends
         >
           <template #event="{ event }">
-            <div
+            <component
+              :is="event.hasEvent ? 'a' : 'div'"
               :class="$style.eventContainer"
+              :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
+              target="_blank"
             >
               <strong
                 :class="$style.eventTitle"
@@ -165,14 +113,12 @@
               >
                 <i class="pi pi-map-marker" /> {{ event.location }}
               </div>
-              <template v-if="event.text">
-                <div :class="$style.eventSpacer" />
-                <span
-                  :class="$style.eventText"
-                  v-text="event.text"
-                />
-              </template>
-            </div>
+              <div
+                v-if="event.text"
+                :class="$style.eventText"
+                v-text="event.text"
+              />
+            </component>
           </template>
         </vue-calendar>
       </template>
@@ -217,7 +163,7 @@
     capitalize,
   } from "~/helpers/string";
   import {
-    ICalendarEvent,
+    ICalendarItem,
   } from "~/graphql/schema";
   import {
     useTranslationsStore,
@@ -242,11 +188,14 @@
       const translationsStore = useTranslationsStore();
 
       type QData = {
-        calendar: (Pick<ICalendarEvent,
-                        "title"
+        calendar: (Pick<ICalendarItem,
+                        "uid"
+                          | "title"
                           | "text"
-                          | "class"
-                          | "noGroup"> & {
+                          | "type"
+                          | "grouped"
+                          | "location"
+                          | "hasEvent"> & {
           split?: number,
           start: string,
           end: string,
@@ -257,13 +206,15 @@
         query: gql`
           query {
             calendar {
+              uid
               title
               text
               start
               end
-              class
-              noGroup
+              type
+              grouped
               location
+              hasEvent
             }
           }
         `,
@@ -276,6 +227,8 @@
                 ...x,
                 start: new Date(x.start),
                 end: new Date(x.end),
+                class: x.type,
+                noGroup: !x.grouped,
               }),
               resp,
             ).sort(
@@ -285,7 +238,7 @@
         )
       ;
 
-      const groupedEvents = groupBy((event) => event.class, events.filter((event) => !event.noGroup));
+      const groupedEvents = groupBy((event) => event.class!, events.filter((event) => event.class && !event.noGroup));
 
       const splitDays =
         Object
@@ -326,7 +279,7 @@
         },
       ));
 
-      const availableDays = [ 0, 1, 2, 3, 4, 5, 6 ] as const;
+      const availableDays = [ 1, 2, 3, 4, 5, 6, 7 ] as const;
       const unusedDays = new Set<number>(availableDays);
       const usedDays = new Set<number>();
       let minHours = 24;
@@ -334,10 +287,10 @@
       for (const event of events) {
         const start = new Date(event.start);
         const end = new Date(event.end);
-        unusedDays.delete(start.getDay());
-        unusedDays.delete(end.getDay());
-        usedDays.add(start.getDay());
-        usedDays.add(end.getDay());
+        unusedDays.delete(start.getDay() || 7);
+        unusedDays.delete(end.getDay() || 7);
+        usedDays.add(start.getDay() || 7);
+        usedDays.add(end.getDay() || 7);
         minHours = Math.min(minHours, start.getHours(), end.getHours());
         maxHours = Math.max(maxHours, start.getHours(), end.getHours());
       }
@@ -535,16 +488,16 @@
 
       .eventLocation {
         font-size: .8em;
-        margin: .5em 0;
-      }
-
-      .eventSpacer {
-        margin-top: .5em;
+        margin: .5em 0 0;
       }
 
       .eventText {
         font-size: .9em;
         font-style: italic;
+      }
+
+      .eventLocation + .eventText {
+        margin-top: .1em;
       }
     }
 

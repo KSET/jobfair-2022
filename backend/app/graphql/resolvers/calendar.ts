@@ -392,7 +392,7 @@ const events = [
 
 export class CalendarMockResolver {
   @Query(() => [ CalendarEvent ])
-  calendar(): GQLResponse<CalendarEvent[]> {
+  calendarOld(): GQLResponse<CalendarEvent[]> {
     return Promise.resolve(events);
   }
 }

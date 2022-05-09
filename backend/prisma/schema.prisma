@@ -262,6 +262,11 @@ model Season {
   companies CompanyApplication[]
   sponsors  Sponsor[]
   partners  Partner[]
+
+  calendar CalendarItem[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  panel CompanyPanel?
 }
 
 model Sponsor {
@@ -329,7 +334,29 @@ model CompanyApplication {
   /// @TypeGraphQL.omit(output: true, input: true)
   forSeasonId Int
 
+  panel   CompanyPanel? @relation(fields: [panelId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  panelId Int?
+
   @@unique([forCompanyId, forSeasonId])
+}
+
+model CompanyPanel {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  name        String
+  description String @default("")
+
+  companies CompanyApplication[]
+  event     CalendarItem?
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int    @unique
 }
 
 model CompanyApplicationApproval {
@@ -371,6 +398,8 @@ model ApplicationTalk {
   forApplicationId Int @unique
   /// @TypeGraphQL.omit(output: true, input: true)
   categoryId       Int
+
+  event CalendarItem?
 }
 
 model ApplicationTalkCategory {
@@ -440,6 +469,8 @@ model ApplicationWorkshop {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplicationId Int @unique
+
+  event CalendarItem?
 }
 
 model Resume {
@@ -452,7 +483,7 @@ model Resume {
   /// @TypeGraphQL.omit(input: true)
   updatedAt DateTime @updatedAt
 
-  faculty   ResumeFaculty?
+  faculty ResumeFaculty?
 
   technologies ResumeTechnology[]
 
@@ -567,4 +598,39 @@ model ResumeStudyYear {
   forResume   Resume @relation(fields: [forResumeId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forResumeId Int
+}
+
+model CalendarItem {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  start DateTime
+  end   DateTime
+
+  title    String?
+  location String?
+  type     String?
+  text     String?
+  grouped  Boolean @default(true)
+
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forTalk   ApplicationTalk? @relation(fields: [forTalkId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forTalkId Int?             @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forWorkshop   ApplicationWorkshop? @relation(fields: [forWorkshopId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forWorkshopId Int?                 @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forPanel   CompanyPanel? @relation(fields: [forPanelId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forPanelId Int?          @unique
 }

@@ -188,6 +188,7 @@ query Company($vat: String!) {
 
 query CompanyInfo($uid: String!) {
     companyInfo(uid: $uid) {
+        uid
         brandName
         descriptionEn
         descriptionHr
@@ -214,6 +215,11 @@ query CompanyInfo($uid: String!) {
                         fullUrl
                     }
                 }
+                event {
+                    start
+                    end
+                    location
+                }
             }
             workshop {
                 uid
@@ -234,17 +240,37 @@ query CompanyInfo($uid: String!) {
                         fullUrl
                     }
                 }
+                event {
+                    start
+                    end
+                    location
+                }
+            }
+            panelParticipants {
+                firstName
+                lastName
+                bioHr
+                bioEn
+                photo {
+                    thumbUrl
+                    fullUrl
+                }
             }
             panel {
-                companyPresenters {
-                    firstName
-                    lastName
-                    bioHr
-                    bioEn
-                    photo {
+                name
+                description
+                companies {
+                    uid
+                    brandName
+                    rasterLogo {
                         thumbUrl
                         fullUrl
                     }
+                }
+                event {
+                    start
+                    end
+                    location
                 }
             }
         }

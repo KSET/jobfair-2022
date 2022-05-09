@@ -2,13 +2,15 @@ import {
   MaybeRef,
 } from "@vueuse/shared";
 import {
- unref,
+  unref,
 } from "vue";
 import {
   ICompany,
   IUser,
   IFile,
   IImage,
+  ICompanyPanel,
+  IApplicationPresenter,
 } from "~/graphql/schema";
 import {
   InputEntry,
@@ -108,4 +110,34 @@ export const companyMembersEdit =
           options: unref(users)?.map((user) => ({ label: `${ user.name } (${ user.email })`, value: user.uid })) || [],
         },
       })
+;
+
+type Panelist = Pick<IApplicationPresenter, "firstName" | "lastName"> & {
+  company: Pick<ICompany, "uid" | "brandName">,
+};
+type CompanyPanel = Pick<ICompanyPanel, "name" | "description"> & {
+  companies: Pick<ICompany, "uid">[],
+};
+export const companyPanelListCreate =
+  <T extends CompanyPanel>(item?: T | null) =>
+    (panelists: MaybeRef<Panelist[]>): Record<keyof CompanyPanel, InputEntry> => ({
+      name: {
+        value: item?.name ?? "",
+        type: "text" as const,
+        placeholder: "Ime panela",
+      },
+      description: {
+        value: item?.description ?? "",
+        type: "textarea" as const,
+        placeholder: "Opis panela",
+      },
+      companies: {
+        value: item?.companies?.map((company) => company.uid) || [],
+        type: "dropdown" as const,
+        options: unref(panelists).map((panelist) => ({
+          label: `[${ panelist.company.brandName }] ${ panelist.firstName } ${ panelist.lastName }`,
+          value: panelist.company.uid,
+        })),
+      },
+    })
 ;

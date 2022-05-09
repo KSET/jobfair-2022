@@ -51,9 +51,11 @@
                 alt="Talk"
                 aspect-ratio="1"
               />
-              <span :class="$style.itemLocation">
-                utorak | 10:00 | KSET
-              </span>
+              <span
+                v-if="programItems.talk.event"
+                :class="$style.itemLocation"
+                v-text="formatLocation(programItems.talk.event)"
+              />
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.talk, 'title').value" />
@@ -92,9 +94,11 @@
                 alt="Workshop"
                 aspect-ratio="1"
               />
-              <span :class="$style.itemLocation">
-                utorak | 10:00 | KSET
-              </span>
+              <span
+                v-if="programItems.talk.event"
+                :class="$style.itemLocation"
+                v-text="formatLocation(programItems.workshop.event)"
+              />
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.workshop, 'title').value" />
@@ -120,13 +124,69 @@
             </div>
           </TabPanel>
 
-          <!--          <TabPanel v-if="programItems.panel">
-                      <template #header>
-                        <translated-text trans-key="company.info.program.panel" />
-                      </template>
+          <TabPanel v-if="programItems.panel">
+            <template #header>
+              <translated-text trans-key="company.info.program.panel" />
+            </template>
 
-                      <pre v-text="programItems.panel" />
-                    </TabPanel>-->
+            <div :class="$style.itemHeader">
+              <app-img
+                :class="$style.itemIcon"
+                :src="eventIcons.workshop"
+                alt="Workshop"
+                aspect-ratio="1"
+              />
+              <span
+                v-if="programItems.talk.event"
+                :class="$style.itemLocation"
+                v-text="formatLocation(programItems.panel.event)"
+              />
+            </div>
+
+            <h3 :class="$style.itemTitle" v-text="programItems.panel.name" />
+
+            <p :class="$style.itemDescription" v-text="programItems.panel.description" />
+
+            <h4>
+              <translated-text trans-key="company.info.program.about-presenters" />
+            </h4>
+
+            <div
+              v-for="presenter in company.program.panelParticipants"
+              :key="presenter.photo.fullUrl"
+              :class="$style.presenter"
+            >
+              <h5 :class="$style.presenterName" v-text="`${presenter.firstName} ${presenter.lastName}`" />
+              <app-img
+                :alt="`${presenter.firstName} ${presenter.lastName}`"
+                :class="$style.presenterPhoto"
+                :lazy-src="presenter.photo.thumbUrl"
+                :src="presenter.photo.fullUrl"
+              />
+              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
+            </div>
+
+            <h4>
+              <translated-text trans-key="company.info.program.other-panelists" />
+            </h4>
+
+            <div
+              :class="$style.companyChips"
+            >
+              <nuxt-link
+                v-for="otherCompany in panelCompanies"
+                :key="otherCompany.uid"
+                :to="{ name: 'company-uid', params: { uid: otherCompany.uid }, query: { tab: 'panel' } }"
+                target="_blank"
+              >
+                <Chip
+                  :class="$style.companyChip"
+                  :image="otherCompany.rasterLogo.fullUrl"
+                  :label="otherCompany.brandName"
+                />
+              </nuxt-link>
+            </div>
+          </TabPanel>
         </TabView>
       </template>
     </div>
@@ -139,6 +199,7 @@
   } from "rambdax";
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
+  import Chip from "primevue/chip";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     computed,
@@ -160,6 +221,9 @@
     Language,
     useTranslationsStore,
   } from "~/store/translations";
+  import {
+    Dict,
+  } from "~/helpers/type";
 
   export default defineComponent({
     name: "PageCompanyInfo",
@@ -170,6 +234,7 @@
       AppMaxWidthContainer,
       TabView,
       TabPanel,
+      Chip,
     },
 
     setup() {
@@ -192,26 +257,56 @@
           )
       ;
 
-      let i = 0;
-      const tabs: Record<string, number> = {
-        talk: i++,
-        workshop: i++,
-      };
+      useTitle(computed(() => `${ unref(company).brandName } - Info`));
 
-      const preselectedTab = route.hash.split("#")[1] ?? "talk";
+      const programItems = computed<NonNullable<typeof companyStore.companyInfo>["program"]>(() => filterObject((x) => Boolean(x), unref(company).program || {}));
+
+      const tabs: Record<string, number> = Object.fromEntries(
+        [
+          "talk",
+          "workshop",
+          "panel",
+        ]
+          .filter((x) => (unref(programItems) as Dict | null)?.[x])
+          .map((x, i) => [ x, i ]),
+      );
+
+      const preselectedTab = String(route.query.tab) || "talk";
       const activeIndex = ref(tabs[preselectedTab] ?? 0);
 
-      useTitle(computed(() => `${ unref(company).brandName } - Info`));
+      const eventTimeFormatter = computed(() => new Intl.DateTimeFormat(
+        translationsStore.currentLanguageIso,
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        },
+      ));
+
+      const eventDayFormatter = computed(() => new Intl.DateTimeFormat(
+        translationsStore.currentLanguageIso,
+        {
+          weekday: "long",
+        },
+      ));
 
       return {
         activeIndex,
         company,
         translateFor,
-        programItems: computed<NonNullable<typeof companyStore.companyInfo>["program"]>(() => filterObject((x) => Boolean(x), unref(company).program || {})),
+        programItems,
         eventIcons: {
           workshop: EventIconWorkshop,
           talk: EventIconTalk,
           panel: EventIconPanel,
+        },
+        panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
+        formatLocation(event: { start: string, end?: string, location?: string, }) {
+          const t = unref(eventTimeFormatter);
+          const d = unref(eventDayFormatter);
+
+          const start = new Date(event.start);
+
+          return [ d.format(start), t.format(start), event.location ].filter((x) => x).join(" | ");
         },
       };
     },
@@ -219,6 +314,7 @@
 </script>
 
 <style lang="scss" module>
+  @use "sass:color";
   @import "assets/styles/include";
 
   $gap-size: 3.125rem;
@@ -303,7 +399,6 @@
 
           .itemLocation {
             font-size: 1rem;
-            display: none;
             opacity: .7;
             color: $fer-black;
           }
@@ -370,6 +465,21 @@
           .presenterDescription {
             margin-top: .5rem;
             white-space: break-spaces;
+          }
+
+          .companyChips {
+            display: flex;
+            margin-top: 1rem;
+            gap: 1rem;
+          }
+
+          .companyChip {
+            transition-property: background-color;
+            background-color: transparent;
+
+            &:hover {
+              background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};
+            }
           }
         }
       }

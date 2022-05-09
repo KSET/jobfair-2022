@@ -2,6 +2,8 @@ import {
   FindManySeasonArgs,
   Season,
   CompanyApplication,
+  CompanyPanel,
+  CalendarItem,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -35,6 +37,7 @@ import {
 } from "../../helpers/auth";
 import {
   Dict,
+  GQLField,
 } from "../../types/helpers";
 import {
   transformSelect as transformSelectCompany,
@@ -51,6 +54,12 @@ import {
 import {
   transformSelect as transformSelectApproval,
 } from "./companyApplicationApproval";
+import {
+  transformSelect as transformSelectPanel,
+} from "./companyPanel";
+import {
+  transformSelect as transformSelectCalendarItem,
+} from "./calendarItem";
 
 @Resolver(() => Season)
 export class SeasonFieldResolver {
@@ -64,6 +73,20 @@ export class SeasonFieldResolver {
     }
 
     return season.companies || [];
+  }
+
+  @FieldResolver(() => CompanyPanel, { nullable: true })
+  panel(
+    @Root() season: Season,
+  ): GQLField<CompanyPanel, "nullable"> {
+    return season.panel || null;
+  }
+
+  @FieldResolver(() => [ CalendarItem ])
+  calendar(
+    @Root() season: Season,
+  ): GQLField<CalendarItem[]> {
+    return season.calendar || [];
   }
 }
 
@@ -99,6 +122,22 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
     transformCompanyField("approval", transformSelectApproval);
 
     delete select.applications;
+
+    return select;
+  },
+
+  panel(select) {
+    select.panel = {
+      select: transformSelectPanel(select.panel as Dict),
+    };
+
+    return select;
+  },
+
+  calendar(select) {
+    select.calendar = {
+      select: transformSelectCalendarItem(select.calendar as Dict),
+    };
 
     return select;
   },

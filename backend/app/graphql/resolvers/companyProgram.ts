@@ -11,6 +11,7 @@ import {
   ApplicationWorkshop,
   ApplicationPresenter,
   CompanyApplicationApproval,
+  CompanyPanel,
 } from "@generated/type-graphql";
 import {
   Dict,
@@ -31,12 +32,9 @@ import {
 import {
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
-
-@ObjectType()
-export class CompanyProgramPanel {
-  @Field(() => [ ApplicationPresenter ])
-    companyPresenters: ApplicationPresenter[] = [];
-}
+import {
+  transformSelect as transformSelectPanel,
+} from "./companyPanel";
 
 @ObjectType()
 export class CompanyProgram {
@@ -52,12 +50,13 @@ export class CompanyProgram {
   @Field(() => ApplicationCocktail, { nullable: true })
     cocktail: ApplicationCocktail | null = null;
 
-  @Field(() => CompanyProgramPanel, { nullable: true })
-    panel: CompanyProgramPanel | null = null;
+  @Field(() => [ ApplicationPresenter ])
+    panelParticipants: ApplicationPresenter[] = [];
+
+  @Field(() => CompanyPanel, { nullable: true })
+    panel: CompanyPanel | null = null;
 
   approval: CompanyApplicationApproval | null = null;
-
-  panelParticipants: CompanyProgramPanel["companyPresenters"] = [];
 }
 
 const approved =
@@ -103,19 +102,18 @@ export class CompanyProgramFieldResolver {
     return approved(program?.cocktail, "cocktail", program);
   }
 
-  @FieldResolver(() => CompanyProgramPanel, { nullable: true })
+  @FieldResolver(() => [ ApplicationPresenter ])
+  panelParticipants(
+    @Root() program: CompanyProgram,
+  ): GQLField<ApplicationPresenter[]> {
+    return approved(program?.panelParticipants, "panel", program) || [];
+  }
+
+  @FieldResolver(() => CompanyPanel, { nullable: true })
   panel(
     @Root() program: CompanyProgram,
-  ): GQLField<CompanyProgramPanel, "nullable"> {
-    const resp = approved(program?.panelParticipants, "panel", program);
-
-    if (resp?.length) {
-      const panel = new CompanyProgramPanel();
-      panel.companyPresenters = resp;
-      return panel;
-    } else {
-      return null;
-    }
+  ): GQLField<CompanyPanel, "nullable"> {
+    return approved(program?.panel, "panel", program);
   }
 }
 
@@ -196,9 +194,18 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
     delete select.cocktail;
   }),
 
-  panel: withApplications((select) => {
+  panelParticipants: withApplications((select) => {
     select.applications.select.panelParticipants = {
-      select: transformSelectPresenter((select.panel as Dict).companyPresenters as Dict),
+      select: transformSelectPresenter(select.panelParticipants as Dict),
+    };
+    select.applications.select.approval.select.panel = true;
+
+    delete select.panelParticipants;
+  }),
+
+  panel: withApplications((select) => {
+    select.applications.select.panel = {
+      select: transformSelectPanel(select.panel as Dict),
     };
     select.applications.select.approval.select.panel = true;
 

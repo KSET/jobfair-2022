@@ -1072,6 +1072,109 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-09-2022"),
+    image: "/tmp/blog9.jpg",
+    title: "Panel rasprava o umjetnoj inteligenciji na 15. Job Fairu!",
+    description: "Saznaj kako umjetna inteligencija utječe na četiri različite industrije te kakva su predviđanja stručnjaka za njezinu budućnost.",
+    content: `
+          <p>
+            U srijedu, <strong>11. svibnja, od 13 do 14 sati</strong> na pozornici u <strong>SD Martinovka</strong> održat će se panel rasprava na temu
+            umjetne inteligencije, Panel raspravu moderirat će Matej Štefanac, student FER-a, a panelisti koji sudjeluju u raspravi će obuhvatiti četiri
+            različite industrije: Tomislav Haus iz <strong>Gideon</strong>a, Marin Šarić iz <strong>OptimoRoute</strong>a, Igor Mijić iz
+            <strong>RealNetworks</strong>a te Lucija Arambašić s <strong>FER</strong>-a,
+          </p>
+
+          <p>U razgovoru s Matejem, otkrivamo pozadinu iza ideje za panel raspravu:</p>
+
+          <p>
+            <em>
+              “U svijetu smo prepunom procesa i informacija. Prosječnu osobu svakodnevno okružuje gomila podataka i konstantna potreba za donošenjem
+              raznih odluka koje mogu biti različitih važnosti: od odabira namirnica za ručak do velikih ulaganja. Također, svijet nam se prividno sve
+              više “smanjuje” jer je promet postao efikasniji no ikada u ljudskoj povijesti. Saveznik i podrška svim navedenim scenarijima jest umjetna inteligencija.
+              Ona nam olakšava sve te procese i štedi naše dragocijeno vrijeme. Što je umjetna inteligencija i u kojem se granama znanosti primjenjuje?
+              Kako su inženjeri oblikovali današnju stvarnost uz njenu pomoć? Što nas očekuje u budućnosti?
+              Odgovore na ova pitanja potražit ćemo u ovoj panel raspravi.”
+            </em>
+          </p>
+
+          <p>
+            Uistinu, čeka nas jedna zanimljiva panel rasprava koju svakako nećete htjeti propustiti! No, svakako se prethodno dolasku u Martinovku prijavi u bazu životopisa.
+          </p>
+
+          <h3>Prije panela - registracija!</h3>
+
+          <p>
+            Ako već nisi, prijavi se na našoj internetskoj stranici, predaj svoj životopis u bazu životopisa te pripremi <strong>QR kod</strong> s kojim možeš ući na panel raspravu.
+            Prije ili nakon panela slobodno posjeti štandove poduzeća čiji predstavnici sudjeluju na panel raspravi. Također, slobodno iskoristi svoj QR kod kao <strong>posjetnicu</strong>
+            jer svaki skenirani životopis će poduzeću biti posebno označen čime ćeš se dodatno istaknuti među ostalim studentima unutar baze životopisa!
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-09-2022"),
+    image: "/tmp/blog9.jpg",
+    title: "The Panel discussion about artificial intelligence at the 15th Job Fair!",
+    description: "Find out how AI affects four different industries and what experts predict about its future.",
+    content: `
+          <p>
+            On Wednesday, <strong>May 11th, from 13.00 to 14.00</strong> the stage at <strong>Martinovka Sports Hall</strong> will host a panel discussion about AI.
+            The discussion will be moderated by Matej Štefanac, a student at FER, and the panelists participating in the discussion will cover four different industries:
+            Tomislav Haus from <strong>Gideon</strong>, Marin Šarić from <strong>OptimoRoute</strong>, Igor Mijić from <strong>RealNetworks</strong>
+            and Lucija Arambašić at <strong>FER</strong>.
+          </p>
+
+          <p>During a conversation with Matej, we found out the idea behind the panel discussion:</p>
+
+          <p>
+            <em>
+              “We are currently living in a world overflowing with processes and information. The average person is constantly surrounded by heaps of data
+              and the constant need to make different decisions which vary in importance: from choosing which groceries to buy to big investments.
+              Furthermore, the world is seemingly “shrinking” because traffic has become more efficient than ever in human history.
+              Our ally and support system in these scenarios is artificial intelligence. It makes all of these processes easies to handle and thus saves us precious time.
+              What is artificial intelligence and what fields of science is it applied to? How have engineers shaped the present with its help? What can we expect of the future?
+              We will find answers to all of these questions in this panel discussion.”
+            </em>
+          </p>
+
+          <p>
+            Indeed, we have an interesting panel discussion ahead of us, and you certainly don’t want to miss it!
+            But, before arriving at Martinovka and attending, apply for entrance through the CV database.
+          </p>
+
+          <h3>Before the panel talk - registration!</h3>
+
+          <p>
+            If you haven’t already, apply through out website, submit your CV and get the <strong>QR code</strong> which allows you entrance to the panel discussion.
+            Before or after the panel talk, feel free to visit booths of the companies whos representatives are participating in the discussion.
+            Also, use your QR code as a business card because every CV the companies scan themselves will have a special mark which makes you
+            stand out more among all the students in the database!
+          </p>
+
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

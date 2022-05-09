@@ -303,8 +303,6 @@ export class CalendarItemInfoResolver {
       },
     );
 
-    console.log(select);
-
     return ctx.prisma.calendarItem.findMany({
       where: {
         ...seasonFilter,

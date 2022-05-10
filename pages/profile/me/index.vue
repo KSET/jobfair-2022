@@ -70,7 +70,7 @@
           </div>
         </div>
 
-        <div :class="$style.item">
+        <div :class="[$style.item, $style.signUp]">
           <div :class="$style.itemContent">
             <h2 :class="$style.itemHeader">
               <translated-text trans-key="profile.events.sign-up" />
@@ -693,12 +693,18 @@
   }
 
   .items {
+    --item-columns: 3;
+
     display: grid;
     gap: 1rem;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(var(--item-columns), minmax(0, 1fr));
+
+    @media screen and (max-width: 1500px) {
+      --item-columns: 2;
+    }
 
     @include media(lg) {
-      grid-template-columns: 1fr;
+      --item-columns: 1;
     }
 
     .item {
@@ -708,6 +714,15 @@
       transition-property: padding;
       background-color: $fer-gray;
       box-shadow: #{map.get($shadows, "shadow-3")};
+
+      &.signUp {
+        min-height: fit-content;
+        grid-column: span 1;
+
+        @media screen and (max-width: 1500px) {
+          grid-column: span var(--item-columns);
+        }
+      }
 
       --item-padding: .875rem;
 

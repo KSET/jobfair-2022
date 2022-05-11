@@ -623,7 +623,12 @@ export class ResumeInfoResolver {
         },
         take: clamp(1, 50, filter?.take ?? 10),
         skip: clamp(0, Infinity, filter?.skip ?? 0),
-        where,
+        where: {
+          resume: where,
+          company: {
+            uid: user.companies[0].uid,
+          },
+        },
         orderBy: {
           resume:
             filter?.orderBy

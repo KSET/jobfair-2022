@@ -404,6 +404,29 @@
             </ul>
           </div>
         </div>
+
+        <div
+          :class="[$style.item, $style.itemApproval]"
+        >
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.company.scanUsers.header" />
+          </h2>
+          <div :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-company-scan-qr' }"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.scanUsers.scan"
+                />
+              </p-button>
+            </nuxt-link>
+          </div>
+        </div>
       </template>
       <div
         v-else-if="!applicationsOpen && companyApplication && hasCompany"

@@ -518,6 +518,9 @@ export class ResumeInfoResolver {
       ctx.prisma.favouriteResume.count({
         where: {
           resume: where,
+          company: {
+            uid: user.companies[0].uid,
+          },
         },
       }),
       ctx.prisma.favouriteResume.findMany({

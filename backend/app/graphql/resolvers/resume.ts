@@ -1012,24 +1012,49 @@ export class ResumeModifyResolver {
     }
 
     if (isFavourite) {
-      await ctx.prisma.favouriteResume.create({
-        data: {
-          resume: {
-            connect: {
+      await ctx.prisma.$transaction(async (prisma) => {
+        const prev = await prisma.favouriteResume.findFirst({
+          where: {
+            resume: {
               uid,
             },
-          },
-          company: {
-            connect: {
+            company: {
               uid: user.companies[0].uid,
             },
-          },
-          season: {
-            connect: {
+            season: {
               uid: season.uid,
             },
           },
-        },
+          select: {
+            id: true,
+          },
+        });
+
+        if (prev) {
+          return true;
+        }
+
+        return await prisma.favouriteResume.create({
+          data: {
+            resume: {
+              connect: {
+                uid,
+              },
+            },
+            company: {
+              connect: {
+                uid: user.companies[0].uid,
+              },
+            },
+            season: {
+              connect: {
+                uid: season.uid,
+              },
+            },
+          },
+        }).catch((e) => {
+          console.log(e);
+        });
       }).catch((e) => {
         console.log(e);
       });
@@ -1112,24 +1137,49 @@ export class ResumeModifyResolver {
       return null;
     }
 
-    await ctx.prisma.scannedResume.create({
-      data: {
-        resume: {
-          connect: {
+    await ctx.prisma.$transaction(async (prisma) => {
+      const prev = await prisma.scannedResume.findFirst({
+        where: {
+          resume: {
             uid: resume.uid,
           },
-        },
-        company: {
-          connect: {
+          company: {
             uid: user.companies[0].uid,
           },
-        },
-        season: {
-          connect: {
+          season: {
             uid: season.uid,
           },
         },
-      },
+        select: {
+          id: true,
+        },
+      });
+
+      if (prev) {
+        return true;
+      }
+
+      return prisma.scannedResume.create({
+        data: {
+          resume: {
+            connect: {
+              uid: resume.uid,
+            },
+          },
+          company: {
+            connect: {
+              uid: user.companies[0].uid,
+            },
+          },
+          season: {
+            connect: {
+              uid: season.uid,
+            },
+          },
+        },
+      }).catch((e) => {
+        console.log(e);
+      });
     }).catch((e) => {
       console.log(e);
     });

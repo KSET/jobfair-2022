@@ -557,7 +557,9 @@ input CompanyApplicationWhereUniqueInput {
 
 type CompanyCount {
   applications: Int!
+  favouriteResumes: Int!
   members: Int!
+  scannedResumes: Int!
 }
 
 enum CompanyOrderByRelevanceFieldEnum {
@@ -741,6 +743,17 @@ input DateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
   notIn: [DateTime!]
 }
 
@@ -1014,6 +1027,9 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
+  resumeScan(userUid: String!): Boolean!
+  resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
+  scanResume(uid: String!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
@@ -1044,6 +1060,17 @@ input NestedDateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
   notIn: [DateTime!]
 }
 
@@ -1228,8 +1255,14 @@ type Query {
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
+  resume(uid: String!): Resume
+  resumeFavourites: [String!]!
   resumeInterests(index: Int, query: String!): SearchResponseStringArray!
+  resumeIsFavourite(uid: String!): Boolean!
   resumeTechnologies(index: Int, query: String!): SearchResponseStringArray!
+  resumes(filter: ResumeFindManyInput): ResumeList!
+  resumesFavourites(filter: ResumeFindManyInput): ResumeList!
+  resumesScanned(filter: ResumeFindManyInput): ResumeList!
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
@@ -1270,8 +1303,10 @@ type Resume {
 }
 
 type ResumeCount {
+  favouriteResumes: Int!
   interests: Int!
   projects: Int!
+  scannedResumes: Int!
   studyYears: Int!
   technologies: Int!
   volunteerExperiences: Int!
@@ -1311,6 +1346,92 @@ input ResumeFacultyCreateInput {
   name: String = ""
 }
 
+enum ResumeFacultyOrderByRelevanceFieldEnum {
+  module
+  name
+  specialization
+}
+
+input ResumeFacultyOrderByRelevanceInput {
+  fields: [ResumeFacultyOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ResumeFacultyOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ResumeFacultyOrderByRelevanceInput
+  module: SortOrder
+  name: SortOrder
+  specialization: SortOrder
+}
+
+input ResumeFacultyRelationFilter {
+  is: ResumeFacultyWhereInput
+  isNot: ResumeFacultyWhereInput
+}
+
+input ResumeFacultyWhereInput {
+  AND: [ResumeFacultyWhereInput!]
+  NOT: [ResumeFacultyWhereInput!]
+  OR: [ResumeFacultyWhereInput!]
+  module: StringFilter
+  name: StringFilter
+  specialization: StringFilter
+}
+
+input ResumeFindManyInput {
+  orderBy: [ResumeOrderByWithRelationAndSearchRelevanceInput!]
+  skip: Int
+  take: Int
+  where: ResumeWhereInput
+  whereUser: String
+}
+
+input ResumeInterestListRelationFilter {
+  every: ResumeInterestWhereInput
+  none: ResumeInterestWhereInput
+  some: ResumeInterestWhereInput
+}
+
+input ResumeInterestOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeInterestWhereInput {
+  AND: [ResumeInterestWhereInput!]
+  NOT: [ResumeInterestWhereInput!]
+  OR: [ResumeInterestWhereInput!]
+  name: StringFilter
+}
+
+type ResumeList {
+  items: [Resume!]!
+  total: Int!
+}
+
+enum ResumeOrderByRelevanceFieldEnum {
+  city
+  uid
+}
+
+input ResumeOrderByRelevanceInput {
+  fields: [ResumeOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input ResumeOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: ResumeOrderByRelevanceInput
+  city: SortOrder
+  faculty: ResumeFacultyOrderByWithRelationAndSearchRelevanceInput
+  interests: ResumeInterestOrderByRelationAggregateInput
+  projects: ResumeProjectOrderByRelationAggregateInput
+  studyYears: ResumeStudyYearOrderByRelationAggregateInput
+  technologies: ResumeTechnologyOrderByRelationAggregateInput
+  volunteerExperiences: ResumeVolunteerExperienceOrderByRelationAggregateInput
+  workExperiences: ResumeWorkExperienceOrderByRelationAggregateInput
+}
+
 type ResumeProject {
   position: String!
   project: String!
@@ -1325,6 +1446,26 @@ input ResumeProjectCreateInput {
   until: DateTime = null
 }
 
+input ResumeProjectListRelationFilter {
+  every: ResumeProjectWhereInput
+  none: ResumeProjectWhereInput
+  some: ResumeProjectWhereInput
+}
+
+input ResumeProjectOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeProjectWhereInput {
+  AND: [ResumeProjectWhereInput!]
+  NOT: [ResumeProjectWhereInput!]
+  OR: [ResumeProjectWhereInput!]
+  position: StringFilter
+  project: StringFilter
+  start: DateTimeFilter
+  until: DateTimeNullableFilter
+}
+
 type ResumeStudyYear {
   studyType: String!
   studyYear: Int!
@@ -1333,6 +1474,41 @@ type ResumeStudyYear {
 input ResumeStudyYearCreateInput {
   studyType: String = ""
   studyYear: Float = 0
+}
+
+input ResumeStudyYearListRelationFilter {
+  every: ResumeStudyYearWhereInput
+  none: ResumeStudyYearWhereInput
+  some: ResumeStudyYearWhereInput
+}
+
+input ResumeStudyYearOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeStudyYearWhereInput {
+  AND: [ResumeStudyYearWhereInput!]
+  NOT: [ResumeStudyYearWhereInput!]
+  OR: [ResumeStudyYearWhereInput!]
+  studyType: StringFilter
+  studyYear: IntFilter
+}
+
+input ResumeTechnologyListRelationFilter {
+  every: ResumeTechnologyWhereInput
+  none: ResumeTechnologyWhereInput
+  some: ResumeTechnologyWhereInput
+}
+
+input ResumeTechnologyOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeTechnologyWhereInput {
+  AND: [ResumeTechnologyWhereInput!]
+  NOT: [ResumeTechnologyWhereInput!]
+  OR: [ResumeTechnologyWhereInput!]
+  name: StringFilter
 }
 
 type ResumeVolunteerExperience {
@@ -1349,6 +1525,40 @@ input ResumeVolunteerExperienceCreateInput {
   until: DateTime = null
 }
 
+input ResumeVolunteerExperienceListRelationFilter {
+  every: ResumeVolunteerExperienceWhereInput
+  none: ResumeVolunteerExperienceWhereInput
+  some: ResumeVolunteerExperienceWhereInput
+}
+
+input ResumeVolunteerExperienceOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeVolunteerExperienceWhereInput {
+  AND: [ResumeVolunteerExperienceWhereInput!]
+  NOT: [ResumeVolunteerExperienceWhereInput!]
+  OR: [ResumeVolunteerExperienceWhereInput!]
+  organisation: StringFilter
+  position: StringFilter
+  start: DateTimeFilter
+  until: DateTimeNullableFilter
+}
+
+input ResumeWhereInput {
+  AND: [ResumeWhereInput!]
+  NOT: [ResumeWhereInput!]
+  OR: [ResumeWhereInput!]
+  city: StringFilter
+  faculty: ResumeFacultyRelationFilter
+  interests: ResumeInterestListRelationFilter
+  projects: ResumeProjectListRelationFilter
+  studyYears: ResumeStudyYearListRelationFilter
+  technologies: ResumeTechnologyListRelationFilter
+  volunteerExperiences: ResumeVolunteerExperienceListRelationFilter
+  workExperiences: ResumeWorkExperienceListRelationFilter
+}
+
 type ResumeWorkExperience {
   company: String!
   position: String!
@@ -1361,6 +1571,26 @@ input ResumeWorkExperienceCreateInput {
   position: String = ""
   start: DateTime = "2022-05-03T17:26:50.810Z"
   until: DateTime = null
+}
+
+input ResumeWorkExperienceListRelationFilter {
+  every: ResumeWorkExperienceWhereInput
+  none: ResumeWorkExperienceWhereInput
+  some: ResumeWorkExperienceWhereInput
+}
+
+input ResumeWorkExperienceOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ResumeWorkExperienceWhereInput {
+  AND: [ResumeWorkExperienceWhereInput!]
+  NOT: [ResumeWorkExperienceWhereInput!]
+  OR: [ResumeWorkExperienceWhereInput!]
+  company: StringFilter
+  position: StringFilter
+  start: DateTimeFilter
+  until: DateTimeNullableFilter
 }
 
 type Role {
@@ -1435,7 +1665,9 @@ type Season {
 type SeasonCount {
   calendar: Int!
   companies: Int!
+  favouriteResumes: Int!
   partners: Int!
+  scannedResumes: Int!
   sponsors: Int!
 }
 

@@ -17,6 +17,9 @@ import {
 import {
   useNuxtApp,
 } from "#app";
+import {
+  reactive,
+} from "#build/imports";
 
 type Query = string | DocumentNode | TypedDocumentNode;
 
@@ -114,7 +117,7 @@ export function useQuery<TData, TVars extends object>(opts: QueryCompositeOption
       doQuery<TData, TVars>(
         unref(opts.query),
         {
-          variables: unref(opts.variables),
+          variables: unref(reactive(opts.variables ?? {}) as TVars),
           headers: unref(opts.context)?.headers,
         },
       )

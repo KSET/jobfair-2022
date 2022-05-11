@@ -56,6 +56,24 @@
                 />
               </nuxt-link>
             </li>
+            <li>
+              <nuxt-link
+                :to="{ name: 'profile-me-company-resumes' }"
+              >
+                <translated-text
+                  trans-key="profile.company.resumes"
+                />
+              </nuxt-link>
+            </li>
+            <li>
+              <nuxt-link
+                :to="{ name: 'profile-me-company-scan-qr' }"
+              >
+                <translated-text
+                  trans-key="profile.company.scan-qr"
+                />
+              </nuxt-link>
+            </li>
           </template>
           <template v-else>
             <li>

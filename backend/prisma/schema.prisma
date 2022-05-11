@@ -116,6 +116,12 @@ model Company {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   rasterLogoId Int?
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedResumes ScannedResume[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  favouriteResumes FavouriteResume[]
 }
 
 model Industry {
@@ -269,6 +275,12 @@ model Season {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   panel CompanyPanel?
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedResumes ScannedResume[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  favouriteResumes FavouriteResume[]
 }
 
 model Sponsor {
@@ -508,6 +520,12 @@ model Resume {
 
   /// @TypeGraphQL.omit(input: true)
   user User?
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedResumes ScannedResume[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  favouriteResumes FavouriteResume[]
 }
 
 model ResumeFaculty {
@@ -656,4 +674,51 @@ model EventReservation {
 
   @@unique([eventId, eventType, userId])
   @@index([userId])
+}
+
+model ScannedResume {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  /// @TypeGraphQL.omit(input: true)
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumeId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  companyId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  seasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  scannedAt DateTime @default(now())
+
+  @@unique([companyId, resumeId])
+}
+
+model FavouriteResume {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  /// @TypeGraphQL.omit(input: true)
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumeId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  companyId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  seasonId Int
+
+  @@unique([companyId, resumeId])
 }

@@ -6,8 +6,10 @@ import {
   FieldResolver,
   Info,
   InputType,
+  Int,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
   Root,
 } from "type-graphql";
@@ -24,11 +26,17 @@ import {
   ResumeStudyYear,
   User,
   File,
+  ResumeWhereInput,
+  ResumeOrderByWithRelationAndSearchRelevanceInput,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
 } from "graphql";
 import * as Sentry from "@sentry/node";
+import {
+  clamp,
+  mergeDeepRight,
+} from "rambdax";
 import {
   toSelect,
   transformSelectDefaults,
@@ -52,6 +60,10 @@ import {
   FileService,
   MinioBase,
 } from "../../services/file-service";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../../helpers/auth";
 import {
   ResumeFacultyCreateInput,
   transformSelect as transformSelectFaculty,
@@ -230,7 +242,400 @@ class ResumeCreateInput {
     city: string = "";
 }
 
-@Resolver((_of) => User)
+@InputType()
+class ResumeFindManyInput {
+  @Field(() => ResumeWhereInput, { nullable: true })
+    where?: ResumeWhereInput | undefined;
+
+  @Field(() => String, { nullable: true })
+    whereUser?: string | undefined;
+
+  @Field(() => [ ResumeOrderByWithRelationAndSearchRelevanceInput ], { nullable: true })
+    orderBy?: ResumeOrderByWithRelationAndSearchRelevanceInput[] | undefined;
+
+  @Field(() => Int, { nullable: true })
+    take?: number | undefined;
+
+  @Field(() => Int, { nullable: true })
+    skip?: number | undefined;
+}
+
+@ObjectType()
+class ResumeList {
+  @Field(() => Int)
+    total: number = 0;
+
+  @Field(() => [ Resume ])
+    items: Resume[] = [];
+}
+
+@Resolver((_of) => Resume)
+export class ResumeInfoResolver {
+  @Authorized()
+  @Query(() => Resume, { nullable: true })
+  resume(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+      @Info() gqlInfo: GraphQLResolveInfo,
+  ): GQLResponse<Resume, "nullable"> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return Promise.resolve(null);
+    }
+
+    return ctx.prisma.resume.findFirst({
+      where: {
+        uid,
+      },
+      select: toSelect(gqlInfo, transformSelect),
+    });
+  }
+
+  @Authorized()
+  @Query(() => Boolean)
+  async resumeIsFavourite(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+  ): GQLResponse<boolean> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return false;
+    }
+
+    const companyUid = user.companies[0].uid;
+
+    const entry = await ctx.prisma.favouriteResume.findFirst({
+      where: {
+        company: {
+          uid: companyUid,
+        },
+        resume: {
+          uid,
+        },
+        season: {
+          startsAt: {
+            lte: new Date(),
+          },
+          endsAt: {
+            gte: new Date(),
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return null !== entry;
+  }
+
+  @Authorized()
+  @Query(() => [ String ])
+  async resumeFavourites(
+    @Ctx() ctx: Context,
+  ): GQLResponse<string[]> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return [];
+    }
+
+    const companyUid = user.companies[0].uid;
+
+    const entries = await ctx.prisma.favouriteResume.findMany({
+      where: {
+        company: {
+          uid: companyUid,
+        },
+        season: {
+          startsAt: {
+            lte: new Date(),
+          },
+          endsAt: {
+            gte: new Date(),
+          },
+        },
+      },
+      select: {
+        resume: {
+          select: {
+            uid: true,
+          },
+        },
+      },
+    });
+
+    return entries.map((entry) => entry.resume.uid);
+  }
+
+  @Authorized()
+  @Query(() => ResumeList)
+  async resumes(
+    @Ctx() ctx: Context,
+      @Info() gqlInfo: GraphQLResolveInfo,
+      @Arg("filter", () => ResumeFindManyInput, { nullable: true }) filter?: ResumeFindManyInput,
+  ): GQLResponse<ResumeList> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    const where: ResumeWhereInput = mergeDeepRight(
+      filter?.where || {},
+      filter?.whereUser
+        ? {
+          user: {
+            OR: [
+              {
+                firstName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                lastName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                email: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          },
+        }
+        : {},
+    );
+
+    const [
+      total,
+      items,
+    ] = await Promise.all([
+      ctx.prisma.resume.count({
+        where,
+      }),
+      ctx.prisma.resume.findMany({
+        select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
+        take: clamp(1, 50, filter?.take ?? 10),
+        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        where,
+        orderBy: filter?.orderBy || {
+          updatedAt: "desc",
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      items: items as Resume[],
+    };
+  }
+
+  @Authorized()
+  @Query(() => ResumeList)
+  async resumesFavourites(
+    @Ctx() ctx: Context,
+      @Info() gqlInfo: GraphQLResolveInfo,
+      @Arg("filter", () => ResumeFindManyInput, { nullable: true }) filter?: ResumeFindManyInput,
+  ): GQLResponse<ResumeList> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    const where: ResumeWhereInput = mergeDeepRight(
+      filter?.where || {},
+      filter?.whereUser
+        ? {
+          user: {
+            OR: [
+              {
+                firstName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                lastName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                email: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          },
+        }
+        : {},
+    );
+
+    const [
+      total,
+      items,
+    ] = await Promise.all([
+      ctx.prisma.favouriteResume.count({
+        where: {
+          resume: where,
+        },
+      }),
+      ctx.prisma.favouriteResume.findMany({
+        select: {
+          resume: {
+            select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
+          },
+        },
+        take: clamp(1, 50, filter?.take ?? 10),
+        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        where,
+        orderBy: {
+          resume:
+            filter?.orderBy
+              ? filter.orderBy[0]
+              : {
+                updatedAt: "desc",
+              }
+          ,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      items: items.map((item) => item.resume) as Resume[],
+    };
+  }
+
+  @Authorized()
+  @Query(() => ResumeList)
+  async resumesScanned(
+    @Ctx() ctx: Context,
+      @Info() gqlInfo: GraphQLResolveInfo,
+      @Arg("filter", () => ResumeFindManyInput, { nullable: true }) filter?: ResumeFindManyInput,
+  ): GQLResponse<ResumeList> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    const where: ResumeWhereInput = mergeDeepRight(
+      filter?.where || {},
+      filter?.whereUser
+        ? {
+          user: {
+            OR: [
+              {
+                firstName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                lastName: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+              {
+                email: {
+                  contains: filter.whereUser,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          },
+        }
+        : {},
+    );
+
+    const [
+      total,
+      items,
+    ] = await Promise.all([
+      ctx.prisma.scannedResume.count({
+        where: {
+          resume: where,
+        },
+      }),
+      ctx.prisma.scannedResume.findMany({
+        select: {
+          resume: {
+            select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
+          },
+        },
+        take: clamp(1, 50, filter?.take ?? 10),
+        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        where,
+        orderBy: {
+          resume:
+            filter?.orderBy
+              ? filter.orderBy[0]
+              : {
+                updatedAt: "desc",
+              }
+          ,
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      items: items.map((item) => item.resume) as Resume[],
+    };
+  }
+}
+
+@Resolver((_of) => Resume)
 export class ResumeModifyResolver {
   @Mutation(() => ResumeCreateResponse, { nullable: true })
   @Authorized()
@@ -558,5 +963,247 @@ export class ResumeModifyResolver {
 
       return true;
     }).catch(() => false);
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async scanResume(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+  ): GQLResponse<boolean> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return false;
+    }
+
+    const resume = await ctx.prisma.resume.findFirst({
+      where: {
+        uid,
+      },
+    });
+
+    if (!resume) {
+      return false;
+    }
+
+    const season = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        uid: true,
+      },
+    });
+
+    if (!season) {
+      return false;
+    }
+
+    await ctx.prisma.scannedResume.create({
+      data: {
+        resume: {
+          connect: {
+            uid,
+          },
+        },
+        company: {
+          connect: {
+            uid: user.companies[0].uid,
+          },
+        },
+        season: {
+          connect: {
+            uid: season.uid,
+          },
+        },
+      },
+    }).catch((e) => {
+      console.log(e);
+    });
+
+    return false;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async resumeSetIsFavourite(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+      @Arg("isFavourite") isFavourite: boolean,
+  ): GQLResponse<boolean> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return false;
+    }
+
+    const resume = await ctx.prisma.resume.findFirst({
+      where: {
+        uid,
+      },
+    });
+
+    if (!resume) {
+      return false;
+    }
+
+    const season = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        uid: true,
+      },
+    });
+
+    if (!season) {
+      return false;
+    }
+
+    if (isFavourite) {
+      await ctx.prisma.favouriteResume.create({
+        data: {
+          resume: {
+            connect: {
+              uid,
+            },
+          },
+          company: {
+            connect: {
+              uid: user.companies[0].uid,
+            },
+          },
+          season: {
+            connect: {
+              uid: season.uid,
+            },
+          },
+        },
+      }).catch((e) => {
+        console.log(e);
+      });
+    } else {
+      await ctx.prisma.favouriteResume.deleteMany({
+        where: {
+          season: {
+            uid: season.uid,
+          },
+          company: {
+            uid: user.companies[0].uid,
+          },
+          resume: {
+            uid,
+          },
+        },
+      }).catch((e) => {
+        console.log(e);
+      });
+    }
+
+    return true;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async resumeScan(
+    @Ctx() ctx: Context,
+      @Arg("userUid") userUid: string,
+  ): GQLResponse<boolean> {
+    const user = ctx.user!;
+
+    const canView =
+      0 < user.companies.length
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return false;
+    }
+
+    const resumeUser = await ctx.prisma.user.findFirst({
+      where: {
+        uid: userUid,
+      },
+      select: {
+        resume: {
+          select: {
+            uid: true,
+          },
+        },
+      },
+    });
+
+    if (!resumeUser) {
+      return false;
+    }
+
+    const { resume } = resumeUser;
+
+    if (!resume) {
+      return false;
+    }
+
+    const season = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        uid: true,
+      },
+    });
+
+    if (!season) {
+      return false;
+    }
+
+    await ctx.prisma.scannedResume.create({
+      data: {
+        resume: {
+          connect: {
+            uid: resume.uid,
+          },
+        },
+        company: {
+          connect: {
+            uid: user.companies[0].uid,
+          },
+        },
+        season: {
+          connect: {
+            uid: season.uid,
+          },
+        },
+      },
+    }).catch((e) => {
+      console.log(e);
+    });
+
+    return true;
   }
 }

@@ -21,6 +21,7 @@
         "pinia": "^2.0.13",
         "postcss": "^8.4.12",
         "primevue": "^3.12.5",
+        "qr-scanner": "^1.4.1",
         "vue": "^3.2.33"
     },
     "lint-staged": {

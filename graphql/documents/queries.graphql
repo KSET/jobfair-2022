@@ -474,3 +474,47 @@ query MyResume {
         }
     }
 }
+
+query Resume($uid: String!) {
+    resume(uid: $uid) {
+        uid
+        faculty {
+            name
+            module
+        }
+        user {
+            name
+            email
+            phone
+        }
+        studyYears {
+            studyYear
+            studyType
+        }
+        projects {
+            project
+            position
+            start
+            until
+        }
+        technologies
+        interests
+        city
+        cv {
+            url
+        }
+        volunteerExperiences {
+            organisation
+            position
+            start
+            until
+        }
+        workExperiences {
+            company
+            position
+            start
+            until
+        }
+    }
+    resumeIsFavourite(uid: $uid)
+}

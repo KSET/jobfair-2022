@@ -106,7 +106,7 @@
                 }
 
                 type QData = {
-                  scanResume: string | null,
+                  resumeScan: string | null,
                 };
                 type QArgs = {
                   userUid: string,
@@ -117,7 +117,7 @@
                     }
                 `)({
                   userUid: data.u as string,
-                  }).then((resp) => resp?.data?.scanResume);
+                  }).then((resp) => resp?.data?.resumeScan);
 
                 if (!uid) {
                   throw new ScanError("Something went wrong");

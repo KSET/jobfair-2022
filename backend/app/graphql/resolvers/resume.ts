@@ -1186,4 +1186,91 @@ export class ResumeModifyResolver {
 
     return resume.uid;
   }
+
+  @Authorized()
+  @Mutation(() => Resume, { nullable: true })
+  async resumeEntryScan(
+    @Ctx() ctx: Context,
+      @Arg("userUid") userUid: string,
+      @Info() gqlInfo: GraphQLResolveInfo,
+  ): GQLResponse<Resume, "nullable"> {
+    const user = ctx.user!;
+
+    const canView =
+      user.email.endsWith("@kset.org")
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return null;
+    }
+
+    const select = toSelect(gqlInfo, transformSelect);
+
+    const resumeUser = await ctx.prisma.user.findFirst({
+      where: {
+        uid: userUid,
+      },
+      select: {
+        resume: {
+          select: {
+            uid: true,
+            ...select,
+          },
+        },
+      },
+    });
+
+    if (!resumeUser) {
+      return null;
+    }
+
+    const { resume } = resumeUser;
+
+    if (!resume) {
+      return null;
+    }
+
+    const season = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        uid: true,
+      },
+    });
+
+    if (!season) {
+      return null;
+    }
+
+    await ctx.prisma.entryResumeLog.create({
+      data: {
+        resume: {
+          connect: {
+            uid: resume.uid,
+          },
+        },
+        season: {
+          connect: {
+            uid: season.uid,
+          },
+        },
+        scannedBy: {
+          connect: {
+            uid: user.uid,
+          },
+        },
+      },
+    }).catch((e) => {
+      console.log(e);
+    });
+
+    return resumeUser.resume as Resume;
+  }
 }

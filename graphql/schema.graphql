@@ -1027,6 +1027,7 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
+  resumeEntryScan(userUid: String!): Resume
   resumeScan(userUid: String!): String
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
@@ -1302,6 +1303,7 @@ type Resume {
 }
 
 type ResumeCount {
+  entryLog: Int!
   favouriteResumes: Int!
   interests: Int!
   projects: Int!
@@ -1664,6 +1666,7 @@ type Season {
 type SeasonCount {
   calendar: Int!
   companies: Int!
+  entryLog: Int!
   favouriteResumes: Int!
   partners: Int!
   scannedResumes: Int!
@@ -1964,6 +1967,7 @@ type UserCount {
   pressReleases: Int!
   reservations: Int!
   roles: Int!
+  scannedEntries: Int!
 }
 
 input UserCreateInput {

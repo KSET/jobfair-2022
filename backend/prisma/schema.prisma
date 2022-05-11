@@ -51,6 +51,9 @@ model User {
   resumeId Int?    @unique
 
   reservations EventReservation[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedEntries EntryResumeLog[]
 }
 
 model Translation {
@@ -281,6 +284,9 @@ model Season {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   favouriteResumes FavouriteResume[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  entryLog EntryResumeLog[]
 }
 
 model Sponsor {
@@ -526,6 +532,9 @@ model Resume {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   favouriteResumes FavouriteResume[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  entryLog EntryResumeLog[]
 }
 
 model ResumeFaculty {
@@ -721,4 +730,30 @@ model FavouriteResume {
   seasonId Int
 
   @@unique([companyId, resumeId])
+}
+
+model EntryResumeLog {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  event   String?
+  eventId Int?
+
+  /// @TypeGraphQL.omit(input: true)
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  resumeId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  seasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  scannedBy   User @relation(fields: [scannedById], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedById Int
+
+  /// @TypeGraphQL.omit(input: true)
+  scannedAt DateTime @default(now())
 }

@@ -358,7 +358,8 @@
         {
           const res = resp?.resumes ?? resp?.resumesFavourites ?? resp?.resumesScanned;
           if (res) {
-            Object.assign(resumes, res);
+            resumes.items = res?.items || [];
+            resumes.total = res?.total || 0;
           }
         }
         {

@@ -1175,6 +1175,156 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-11-2022"),
+    image: "/tmp/blog10.png",
+    title: "Razvežimo kravate na 15. Job Fairu!",
+    description: "Na kraju prvog dana Job Faira očekuje te mnogo zabavnih sadržaja i igara u koje se možeš uključiti!",
+    content: `
+          <p>
+            U srijedu, <strong>11. svibnja, od 18 sati</strong> u KSET-u održat će se <strong>Loosen Up Party</strong>.
+            Osim besplatnih brendiranih koktela i piva koje su nam ove godine omogućila čak <strong>23</strong> poduzeća,
+            održavat će se i zabavne igre u kojima mogu sudjelovati timovi sastavljeni od predstavnika poduzeća i studenata.
+            Ulaz je besplatan je i otvoren za sve!
+          </p>
+
+          <h3>Koje se igre igraju?</h3>
+
+          <p>
+            Tko još nije čuo za Igru života? Prvi dio igre obilježavaju discipline iz pop kulture: Pogodi jezik pjesme, Nastavi pjesmu
+            i Pogađanje poznatih rečenica iz filmova. Ako ti prethodne discipline nisu donijele slavu, za dodatne bodove u drugom dijelu
+            možeš propjevati uz karaoke i pokazati fleksibilnost uz limbo. U ovom koraku se dobro potrudi jer se u slučaju izjednačenja igramo
+            Paklenih jezikolomki uz malu pomoć Volim ljuto.
+          </p>
+
+          <h3>Što je u ponudi pića?</h3>
+
+          <p>
+            Ove godine, uz 14 koktela, u ponudi je i 9 piva iz asortimana pivovare Medvedgrad.
+          </p>
+
+          <p>Kokteli:</p>
+
+          <p>
+            Memory Leak (Televend by Intis)
+            TAKE THE LEAP (Leapbit)
+            Blue Vision (Visage Technologies)
+            The brown stuff (Syntio)
+            Very Big Cocktail (Very Big Things)
+            Pour Request (Infinum)
+            mStart (mStart)
+            Big Smash (Infobip)
+            Real Booze (RealNetworks)
+            #NeverDrinkingAgain (Rimac Technology)
+            KONČAR’s Cocktail (KONČAR)
+            Undashot (Undabot)
+          </p>
+
+          <p>Piva:</p>
+
+          <p>
+            Random šuma (OptimoRoute)
+            AxBeer (Axiros)
+            PivCO (Croatia osiguranje)
+            MaxWave (Maxtena)
+            Computer Juice (2e Systems)
+            IDBEER (Infodom)
+            King’s Beer (KING ICT)
+            Koios (Koios)
+            HR Prodigy (HR Prodigy)
+          </p>
+
+          <p>
+            Za detaljnu koktel i piva kartu posjeti Loosen Up Party. Vidimo se!
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-11-2022"),
+    image: "/tmp/blog10.png",
+    title: "Let’s untie our ties at the 15th Job Fair!",
+    description: "You’ll be able to join lots of fun activities and games at the end of the first day of Job Fair!",
+    content: `
+          <p>
+            The Loosen Up Party will be held at KSET on Wednesday, May 11, at 6 pm. In addition to free branded cocktails
+            and beers provided to us by as many as <strong>23</strong> companies this year, there will also be fun games
+            in which teams made up of company representatives and students can participate. Admission is free and open to all!
+          </p>
+
+          <h3>Which games will be played?</h3>
+
+          <p>
+            Who here hasn’t heard of the Game of Life? The first part consists of pop-culture disciplines: Guess the song's language,
+            Continue the song and Guess which movie the quote is from. If these games don't do you justice, you can let yourself be
+            heard in karaoke or show of your flexibility in limbo for extra points. You better try hard here because in case of a tie,
+            we start the game of Fiery Tongue Twisters with a little twist provided by Volim Ljuto.
+          </p>
+
+          <h3>What’s the drinks offer like?</h3>
+
+          <p>
+            This year, in addition to 14 cocktails, we also offer 9 beers from the Medvedgrad brewery assortment.
+          </p>
+
+          <p>Cocktails:</p>
+
+          <p>
+            Memory Leak (Televend by Intis)
+            TAKE THE LEAP (Leapbit)
+            Blue Vision (Visage Technologies)
+            The brown stuff (Syntio)
+            Very Big Cocktail (Very Big Things)
+            Pour Request (Infinum)
+            mStart (mStart)
+            Big Smash (Infobip)
+            Real Booze (RealNetworks)
+            #NeverDrinkingAgain (Rimac Technology)
+            KONČAR’s Cocktail (KONČAR)
+            Undashot (Undabot)
+          </p>
+
+          <p>Beers:</p>
+
+          <p>
+            Random forest (OptimoRoute)
+            AxBeer (Axiros)
+            PivCO (Croatia osiguranje)
+            MaxWave (Maxtena)
+            Computer Juice (2e Systems)
+            IDBEER (Infodom)
+            King’s Beer (KING ICT)
+            Koios (Koios)
+            HR Prodigy (HR Prodigy)
+          </p>
+
+          <p>
+            For a detailed cocktail and beer card, visit the Loosen Up Party. See ya!
+          </p>
+
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

@@ -967,76 +967,6 @@ export class ResumeModifyResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async scanResume(
-    @Ctx() ctx: Context,
-      @Arg("uid") uid: string,
-  ): GQLResponse<boolean> {
-    const user = ctx.user!;
-
-    const canView =
-      0 < user.companies.length
-      || hasAtLeastRole(Role.Admin, user)
-    ;
-
-    if (!canView) {
-      return false;
-    }
-
-    const resume = await ctx.prisma.resume.findFirst({
-      where: {
-        uid,
-      },
-    });
-
-    if (!resume) {
-      return false;
-    }
-
-    const season = await ctx.prisma.season.findFirst({
-      where: {
-        startsAt: {
-          lte: new Date(),
-        },
-        endsAt: {
-          gte: new Date(),
-        },
-      },
-      select: {
-        uid: true,
-      },
-    });
-
-    if (!season) {
-      return false;
-    }
-
-    await ctx.prisma.scannedResume.create({
-      data: {
-        resume: {
-          connect: {
-            uid,
-          },
-        },
-        company: {
-          connect: {
-            uid: user.companies[0].uid,
-          },
-        },
-        season: {
-          connect: {
-            uid: season.uid,
-          },
-        },
-      },
-    }).catch((e) => {
-      console.log(e);
-    });
-
-    return false;
-  }
-
-  @Authorized()
-  @Mutation(() => Boolean)
   async resumeSetIsFavourite(
     @Ctx() ctx: Context,
       @Arg("uid") uid: string,
@@ -1125,11 +1055,11 @@ export class ResumeModifyResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => String, { nullable: true })
   async resumeScan(
     @Ctx() ctx: Context,
       @Arg("userUid") userUid: string,
-  ): GQLResponse<boolean> {
+  ): GQLResponse<string, "nullable"> {
     const user = ctx.user!;
 
     const canView =
@@ -1138,7 +1068,7 @@ export class ResumeModifyResolver {
     ;
 
     if (!canView) {
-      return false;
+      return null;
     }
 
     const resumeUser = await ctx.prisma.user.findFirst({
@@ -1155,13 +1085,13 @@ export class ResumeModifyResolver {
     });
 
     if (!resumeUser) {
-      return false;
+      return null;
     }
 
     const { resume } = resumeUser;
 
     if (!resume) {
-      return false;
+      return null;
     }
 
     const season = await ctx.prisma.season.findFirst({
@@ -1179,7 +1109,7 @@ export class ResumeModifyResolver {
     });
 
     if (!season) {
-      return false;
+      return null;
     }
 
     await ctx.prisma.scannedResume.create({
@@ -1204,6 +1134,6 @@ export class ResumeModifyResolver {
       console.log(e);
     });
 
-    return true;
+    return resume.uid;
   }
 }

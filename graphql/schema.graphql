@@ -1027,9 +1027,8 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
-  resumeScan(userUid: String!): Boolean!
+  resumeScan(userUid: String!): String
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
-  scanResume(uid: String!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem

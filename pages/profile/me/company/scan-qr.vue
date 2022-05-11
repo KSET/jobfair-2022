@@ -95,7 +95,7 @@
             throttle(async (result) => {
               qrScanner?.stop();
               try {
-                const data = await JSON.parse(result.data) as Dict;
+                const data = JSON.parse(result.data) as Dict;
 
                 if ("user" !== data?.f) {
                   throw new ScanError(`Wrong QR code type: ${ String(data?.f) }`);
@@ -106,27 +106,27 @@
                 }
 
                 type QData = {
-                  scanResume: boolean,
+                  scanResume: string | null,
                 };
                 type QArgs = {
                   userUid: string,
                 };
-                const resp = await useMutation<QData, QArgs>(gql`
+                const uid = await useMutation<QData, QArgs>(gql`
                     mutation Scan($userUid: String!) {
-                        scanResume(uid: $userUid)
+                        resumeScan(userUid: $userUid)
                     }
                 `)({
                   userUid: data.u as string,
                   }).then((resp) => resp?.data?.scanResume);
 
-                if ("boolean" !== typeof resp) {
+                if (!uid) {
                   throw new ScanError("Something went wrong");
                 }
 
                 await navigateTo({
                   name: "profile-me-company-resumes-uid",
                   params: {
-                    uid: data.u as string,
+                    uid,
                   },
                 });
               } catch (e) {

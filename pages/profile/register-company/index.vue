@@ -275,12 +275,12 @@
 
     .companyForm {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, mimmax(0, 1fr));
       grid-column-gap: min(6.25rem, 7.5vw);
       grid-row-gap: var(--gap-row);
 
       @include media(lg) {
-        grid-template-columns: 1fr;
+        grid-template-columns: mimmax(0, 1fr);
       }
 
       .column2 {

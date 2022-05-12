@@ -297,14 +297,14 @@
       margin: 0 auto;
       padding: 0;
       transition-property: padding, width;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(4, mimmax(0, 1fr));
       grid-column-gap: 3rem;
       grid-row-gap: 2.5rem;
 
       @include media($breakpoint) {
         width: 100%;
         padding: 0 .75rem;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, mimmax(0, 1fr));
       }
 
       .logoCol {

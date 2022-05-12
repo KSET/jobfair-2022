@@ -351,13 +351,13 @@
       display: grid;
       align-items: start;
       color: #{color.adjust($fer-black, $alpha: -.2)};
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, mimmax(0, 1fr));
       grid-row-gap: 3.125rem;
       grid-column-gap: 2rem;
 
       @include media(md) {
         grid-row-gap: 2.5rem;
-        grid-template-columns: 1fr;
+        grid-template-columns: mimmax(0, 1fr);
       }
 
       .pressKitItem {
@@ -483,7 +483,7 @@
     .galleryContainer {
       display: grid;
       gap: .8rem;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, mimmax(0, 1fr));
 
       .galleryItem {
         overflow: hidden;

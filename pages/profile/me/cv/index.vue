@@ -193,7 +193,6 @@
     resumeFacultyCreate,
     resumeInterestCreate,
     resumeProjectCreate,
-    resumeRandomCreate,
     resumeStudyCreate,
     resumeTechnologyCreate,
     resumeVolunteerExperienceCreate,
@@ -234,7 +233,6 @@
     Projects = "projects",
     VolunteerExperiences = "volunteerExperiences",
     Pdf = "pdf",
-    ExtraField = "extraField",
   }
 
   type ArrayElement<ArrayType extends readonly unknown[]> =
@@ -311,7 +309,6 @@
         [FormFor.WorkExperiences]: resumeWorkExperienceCreate,
         [FormFor.Projects]: resumeProjectCreate,
         [FormFor.VolunteerExperiences]: resumeVolunteerExperienceCreate,
-        [FormFor.ExtraField]: resumeRandomCreate,
       } as const;
 
       const _f = <T extends Record<FormFor, unknown>>(forms: T) => reactive(forms);
@@ -326,7 +323,6 @@
         [FormFor.Technologies]: form(createFormFor[FormFor.Technologies](null)),
         [FormFor.Interests]: form(createFormFor[FormFor.Interests](null)),
         [FormFor.City]: form(createFormFor[FormFor.City](r)),
-        [FormFor.ExtraField]: form(createFormFor[FormFor.ExtraField](r)),
       } as const);
 
       const items = createItems(unref(resume));
@@ -499,7 +495,6 @@
             [FormFor.Technologies]: Array.from(infoFor[FormFor.Technologies].selected),
             [FormFor.Interests]: Array.from(infoFor[FormFor.Interests].selected),
             [FormFor.City]: itemData(FormFor.City)[FormFor.City].city,
-            [FormFor.ExtraField]: itemData(FormFor.ExtraField)[FormFor.ExtraField].extraField,
           };
 
           if ("string" === typeof data[FormFor.Pdf]?.cv) {

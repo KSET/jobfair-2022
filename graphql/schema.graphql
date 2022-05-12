@@ -1290,6 +1290,7 @@ type Resume {
   city: String!
   createdAt: DateTime!
   cv: File
+  extraField: String!
   faculty: ResumeFaculty
   interests: [String!]!
   projects: [ResumeProject!]!
@@ -1321,6 +1322,7 @@ input ResumeCreateCvInput {
 
 input ResumeCreateInput {
   city: String = ""
+  extraField: String = ""
   faculty: ResumeFacultyCreateInput!
   interests: [String!] = []
   pdf: ResumeCreateCvInput
@@ -1412,6 +1414,7 @@ type ResumeList {
 
 enum ResumeOrderByRelevanceFieldEnum {
   city
+  extraField
   uid
 }
 
@@ -1424,6 +1427,7 @@ input ResumeOrderByRelevanceInput {
 input ResumeOrderByWithRelationAndSearchRelevanceInput {
   _relevance: ResumeOrderByRelevanceInput
   city: SortOrder
+  extraField: SortOrder
   faculty: ResumeFacultyOrderByWithRelationAndSearchRelevanceInput
   interests: ResumeInterestOrderByRelationAggregateInput
   projects: ResumeProjectOrderByRelationAggregateInput
@@ -1551,6 +1555,7 @@ input ResumeWhereInput {
   NOT: [ResumeWhereInput!]
   OR: [ResumeWhereInput!]
   city: StringFilter
+  extraField: StringFilter
   faculty: ResumeFacultyRelationFilter
   interests: ResumeInterestListRelationFilter
   projects: ResumeProjectListRelationFilter

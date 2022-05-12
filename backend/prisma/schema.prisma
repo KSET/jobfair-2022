@@ -519,6 +519,8 @@ model Resume {
 
   volunteerExperiences ResumeVolunteerExperience[]
 
+  extraField String @default("")
+
   /// @TypeGraphQL.omit(input: true)
   cv   File? @relation(fields: [cvId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)

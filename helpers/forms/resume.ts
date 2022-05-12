@@ -205,3 +205,15 @@ export const resumeInterestCreate =
       },
     })
 ;
+
+type ResumeRandom = Pick<IResume, "extraField">;
+export const resumeRandomCreate =
+  <T extends ResumeRandom>(resume: Maybe<T>): Record<keyof ResumeRandom, InputEntry> =>
+    ({
+      extraField: {
+        value: resume?.extraField || "",
+        type: "text",
+        required: false,
+      },
+    })
+;

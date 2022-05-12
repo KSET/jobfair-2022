@@ -240,6 +240,9 @@ class ResumeCreateInput {
 
   @Field(() => String)
     city: string = "";
+
+  @Field(() => String, { nullable: true })
+    extraField?: string | undefined = "";
 }
 
 @InputType()
@@ -787,6 +790,7 @@ export class ResumeModifyResolver {
                 id: user.id,
               },
             },
+            extraField: info.extraField || "",
           },
           select: resumeSelect,
         });
@@ -889,6 +893,7 @@ export class ResumeModifyResolver {
               id: user.id,
             },
           },
+          extraField: info.extraField || "",
         },
         select: resumeSelect,
       }) as Resume;

@@ -471,6 +471,7 @@ query MyResume {
                 studyType
                 studyYear
             }
+            extraField
         }
     }
 }
@@ -515,6 +516,7 @@ query Resume($uid: String!) {
             start
             until
         }
+        extraField
     }
     resumeIsFavourite(uid: $uid)
 }

@@ -13,6 +13,7 @@ import {
   FieldResolver,
   Info,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -185,6 +186,38 @@ export class SeasonFieldResolver {
       count: row.count,
     }));
   }
+
+  @FieldResolver(() => Int)
+  entryCount(
+    @Root() season: Season,
+      @Ctx() ctx: Context,
+  ): GQLField<number> {
+    if (!ctx.user) {
+      return 0;
+    }
+
+    return ctx.prisma.entryResumeLog.count({
+      where: {
+        seasonId: season.id,
+      },
+    });
+  }
+
+  @FieldResolver(() => Int)
+  companyScannedCvs(
+    @Root() season: Season,
+      @Ctx() ctx: Context,
+  ): GQLField<number> {
+    if (!ctx.user) {
+      return 0;
+    }
+
+    return ctx.prisma.scannedResume.count({
+      where: {
+        seasonId: season.id,
+      },
+    });
+  }
 }
 
 export const transformSelect = transformSelectFor<SeasonFieldResolver>({
@@ -242,6 +275,20 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
   reservations(select) {
     select.id = true;
     delete select.reservations;
+
+    return select;
+  },
+
+  entryCount(select) {
+    select.id = true;
+    delete select.entryCount;
+
+    return select;
+  },
+
+  companyScannedCvs(select) {
+    select.id = true;
+    delete select.companyScannedCvs;
 
     return select;
   },

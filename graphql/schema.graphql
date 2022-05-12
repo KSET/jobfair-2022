@@ -1654,7 +1654,9 @@ type Season {
   applicationsFrom: DateTime!
   applicationsUntil: DateTime!
   calendar: [CalendarItem!]!
+  companyScannedCvs: Int!
   endsAt: DateTime!
+  entryCount: Int!
   name: String!
   panel: CompanyPanel
   reservations: [ReservationItem!]!

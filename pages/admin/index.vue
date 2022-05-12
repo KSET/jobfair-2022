@@ -204,6 +204,13 @@
               Rezervacije
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-stats', params: { season: season.uid } }"
+            >
+              Statistike
+            </nuxt-link>
+          </li>
         </ul>
       </fieldset>
     </div>

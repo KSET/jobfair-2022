@@ -413,6 +413,19 @@
           </h2>
           <div :class="$style.itemActions">
             <nuxt-link
+              :to="{ name: 'profile-me-company-resumes' }"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.scanUsers.resumes"
+                />
+              </p-button>
+            </nuxt-link>
+
+            <nuxt-link
               :to="{ name: 'profile-me-company-scan-qr' }"
               class="ml-auto"
             >
@@ -716,9 +729,10 @@
   }
 
   .items {
+    display: grid;
+
     --item-columns: 3;
 
-    display: grid;
     gap: 1rem;
     grid-template-columns: repeat(var(--item-columns), minmax(0, 1fr));
 
@@ -737,6 +751,7 @@
       transition-property: padding;
       background-color: $fer-gray;
       box-shadow: #{map.get($shadows, "shadow-3")};
+      gap: var(--item-padding);
 
       &.signUp {
         min-height: fit-content;
@@ -778,7 +793,7 @@
 
       .itemActions {
         display: flex;
-        margin-top: var(--item-padding);
+        margin-top: auto;
 
         :global(.p-button) {
           padding: .625rem 1.125rem;

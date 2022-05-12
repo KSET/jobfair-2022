@@ -70,20 +70,22 @@ export const usePagesStore = defineStore(
           {
             name: "profile.company.signup",
             to: { name: "profile-me-company-signup" },
-            if: () => seasonsStore.applicationsOpen,
+            if: () => userStore.hasCompany && seasonsStore.applicationsOpen,
           },
           {
             name: "profile.company.application.edit",
             to: { name: "profile-me-company-application-edit" },
-            if: () => !seasonsStore.applicationsOpen && companyStore.hasApplicationApproved,
+            if: () => userStore.hasCompany && !seasonsStore.applicationsOpen && companyStore.hasApplicationApproved,
           },
           {
             name: "profile.company.resumes",
             to: { name: "profile-me-company-resumes" },
+            if: () => userStore.hasCompany,
           },
           {
             name: "profile.company.scan-qr",
             to: { name: "profile-me-company-scan-qr" },
+            if: () => userStore.hasCompany,
           },
           {
             name: "profile.cv",

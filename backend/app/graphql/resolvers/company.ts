@@ -610,6 +610,106 @@ export class CompanyInfoMutationsResolver {
       entity,
     };
   }
+
+  @Mutation(() => String, { nullable: true })
+  async addCompanyMember(
+    @Ctx() ctx: Context,
+      @Arg("email", () => String) newMemberEmail: string,
+  ): GQLResponse<string, "nullable"> {
+    if (!ctx.user) {
+      return null;
+    }
+
+    const [ company ] = ctx.user.companies;
+
+    if (!company && !hasAtLeastRole(Role.Admin, ctx.user)) {
+      return "You can not edit the company";
+    }
+
+    const companyUid = company.uid;
+
+    const error = await ctx.prisma.$transaction(async (prisma) => {
+      const newMember = await prisma.user.findFirst({
+        where: {
+          email: newMemberEmail,
+        },
+      });
+
+      if (!newMember) {
+        throw new Error("User does not exist");
+      }
+
+      return prisma.company.update({
+        data: {
+          members: {
+            connect: {
+              email: newMemberEmail,
+            },
+          },
+        },
+        where: {
+          uid: companyUid,
+        },
+        select: {
+          id: true,
+        },
+      }).catch(() => null);
+    }).then(() => "").catch((e) => (e as Error)?.message);
+
+    if (error) {
+      return error;
+    }
+
+    void EventsService.logEvent("user:company:members:add", ctx.user.id, {
+      email: newMemberEmail,
+    });
+
+    return "";
+  }
+
+  @Mutation(() => String, { nullable: true })
+  async removeCompanyMember(
+    @Ctx() ctx: Context,
+      @Arg("email", () => String) newMemberEmail: string,
+  ): GQLResponse<string, "nullable"> {
+    if (!ctx.user) {
+      return null;
+    }
+
+    const [ company ] = ctx.user.companies;
+
+    if (!company && !hasAtLeastRole(Role.Admin, ctx.user)) {
+      return "You can not edit the company";
+    }
+
+    const companyUid = company.uid;
+
+    const entity = await ctx.prisma.company.update({
+      data: {
+        members: {
+          disconnect: {
+            email: newMemberEmail,
+          },
+        },
+      },
+      where: {
+        uid: companyUid,
+      },
+      select: {
+        id: true,
+      },
+    }).catch(() => null);
+
+    if (!entity) {
+      return "Company not found";
+    }
+
+    void EventsService.logEvent("user:company:members:remove", ctx.user.id, {
+      email: newMemberEmail,
+    });
+
+    return "";
+  }
 }
 
 @Resolver(() => Company)

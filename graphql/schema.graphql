@@ -1005,6 +1005,7 @@ input IntFilter {
 }
 
 type Mutation {
+  addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
@@ -1025,6 +1026,7 @@ type Mutation {
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
+  removeCompanyMember(email: String!): String
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
   resumeEntryScan(userUid: String!): Resume

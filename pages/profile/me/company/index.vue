@@ -36,6 +36,43 @@
         </div>
       </template>
     </app-formgroup>
+
+    <h2 class="mt-6">
+      <translated-text trans-key="profile.about-company.add-members" />
+    </h2>
+    <ul class="mb-5">
+      <li v-for="member in members" :key="member.uid">
+        <div :class="$style.companyMember">
+          <strong v-text="member.name" /> - <em v-text="member.email" />
+          <template v-if="user.uid !== member.uid">
+            |
+            <p-button
+              class="p-button-text p-button-danger"
+              :loading="newMember.loading"
+              icon="pi pi-trash"
+              @click="handleRemoveMember(member.email)"
+            />
+          </template>
+        </div>
+      </li>
+    </ul>
+    <form class="flex flex-column" style="max-width: 30em;" @submit.prevent="handleAddMember">
+      <app-input
+        v-model="newMember.email"
+        :disabled="newMember.loading"
+        type="email"
+        name="new-member"
+        label-key="profile.about-company.add-member"
+        required
+      />
+      <p-button
+        :loading="newMember.loading"
+        class="p-button-secondary mt-2"
+        type="submit"
+      >
+        <translated-text trans-key="form.save" />
+      </p-button>
+    </form>
   </app-user-profile-container>
 </template>
 
@@ -72,6 +109,7 @@
   } from "~/helpers/forms/company";
   import useTitle from "~/composables/useTitle";
   import {
+    useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
@@ -81,12 +119,19 @@
     IImageVariation,
     IIndustry,
     IUpdateCompanyInfoMutationVariables,
+    IUser,
   } from "~/graphql/schema";
+  import {
+    computed,
+    unref,
+  } from "#imports";
+  import AppInput from "~/components/util/form/app-input.vue";
 
   export default defineComponent({
     name: "PageProfileCompanyHome",
 
     components: {
+      AppInput,
       TranslatedText,
       AppFormgroup,
       AppUserProfileContainer,
@@ -102,7 +147,8 @@
 
       const isLoading = ref(false);
 
-      const { vat } = userStore.user!.companies[0];
+      const user = computed(() => userStore.user!);
+      const { vat } = unref(user).companies[0];
 
       type QData = {
         industries: Pick<IIndustry, "name">[],
@@ -111,6 +157,7 @@
             full: Pick<IImageVariation, "mimeType">,
           },
           vectorLogo: Pick<IFile, "uid" | "name" | "mimeType">,
+          members: Pick<IUser, "uid" | "name" | "email">[],
         },
       };
       type QArgs = {
@@ -146,6 +193,11 @@
                         name
                         mimeType
                     }
+                    members {
+                        uid
+                        name
+                        email
+                    }
                 }
             }
         `,
@@ -154,7 +206,41 @@
         },
       })();
 
+      const membersQuery = useQuery<{ company: Pick<QData["company"], "members">, }, QArgs>({
+        query: gql`
+            query Company($vat: String!) {
+                company(vat: $vat) {
+                    members {
+                        uid
+                        name
+                        email
+                    }
+                }
+            }
+        `,
+        variables: {
+          vat,
+        },
+      });
+
+      const memberAddMutation = useMutation<{ addCompanyMember: string, }, { email: string, }>(gql`
+        mutation UpdateMembers($email: String!) {
+            addCompanyMember(email: $email)
+        }
+      `);
+
+      const memberRemoveMutation = useMutation<{ removeCompanyMember: string, }, { email: string, }>(gql`
+        mutation UpdateMembers($email: String!) {
+            removeCompanyMember(email: $email)
+        }
+      `);
+
       const industries = (resp?.data?.industries || []).map((x) => ({ label: x.name, value: x.name }));
+      const members = ref(resp?.data?.company?.members || []);
+      const newMember = reactive({
+        email: "",
+        loading: false,
+      });
 
       const info_ = companyCreate(resp?.data?.company)(industries);
       const info = reactive({
@@ -180,6 +266,9 @@
         isLoading,
         info,
         errors,
+        user,
+        members,
+        newMember,
         async handleUpdate() {
           resetErrors();
           const data: IUpdateCompanyInfoMutationVariables["info"] = pipe(
@@ -228,6 +317,47 @@
             });
           }
         },
+        async handleAddMember() {
+          newMember.loading = true;
+          const resp = await memberAddMutation({
+            email: newMember.email,
+          }).then((x) => x?.data?.addCompanyMember);
+          newMember.loading = false;
+
+          if ("" === resp) {
+            members.value = await membersQuery().then((resp) => resp?.data?.company?.members || []);
+            newMember.email = "";
+          } else {
+            toast.add({
+              severity: "error",
+              summary: resp ?? "Something went wrong",
+              closable: true,
+              life: 5000,
+            });
+          }
+        },
+        async handleRemoveMember(email: string) {
+          if (!confirm(`Remove ${ email } from company?`)) {
+            return;
+          }
+
+          newMember.loading = true;
+          const resp = await memberRemoveMutation({
+            email,
+          }).then((x) => x?.data?.removeCompanyMember);
+          newMember.loading = false;
+
+          if ("" === resp) {
+            members.value = await membersQuery().then((resp) => resp?.data?.company?.members || []);
+          } else {
+            toast.add({
+              severity: "error",
+              summary: resp ?? "Something went wrong",
+              closable: true,
+              life: 5000,
+            });
+          }
+        },
       };
     },
   });
@@ -266,6 +396,18 @@
         @include media(lg) {
           grid-column: initial;
         }
+      }
+    }
+
+    .companyMember {
+      display: flex;
+      align-items: center;
+      gap: .4em;
+
+      button {
+        width: 1.5em;
+        height: 1.5em;
+        padding: 0;
       }
     }
   }

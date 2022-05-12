@@ -6,38 +6,36 @@
       />
     </h1>
 
-    <client-only>
-      <app-formgroup
-        :class="$style.form"
-        :errors="errors"
-        :inputs="info"
-        :loading="isLoading"
-        @submit="handleUpdate"
-      >
-        <template #after>
-          <div
-            v-if="errors.entity.length > 0"
-            :class="$style.errorContainer"
-          >
-            <translated-text
-              v-for="err in errors.entity"
-              :key="err.message"
-              :trans-key="err.message"
-            />
-          </div>
+    <app-formgroup
+      :class="$style.form"
+      :errors="errors"
+      :inputs="info"
+      :loading="isLoading"
+      @submit="handleUpdate"
+    >
+      <template #after>
+        <div
+          v-if="errors.entity.length > 0"
+          :class="$style.errorContainer"
+        >
+          <translated-text
+            v-for="err in errors.entity"
+            :key="err.message"
+            :trans-key="err.message"
+          />
+        </div>
 
-          <div :class="$style.column2" class="text-right -mt-3">
-            <p-button
-              :loading="isLoading"
-              class="p-button-secondary font-bold"
-              type="submit"
-            >
-              <translated-text trans-key="form.save" />
-            </p-button>
-          </div>
-        </template>
-      </app-formgroup>
-    </client-only>
+        <div :class="$style.column2" class="text-right -mt-3">
+          <p-button
+            :loading="isLoading"
+            class="p-button-secondary font-bold"
+            type="submit"
+          >
+            <translated-text trans-key="form.save" />
+          </p-button>
+        </div>
+      </template>
+    </app-formgroup>
   </app-user-profile-container>
 </template>
 

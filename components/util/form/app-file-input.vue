@@ -41,22 +41,30 @@
         v-if="previewSrc"
         :class="$style.dropAreaPreview"
       >
-        <icon-file-generic
-          v-if="previewSrc === 'file'"
-          :aria-label="previewName"
-        />
-        <icon-file-archive
-          v-else-if="previewSrc === 'archive'"
-          :aria-label="previewName"
-        />
-        <app-img
-          v-else
-          :alt="previewName || 'Preview'"
-          :src="previewSrc"
-          aspect-ratio="1.78"
-          contain
-          @load="freeFileUrl(previewSrc)"
-        />
+        <client-only>
+          <template #fallback>
+            <icon-file-generic
+              :aria-label="previewName"
+            />
+          </template>
+
+          <icon-file-generic
+            v-if="previewSrc === 'file'"
+            :aria-label="previewName"
+          />
+          <icon-file-archive
+            v-else-if="previewSrc === 'archive'"
+            :aria-label="previewName"
+          />
+          <app-img
+            v-else
+            :alt="previewName || 'Preview'"
+            :src="previewSrc"
+            aspect-ratio="1.78"
+            contain
+            @load="freeFileUrl(previewSrc)"
+          />
+        </client-only>
         <span
           v-if="previewName"
           :class="$style.dropAreaPreviewText"

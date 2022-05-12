@@ -818,11 +818,7 @@ export class ResumeModifyResolver {
             },
           },
           technologies: {
-            deleteMany: {
-              id: {
-                in: oldResume.technologies.map((x) => x.id),
-              },
-            },
+            disconnect: oldResume.technologies,
             connectOrCreate: info.technologies.map((name) => ({
               where: {
                 name,
@@ -833,11 +829,7 @@ export class ResumeModifyResolver {
             })),
           },
           interests: {
-            deleteMany: {
-              id: {
-                in: oldResume.interests.map((x) => x.id),
-              },
-            },
+            disconnect: oldResume.interests,
             connectOrCreate: info.interests.map((name) => ({
               where: {
                 name,

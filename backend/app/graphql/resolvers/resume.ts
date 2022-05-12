@@ -439,6 +439,9 @@ export class ResumeInfoResolver {
         : {},
     );
 
+    const take = clamp(1, 50, filter?.take ?? 10);
+    const skip = clamp(0, Infinity, filter?.skip ?? 0) * take;
+
     const [
       total,
       items,
@@ -448,8 +451,8 @@ export class ResumeInfoResolver {
       }),
       ctx.prisma.resume.findMany({
         select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
-        take: clamp(1, 50, filter?.take ?? 10),
-        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        take,
+        skip,
         where,
         orderBy: filter?.orderBy || {
           updatedAt: "desc",
@@ -514,6 +517,9 @@ export class ResumeInfoResolver {
         : {},
     );
 
+    const take = clamp(1, 50, filter?.take ?? 10);
+    const skip = clamp(0, Infinity, filter?.skip ?? 0) * take;
+
     const [
       total,
       items,
@@ -532,8 +538,8 @@ export class ResumeInfoResolver {
             select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
           },
         },
-        take: clamp(1, 50, filter?.take ?? 10),
-        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        take,
+        skip,
         where: {
           resume: where,
           company: {
@@ -609,6 +615,9 @@ export class ResumeInfoResolver {
         : {},
     );
 
+    const take = clamp(1, 50, filter?.take ?? 10);
+    const skip = clamp(0, Infinity, filter?.skip ?? 0) * take;
+
     const [
       total,
       items,
@@ -627,8 +636,8 @@ export class ResumeInfoResolver {
             select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
           },
         },
-        take: clamp(1, 50, filter?.take ?? 10),
-        skip: clamp(0, Infinity, filter?.skip ?? 0),
+        take,
+        skip,
         where: {
           resume: where,
           company: {

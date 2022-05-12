@@ -238,6 +238,7 @@
       &::after {
         left: 1.25rem !important;
         border-top-color: $border-color !important;
+        border-bottom-color: transparent !important;
       }
     }
 
@@ -323,8 +324,8 @@
 
     .overlayPanelHeaderImage {
       width: 3rem;
-      box-shadow: 0 0 4px 2px #{color.adjust($fer-white, $alpha: -.7)};
       border-radius: 100%;
+      box-shadow: 0 0 4px 2px #{color.adjust($fer-white, $alpha: -.7)};
     }
 
     .overlayPanelHeader {

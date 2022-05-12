@@ -85,6 +85,10 @@ export const usePagesStore = defineStore(
             name: "profile.company.scan-qr",
             to: { name: "profile-me-company-scan-qr" },
           },
+          {
+            name: "profile.cv",
+            to: { name: "profile-me-cv" },
+          },
         ].filter((page) => page.if ? page.if() : true);
       },
     },

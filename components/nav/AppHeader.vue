@@ -92,7 +92,7 @@
                 </ul>
               </li>
               <li
-                v-for="page in pages"
+                v-for="page in sidebarPages"
                 :key="page.name"
               >
                 <nuxt-link
@@ -145,6 +145,9 @@
     Language,
     useTranslationsStore,
   } from "~/store/translations";
+  import {
+    unref,
+  } from "#imports";
 
   export default defineComponent({
     components: {
@@ -175,14 +178,27 @@
       );
 
       const pages = computed(() => pagesStore.pages);
+      const profilePages = computed(() => pagesStore.profilePages);
+      const isProfilePage = ref(false);
+      watch(
+        () => route.path,
+        () => {
+          isProfilePage.value = /^\/profile\//gi.test(route.path);
+        },
+        {
+          immediate: true,
+        },
+      );
 
       return {
         isAtTop,
         sidebarOpen,
         pages,
+        sidebarPages: computed(() => unref(isProfilePage) ? unref(profilePages) : unref(pages)),
         languages: Language,
         currentLanguage: computed({
           get: () => translationsStore.currentLanguage,
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           set: (value) => translationsStore.setCurrentLanguage(value),
         }),
       };

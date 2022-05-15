@@ -265,7 +265,7 @@
         grid-template-columns: 12.5rem auto;
 
         @include media(md) {
-          grid-template-columns: mimmax(0, 1fr);
+          grid-template-columns: minmax(0, 1fr);
           grid-row-gap: .5em;
         }
 

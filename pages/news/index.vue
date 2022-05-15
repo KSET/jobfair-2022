@@ -191,13 +191,13 @@
   .newsContainer {
     display: grid;
     margin-top: 4rem;
-    grid-template-columns: repeat(3, mimmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-column-gap: 2.375rem;
     grid-row-gap: 3rem;
 
     @include media(md) {
       grid-row-gap: 2.45rem;
-      grid-template-columns: mimmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .newsItemContainer {

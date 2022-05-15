@@ -594,7 +594,7 @@
       $gap-size: 1.5rem;
 
       padding-top: $gap-size;
-      grid-template-columns: mimmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: $gap-size;
 
       .companyDescriptionContainer {

@@ -152,7 +152,7 @@
       flex-direction: column;
       max-width: 921px;
       margin: 4.5rem auto 0;
-      grid-template-columns: mimmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: $item-gap;
 
       @include media(md) {

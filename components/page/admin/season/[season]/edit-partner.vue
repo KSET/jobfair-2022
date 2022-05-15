@@ -310,12 +310,12 @@
     vertical-align: middle;
     border: 1px solid #{$fer-dark-blue};
     border-radius: 4px;
-    grid-template-columns: repeat(2, mimmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-self: center;
 
     @include media(md) {
       grid-auto-flow: row;
-      grid-template-columns: mimmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
     }
 
     label[for^="input-"][for$="-photo"] {

@@ -46,6 +46,7 @@
       <DataTable
         v-model:first="queryMeta.first"
         v-model:rows="queryMeta.take"
+        :class="$style.table"
         :loading="isLoading"
         :rows-per-page-options="[10, 20, 50]"
         :total-records="resumes.total"
@@ -54,7 +55,7 @@
         data-key="uid"
         lazy
         paginator
-        paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+        paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         removable-sort
         striped-rows
         @row-click="handleRowClick"
@@ -362,6 +363,34 @@
 
     .hidden {
       display: none;
+    }
+
+    .table {
+
+      :global {
+        @include media(md) {
+
+          .p-paginator-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            .p-paginator-pages,
+            .p-paginator-rpp-options,
+            .p-paginator-current {
+              grid-column: span 2;
+            }
+
+            .p-paginator-pages {
+              text-align: center;
+            }
+
+            .p-paginator-rpp-options {
+              justify-self: center;
+            }
+          }
+
+        }
+      }
     }
   }
 </style>

@@ -365,6 +365,13 @@
       display: none;
     }
 
+    :global(.p-tabview) {
+
+      :global(.p-tabview-panels) {
+        padding: 0;
+      }
+    }
+
     .table {
 
       :global {

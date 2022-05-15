@@ -28,147 +28,63 @@
           <template #header>
             <translated-text trans-key="resume.list.all" />
           </template>
-
-          <DataTable
-            v-model:first="queryMeta.first"
-            v-model:rows="queryMeta.take"
-            :lazy="true"
-            :loading="isLoading"
-            :paginator="true"
-            :rows-per-page-options="[10, 20, 50]"
-            :total-records="resumes.total"
-            :value="resumes.items"
-            current-page-report-template="{first}-{last}/{totalRecords}"
-            data-key="uid"
-            paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-            removable-sort
-            striped-rows
-            @row-click="handleRowClick"
-          >
-            <Column field="user.name">
-              <template #header>
-                <translated-text trans-key="resume.user.name" />
-              </template>
-            </Column>
-            <Column field="user.email">
-              <template #header>
-                <translated-text trans-key="resume.user.email" />
-              </template>
-            </Column>
-            <Column field="faculty.name">
-              <template #header>
-                <translated-text trans-key="resume.faculty.name" />
-              </template>
-            </Column>
-            <Column field="faculty.module">
-              <template #header>
-                <translated-text trans-key="resume.faculty.module" />
-              </template>
-            </Column>
-            <Column>
-              <template #body="{ data }">
-                <i :class="[$style.heart, { [$style.hidden]: !favourites[data.uid] }]" class="pi pi-heart-fill" />
-              </template>
-            </Column>
-          </DataTable>
         </TabPanel>
+
         <TabPanel>
           <template #header>
             <translated-text trans-key="resume.list.scanned" />
           </template>
-
-          <DataTable
-            v-model:first="queryMeta.first"
-            v-model:rows="queryMeta.take"
-            :lazy="true"
-            :loading="isLoading"
-            :paginator="true"
-            :rows-per-page-options="[10, 20, 50]"
-            :total-records="resumes.total"
-            :value="resumes.items"
-            current-page-report-template="{first}-{last}/{totalRecords}"
-            data-key="uid"
-            paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-            removable-sort
-            striped-rows
-            @row-click="handleRowClick"
-          >
-            <Column field="user.name">
-              <template #header>
-                <translated-text trans-key="resume.user.name" />
-              </template>
-            </Column>
-            <Column field="user.email">
-              <template #header>
-                <translated-text trans-key="resume.user.email" />
-              </template>
-            </Column>
-            <Column field="faculty.name">
-              <template #header>
-                <translated-text trans-key="resume.faculty.name" />
-              </template>
-            </Column>
-            <Column field="faculty.module">
-              <template #header>
-                <translated-text trans-key="resume.faculty.module" />
-              </template>
-            </Column>
-            <Column>
-              <template #body="{ data }">
-                <i :class="[$style.heart, { [$style.hidden]: !favourites[data.uid] }]" class="pi pi-heart-fill" />
-              </template>
-            </Column>
-          </DataTable>
         </TabPanel>
+
         <TabPanel>
           <template #header>
             <translated-text trans-key="resume.list.favourites" />
           </template>
-
-          <DataTable
-            v-model:first="queryMeta.first"
-            v-model:rows="queryMeta.take"
-            :lazy="true"
-            :loading="isLoading"
-            :paginator="true"
-            :rows-per-page-options="[10, 20, 50]"
-            :total-records="resumes.total"
-            :value="resumes.items"
-            current-page-report-template="{first}-{last}/{totalRecords}"
-            data-key="uid"
-            paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-            removable-sort
-            striped-rows
-            @row-click="handleRowClick"
-          >
-            <Column field="user.name">
-              <template #header>
-                <translated-text trans-key="resume.user.name" />
-              </template>
-            </Column>
-            <Column field="user.email">
-              <template #header>
-                <translated-text trans-key="resume.user.email" />
-              </template>
-            </Column>
-            <Column field="faculty.name">
-              <template #header>
-                <translated-text trans-key="resume.faculty.name" />
-              </template>
-            </Column>
-            <Column field="faculty.module">
-              <template #header>
-                <translated-text trans-key="resume.faculty.module" />
-              </template>
-            </Column>
-            <Column>
-              <template #body="{ data }">
-                <i :class="[$style.heart, { [$style.hidden]: !favourites[data.uid] }]" class="pi pi-heart-fill" />
-              </template>
-            </Column>
-          </DataTable>
         </TabPanel>
       </TabView>
+
+      <DataTable
+        v-model:first="queryMeta.first"
+        v-model:rows="queryMeta.take"
+        :loading="isLoading"
+        :rows-per-page-options="[10, 20, 50]"
+        :total-records="resumes.total"
+        :value="resumes.items"
+        current-page-report-template="{first}-{last}/{totalRecords}"
+        data-key="uid"
+        lazy
+        paginator
+        paginator-template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+        removable-sort
+        striped-rows
+        @row-click="handleRowClick"
+      >
+        <Column field="user.name">
+          <template #header>
+            <translated-text trans-key="resume.user.name" />
+          </template>
+        </Column>
+        <Column field="user.email">
+          <template #header>
+            <translated-text trans-key="resume.user.email" />
+          </template>
+        </Column>
+        <Column field="faculty.name">
+          <template #header>
+            <translated-text trans-key="resume.faculty.name" />
+          </template>
+        </Column>
+        <Column field="faculty.module">
+          <template #header>
+            <translated-text trans-key="resume.faculty.module" />
+          </template>
+        </Column>
+        <Column>
+          <template #body="{ data }">
+            <i :class="[$style.heart, { [$style.hidden]: !favourites[data.uid] }]" class="pi pi-heart-fill" />
+          </template>
+        </Column>
+      </DataTable>
     </client-only>
   </app-max-width-container>
 </template>

@@ -1,8 +1,12 @@
 import {
+  MaybeRef,
+} from "@vueuse/shared";
+import {
   IApplicationCocktail,
   IApplicationPresenter,
   IApplicationTalk,
   IApplicationWorkshop,
+  ICompanyApplicationFeedback,
   IImage,
 } from "~/graphql/schema";
 import {
@@ -11,6 +15,10 @@ import {
 import {
   Language,
 } from "~/store/translations";
+import {
+  computed,
+  unref,
+} from "#imports";
 
 const withRandomName =
   <T>(
@@ -86,6 +94,7 @@ export type Talk = Omit<IApplicationTalk,
   | "categoryId"
   | "createdAt"
   | "updatedAt"
+  | "event"
   | "uid">
   ;
 export const companyApplicationTalkCreate =
@@ -136,6 +145,8 @@ export type Workshop = Omit<IApplicationWorkshop,
   | "presenters"
   | "createdAt"
   | "updatedAt"
+  | "reservation"
+  | "event"
   | "uid">;
 export const companyApplicationWorkshopCreate =
   <T extends Workshop>(workshop?: T | null) =>
@@ -207,6 +218,141 @@ export const companyApplicationCocktailCreate =
           value: cocktail?.colour || "",
           type: "text" as const,
           placeholder: "KSET orange (#ff7000)",
+        },
+      })
+;
+
+export type FeedbackDate = Pick<ICompanyApplicationFeedback,
+  "dateRating"
+  | "timeRating"
+  | "dateComments">;
+export const companyApplicationFeedbackDate =
+  <T extends FeedbackDate>(feedback?: T | null) =>
+    (): Record<keyof FeedbackDate, InputEntry> =>
+      ({
+        dateRating: {
+          value: feedback?.dateRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        timeRating: {
+          value: feedback?.timeRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        dateComments: {
+          value: feedback?.dateComments || "",
+          type: "textarea" as const,
+          required: false,
+        },
+      })
+;
+
+export type FeedbackOrganisation = Pick<ICompanyApplicationFeedback,
+  "applicationRating"
+  | "onsiteRating"
+  | "foodRating"
+  | "applicationComments">;
+export const companyApplicationFeedbackOrganisation =
+  <T extends FeedbackOrganisation>(feedback?: T | null) =>
+    (): Record<keyof FeedbackOrganisation, InputEntry> =>
+      ({
+        applicationRating: {
+          value: feedback?.applicationRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        onsiteRating: {
+          value: feedback?.onsiteRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        foodRating: {
+          value: feedback?.foodRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        applicationComments: {
+          value: feedback?.applicationComments || "",
+          type: "textarea" as const,
+          required: false,
+        },
+      })
+;
+
+export type FeedbackExperience = Pick<ICompanyApplicationFeedback,
+  "attendanceRating"
+  | "mostLiked"
+  | "experienceComments">;
+export const companyApplicationFeedbackExperience =
+  <T extends FeedbackExperience>(feedback?: T | null) =>
+    ({
+      mostLiked = [] as MaybeRef<string[]>,
+    } = {}): Record<keyof FeedbackExperience, InputEntry> =>
+      ({
+        attendanceRating: {
+          value: feedback?.attendanceRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        mostLiked: {
+          // eslint-disable-next-line no-bitwise
+          value: unref(mostLiked).map((_, i) => (feedback?.mostLiked ?? 0) & Math.pow(2, i)).filter((x) => x).map(String),
+          type: "dropdown" as const,
+          options: computed(() => unref(mostLiked).map((label, i) => ({
+            label,
+            value: Math.pow(2, i).toString(),
+          }))),
+        },
+        experienceComments: {
+          value: feedback?.experienceComments || "",
+          type: "textarea" as const,
+          required: false,
+        },
+      })
+;
+
+export type FeedbackOverall = Pick<ICompanyApplicationFeedback,
+  "overallRating"
+  | "recommended"
+  | "testimonial">;
+export const companyApplicationFeedbackOverall =
+  <T extends FeedbackOverall>(feedback?: T | null) =>
+    ({
+      recommended = [] as MaybeRef<string[]>,
+    } = {}): Record<keyof FeedbackOverall, InputEntry> =>
+      ({
+        overallRating: {
+          value: feedback?.overallRating ?? null,
+          type: "slider" as const,
+          min: 1,
+          max: 10,
+          step: 1,
+        },
+        recommended: {
+          value: String(feedback?.recommended ?? ""),
+          type: "dropdown" as const,
+          options: computed(() => unref(recommended).map((label, i) => ({
+            label,
+            value: Math.pow(2, i).toString(),
+          }))),
+        },
+        testimonial: {
+          value: feedback?.testimonial || "",
+          type: "textarea" as const,
+          required: false,
         },
       })
 ;

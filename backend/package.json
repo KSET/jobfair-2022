@@ -31,6 +31,7 @@
         "fast-glob": "^3.2.11",
         "graphql": "^15.8.0",
         "graphql-fields": "^2.0.3",
+        "graphql-scalars": "^1.17.0",
         "graphql-upload": "^13.0.0",
         "handlebars": "^4.7.7",
         "html-minifier": "^4.0.0",

@@ -12,6 +12,11 @@ import {
 type Season = Omit<ISeason,
   "uid"
   | "applications"
+  | "companyScannedCvs"
+  | "calendar"
+  | "entryCount"
+  | "panel"
+  | "reservations"
   | "_count">;
 export const seasonCreate =
   <T extends Season>(season?: T | null): Record<keyof Season, InputEntry> =>
@@ -59,6 +64,22 @@ export const seasonCreate =
       showSponsorsUntil: {
         type: "datetime-local",
         value: season?.showSponsorsUntil || tomorrow(),
+      },
+      eventFrom: {
+        type: "datetime-local",
+        value: season?.eventFrom || today(),
+      },
+      eventUntil: {
+        type: "datetime-local",
+        value: season?.eventUntil || tomorrow(),
+      },
+      feedbackFrom: {
+        type: "datetime-local",
+        value: season?.feedbackFrom || today(),
+      },
+      feedbackUntil: {
+        type: "datetime-local",
+        value: season?.feedbackUntil || tomorrow(),
       },
     })
 ;

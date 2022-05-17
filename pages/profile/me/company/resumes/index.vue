@@ -24,7 +24,7 @@
         </nuxt-link>
       </div>
       <TabView v-model:active-index="activeTab" lazy>
-        <TabPanel v-if="isAdmin">
+        <TabPanel v-if="showAll">
           <template #header>
             <translated-text trans-key="resume.list.all" />
           </template>
@@ -124,6 +124,9 @@
   import {
     useUserStore,
   } from "~/store/user";
+  import {
+    useCompanyStore,
+  } from "~/store/company";
 
   export default defineComponent({
     name: "PageProfileCompanyResumes",
@@ -141,6 +144,7 @@
     async setup() {
       const router = useRouter();
       const userStore = useUserStore();
+      const companyStore = useCompanyStore();
 
       const queryMeta = reactive({
         take: 10,
@@ -251,20 +255,26 @@
         },
       });
 
-      const queries = [
-        resumesQuery,
-        scannedQuery,
-        favouritesQuery,
-      ];
-      if (!userStore.isAdmin) {
-        queries.shift();
-      }
+      const showAll = computed(() => userStore.isAdmin || companyStore.hasFeedback);
+
+      const queries = computed(() => {
+        const queryList = [
+          scannedQuery,
+          favouritesQuery,
+        ];
+
+        if (unref(showAll)) {
+          queryList.unshift(resumesQuery);
+        }
+
+        return queryList;
+      });
 
       const resumes = reactive({ total: 0, items: [] } as NonNullable<QData["resumes"]>);
       const favourites = ref({} as Record<string, true>);
 
       const refreshResumes = async () => {
-        const query = queries[unref(activeTab)];
+        const query = unref(queries)[unref(activeTab)];
 
         if (!query) {
           return;
@@ -306,7 +316,7 @@
         resumes,
         favourites,
         isLoading,
-        isAdmin: computed(() => userStore.isAdmin),
+        showAll,
         async handleRowClick(event: { data: QResume, }) {
           await router.push({
             name: "profile-me-company-resumes-uid",

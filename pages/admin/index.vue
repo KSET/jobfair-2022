@@ -358,6 +358,16 @@
                   endsAt
                   applicationsFrom
                   applicationsUntil
+                  showParticipantsFrom
+                  showParticipantsUntil
+                  showPartnersFrom
+                  showPartnersUntil
+                  showSponsorsFrom
+                  showSponsorsUntil
+                  eventFrom
+                  eventUntil
+                  feedbackFrom
+                  feedbackUntil
               }
             }
           `,

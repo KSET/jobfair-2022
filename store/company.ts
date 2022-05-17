@@ -58,6 +58,10 @@ export const useCompanyStore = defineStore(
       hasApplicationApproved(state) {
         return isApplicationApproved(state.applicationInfo?.companyApplication?.approval);
       },
+
+      hasFeedback(state) {
+        return Boolean(state.applicationInfo?.companyApplication?.feedback);
+      },
     },
 
     actions: {

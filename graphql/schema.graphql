@@ -416,6 +416,7 @@ type CompanyApplication {
   booth: String
   cocktail: ApplicationCocktail
   createdAt: DateTime!
+  feedback: CompanyApplicationFeedback
   forCompany: Company
   forSeason: Season
   panelParticipants: [ApplicationPresenter!]!
@@ -481,6 +482,40 @@ input CompanyApplicationCreateInput {
   workshop: WorkshopCreateInput = null
 }
 
+type CompanyApplicationFeedback {
+  applicationComments: String!
+  applicationRating: Int!
+  attendanceRating: Int!
+  createdAt: DateTime!
+  dateComments: String!
+  dateRating: Int!
+  experienceComments: String!
+  foodRating: Int!
+  mostLiked: Int!
+  onsiteRating: Int!
+  overallRating: Int!
+  recommended: Int!
+  testimonial: String!
+  timeRating: Int!
+  updatedAt: DateTime!
+}
+
+input CompanyApplicationFeedbackCreateInput {
+  applicationComments: String
+  applicationRating: Int!
+  attendanceRating: Int!
+  dateComments: String
+  dateRating: Int!
+  experienceComments: String
+  foodRating: Int!
+  mostLiked: Int!
+  onsiteRating: Int!
+  overallRating: Int!
+  recommended: Int!
+  testimonial: String
+  timeRating: Int!
+}
+
 input CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput {
   forCompanyId: Int!
   forSeasonId: Int!
@@ -525,6 +560,7 @@ enum CompanyApplicationScalarFieldEnum {
   booth
   cocktailId
   createdAt
+  feedbackFormId
   forCompanyId
   forSeasonId
   id
@@ -1035,6 +1071,7 @@ type Mutation {
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
+  updateCompanyApplicationFeedback(input: CompanyApplicationFeedbackCreateInput!): CompanyApplicationFeedback
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updateCompanyPanel(input: CompanyPanelUpdateInput!): CompanyPanel
@@ -1659,6 +1696,10 @@ type Season {
   companyScannedCvs: Int!
   endsAt: DateTime!
   entryCount: Int!
+  eventFrom: DateTime!
+  eventUntil: DateTime!
+  feedbackFrom: DateTime!
+  feedbackUntil: DateTime!
   name: String!
   panel: CompanyPanel
   reservations: [ReservationItem!]!
@@ -1686,6 +1727,10 @@ input SeasonCreateInput {
   applicationsFrom: DateTime = null
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
+  eventFrom: DateTime = null
+  eventUntil: DateTime = null
+  feedbackFrom: DateTime = null
+  feedbackUntil: DateTime = null
   name: String = ""
   showParticipantsFrom: DateTime = null
   showParticipantsUntil: DateTime = null
@@ -1714,6 +1759,10 @@ input SeasonOrderByWithRelationAndSearchRelevanceInput {
   calendar: CalendarItemOrderByRelationAggregateInput
   companies: CompanyApplicationOrderByRelationAggregateInput
   endsAt: SortOrder
+  eventFrom: SortOrder
+  eventUntil: SortOrder
+  feedbackFrom: SortOrder
+  feedbackUntil: SortOrder
   name: SortOrder
   partners: PartnerOrderByRelationAggregateInput
   showParticipantsFrom: SortOrder
@@ -1736,6 +1785,10 @@ enum SeasonScalarFieldEnum {
   applicationsFrom
   applicationsUntil
   endsAt
+  eventFrom
+  eventUntil
+  feedbackFrom
+  feedbackUntil
   id
   name
   showParticipantsFrom
@@ -1752,6 +1805,10 @@ input SeasonUpdateInput {
   applicationsFrom: DateTime = null
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
+  eventFrom: DateTime = null
+  eventUntil: DateTime = null
+  feedbackFrom: DateTime = null
+  feedbackUntil: DateTime = null
   name: String = ""
   showParticipantsFrom: DateTime = null
   showParticipantsUntil: DateTime = null
@@ -1772,6 +1829,10 @@ input SeasonWhereInput {
   calendar: CalendarItemListRelationFilter
   companies: CompanyApplicationListRelationFilter
   endsAt: DateTimeFilter
+  eventFrom: DateTimeFilter
+  eventUntil: DateTimeFilter
+  feedbackFrom: DateTimeFilter
+  feedbackUntil: DateTimeFilter
   name: StringFilter
   partners: PartnerListRelationFilter
   showParticipantsFrom: DateTimeFilter

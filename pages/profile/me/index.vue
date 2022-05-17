@@ -406,6 +406,7 @@
         </div>
 
         <div
+          v-if="isEventOngoing"
           :class="[$style.item, $style.itemApproval]"
         >
           <h2 :class="$style.itemHeader">
@@ -435,6 +436,48 @@
               >
                 <translated-text
                   trans-key="profile.company.scanUsers.scan"
+                />
+              </p-button>
+            </nuxt-link>
+          </div>
+        </div>
+
+        <div
+          v-if="isFeedbackOpen"
+          :class="[$style.item, $style.itemApproval]"
+        >
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.company.feedback.header" />
+            </h2>
+            <p>
+              <translated-text trans-key="profile.company.feedback.text" />
+            </p>
+          </div>
+          <div :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-company-resumes' }"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.scanUsers.resumes"
+                />
+              </p-button>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{ name: 'profile-me-company-feedback' }"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.feedback.submit"
                 />
               </p-button>
             </nuxt-link>
@@ -689,6 +732,8 @@
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
+        isEventOngoing: computed(() => seasonsStore.isEventOngoing),
+        isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
         isApproved,

@@ -23,6 +23,7 @@ import {
   CompanyApplicationApproval,
   FindManyCompanyApplicationArgs,
   Season,
+  CompanyApplicationFeedback,
 } from "@generated/type-graphql";
 import {
   groupBy,
@@ -103,6 +104,9 @@ import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
+import {
+  transformSelect as transformSelectFeedback,
+} from "./companyApplicationFeedback";
 
 const photoMimeTypes = new Set([
   "image/png",
@@ -209,6 +213,13 @@ export class CompanyApplicationFieldResolver {
       workshop: summed.workshop || 0,
     };
   }
+
+  @FieldResolver(() => CompanyApplicationFeedback, { nullable: true })
+  feedback(
+    @Root() application: CompanyApplication,
+  ): GQLField<CompanyApplicationFeedback, "nullable"> {
+    return application.feedback;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationFieldResolver>({
@@ -272,6 +283,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     select.id = true;
 
     delete select.userApplications;
+
+    return select;
+  },
+
+  feedback(select) {
+    select.feedback = {
+      select: transformSelectFeedback(select.feedback as Dict),
+    };
 
     return select;
   },

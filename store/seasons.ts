@@ -62,6 +62,14 @@ export const useSeasonsStore = defineStore(
       areSponsorsShown(state) {
         return areOpen("showSponsors", state.currentSeason);
       },
+
+      isEventOngoing(state) {
+        return areOpen("event", state.currentSeason);
+      },
+
+      isFeedbackOpen(state) {
+        return areOpen("feedback", state.currentSeason);
+      },
     },
 
     actions: {

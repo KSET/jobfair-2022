@@ -270,6 +270,12 @@ model Season {
   showSponsorsFrom  DateTime
   showSponsorsUntil DateTime
 
+  eventFrom  DateTime
+  eventUntil DateTime
+
+  feedbackFrom  DateTime
+  feedbackUntil DateTime
+
   companies CompanyApplication[]
   sponsors  Sponsor[]
   partners  Partner[]
@@ -348,6 +354,14 @@ model CompanyApplication {
 
   approval CompanyApplicationApproval?
 
+  /// @TypeGraphQL.omit(input: true)
+  feedbackForm   Form? @relation(fields: [feedbackFormId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  feedbackFormId Int?
+
+  /// @TypeGraphQL.omit(input: true)
+  feedback CompanyApplicationFeedback?
+
   /// @TypeGraphQL.omit(output: true, input: true)
   forCompanyId Int
 
@@ -359,6 +373,38 @@ model CompanyApplication {
   panelId Int?
 
   @@unique([forCompanyId, forSeasonId])
+}
+
+model CompanyApplicationFeedback {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  /// @TypeGraphQL.omit(input: true)
+  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int                @unique
+
+  dateRating   Int
+  timeRating   Int
+  dateComments String @default("")
+
+  applicationRating   Int
+  onsiteRating        Int
+  foodRating          Int
+  applicationComments String @default("")
+
+  attendanceRating   Int
+  mostLiked          Int
+  experienceComments String @default("")
+
+  overallRating Int
+  recommended   Int
+  testimonial   String @default("")
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
 }
 
 model CompanyPanel {
@@ -758,4 +804,52 @@ model EntryResumeLog {
 
   /// @TypeGraphQL.omit(input: true)
   scannedAt DateTime @default(now())
+}
+
+model Form {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  name String
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  options Json @default("{}")
+
+  questions          FormQuestion[]
+  CompanyApplication CompanyApplication[]
+}
+
+model FormQuestion {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  form   Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  formId Int
+
+  options Json @default("{}")
+  order   Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  answers FormAnswers[]
+}
+
+model FormAnswers {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  formQuestion   FormQuestion @relation(fields: [formQuestionId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  formQuestionId Int
+
+  answer Json @default("{}")
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
 }

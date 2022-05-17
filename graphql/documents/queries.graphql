@@ -11,6 +11,10 @@ fragment frag_Season on Season {
     showPartnersUntil
     showSponsorsFrom
     showSponsorsUntil
+    eventFrom
+    eventUntil
+    feedbackFrom
+    feedbackUntil
 }
 
 fragment frag_UserProfile on User {
@@ -95,6 +99,23 @@ fragment frag_CompanyApplication on CompanyApplication {
         talkParticipants
         workshopParticipants
         booth
+    }
+    feedback {
+        applicationComments
+        applicationRating
+        attendanceRating
+        dateComments
+        dateRating
+        experienceComments
+        foodRating
+        mostLiked
+        onsiteRating
+        overallRating
+        recommended
+        testimonial
+        timeRating
+        createdAt
+        updatedAt
     }
 }
 

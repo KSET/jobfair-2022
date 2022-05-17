@@ -89,6 +89,33 @@
           />
         </template>
       </app-file-input>
+      <app-slider
+        v-else-if="input.type === 'slider'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${prefix}${inputName}`"
+        :max="input.max ?? 10"
+        :min="input.min ?? 0"
+        :name="inputName"
+        :required="input.required ?? true"
+        :step="input.step ?? 1"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-slider>
       <app-input
         v-else-if="input.type === 'datetime-local'"
         :key="`${input.type}-${inputName}`"
@@ -229,11 +256,20 @@
     multiple?: MaybeRef<boolean>,
   };
 
+  type InputSlider = InputBase & {
+    value: number | null,
+    type: "slider",
+    step?: MaybeRef<number>,
+    min?: MaybeRef<number>,
+    max?: MaybeRef<number>,
+  };
+
   export type InputEntry =
     InputText
     | InputDropdown
     | InputTextarea
     | InputFile
+    | InputSlider
   ;
 
   export default defineComponent({
@@ -242,6 +278,7 @@
       AppDropdown: defineAsyncComponent(() => import("~/components/util/form/app-dropdown.vue")),
       AppInput: defineAsyncComponent(() => import("~/components/util/form/app-input.vue")),
       AppTextarea: defineAsyncComponent(() => import("~/components/util/form/app-textarea.vue")),
+      AppSlider: defineAsyncComponent(() => import("~/components/util/form/app-slider.vue")),
       TranslatedText,
     },
 

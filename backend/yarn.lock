@@ -1635,6 +1635,7 @@ __metadata:
     fast-glob: ^3.2.11
     graphql: ^15.8.0
     graphql-fields: ^2.0.3
+    graphql-scalars: ^1.17.0
     graphql-upload: ^13.0.0
     handlebars: ^4.7.7
     html-minifier: ^4.0.0
@@ -3532,6 +3533,17 @@ __metadata:
   peerDependencies:
     graphql: ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: defe9a5e9c797c6619b66eda8129b3576579bd420e5cd10e245a8ad1250d15d5be789b841b36c8533f65f4c2f0aa4f1a5b62d4b51b74ff14adb77f729b5621c9
+  languageName: node
+  linkType: hard
+
+"graphql-scalars@npm:^1.17.0":
+  version: 1.17.0
+  resolution: "graphql-scalars@npm:1.17.0"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 4ac8f2ef7a387bac85e32381fc73067e7dd4ad4c1bef4cda3b5de4eb907ef9bc258372e1dcf225547390b5798a476073e6d83eb36ecdf6c3c06669c13d021962
   languageName: node
   linkType: hard
 

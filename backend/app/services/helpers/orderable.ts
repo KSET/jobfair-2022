@@ -41,8 +41,12 @@ export const swap =
     },
     where: Parameters<PrismaModels[T]["updateMany"]>[0]["where"] = {},
   ) => {
+    const prismaModel = prisma[model];
+
     const actions = [
-      prisma[model].updateMany({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      prismaModel.updateMany({
         data: {
           order: -1,
         },
@@ -51,7 +55,9 @@ export const swap =
           ...where as Dict,
         },
       }),
-      prisma[model].updateMany({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      prismaModel.updateMany({
         data: {
           order: a,
         },
@@ -60,7 +66,9 @@ export const swap =
           ...where as Dict,
         },
       }),
-      prisma[model].updateMany({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      prismaModel.updateMany({
         data: {
           order: b,
         },

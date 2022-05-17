@@ -328,6 +328,18 @@ export class SeasonCreateInput {
 
   @Field()
     showSponsorsUntil: Date = null as unknown as Date;
+
+  @Field()
+    eventFrom: Date = null as unknown as Date;
+
+  @Field()
+    eventUntil: Date = null as unknown as Date;
+
+  @Field()
+    feedbackFrom: Date = null as unknown as Date;
+
+  @Field()
+    feedbackUntil: Date = null as unknown as Date;
 }
 
 @InputType()

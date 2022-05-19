@@ -110,6 +110,7 @@ fragment frag_CompanyApplication on CompanyApplication {
         foodRating
         mostLiked
         onsiteRating
+        overallComment
         overallRating
         recommended
         testimonial

@@ -397,9 +397,10 @@ model CompanyApplicationFeedback {
   mostLiked          Int
   experienceComments String @default("")
 
-  overallRating Int
-  recommended   Int
-  testimonial   String @default("")
+  overallRating  Int
+  recommended    Int
+  overallComment String @default("")
+  testimonial    String @default("")
 
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime @default(now())

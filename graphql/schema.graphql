@@ -493,6 +493,7 @@ type CompanyApplicationFeedback {
   foodRating: Int!
   mostLiked: Int!
   onsiteRating: Int!
+  overallComment: String!
   overallRating: Int!
   recommended: Int!
   testimonial: String!
@@ -510,6 +511,7 @@ input CompanyApplicationFeedbackCreateInput {
   foodRating: Int!
   mostLiked: Int!
   onsiteRating: Int!
+  overallComment: String
   overallRating: Int!
   recommended: Int!
   testimonial: String

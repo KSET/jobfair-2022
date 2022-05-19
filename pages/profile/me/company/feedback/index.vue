@@ -203,6 +203,7 @@
                   foodRating
                   mostLiked
                   onsiteRating
+                  overallComment
                   overallRating
                   recommended
                   testimonial

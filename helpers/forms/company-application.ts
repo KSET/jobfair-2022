@@ -322,6 +322,7 @@ export const companyApplicationFeedbackExperience =
 export type FeedbackOverall = Pick<ICompanyApplicationFeedback,
   "overallRating"
   | "recommended"
+  | "overallComment"
   | "testimonial">;
 export const companyApplicationFeedbackOverall =
   <T extends FeedbackOverall>(feedback?: T | null) =>
@@ -342,6 +343,11 @@ export const companyApplicationFeedbackOverall =
             label,
             value: Math.pow(2, i).toString(),
           }))),
+        },
+        overallComment: {
+          value: feedback?.overallComment || "",
+          type: "textarea" as const,
+          required: false,
         },
         testimonial: {
           value: feedback?.testimonial || "",

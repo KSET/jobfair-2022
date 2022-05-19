@@ -4,6 +4,10 @@
       <translated-text trans-key="company-feedback.header" />
     </h1>
 
+    <p>
+      <translated-text :trans-key="`company-feedback.comment`" />
+    </p>
+
     <form :class="$style.forms" @submit.prevent="handleSave">
       <div v-for="(form, formName) in forms" :key="formName" :class="$style.form">
         <h2>
@@ -125,34 +129,26 @@
         })
       ;
 
-      const mostLikedOptions = computed(() =>
-        [
-          "form.company-feedback.experience.mostLiked.1",
-          "form.company-feedback.experience.mostLiked.2",
-          "form.company-feedback.experience.mostLiked.3",
-          "form.company-feedback.experience.mostLiked.4",
-          "form.company-feedback.experience.mostLiked.5",
-          "form.company-feedback.experience.mostLiked.6",
-          "form.company-feedback.experience.mostLiked.7",
-        ].map((key) => unref($t)(key)),
-      );
-
-      const recommendedOptions = computed(() =>
-        [
-          "form.company-feedback.overall.recommended.1",
-          "form.company-feedback.overall.recommended.2",
-          "form.company-feedback.overall.recommended.3",
-        ].map((key) => unref($t)(key)),
-      );
-
       const forms = reactive({
         date: toForm(companyApplicationFeedbackDate(feedback)()),
         organisation: toForm(companyApplicationFeedbackOrganisation(feedback)()),
         experience: toForm(companyApplicationFeedbackExperience(feedback)({
-          mostLiked: mostLikedOptions,
+          mostLiked: [
+            "form.company-feedback.experience.mostLiked.1",
+            "form.company-feedback.experience.mostLiked.2",
+            "form.company-feedback.experience.mostLiked.3",
+            "form.company-feedback.experience.mostLiked.4",
+            "form.company-feedback.experience.mostLiked.5",
+            "form.company-feedback.experience.mostLiked.6",
+            "form.company-feedback.experience.mostLiked.7",
+          ],
         })),
         overall: toForm(companyApplicationFeedbackOverall(feedback)({
-          recommended: recommendedOptions,
+          recommended: [
+            "form.company-feedback.overall.recommended.1",
+            "form.company-feedback.overall.recommended.2",
+            "form.company-feedback.overall.recommended.3",
+          ],
         })),
       });
 
@@ -181,6 +177,17 @@
           data.recommended = Number(data.recommended);
           // eslint-disable-next-line no-bitwise
           data.mostLiked = (data.mostLiked as unknown as string[]).reduce((acc, x) => acc | Number(x), 0);
+
+          const noEntry = Object.entries(data).filter(([ , val ]) => null === val);
+
+          if (noEntry.length) {
+            return toast.add({
+              severity: "warn",
+              summary: `Please fill in the required fields: ${ noEntry.map(([ label ]) => unref($t)(`form.company-feedback.${ label }`)).join(", ") }`,
+              closable: true,
+              life: 5000,
+            });
+          }
 
           isLoading.value = true;
           const resp =

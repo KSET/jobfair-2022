@@ -232,17 +232,15 @@ export const companyApplicationFeedbackDate =
       ({
         dateRating: {
           value: feedback?.dateRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         timeRating: {
           value: feedback?.timeRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         dateComments: {
           value: feedback?.dateComments || "",
@@ -263,24 +261,21 @@ export const companyApplicationFeedbackOrganisation =
       ({
         applicationRating: {
           value: feedback?.applicationRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         onsiteRating: {
           value: feedback?.onsiteRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         foodRating: {
           value: feedback?.foodRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         applicationComments: {
           value: feedback?.applicationComments || "",
@@ -302,19 +297,19 @@ export const companyApplicationFeedbackExperience =
       ({
         attendanceRating: {
           value: feedback?.attendanceRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         mostLiked: {
           // eslint-disable-next-line no-bitwise
           value: unref(mostLiked).map((_, i) => (feedback?.mostLiked ?? 0) & Math.pow(2, i)).filter((x) => x).map(String),
-          type: "dropdown" as const,
+          type: "multi-pick" as const,
           options: computed(() => unref(mostLiked).map((label, i) => ({
             label,
             value: Math.pow(2, i).toString(),
           }))),
+          required: false,
         },
         experienceComments: {
           value: feedback?.experienceComments || "",
@@ -336,14 +331,13 @@ export const companyApplicationFeedbackOverall =
       ({
         overallRating: {
           value: feedback?.overallRating ?? null,
-          type: "slider" as const,
+          type: "number-range" as const,
           min: 1,
           max: 10,
-          step: 1,
         },
         recommended: {
           value: String(feedback?.recommended ?? ""),
-          type: "dropdown" as const,
+          type: "single-pick" as const,
           options: computed(() => unref(recommended).map((label, i) => ({
             label,
             value: Math.pow(2, i).toString(),

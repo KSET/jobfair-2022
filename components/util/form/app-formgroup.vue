@@ -116,6 +116,84 @@
           />
         </template>
       </app-slider>
+      <app-number-range-input
+        v-else-if="input.type === 'number-range'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${prefix}${inputName}`"
+        :max="input.max ?? 10"
+        :min="input.min ?? 0"
+        :name="inputName"
+        :required="input.required ?? true"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-number-range-input>
+      <app-multi-pick
+        v-else-if="input.type === 'multi-pick'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${prefix}${inputName}`"
+        :name="inputName"
+        :options="input.options"
+        :placeholder="input.placeholder"
+        :required="input.required ?? true"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-multi-pick>
+      <app-single-pick
+        v-else-if="input.type === 'single-pick'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...(input.classes ?? [])
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${prefix}${inputName}`"
+        :name="inputName"
+        :options="input.options"
+        :placeholder="input.placeholder"
+        :required="input.required ?? true"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </app-single-pick>
       <app-input
         v-else-if="input.type === 'datetime-local'"
         :key="`${input.type}-${inputName}`"
@@ -264,12 +342,40 @@
     max?: MaybeRef<number>,
   };
 
+  type InputNumberRange = InputBase & {
+    value: number | null,
+    type: "number-range",
+    min: MaybeRef<number>,
+    max: MaybeRef<number>,
+  };
+
+  type InputMultiPick = InputBase & {
+    value: string[],
+    type: "multi-pick",
+    options: MaybeRef<{
+      label: string,
+      value: string,
+    }[]>,
+  };
+
+  type InputSinglePick = InputBase & {
+    value: string,
+    type: "single-pick",
+    options: MaybeRef<{
+      label: string,
+      value: string,
+    }[]>,
+  };
+
   export type InputEntry =
     InputText
     | InputDropdown
     | InputTextarea
     | InputFile
     | InputSlider
+    | InputNumberRange
+    | InputMultiPick
+    | InputSinglePick
   ;
 
   export default defineComponent({
@@ -279,6 +385,9 @@
       AppInput: defineAsyncComponent(() => import("~/components/util/form/app-input.vue")),
       AppTextarea: defineAsyncComponent(() => import("~/components/util/form/app-textarea.vue")),
       AppSlider: defineAsyncComponent(() => import("~/components/util/form/app-slider.vue")),
+      AppNumberRangeInput: defineAsyncComponent(() => import("~/components/util/form/app-number-range-input.vue")),
+      AppMultiPick: defineAsyncComponent(() => import("~/components/util/form/app-multi-pick.vue")),
+      AppSinglePick: defineAsyncComponent(() => import("~/components/util/form/app-single-pick.vue")),
       TranslatedText,
     },
 

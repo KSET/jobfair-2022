@@ -6,6 +6,7 @@ import {
   Attachment as MailerAttachment,
   Options as MailerOptions,
 } from "nodemailer/lib/mailer";
+import inlineCss from "inline-css";
 import {
   smtpTransport,
 } from "../providers/email";
@@ -59,7 +60,7 @@ const sendMail =
 ;
 
 export class EmailService {
-  public static sendMail<Template extends keyof ITemplates>(
+  public static async sendMail<Template extends keyof ITemplates>(
     subject: string,
     to: string,
     template: {
@@ -70,7 +71,7 @@ export class EmailService {
     return sendMail(
       to,
       subject,
-      this.renderTemplate(
+      await this.renderTemplate(
         template.name,
         template.parameters,
       ),
@@ -78,20 +79,33 @@ export class EmailService {
     );
   }
 
-  private static renderTemplate<Template extends keyof ITemplates>(
+  private static async renderTemplate<Template extends keyof ITemplates>(
     name: Template,
     parameters: TemplateParameters<Template>,
   ) {
     const rendered = Templates[name](parameters);
+    const inlinedCss = await inlineCss(
+      rendered,
+      {
+        url: "https://jobfair.fer.unizg.hr/",
+        preserveMediaQueries: true,
+        applyTableAttributes: true,
+        removeHtmlSelectors: false,
+      },
+    );
 
     return (
       HtmlMinifier.minify(
-        rendered,
+        inlinedCss,
         {
           collapseInlineTagWhitespace: true,
           collapseWhitespace: true,
           removeComments: true,
           removeRedundantAttributes: true,
+          minifyCSS: {
+            level: 2,
+          },
+          sortAttributes: true,
         },
       )
     );

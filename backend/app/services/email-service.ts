@@ -3,7 +3,6 @@ import {
 } from "node:path";
 import HtmlMinifier from "html-minifier";
 import {
-  Attachment as MailerAttachment,
   Options as MailerOptions,
 } from "nodemailer/lib/mailer";
 import inlineCss from "inline-css";
@@ -17,15 +16,16 @@ import {
 } from "../providers/template";
 
 const sendMail =
-  async (
+  (
     to: string,
     subject: string,
     html: string,
     text: string,
-    attachments: MailerAttachment[] = [],
-  ): Promise<boolean> => {
+    options: Partial<MailerOptions> = {},
+  ) => {
     try {
       const message: MailerOptions = {
+        ...options,
         from: `"${ process.env.EMAIL_FROM_NAME || "Job Fair" }" <${ process.env.EMAIL_FROM || "dontreply-jobfair@fer.hr" }>`,
         replyTo: process.env.EMAIL_REPLY_TO || process.env.EMAIL_FROM || "jobfair@fer.hr",
         to,
@@ -45,28 +45,27 @@ const sendMail =
             ),
             cid: "jobfair-logo@jobfair.fer.unizg.hr",
           },
-          ...attachments,
+          ...(options.attachments ?? []),
         ],
       };
 
-      await smtpTransport.sendMail(message);
-
-      return true;
+      return smtpTransport.sendMail(message);
     } catch (e) {
       console.error(e);
-      return false;
+      return null;
     }
   }
 ;
 
 export class EmailService {
   public static async sendMail<Template extends keyof ITemplates>(
-    subject: string,
     to: string,
+    subject: string,
     template: {
       name: Template,
       parameters: TemplateParameters<Template>,
     },
+    options: Partial<MailerOptions> = {},
   ) {
     return sendMail(
       to,
@@ -76,6 +75,7 @@ export class EmailService {
         template.parameters,
       ),
       `${ template.parameters.content.join("\n") }\n\nPozdrav,\nJob Fair Tim\nUnska 3, 10000 Zagreb, Hrvatska\ne-mail: jobfair@fer.hr\nweb: jobfair.fer.unizg.hr\nsocial: jobfairfer\n#jobfair22`,
+      options,
     );
   }
 

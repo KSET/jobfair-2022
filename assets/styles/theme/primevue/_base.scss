@@ -86,7 +86,7 @@ input[type="checkbox"] {
   background-color: transparent;
   appearance: none;
 
-  &::before {
+  &::after {
     line-height: 1em;
     position: absolute;
     top: 0;
@@ -112,7 +112,7 @@ input[type="checkbox"] {
   &:checked {
     background-color: $fer-yellow;
 
-    &:before {
+    &:after {
       opacity: 1;
     }
   }

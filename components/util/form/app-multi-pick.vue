@@ -34,6 +34,7 @@
         <input
           v-model="selected[option.value]"
           :checked="modelValue.includes(option.value)"
+          :class="$style.input"
           :disabled="disabled"
           :name="name"
           :required="required"
@@ -256,24 +257,13 @@
       .option {
         display: flex;
         align-items: center;
+        align-self: flex-start;
         gap: .5em;
       }
     }
 
     .input {
-      font-size: 1em;
-      width: 100%;
-      transition-property: outline-color, border-color;
-      color: $fer-black;
-      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
-      border-radius: 4px;
-      outline: transparent solid 2px;
-      appearance: none;
-
-      &:focus {
-        border-color: #{$fer-yellow};
-        outline-color: #{$fer-yellow};
-      }
+      flex: 1 0 auto;
 
       &.invalid {
         border-color: #{$fer-error};

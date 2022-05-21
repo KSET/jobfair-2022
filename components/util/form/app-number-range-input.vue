@@ -219,10 +219,15 @@
     }
 
     .slider {
-      display: flex;
+      display: grid;
       justify-content: space-between;
       width: 100%;
       gap: 1em;
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+
+      @include media(lg) {
+        gap: 0;
+      }
     }
 
     .inputLabel {
@@ -236,18 +241,11 @@
 
       span {
         padding: 0 .2em;
-        border-bottom: 2px solid transparent;
-      }
-
-      &:hover {
-
-        span {
-          border-bottom-color: $fer-yellow;
-        }
       }
     }
 
     .input {
+      flex: 1 0 auto;
 
       &.invalid {
         border-color: #{$fer-error};

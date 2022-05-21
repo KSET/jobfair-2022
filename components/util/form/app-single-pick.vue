@@ -219,11 +219,13 @@
       .option {
         display: flex;
         align-items: center;
+        align-self: flex-start;
         gap: .5em;
       }
     }
 
     .input {
+      flex: 1 0 auto;
 
       &.invalid {
         border-color: #{$fer-error};

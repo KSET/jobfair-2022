@@ -29,7 +29,6 @@
       <p-multi-select
         v-if="isMultiple"
         v-model="input"
-        :input-id="id.input"
         :aria-describedby="elseNull(visible.message, id.message)"
         :aria-errormessage="elseNull(visible.label && invalid, id.label)"
         :aria-invalid="orNull(invalid)"
@@ -42,6 +41,7 @@
         }"
         :disabled="disabled"
         :filter="!noFilter"
+        :input-id="id.input"
         :name="name"
         :options="options"
         :placeholder="orNull(placeholder)"
@@ -52,7 +52,6 @@
       <p-dropdown
         v-else
         v-model="input"
-        :input-id="id.input"
         :aria-describedby="elseNull(visible.message, id.message)"
         :aria-errormessage="elseNull(visible.label && invalid, id.label)"
         :aria-invalid="orNull(invalid)"
@@ -65,6 +64,7 @@
         }"
         :disabled="disabled"
         :filter="!noFilter"
+        :input-id="id.input"
         :name="name"
         :options="options"
         :placeholder="orNull(placeholder)"
@@ -72,6 +72,29 @@
         option-label="label"
         option-value="value"
       />
+      <template #placeholder>
+        <select
+          v-model="input"
+          :aria-describedby="elseNull(visible.message, id.message)"
+          :aria-errormessage="elseNull(visible.label && invalid, id.label)"
+          :aria-invalid="orNull(invalid)"
+          :aria-label="orNull(label || labelTranslated)"
+          :aria-labelledby="elseNull(visible.label, id.label)"
+          :aria-required="orNull(required)"
+          :class="$style.fallbackSelect"
+          :disabled="disabled"
+          :multiple="isMultiple"
+          :name="name"
+          :required="required"
+        >
+          <option
+            v-for="option in options"
+            :key="`${option.value}$${option.label}`"
+            :value="option.value"
+            v-text="option.label"
+          />
+        </select>
+      </template>
     </client-only>
     <transition name="input-message">
       <small
@@ -266,6 +289,33 @@
       :global(.p-dropdown-label) {
         padding: .625em;
       }
+
+      &:focus {
+        border-color: #{$fer-yellow};
+        outline-color: #{$fer-yellow};
+      }
+
+      &.invalid {
+        border-color: #{$fer-error};
+
+        &:focus {
+          outline-color: #{$fer-error};
+        }
+      }
+    }
+
+    .fallbackSelect {
+      font-size: 1em;
+      position: relative;
+      display: flex;
+      width: 100%;
+      padding: .625em;
+      transition-property: outline-color, border-color;
+      color: $fer-black;
+      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
+      border-radius: 4px;
+      outline: transparent solid 2px;
+      background-color: $fer-white;
 
       &:focus {
         border-color: #{$fer-yellow};

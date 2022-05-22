@@ -90,6 +90,7 @@
           <option
             v-for="option in options"
             :key="`${option.value}$${option.label}`"
+            :selected="orNull(option.value === input)"
             :value="option.value"
             v-text="option.label"
           />

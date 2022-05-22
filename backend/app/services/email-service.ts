@@ -6,6 +6,7 @@ import {
   Options as MailerOptions,
 } from "nodemailer/lib/mailer";
 import inlineCss from "inline-css";
+import * as Sentry from "@sentry/node";
 import {
   smtpTransport,
 } from "../providers/email";
@@ -51,7 +52,7 @@ const sendMail =
 
       return smtpTransport.sendMail(message);
     } catch (e) {
-      console.error(e);
+      Sentry.captureException(e);
       return null;
     }
   }

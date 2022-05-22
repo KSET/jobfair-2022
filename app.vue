@@ -25,7 +25,7 @@
     </client-only>
 
     <NuxtLayout>
-      <app-nuxt-page />
+      <nuxt-page />
     </NuxtLayout>
 
     <client-only>
@@ -100,7 +100,6 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
-  import AppNuxtPage from "~/components/meta/bugfix/app-nuxt-page.vue";
 
   export default defineComponent({
     components: {
@@ -109,7 +108,6 @@
       PToast: Toast,
       PDialog: Dialog,
       IconGlobe,
-      AppNuxtPage,
     },
 
     async setup() {

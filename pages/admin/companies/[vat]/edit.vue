@@ -1,5 +1,5 @@
 <template>
-  <app-max-width-container v-if="company.uid" :class="$style.container">
+  <app-max-width-container :not-found="!company.uid" :class="$style.container">
     <h1>
       Uredi firmu
     </h1>
@@ -89,7 +89,6 @@
       </div>
     </client-only>
   </app-max-width-container>
-  <page-not-found v-else />
 </template>
 
 <script lang="ts">
@@ -143,13 +142,11 @@
     ICreateCompanyResponse,
     IMutationUpdateCompanyMembersForArgs,
   } from "~/graphql/schema";
-  import PageNotFound from "~/components/page-not-found.vue";
 
   export default defineComponent({
     name: "PageAdminCompanyEdit",
 
     components: {
-      PageNotFound,
       TranslatedText,
       AppFormgroup,
       AppMaxWidthContainer,

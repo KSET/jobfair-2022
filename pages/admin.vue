@@ -1,10 +1,12 @@
 <template>
-  <nuxt-nested-page
-    v-if="isAdmin"
-  />
-  <page-not-found
-    v-else
-  />
+  <div style="display: contents;">
+    <nuxt-nested-page
+      v-if="isAdmin"
+    />
+    <page-not-found
+      v-else
+    />
+  </div>
 </template>
 
 <script lang="ts">

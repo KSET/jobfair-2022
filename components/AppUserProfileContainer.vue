@@ -1,111 +1,113 @@
 <template>
-  <div v-if="!notFound" :class="$style.container">
-    <aside :class="$style.aside">
-      <div :class="$style.avatarContainer">
-        <profile-picture />
-      </div>
-      <p
-        class="text-center"
-        v-text="user.email"
-      />
-      <div :class="$style.linksContainer">
-        <ul>
-          <li>
-            <nuxt-link
-              :to="{ name: 'profile-me' }"
-            >
-              <translated-text
-                trans-key="profile.my-profile"
-              />
-            </nuxt-link>
-          </li>
-          <li>
-            <nuxt-link
-              :to="{ name: 'profile-me-settings' }"
-            >
-              <translated-text
-                trans-key="profile.settings"
-              />
-            </nuxt-link>
-          </li>
-          <template v-if="hasCompany">
+  <div style="display: contents;">
+    <div v-if="!notFound" :class="$style.container">
+      <aside :class="$style.aside">
+        <div :class="$style.avatarContainer">
+          <profile-picture />
+        </div>
+        <p
+          class="text-center"
+          v-text="user.email"
+        />
+        <div :class="$style.linksContainer">
+          <ul>
             <li>
-              <a
-                :href="$router.resolve({ name: 'profile-me-company' }).href"
-              >
-                <translated-text
-                  trans-key="profile.company"
-                />
-              </a>
-            </li>
-            <li v-if="applicationsOpen">
-              <a
-                :href="$router.resolve({ name: 'profile-me-company-signup' }).href"
-              >
-                <translated-text
-                  trans-key="profile.company.signup"
-                />
-              </a>
-            </li>
-            <li v-else-if="applicationApproved">
               <nuxt-link
-                :to="{ name: 'profile-me-company-application-edit' }"
+                :to="{ name: 'profile-me' }"
               >
                 <translated-text
-                  trans-key="profile.company.application.edit"
+                  trans-key="profile.my-profile"
                 />
               </nuxt-link>
             </li>
             <li>
               <nuxt-link
-                :to="{ name: 'profile-me-company-resumes' }"
+                :to="{ name: 'profile-me-settings' }"
               >
                 <translated-text
-                  trans-key="profile.company.resumes"
+                  trans-key="profile.settings"
                 />
               </nuxt-link>
             </li>
+            <template v-if="hasCompany">
+              <li>
+                <nuxt-link
+                  :to="{ name: 'profile-me-company' }"
+                >
+                  <translated-text
+                    trans-key="profile.company"
+                  />
+                </nuxt-link>
+              </li>
+              <li v-if="applicationsOpen">
+                <nuxt-link
+                  :to="{ name: 'profile-me-company-signup' }"
+                >
+                  <translated-text
+                    trans-key="profile.company.signup"
+                  />
+                </nuxt-link>
+              </li>
+              <li v-else-if="applicationApproved">
+                <nuxt-link
+                  :to="{ name: 'profile-me-company-application-edit' }"
+                >
+                  <translated-text
+                    trans-key="profile.company.application.edit"
+                  />
+                </nuxt-link>
+              </li>
+              <li>
+                <nuxt-link
+                  :to="{ name: 'profile-me-company-resumes' }"
+                >
+                  <translated-text
+                    trans-key="profile.company.resumes"
+                  />
+                </nuxt-link>
+              </li>
+              <li>
+                <nuxt-link
+                  :to="{ name: 'profile-me-company-scan-qr' }"
+                >
+                  <translated-text
+                    trans-key="profile.company.scan-qr"
+                  />
+                </nuxt-link>
+              </li>
+            </template>
+            <template v-else>
+              <li>
+                <nuxt-link
+                  :to="{ name: 'profile-register-company' }"
+                >
+                  <translated-text
+                    trans-key="profile.company-register"
+                  />
+                </nuxt-link>
+              </li>
+            </template>
             <li>
               <nuxt-link
-                :to="{ name: 'profile-me-company-scan-qr' }"
+                :to="{ name: 'profile-me-cv' }"
               >
                 <translated-text
-                  trans-key="profile.company.scan-qr"
+                  trans-key="profile.cv"
                 />
               </nuxt-link>
             </li>
-          </template>
-          <template v-else>
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-register-company' }"
-              >
-                <translated-text
-                  trans-key="profile.company-register"
-                />
-              </nuxt-link>
-            </li>
-          </template>
-          <li>
-            <nuxt-link
-              :to="{ name: 'profile-me-cv' }"
-            >
-              <translated-text
-                trans-key="profile.cv"
-              />
-            </nuxt-link>
-          </li>
-        </ul>
-      </div>
-    </aside>
+          </ul>
+        </div>
+      </aside>
 
-    <div :class="$style.content">
-      <slot />
+      <div :class="$style.content">
+        <slot />
+      </div>
     </div>
+    <app-max-width-container v-else>
+      <page-not-found />
+    </app-max-width-container>
   </div>
-  <app-max-width-container v-else>
-    <page-not-found />
-  </app-max-width-container>
 </template>
 
 <script lang="ts">

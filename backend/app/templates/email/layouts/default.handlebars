@@ -1,54 +1,177 @@
-<div
-    style="background-color:#00003f;font-family:sans-serif;font-size:14px;line-height:1.4;margin:0;padding:0"
->
-  <table
-      bgcolor="#00003f"
-      border="0"
-      cellpadding="0"
-      cellspacing="0"
-      role="presentation"
-      style="border-collapse:separate;min-width:100%;background-color:#00003f;width:100%"
-      width="100%"
-  >
+<style>
+  a, p, span {
+    font-family: sans-serif;
+    font-size: 14px;
+    vertical-align: top;
+  }
+
+  img {
+    border: none;
+  }
+
+  img.yt {
+    padding-bottom: 1px;
+  }
+
+  td > img {
+    vertical-align: middle;
+  }
+
+  table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: separate;
+    border: none;
+    border-spacing: 0;
+  }
+
+  table[role="presentation"] {
+    width: 100%;
+  }
+
+  .container {
+    margin: 0;
+    padding: 0;
+    background-color: #ebeae8;
+  }
+
+  .container > table {
+    background-color: #ebeae8;
+  }
+
+  .tableContainer {
+    display: block;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 10px;
+    vertical-align: top;
+  }
+
+  .tableContainer > div {
+    display: block;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  .container .logoContainer {
+    padding-top: 20px;
+    padding-bottom: 30px;
+  }
+
+  .logoContainer td {
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .logoContainer a {
+    display: inline-block;
+  }
+
+  .bodyContainer > table {
+    line-height: 1.15;
+    width: 100%;
+    min-width: 100%;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+
+  .contentContainer {
+    padding: 20px;
+    vertical-align: top;
+  }
+
+  .content > p {
+    font-weight: normal;
+    margin: 0;
+    color: #000000;
+  }
+
+  .content > p:last-child {
+    margin-top: 15px;
+  }
+
+  .tableContainer .footerContainer {
+    max-width: 95%;
+    padding-top: 0;
+  }
+
+  .tableContainer .footerContainer, .tableContainer .footerContainer * {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .tableContainer .footerContainer a {
+    display: inline-block;
+    text-decoration: none;
+    color: #000000;
+  }
+
+  .tableContainer .footerContainer > * {
+    padding-top: 4px;
+  }
+
+  .tableContainer .footerContainer > *:first-child {
+    padding-top: 0;
+  }
+
+  .tableContainer .footerContainer table.imageAndText {
+    display: inline-block;
+  }
+
+  .tableContainer .footerContainer table.imageAndText td {
+    vertical-align: middle;
+  }
+
+  .tableContainer .footerContainer table.imageAndText td:first-child {
+    width: 18px;
+    height: 18px;
+    text-align: center;
+  }
+
+  .tableContainer .footerContainer table.imageAndText td:first-child svg {
+    width: 100%;
+    max-height: 100%;
+  }
+
+  .tableContainer .footerContainer table.imageAndText td:last-child {
+    padding-left: 4px;
+  }
+
+  .tableContainer .footerContainer table.social {
+    display: inline-block;
+    padding-top: 8px;
+  }
+
+  .tableContainer .footerContainer table.social td {
+    vertical-align: middle;
+  }
+
+  .tableContainer .footerContainer table.social td + td {
+    padding-left: 5px;
+  }
+
+  .tableContainer .footerContainer table.social a:hover {
+    opacity: .85;
+  }
+</style>
+
+<div class="container">
+  <table role="presentation">
     <tbody>
       <tr>
-        <td
-            style="font-family:sans-serif;font-size:14px;vertical-align:top"
-            valign="top">&nbsp;
-        </td>
-        <td
-            style="font-family:sans-serif;font-size:14px;vertical-align:top;display:block;max-width:580px;padding:10px;width:580px;Margin:0 auto"
-            valign="top"
-            width="580"
-        >
-          <div
-              style="padding:20px 0"
-          >
-            <table
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                role="presentation"
-                style="border-collapse:separate;min-width:100%;width:100%"
-                width="100%"
-            >
+        <td class="tableContainer">
+          <div class="logoContainer">
+            <table role="presentation">
               <tbody>
                 <tr>
-                  <td
-                      align="center"
-                      style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:center"
-                      valign="top"
-                      width="100%"
-                  >
-                    <a
-                        href="https://jobfair.fer.unizg.hr"
-                        target="_blank"
-                    >
+                  <td align="center" valign="top" width="100%">
+                    <a href="https://jobfair.fer.unizg.hr" target="_blank">
                       <img
                           alt="Job Fair"
                           height="50"
-                          src="cid:jobfair-logo@jobfair.fer.unizg.hr"
-                          style="border:none;max-width:100%"
+                          src="cid:jobfair-logo.png@jobfair.fer.unizg.hr"
                       >
                     </a>
                   </td>
@@ -56,46 +179,24 @@
               </tbody>
             </table>
           </div>
-          <div
-              style="box-sizing:border-box;display:block;Margin:0 auto;max-width:580px;padding:10px"
-          >
-            <table
-                role="presentation"
-                style="border-collapse:separate;min-width:100%;background:#ffffff;border-radius:4px;width:100%"
-                width="100%"
-            >
+          <div class="bodyContainer">
+            <table role="presentation">
               <tbody>
                 <tr>
-                  <td
-                      style="font-family:sans-serif;font-size:14px;vertical-align:top;box-sizing:border-box;padding:20px"
-                      valign="top"
-                  >
-                    <table
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                        style="border-collapse:separate;min-width:100%;width:100%"
-                        width="100%"
-                    >
+                  <td class="contentContainer">
+                    <table role="presentation">
                       <tbody>
                         <tr>
-                          <td
-                              style="font-family:sans-serif;font-size:14px;vertical-align:top"
-                              valign="top"
-                          >
+                          <td class="content">
                             {{#each content}}
-                              <p
-                                  style="font-family:sans-serif;font-size:14px;color:#000;font-weight:normal;margin:0;margin-bottom:15px"
-                              >{{this}}</p>
+                              <p>{{this}}</p>
                             {{/each}}
                             {{> @partial-block }}
-                            <p
-                                style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0"
-                            >
+                            <br>
+                            <p>
                               Pozdrav,
                               <br>
-                              <strong>Job Fair Tim</strong>
+                              Job Fair Tim
                             </p>
                           </td>
                         </tr>
@@ -106,29 +207,82 @@
               </tbody>
             </table>
           </div>
-          <div
-              style="box-sizing:border-box;display:block;Margin:0 auto;max-width:580px;padding:0 10px 10px 10px;color:#8080ff;"
-          >
-            Unska 3, 10000 Zagreb, Hrvatska
-            <br>
-            e-mail:&nbsp;<a
-              style="color:#b3b3ff;text-decoration:underline"
-              href="mailto:jobfair@fer.hr">jobfair@fer.hr</a>&nbsp;
-            <br>
-            web:&nbsp;<a
-              style="color:#b3b3ff;text-decoration:underline"
-              href="https://jobfair.fer.unizg.hr">jobfair.fer.unizg.hr</a>&nbsp;
-            <br>
-            social: jobfairfer
-            <br>
-            #jobfair22
+          <div class="footerContainer">
+            <table class="imageAndText">
+              <tr>
+                <td>
+                  <img
+                      alt="Job Fair location"
+                      height="20"
+                      src="cid:sprites_icon-location.png@jobfair.fer.unizg.hr"
+                  >
+                </td>
+                <td>
+                  <span>Unska 3, 10000 Zagreb, Hrvatska</span>
+                </td>
+              </tr>
+            </table>
+
+
+            <a href="mailto:jobfair@fer.hr">
+              <table class="imageAndText">
+                <tr>
+                  <td>
+                    <img
+                        alt="Job Fair email"
+                        width="20"
+                        src="cid:sprites_icon-mail.png@jobfair.fer.unizg.hr"
+                    >
+                  </td>
+                  <td>
+                    <span>jobfair@fer.hr</span>
+                  </td>
+                </tr>
+              </table>
+            </a>
+
+            <table class="social">
+              <tr>
+                <td>
+                  <a href="https://www.instagram.com/jobfairfer/">
+                    <img
+                        alt="Job Fair Instagram"
+                        width="18"
+                        src="cid:sprites_icon-ig.png@jobfair.fer.unizg.hr"
+                    >
+                  </a>
+                </td>
+                <td>
+                  <a href="https://fb.com/JobFair.FER">
+                    <img
+                        alt="Job Fair Facebook"
+                        width="18"
+                        src="cid:sprites_icon-fb.png@jobfair.fer.unizg.hr"
+                    >
+                  </a>
+                </td>
+                <td>
+                  <a href="https://linkedin.com/company/jobfairfer">
+                    <img
+                        alt="Job Fair LinkedIn"
+                        width="18"
+                        src="cid:sprites_icon-in.png@jobfair.fer.unizg.hr"
+                    >
+                  </a>
+                </td>
+                <td>
+                  <a href="https://youtube.com/c/jobfairfer">
+                    <img
+                        alt="Job Fair YouTube"
+                        height="16"
+                        src="cid:sprites_icon-yt.png@jobfair.fer.unizg.hr"
+                        class="yt"
+                    >
+                  </a>
+                </td>
+              </tr>
+            </table>
           </div>
-        </td>
-        <td
-            style="font-family:sans-serif;font-size:14px;vertical-align:top"
-            valign="top"
-        >
-          &nbsp;
         </td>
       </tr>
     </tbody>

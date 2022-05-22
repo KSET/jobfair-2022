@@ -16,6 +16,22 @@ import {
   Templates,
 } from "../providers/template";
 
+const asset =
+  (...filePath: string[]) =>
+    ({
+      filename: filePath[filePath.length - 1],
+      path: resolve(
+        __dirname,
+        "../",
+        "templates",
+        "email",
+        "assets",
+        ...filePath,
+      ),
+      cid: `${ filePath.join("_") }@jobfair.fer.unizg.hr`,
+    })
+;
+
 const sendMail =
   (
     to: string,
@@ -34,18 +50,13 @@ const sendMail =
         text,
         html,
         attachments: [
-          {
-            filename: "jobfair-logo.png",
-            path: resolve(
-              __dirname,
-              "../",
-              "templates",
-              "email",
-              "assets",
-              "jobfair-logo.png",
-            ),
-            cid: "jobfair-logo@jobfair.fer.unizg.hr",
-          },
+          asset("jobfair-logo.png"),
+          asset("sprites", "icon-fb.png"),
+          asset("sprites", "icon-ig.png"),
+          asset("sprites", "icon-in.png"),
+          asset("sprites", "icon-location.png"),
+          asset("sprites", "icon-mail.png"),
+          asset("sprites", "icon-yt.png"),
           ...(options.attachments ?? []),
         ],
       };
@@ -75,7 +86,7 @@ export class EmailService {
         template.name,
         template.parameters,
       ),
-      `${ template.parameters.content.join("\n") }\n\nPozdrav,\nJob Fair Tim\nUnska 3, 10000 Zagreb, Hrvatska\ne-mail: jobfair@fer.hr\nweb: jobfair.fer.unizg.hr\nsocial: jobfairfer\n#jobfair22`,
+      `${ template.parameters.content.join("\n") }\n\nPozdrav,\nJob Fair Tim\n\nUnska 3, 10000 Zagreb, Hrvatska\ne-mail: jobfair@fer.hr\nweb: jobfair.fer.unizg.hr\nsocial: jobfairfer`,
       options,
     );
   }

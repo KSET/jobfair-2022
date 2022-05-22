@@ -1705,6 +1705,8 @@ type Season {
   name: String!
   panel: CompanyPanel
   reservations: [ReservationItem!]!
+  scheduleFrom: DateTime!
+  scheduleUntil: DateTime!
   showParticipantsFrom: DateTime!
   showParticipantsUntil: DateTime!
   showPartnersFrom: DateTime!
@@ -1734,6 +1736,8 @@ input SeasonCreateInput {
   feedbackFrom: DateTime = null
   feedbackUntil: DateTime = null
   name: String = ""
+  scheduleFrom: DateTime = null
+  scheduleUntil: DateTime = null
   showParticipantsFrom: DateTime = null
   showParticipantsUntil: DateTime = null
   showPartnersFrom: DateTime = null
@@ -1767,6 +1771,8 @@ input SeasonOrderByWithRelationAndSearchRelevanceInput {
   feedbackUntil: SortOrder
   name: SortOrder
   partners: PartnerOrderByRelationAggregateInput
+  scheduleFrom: SortOrder
+  scheduleUntil: SortOrder
   showParticipantsFrom: SortOrder
   showParticipantsUntil: SortOrder
   showPartnersFrom: SortOrder
@@ -1793,6 +1799,8 @@ enum SeasonScalarFieldEnum {
   feedbackUntil
   id
   name
+  scheduleFrom
+  scheduleUntil
   showParticipantsFrom
   showParticipantsUntil
   showPartnersFrom
@@ -1812,6 +1820,8 @@ input SeasonUpdateInput {
   feedbackFrom: DateTime = null
   feedbackUntil: DateTime = null
   name: String = ""
+  scheduleFrom: DateTime = null
+  scheduleUntil: DateTime = null
   showParticipantsFrom: DateTime = null
   showParticipantsUntil: DateTime = null
   showPartnersFrom: DateTime = null
@@ -1837,6 +1847,8 @@ input SeasonWhereInput {
   feedbackUntil: DateTimeFilter
   name: StringFilter
   partners: PartnerListRelationFilter
+  scheduleFrom: DateTimeFilter
+  scheduleUntil: DateTimeFilter
   showParticipantsFrom: DateTimeFilter
   showParticipantsUntil: DateTimeFilter
   showPartnersFrom: DateTimeFilter

@@ -340,6 +340,12 @@ export class SeasonCreateInput {
 
   @Field()
     feedbackUntil: Date = null as unknown as Date;
+
+  @Field()
+    scheduleFrom: Date = null as unknown as Date;
+
+  @Field()
+    scheduleUntil: Date = null as unknown as Date;
 }
 
 @InputType()

@@ -278,6 +278,9 @@ model Season {
   feedbackFrom  DateTime
   feedbackUntil DateTime
 
+  scheduleFrom  DateTime
+  scheduleUntil DateTime
+
   companies CompanyApplication[]
   sponsors  Sponsor[]
   partners  Partner[]

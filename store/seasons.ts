@@ -70,6 +70,10 @@ export const useSeasonsStore = defineStore(
       isFeedbackOpen(state) {
         return areOpen("feedback", state.currentSeason);
       },
+
+      isScheduleShown(state) {
+        return areOpen("schedule", state.currentSeason);
+      },
     },
 
     actions: {

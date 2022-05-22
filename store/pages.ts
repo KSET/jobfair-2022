@@ -2,48 +2,53 @@ import {
   defineStore,
 } from "pinia";
 import {
- useUserStore,
+  useUserStore,
 } from "~/store/user";
 import {
- useSeasonsStore,
+  useSeasonsStore,
 } from "~/store/seasons";
 import {
- useCompanyStore,
+  useCompanyStore,
 } from "~/store/company";
 
 export const usePagesStore = defineStore(
   "pages",
   {
-    state: () => ({
-      pages: [
-        {
-          name: "page.name.home",
-          to: { name: "index" },
-        },
-        {
-          name: "page.name.news",
-          to: { name: "news" },
-        },
-        {
-          name: "page.name.schedule",
-          to: { name: "schedule" },
-        },
-        {
-          name: "page.name.about",
-          to: { name: "about" },
-        },
-        {
-          name: "page.name.contact",
-          to: { name: "contact" },
-        },
-        {
-          name: "page.name.press",
-          to: { name: "press" },
-        },
-      ],
-    }),
+    state: () => ({}),
 
     getters: {
+      pages() {
+        const seasonsStore = useSeasonsStore();
+
+        return [
+          {
+            name: "page.name.home",
+            to: { name: "index" },
+          },
+          {
+            name: "page.name.news",
+            to: { name: "news" },
+          },
+          {
+            name: "page.name.schedule",
+            to: { name: "schedule" },
+            if: () => seasonsStore.isScheduleShown,
+          },
+          {
+            name: "page.name.about",
+            to: { name: "about" },
+          },
+          {
+            name: "page.name.contact",
+            to: { name: "contact" },
+          },
+          {
+            name: "page.name.press",
+            to: { name: "press" },
+          },
+        ].filter((page) => page.if ? page.if() : true);
+      },
+
       profilePages() {
         const userStore = useUserStore();
         const seasonsStore = useSeasonsStore();

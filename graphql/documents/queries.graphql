@@ -15,6 +15,8 @@ fragment frag_Season on Season {
     eventUntil
     feedbackFrom
     feedbackUntil
+    scheduleFrom
+    scheduleUntil
 }
 
 fragment frag_UserProfile on User {

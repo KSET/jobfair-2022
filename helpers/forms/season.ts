@@ -81,5 +81,13 @@ export const seasonCreate =
         type: "datetime-local",
         value: season?.feedbackUntil || tomorrow(),
       },
+      scheduleFrom: {
+        type: "datetime-local",
+        value: season?.scheduleFrom || today(),
+      },
+      scheduleUntil: {
+        type: "datetime-local",
+        value: season?.scheduleUntil || tomorrow(),
+      },
     })
 ;

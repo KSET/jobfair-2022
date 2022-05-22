@@ -1,5 +1,5 @@
 <template>
-  <app-max-width-container :class="$style.container">
+  <app-max-width-container v-if="isScheduleShown" :class="$style.container">
     <h1>
       <translated-text trans-key="schedule.header" />
     </h1>
@@ -129,6 +129,7 @@
       </h2>
     </div>
   </app-max-width-container>
+  <page-not-found v-else />
 </template>
 
 <script lang="ts">
@@ -168,11 +169,16 @@
   import {
     useTranslationsStore,
   } from "~/store/translations";
+  import PageNotFound from "~/components/page-not-found.vue";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     name: "PageSchedule",
 
     components: {
+      PageNotFound,
       AppImg,
       DropdownMenu,
       VueCalendar,
@@ -186,6 +192,7 @@
       useTitle("schedule.header");
 
       const translationsStore = useTranslationsStore();
+      const seasonsStore = useSeasonsStore();
 
       type QData = {
         calendar: (Pick<ICalendarItem,
@@ -339,6 +346,7 @@
       const isMd = useBreakpoints().smaller("md");
 
       return {
+        isScheduleShown: computed(() => seasonsStore.isScheduleShown),
         events,
         splitDays,
         isMd,

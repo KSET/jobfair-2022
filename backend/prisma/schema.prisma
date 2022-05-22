@@ -33,6 +33,8 @@ model User {
   /// @TypeGraphQL.omit(input: true)
   updatedAt DateTime @updatedAt
 
+  language String @default("hr-HR")
+
 
   /// @TypeGraphQL.omit(output: true, input: true)
   companies     Company[]

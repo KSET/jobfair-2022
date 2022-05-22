@@ -12,6 +12,10 @@ import {
   unref,
 } from "vue";
 import {
+  fromPairs,
+  toPairs,
+} from "rambdax";
+import {
   capitalize,
 } from "~/helpers/string";
 import {
@@ -35,9 +39,9 @@ export enum Language {
   HR = "hr_HR",
 }
 
-const LanguageToName = Object.fromEntries(Object.entries(Language).map(([ a, b ]) => [ b, a ])) as Record<Language, keyof Language>;
+export const LanguageToName = fromPairs(toPairs(Language).map(([ a, b ]) => [ b, a ])) as Record<Language, keyof typeof Language>;
 
-const LanguageISO: Record<Language, string> = {
+export const LanguageISO: Record<Language, string> = {
   [Language.EN]: "en-US",
   [Language.HR]: "hr-HR",
 };

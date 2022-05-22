@@ -24,6 +24,7 @@ fragment frag_UserProfile on User {
     lastName
     email
     phone
+    language
     roles {
         name
     }

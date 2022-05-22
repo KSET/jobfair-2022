@@ -43,6 +43,7 @@ const registerValidation = z.object({
   firstName: z.string().min(2).max(80),
   lastName: z.string().min(2).max(80),
   phone: z.string().min(4).max(80),
+  language: z.optional(z.string()),
   password: passwordValidation,
   passwordRepeat: passwordValidation,
 });

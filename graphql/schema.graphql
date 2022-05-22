@@ -2022,6 +2022,7 @@ type User {
   createdAt: DateTime!
   email: String!
   firstName: String!
+  language: String!
   lastName: String!
   name: String!
   phone: String!
@@ -2045,6 +2046,7 @@ type UserCount {
 input UserCreateInput {
   email: String!
   firstName: String!
+  language: String
   lastName: String!
   password: String!
   phone: String!
@@ -2054,6 +2056,7 @@ input UserCreateInput {
 enum UserOrderByRelevanceFieldEnum {
   email
   firstName
+  language
   lastName
   password
   phone
@@ -2070,6 +2073,7 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
   _relevance: UserOrderByRelevanceInput
   email: SortOrder
   firstName: SortOrder
+  language: SortOrder
   lastName: SortOrder
   password: SortOrder
   phone: SortOrder
@@ -2079,6 +2083,7 @@ input UserOrderByWithRelationAndSearchRelevanceInput {
 input UserRegisterInput {
   email: String!
   firstName: String!
+  language: String
   lastName: String!
   password: String!
   passwordRepeat: String = ""
@@ -2096,6 +2101,7 @@ enum UserScalarFieldEnum {
   email
   firstName
   id
+  language
   lastName
   password
   phone
@@ -2107,6 +2113,7 @@ enum UserScalarFieldEnum {
 input UserUpdateInput {
   email: String!
   firstName: String!
+  language: String
   lastName: String!
   password: String!
   phone: String!
@@ -2120,6 +2127,7 @@ input UserWhereInput {
   OR: [UserWhereInput!]
   email: StringFilter
   firstName: StringFilter
+  language: StringFilter
   lastName: StringFilter
   password: StringFilter
   phone: StringFilter

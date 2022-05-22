@@ -4,117 +4,36 @@
       <translated-text trans-key="profile.settings" />
     </h1>
 
-    <form
-      :aria-disabled="isLoading || null"
+    <app-formgroup
       :class="$style.formContainer"
-      method="POST"
-      @submit.prevent="handleSubmit"
+      :errors="errors"
+      :inputs="info"
+      :loading="isLoading"
+      @submit="handleSubmit"
     >
-      <app-input
-        v-model="info.email"
-        :class="$style.formElement"
-        :disabled="isLoading"
-        :invalid="errors.email.length > 0"
-        label-key="form.email"
-        name="email"
-        placeholder="jobfair@kset.org"
-        required
-        type="email"
-      >
-        <template v-if="errors.email.length > 0" #message>
-          <translated-text
-            v-for="err in errors.email"
-            :key="err.message"
-            :trans-key="err.message"
-            class="block"
-          />
-        </template>
-      </app-input>
-
-      <app-input
-        v-model="info.firstName"
-        :class="$style.formElement"
-        :disabled="isLoading"
-        :invalid="errors.firstName.length > 0"
-        label-key="form.firstName"
-        name="firstName"
-        placeholder="Marko"
-        required
-        type="text"
-      >
-        <template v-if="errors.firstName.length > 0" #message>
-          <translated-text
-            v-for="err in errors.firstName"
-            :key="err.message"
-            :trans-key="err.message"
-            class="block"
-          />
-        </template>
-      </app-input>
-
-      <app-input
-        v-model="info.lastName"
-        :class="$style.formElement"
-        :disabled="isLoading"
-        :invalid="errors.lastName.length > 0"
-        label-key="form.lastName"
-        name="lastName"
-        placeholder="Horvat"
-        required
-        type="text"
-      >
-        <template v-if="errors.lastName.length > 0" #message>
-          <translated-text
-            v-for="err in errors.lastName"
-            :key="err.message"
-            :trans-key="err.message"
-            class="block"
-          />
-        </template>
-      </app-input>
-
-      <app-input
-        v-model="info.phone"
-        :class="$style.formElement"
-        :disabled="isLoading"
-        :invalid="errors.phone.length > 0"
-        label-key="form.phone"
-        name="phone"
-        placeholder="+385981234567"
-        required
-        type="phone"
-      >
-        <template v-if="errors.phone.length > 0" #message>
-          <translated-text
-            v-for="err in errors.phone"
-            :key="err.message"
-            :trans-key="err.message"
-            class="block"
-          />
-        </template>
-      </app-input>
-
-      <div
-        v-if="errors.user.length > 0"
-        :class="$style.errorContainer"
-      >
-        <translated-text
-          v-for="err in errors.user"
-          :key="err.message"
-          :trans-key="err.message"
-        />
-      </div>
-
-      <div :class="$style.submitContainer">
-        <p-button
-          :loading="isLoading"
-          class="p-button-secondary w-full font-bold"
-          type="submit"
+      <template #after>
+        <div
+          v-if="errors.user.length > 0"
+          :class="$style.errorContainer"
         >
-          <translated-text trans-key="form.save" />
-        </p-button>
-      </div>
-    </form>
+          <translated-text
+            v-for="err in errors.user"
+            :key="err.message"
+            :trans-key="err.message"
+          />
+        </div>
+
+        <div :class="$style.submitContainer">
+          <p-button
+            :loading="isLoading"
+            class="p-button-secondary w-full font-bold"
+            type="submit"
+          >
+            <translated-text trans-key="form.save" />
+          </p-button>
+        </div>
+      </template>
+    </app-formgroup>
 
     <form
       :aria-disabled="isLoading || null"
@@ -220,8 +139,12 @@
     ref,
   } from "vue";
   import {
+    keys,
     mapObject,
   } from "rambdax";
+  import {
+    useToast,
+  } from "primevue/usetoast";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useTitle from "~/composables/useTitle";
   import AppInput from "~/components/util/form/app-input.vue";
@@ -229,11 +152,22 @@
     useUserStore,
   } from "~/store/user";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
+  import AppFormgroup from "~/components/util/form/app-formgroup.vue";
+  import {
+    userProfileEdit,
+  } from "~/helpers/forms/user";
+  import {
+    IUserCreateInput,
+  } from "~/graphql/schema";
+  import {
+    Dict,
+  } from "~/helpers/type";
 
   export default defineComponent({
     name: "PageRegister",
 
     components: {
+      AppFormgroup,
       AppUserProfileContainer,
       AppInput,
       TranslatedText,
@@ -243,16 +177,11 @@
       useTitle("profile.settings");
 
       const userStore = useUserStore();
+      const toast = useToast();
 
       const user = userStore.user!;
 
-      const info = reactive({
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        password: "",
-      });
+      const info = reactive(userProfileEdit(user));
 
       const pass = reactive({
         currentPassword: "",
@@ -263,12 +192,15 @@
       type AuthError = {
         message: string,
       };
-      const errors = reactive(mapObject(() => [] as AuthError[], {
+      const _e = <T extends Dict>(x: T) => reactive(mapObject(() => [] as AuthError[], x)) as Record<keyof T, AuthError[]>;
+      const errors = _e({
         ...info,
         ...pass,
         user: "",
-      }));
-      const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
+        password: "",
+      });
+      const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
+      type ErrorList = { field: keyof typeof errors, message: string, }[] | undefined;
 
       const isLoading = ref(false);
 
@@ -281,7 +213,10 @@
           resetErrors();
           isLoading.value = true;
           const resp = await userStore.updateProfile({
-            info,
+            info: {
+              ...mapObject((x) => (x as { value: unknown, }).value, info),
+              password: "",
+            } as IUserCreateInput,
           });
           isLoading.value = false;
 
@@ -292,14 +227,14 @@
             return;
           }
 
-          const errorList = resp.errors;
+          const errorList = resp.errors as ErrorList;
 
           if (!errorList) {
-            /* toast.add({
-             severity: "success",
-             summary: "Updated",
-             life: 3000,
-             }); */
+            toast.add({
+              severity: "success",
+              summary: "Saved",
+              life: 3000,
+            });
 
             return;
           }
@@ -323,17 +258,17 @@
             return;
           }
 
-          const errorList = resp.errors;
+          const errorList = resp.errors as ErrorList;
 
           if (!errorList) {
-            /* toast.add({
-             severity: "success",
-             summary: "Updated",
-             life: 3000,
-             }); */
+            toast.add({
+              severity: "success",
+              summary: "Saved",
+              life: 3000,
+            });
 
-            Object.keys(pass).forEach((key) => {
-              pass[key as keyof typeof pass] = "";
+            keys(pass).forEach((key) => {
+              pass[key] = "";
             });
 
             return;

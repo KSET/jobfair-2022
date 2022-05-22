@@ -266,7 +266,7 @@
         async handleMovePartner(partner: IPartner, direction: string) {
           const offset = "left" === direction ? -1 : 1;
           const newOrder = partner.order + offset;
-          const toSwapWith = sponsors.value.find((s) => s.order === newOrder);
+          const toSwapWith = partners.value.find((s) => s.order === newOrder);
 
           if (!toSwapWith) {
             return;

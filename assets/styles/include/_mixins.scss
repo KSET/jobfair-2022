@@ -17,7 +17,7 @@
 }
 
 // Fake definition to satisfy scss compiler
-@mixin style-class($prop, $map, $responsive: false) {
+@mixin style-class($prop, $map, $responsive: false, $states: false) {
   // Fake
 
 }

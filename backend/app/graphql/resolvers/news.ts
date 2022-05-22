@@ -1325,6 +1325,146 @@ const news = [
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
   },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("05-22-2022"),
+    image: "/tmp/blog11.jpg",
+    title: "Kako je Job Fair proslavio svoj 15. rođendan?",
+    description: "Iza nas je 15. po redu Job Fair. Najveći sajam poslova u Hrvatskoj ponovno je oborio svoje rekorde.",
+    content: `
+          <p>
+            U srijedu i četvrtak, <strong>11. i 12. svibnja</strong>, održali smo 15. Job Fair. Sportsku dvoranu Martinovka
+            na ta dva dana pretvorili smo u mjesto za upoznavanje <strong>134 poduzeća</strong> iz <strong>15 različitih industrija</strong>
+            i preko <strong>2 tisuće studenata</strong> STEM usmjerenja.
+          </p>
+
+          <h3>Martinovka puna iznenađenja</h3>
+
+          <p>
+            Tijekom dva dana sajma čekalo je <strong>129 štandova</strong> da ih posjetiš, a veliki dio njih imao je i svoje dodatne aktivnosti
+            sa zanimljivim nagradama. Na pozornici su u isto vrijeme predstavnici poduzeća razgovarali su o svojim iskustvima tijekom
+            <strong>24 talka</strong> u nove <strong>tri kategorije</strong>: <em>Career Switch</em>, <em>What the Tech?!</em> i
+            <em>Recycled Technology</em>. Osim toga, prvi dan se održala i panel rasprava na temu “Kako umjetna inteligencija utječe na naše društvo?”
+            u kojoj su predstavnici iz gospodarske i akademske zajednice otkrili kako je umjetna inteligencija nastala, kako je oni primjenjuju
+            u industrijama u kojima rade, koji su njeni benefit i koja su predviđanja za njen budući razvoj. Drugi dan je umjesto panel rasprave održan
+            <strong>Hot talk</strong> u kojem je sudjelovao <strong>Luka Drezga, COO iz Ars Future</strong>. Odgovarajući na pitanja iz službene i neslužbene
+            sfere života, pritom probavajući jednako ljute umake, svoju pobjedu odnio je ponosno osvajanjem najvećeg broja bodova do sada.
+          </p>
+
+          <h3>Nezaobilazan je bio i FER</h3>
+
+          <p>
+            Na <strong>Fakultetu elektrotehnike i računarstva</strong> se održalo čak <strong>16 radionica</strong> koje je ukupno posjetilo
+            preko <strong>300 studenata</strong>. Tako su se sudionici mogli dotaknuti praktičnih zadataka i zajedničkim snagama riješiti
+            jedan problem, ali i čuti razna iskustva ljudi iz industrije te kako su ih upravo oni riješili.
+          </p>
+
+          <h3>U KSET-u tradiocionalna zabava</h3>
+
+          <p>
+            Na kraju prvog dana put je vodio na <strong>Loosen up partij</strong> u <strong>Klubu studenata elektrotehnike</strong>.
+            Večernje druženje odvilo se uz natjecanje u raznim igrama koje su zahtjevale poznavanja stranih jezika, filmova i glazbe,
+            ali i fizičke spreme. Studenti su mogli tako u ležernijem okruženju upoznati kolege iz njima zanimljivog poduzeća koji su
+            ih častili sa čak 14 vrsta besplatnih koktela i 9 vrsta točenih piva.
+          </p>
+
+          <h3>Znaimljive statistike</h3>
+
+          <p>
+            Događaj je prenijelo 20 različitih medijskih kuća, a podržalo 4 prijatelja sajma. Tijekom pripreme sajma se razmjenilo preko
+            20 tisuća Slack poruka. Na sajmu je okinuto 10 366 fotografija.
+          </p>
+
+          <h3>Još se stigneš prijaviti!</h3>
+
+          <p>
+            Registrirati se možeš na službenoj stranici tijekom cijele godine, a životopis za ovogodišnji Job Fair predati
+            <strong>do kraja 29. svibnja</strong> kako bi poduzećima koja su sudjelovala na ovogodišnjem sajmu postao dostupan.
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>`,
+  },
+  {
+    lang: "en_US",
+    date: new Date("05-22-2022"),
+    image: "/tmp/blog11.jpg",
+    title: "How did the Job Fair celebrate its 15th birthday??",
+    description: "The 15th Job Fair is now behind us. The largest job Fair in Croatia managed to break records once again.",
+    content: `
+          <p>
+            The 15th Job Fair took place on Wednesday and Thursday, May 11 and 12. During those two days, we transformed
+            Martinovka Sports Hall into a meeting spot for <strong>134 companies</strong> from 15 different industries
+            and over <strong>2 thousand STEM students</strong>.
+          </p>
+
+          <h3>Martinovka full of surprises</h3>
+
+          <p>
+            129 booths waited for you to visit them, and a big part had their own activities with interesting prizes.
+            At the same time company representatives held <strong>24 talks</strong> on the stage, divided into three
+            categories: <em>Career Switch</em>, <em>What the Tech?!</em>, and <em>Recycled Technology</em>.
+            Besides that, the first day also had the <strong>panel discussion</strong> about “How does AI impact our society?”
+            in which representatives from the economy and academic community found out how AI came to be,
+            how it’s used in their industries, the benefits and what predictions for its future development are.
+            Instead of the panel discussion, the second day’s program was divided by the <strong>Hot Talk</strong>
+            in which <strong>Luka Drezga, COO at Ars Futura</strong> participated. While answering questions from
+            the work and home parts of life and trying equally spicy hot sauces, he managed to leave victorious with the highest score.
+          </p>
+
+          <h3>You couldn’t leave without visiting FER</h3>
+
+          <p>
+            <strong>16 workshops</strong> took place at the <strong>Faculty of Electrical Engineering and Computing</strong>
+            with over <strong>300 visitors</strong>. Participants could together try solving practical problems and hear about
+            the experience of people from the industry and how they managed to solve those same problems.
+          </p>
+
+          <h3>The traditional party at KSET</h3>
+
+          <p>
+            At the end of the first day, the <strong>Club of Students of Electrical Engineering (KSET)</strong> hosted the
+            <strong>Loosen up Party</strong>. The evening’s party was enhanced with different games which required knowledge of
+            foreign languages, films and music, but also fitness. Students were able to meet their colleagues from interesting
+            companies in a more casual setting while companies treated them to 14 different cocktails and 9 types of beer.
+          </p>
+
+          <h3>Interesting stats</h3>
+
+          <p>
+            20 different media companies reported on the event, and 4 partners of the Fair helped.
+            During the organization, over 20 thousand Slack messages were sent and during the Fair,
+            10366 photos were taken.
+          </p>
+
+          <h3>You still have time to apply!</h3>
+
+          <p>
+            You can register on the official web page all year long, and you can submit your CV for this
+            year's Job Fair until <strong>May 29, EOD</strong> so companies which participated in the Fair
+            can have it available.
+          </p>
+
+          <p>
+            Follow the <a href="https://jobfair.fer.unizg.hr/">Job Fair official website</a>, <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook page</a>,
+            <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagram profile</a> and
+            <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube channel</a> for more information.
+            <a href="https://jobfair.fer.unizg.hr/">Job Fair</a> is organized by
+            <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">FER Career Center</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
+          </p>`,
+  },
 ].map((obj) => ({
   ...obj,
   slug: kebabCase(obj.title),

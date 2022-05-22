@@ -89,7 +89,7 @@
   } from "@urql/core";
   import {
     MaybeRef,
-  } from "@vueuse/shared";
+  } from "~/helpers/type";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useSeasonsStore,

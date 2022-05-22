@@ -1,9 +1,9 @@
 import {
-  MaybeRef,
-} from "@vueuse/shared";
-import {
   unref,
 } from "vue";
+import {
+  MaybeRef,
+} from "~/helpers/type";
 import {
   ICompany,
   IUser,

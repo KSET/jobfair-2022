@@ -28,7 +28,7 @@
   } from "vue";
   import {
     MaybeRef,
-  } from "@vueuse/shared";
+  } from "~/helpers/type";
   import {
     useTranslationsStore,
   } from "~/store/translations";

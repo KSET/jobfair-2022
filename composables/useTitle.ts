@@ -3,9 +3,9 @@ import {
   computed,
   unref,
 } from "vue";
-import type {
+import {
   MaybeRef,
-} from "@vueuse/shared";
+} from "~/helpers/type";
 import {
   useTranslationsStore,
 } from "~/store/translations";

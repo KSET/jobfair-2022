@@ -94,14 +94,14 @@
   import {
     gql,
   } from "@urql/core";
-  import {
-    MaybeRef,
-  } from "@vueuse/shared";
   import DataTable from "primevue/datatable";
   import Column from "primevue/column";
   import InputText from "primevue/inputtext";
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
+  import {
+    MaybeRef,
+  } from "~/helpers/type";
   import {
     computed,
     defineComponent,

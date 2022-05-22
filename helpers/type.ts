@@ -1,3 +1,7 @@
+import type {
+ Ref,
+} from "vue";
+
 export type WithSuffix<Key, Suffix extends string> =
   Key extends string
     ? `${ Key }${ Suffix }`
@@ -11,3 +15,5 @@ export type WithoutSuffix<SuffixedKey, Suffix extends string> =
   ;
 
 export type Dict<Values = unknown, Keys extends (string | number | symbol) = string> = Record<Keys, Values>;
+
+export type MaybeRef<T> = T | Ref<T>;

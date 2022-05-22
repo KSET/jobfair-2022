@@ -260,7 +260,7 @@
   } from "vue";
   import {
     MaybeRef,
-  } from "@vueuse/shared";
+  } from "~/helpers/type";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useModelWrapper from "~/composables/useModelWrapper";
   import {

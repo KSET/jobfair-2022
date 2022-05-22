@@ -2,9 +2,6 @@ import {
   DocumentNode,
 } from "graphql";
 import {
-  MaybeRef,
-} from "@vueuse/shared";
-import {
   unref,
 } from "vue";
 import {
@@ -15,11 +12,14 @@ import {
   mergeDeepRight,
 } from "rambdax";
 import {
+  MaybeRef,
+} from "~/helpers/type";
+import {
   useNuxtApp,
 } from "#app";
 import {
   reactive,
-} from "#build/imports";
+} from "#imports";
 
 type Query = string | DocumentNode | TypedDocumentNode;
 

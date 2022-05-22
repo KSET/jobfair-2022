@@ -1,6 +1,6 @@
 import {
   MaybeRef,
-} from "@vueuse/shared";
+} from "~/helpers/type";
 import {
   IApplicationCocktail,
   IApplicationPresenter,

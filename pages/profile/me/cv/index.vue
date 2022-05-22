@@ -169,9 +169,6 @@
   import AutoComplete from "primevue/autocomplete";
   import Chip from "primevue/chip";
   import {
-    MaybeRef,
-  } from "@vueuse/shared";
-  import {
     keys,
     map,
     mapObject,
@@ -184,6 +181,10 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import {
+    MaybeRef,
+    Dict,
+  } from "~/helpers/type";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import useTitle from "~/composables/useTitle";
@@ -201,9 +202,6 @@
   import AppFormgroup, {
     InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
-  import {
-    Dict,
-  } from "~/helpers/type";
   import {
     useMutation,
     useQuery,

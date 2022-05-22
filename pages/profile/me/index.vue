@@ -362,7 +362,7 @@
               </li>
             </ul>
           </div>
-          <div v-if="isApproved && isApprovedWithoutBooth" :class="$style.itemActions">
+          <div v-if="isApproved && isApprovedWithoutBooth && applicationsEditable" :class="$style.itemActions">
             <nuxt-link
               :to="{ name: 'profile-me-company-application-edit' }"
               class="ml-auto"
@@ -732,6 +732,7 @@
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
+        applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
         hasCompany: computed(() => userStore.hasCompany),

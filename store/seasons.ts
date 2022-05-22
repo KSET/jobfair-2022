@@ -51,6 +51,10 @@ export const useSeasonsStore = defineStore(
         return areOpen("applications", state.currentSeason);
       },
 
+      areApplicationsEditable(state) {
+        return areOpen("applicationsEditable", state.currentSeason);
+      },
+
       areParticipantsShown(state) {
         return areOpen("showParticipants", state.currentSeason);
       },

@@ -48,7 +48,7 @@
                   />
                 </nuxt-link>
               </li>
-              <li v-else-if="applicationApproved">
+              <li v-else-if="applicationApproved && applicationsEditable">
                 <nuxt-link
                   :to="{ name: 'profile-me-company-application-edit' }"
                 >
@@ -153,6 +153,7 @@
       return {
         isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
+        applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         applicationApproved: computed(() => companyStore.hasApplicationApproved),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),

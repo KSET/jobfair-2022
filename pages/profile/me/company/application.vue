@@ -1,7 +1,7 @@
 <template>
   <div style="display: contents;">
     <nuxt-nested-page
-      v-if="hasApplication"
+      v-if="isAllowed"
     />
     <page-not-found
       v-else
@@ -18,6 +18,12 @@
   import {
     useCompanyStore,
   } from "~/store/company";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
+  import {
+    unref,
+  } from "#imports";
 
   export default defineComponent({
     name: "PageProfileCompanyApplicationHandler",
@@ -28,13 +34,15 @@
 
     async setup() {
       const companyStore = useCompanyStore();
+      const seasonsStore = useSeasonsStore();
 
       const hasApplication = computed(() => Boolean(companyStore.applicationInfo?.companyApplication));
+      const applicationsEditable = computed(() => seasonsStore.areApplicationsEditable);
 
       await companyStore.fetchCurrentApplication();
 
       return {
-        hasApplication,
+        isAllowed: computed(() => unref(hasApplication) && unref(applicationsEditable)),
       };
     },
   });

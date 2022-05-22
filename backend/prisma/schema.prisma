@@ -263,6 +263,9 @@ model Season {
   applicationsFrom  DateTime
   applicationsUntil DateTime
 
+  applicationsEditableFrom  DateTime
+  applicationsEditableUntil  DateTime
+
   showParticipantsFrom  DateTime
   showParticipantsUntil DateTime
 

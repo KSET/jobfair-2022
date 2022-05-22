@@ -1692,6 +1692,8 @@ type SearchResponseStringArray {
 type Season {
   _count: SeasonCount
   applications: [CompanyApplication!]!
+  applicationsEditableFrom: DateTime!
+  applicationsEditableUntil: DateTime!
   applicationsFrom: DateTime!
   applicationsUntil: DateTime!
   calendar: [CalendarItem!]!
@@ -1728,6 +1730,8 @@ type SeasonCount {
 }
 
 input SeasonCreateInput {
+  applicationsEditableFrom: DateTime = null
+  applicationsEditableUntil: DateTime = null
   applicationsFrom: DateTime = null
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
@@ -1760,6 +1764,8 @@ input SeasonOrderByRelevanceInput {
 
 input SeasonOrderByWithRelationAndSearchRelevanceInput {
   _relevance: SeasonOrderByRelevanceInput
+  applicationsEditableFrom: SortOrder
+  applicationsEditableUntil: SortOrder
   applicationsFrom: SortOrder
   applicationsUntil: SortOrder
   calendar: CalendarItemOrderByRelationAggregateInput
@@ -1790,6 +1796,8 @@ input SeasonRelationFilter {
 }
 
 enum SeasonScalarFieldEnum {
+  applicationsEditableFrom
+  applicationsEditableUntil
   applicationsFrom
   applicationsUntil
   endsAt
@@ -1812,6 +1820,8 @@ enum SeasonScalarFieldEnum {
 }
 
 input SeasonUpdateInput {
+  applicationsEditableFrom: DateTime = null
+  applicationsEditableUntil: DateTime = null
   applicationsFrom: DateTime = null
   applicationsUntil: DateTime = null
   endsAt: DateTime = null
@@ -1836,6 +1846,8 @@ input SeasonWhereInput {
   AND: [SeasonWhereInput!]
   NOT: [SeasonWhereInput!]
   OR: [SeasonWhereInput!]
+  applicationsEditableFrom: DateTimeFilter
+  applicationsEditableUntil: DateTimeFilter
   applicationsFrom: DateTimeFilter
   applicationsUntil: DateTimeFilter
   calendar: CalendarItemListRelationFilter

@@ -5,6 +5,8 @@ fragment frag_Season on Season {
     endsAt
     applicationsFrom
     applicationsUntil
+    applicationsEditableFrom
+    applicationsEditableUntil
     showParticipantsFrom
     showParticipantsUntil
     showPartnersFrom

@@ -41,6 +41,14 @@ export const seasonCreate =
         type: "datetime-local",
         value: season?.applicationsUntil || tomorrow(),
       },
+      applicationsEditableFrom: {
+        type: "datetime-local",
+        value: season?.applicationsEditableFrom || today(),
+      },
+      applicationsEditableUntil: {
+        type: "datetime-local",
+        value: season?.applicationsEditableUntil || tomorrow(),
+      },
       showParticipantsFrom: {
         type: "datetime-local",
         value: season?.showParticipantsFrom || today(),

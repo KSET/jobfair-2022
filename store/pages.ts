@@ -80,7 +80,7 @@ export const usePagesStore = defineStore(
           {
             name: "profile.company.application.edit",
             to: { name: "profile-me-company-application-edit" },
-            if: () => userStore.hasCompany && !seasonsStore.applicationsOpen && companyStore.hasApplicationApproved,
+            if: () => userStore.hasCompany && !seasonsStore.applicationsOpen && companyStore.hasApplicationApproved && seasonsStore.areApplicationsEditable,
           },
           {
             name: "profile.company.resumes",

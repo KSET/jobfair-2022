@@ -312,6 +312,12 @@ export class SeasonCreateInput {
     applicationsUntil: Date = null as unknown as Date;
 
   @Field()
+    applicationsEditableFrom: Date = null as unknown as Date;
+
+  @Field()
+    applicationsEditableUntil: Date = null as unknown as Date;
+
+  @Field()
     showParticipantsFrom: Date = null as unknown as Date;
 
   @Field()

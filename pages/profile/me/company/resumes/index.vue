@@ -48,7 +48,7 @@
         v-model:rows="queryMeta.take"
         :class="$style.table"
         :loading="isLoading"
-        :rows-per-page-options="[10, 20, 50]"
+        :rows-per-page-options="queryMeta.perPageOptions"
         :total-records="resumes.total"
         :value="resumes.items"
         current-page-report-template="{first}-{last}/{totalRecords}"
@@ -100,6 +100,9 @@
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
   import {
+    clamp,
+  } from "rambdax";
+  import {
     MaybeRef,
   } from "~/helpers/type";
   import {
@@ -110,8 +113,10 @@
     toRef,
     unref,
     useQuery,
+    useRoute,
     useRouter,
     useThrottleFn,
+    useUrlSearchParams,
     watch,
   } from "#imports";
   import {
@@ -143,17 +148,48 @@
 
     async setup() {
       const router = useRouter();
+      const route = useRoute();
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
+      const queryParams = useUrlSearchParams("history");
 
       const queryMeta = reactive({
-        take: 10,
+        take: 1,
         first: 0,
+        perPageOptions: [ 10, 20, 50 ].sort((a, b) => a - b),
       });
       const queryFilter = reactive({
         whereUser: "",
       });
       const activeTab = ref(0);
+
+      if (route.query.q && !Array.isArray(route.query.q)) {
+        queryFilter.whereUser = route.query.q;
+      }
+
+      if (route.query.p && !Array.isArray(route.query.p)) {
+        const page = Number(route.query.p);
+
+        if (!isNaN(page)) {
+          queryMeta.first = clamp(
+            0,
+            Infinity,
+            page - 1,
+          );
+        }
+      }
+
+      if (route.query.n && !Array.isArray(route.query.n)) {
+        const take = Number(route.query.n);
+
+        if (!isNaN(take)) {
+          queryMeta.take = clamp(
+            queryMeta.perPageOptions[0],
+            queryMeta.perPageOptions[queryMeta.perPageOptions.length - 1],
+            take,
+          );
+        }
+      }
 
       const isLoading = ref(false);
 
@@ -253,6 +289,12 @@
           skip: computed(() => queryMeta.first / queryMeta.take),
           whereUser: toRef(queryFilter, "whereUser"),
         },
+      });
+
+      watch([ queryMeta, queryFilter ], ([ meta, filter ]) => {
+        queryParams.p = String((meta.first || 0) + 1);
+        queryParams.n = String(meta.take);
+        queryParams.q = String(filter.whereUser);
       });
 
       const showAll = computed(() => userStore.isAdmin || companyStore.hasFeedback);

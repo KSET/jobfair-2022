@@ -116,7 +116,6 @@
     useRoute,
     useRouter,
     useThrottleFn,
-    useUrlSearchParams,
     watch,
   } from "#imports";
   import {
@@ -151,12 +150,12 @@
       const route = useRoute();
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
-      const queryParams = useUrlSearchParams("history");
 
+      const perPageOptions = [ 10, 20, 50 ].sort((a, b) => a - b);
       const queryMeta = reactive({
-        take: 1,
+        take: perPageOptions[0],
         first: 0,
-        perPageOptions: [ 10, 20, 50 ].sort((a, b) => a - b),
+        perPageOptions,
       });
       const queryFilter = reactive({
         whereUser: "",
@@ -174,7 +173,7 @@
           queryMeta.first = clamp(
             0,
             Infinity,
-            page - 1,
+            page,
           );
         }
       }
@@ -291,10 +290,18 @@
         },
       });
 
-      watch([ queryMeta, queryFilter ], ([ meta, filter ]) => {
-        queryParams.p = String((meta.first || 0) + 1);
-        queryParams.n = String(meta.take);
-        queryParams.q = String(filter.whereUser);
+      watch([ queryMeta, queryFilter ], async ([ meta, filter ]) => {
+        const query = {
+          p: String(meta.first),
+          n: String(meta.take),
+          q: String(filter.whereUser),
+        };
+
+        await router.replace({
+          name: "profile-me-company-resumes",
+          query,
+          replace: true,
+        });
       });
 
       const showAll = computed(() => userStore.isAdmin || companyStore.hasFeedback);

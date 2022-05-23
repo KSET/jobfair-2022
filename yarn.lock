@@ -12180,20 +12180,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ufo@npm:^0.7.11, ufo@npm:^0.7.9":
-  version: 0.7.11
-  resolution: "ufo@npm:0.7.11"
-  checksum: e5dfaff619e9b6d2e1e205877738f701722c99a0da8eda5e180f72844cdb668488656de47d6777d85c1ca17717d527a45ae8eb3954a0271d7d08e59acc02dd99
-  languageName: node
-  linkType: hard
-
-"ufo@npm:^0.8.3":
-  version: 0.8.3
-  resolution: "ufo@npm:0.8.3"
-  checksum: 7ea20e9d0fbd92b3310de4b020919f0a0542db60a6787ccecf232285d55795ddc0ea482b04d6c07cac60367a294aee705d888999867a5c3c69e47ed8d0ae3009
-  languageName: node
-  linkType: hard
-
 "ufo@npm:^0.8.4":
   version: 0.8.4
   resolution: "ufo@npm:0.8.4"

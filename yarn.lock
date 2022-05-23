@@ -1869,7 +1869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/vite-builder@npm:^3.0.0-rc.3":
+"@nuxt/vite-builder@npm:^3.0.0-rc.1, @nuxt/vite-builder@npm:^3.0.0-rc.3":
   version: 3.0.0-rc.3
   resolution: "@nuxt/vite-builder@npm:3.0.0-rc.3"
   dependencies:
@@ -9154,7 +9154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nuxt@npm:^3.0.0-rc.3":
+"nuxt@npm:^3.0.0-rc.1":
   version: 3.0.0-rc.3
   resolution: "nuxt@npm:3.0.0-rc.3"
   dependencies:
@@ -10827,7 +10827,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^2.4.0
     "@graphql-codegen/typescript-resolvers": ^2.6.4
     "@iconify/json": ^2.1.47
-    "@nuxt/vite-builder": ^3.0.0-rc.3
+    "@nuxt/vite-builder": ^3.0.0-rc.1
     "@nuxtjs/composition-api": ^0.32.0
     "@nuxtjs/eslint-config-typescript": ^8.0.0
     "@nuxtjs/eslint-module": ^3.1.0
@@ -10852,7 +10852,7 @@ __metadata:
     lint-staged: ^12.4.1
     lodash-es: ^4.17.21
     normalize.css: ^8.0.1
-    nuxt: ^3.0.0-rc.3
+    nuxt: ^3.0.0-rc.1
     pinia: ^2.0.14
     postcss: ^8.4.14
     postcss-html: ^1.4.1

@@ -291,7 +291,11 @@ router.getRaw("/all.xlsx", async (req, res) => {
       }
 
       if (cv) {
-        row.getCell("cv").value = `${ process.env.BASE_URL || "https://jobfair.fer.unizg.hr/api" }/file/${ cv.uid }`;
+        const url = `${ process.env.BASE_URL || "https://jobfair.fer.unizg.hr/api" }/file/${ cv.uid }`;
+        row.getCell("cv").value = {
+          text: url,
+          hyperlink: url,
+        };
       }
     }
   };

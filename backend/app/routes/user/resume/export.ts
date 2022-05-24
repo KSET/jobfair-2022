@@ -57,15 +57,42 @@ router.getRaw("/all.xlsx", async (req, res) => {
     cv: true,
   };
 
+  const application = await prisma.companyApplication.findFirst({
+    where: {
+      forCompany: {
+        uid: user.companies?.[0]?.uid || "",
+      },
+      forSeason: {
+        startsAt: {
+          gte: new Date(),
+        },
+        endsAt: {
+          lte: new Date(),
+        },
+      },
+    },
+    select: {
+      feedback: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  const sentFeedback = Boolean(application?.feedback?.id);
+
   const [
     allResumes,
     scannedResumes,
     favouriteResumes,
     translations,
   ] = await Promise.all([
-    prisma.resume.findMany({
-      include,
-    }),
+    sentFeedback
+      ? prisma.resume.findMany({
+        include,
+      })
+      : Promise.resolve([]),
     prisma.scannedResume.findMany({
       where: {
         company: {
@@ -305,7 +332,9 @@ router.getRaw("/all.xlsx", async (req, res) => {
     }
   };
 
-  addResumePage(ResumeFilters.All, allResumes);
+  if (sentFeedback) {
+    addResumePage(ResumeFilters.All, allResumes);
+  }
   addResumePage(ResumeFilters.Scanned, scannedResumes.map((x) => x.resume));
   addResumePage(ResumeFilters.Favourites, favouriteResumes.map((x) => x.resume));
 

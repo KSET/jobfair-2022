@@ -65,8 +65,6 @@ export class CompanyApplicationFeedbackMutationResolver {
       return null;
     }
 
-    console.log(application);
-
     return ctx.prisma.companyApplicationFeedback.upsert({
       create: {
         ...input,

@@ -170,7 +170,7 @@ router.getRaw("/all.xlsx", async (req, res) => {
         { header: `${ $t("resume.section.workExperiences") } - ${ $t("resume.section.workExperiences.duration") } ${ i + 1 }`, key: `workExperiencesDuration${ i }` },
       ]).flat(),
       ...Array.from({ length: MAX_PROJECTS }, (_, i) => [
-        { header: `${ $t("resume.section.projects") } - ${ $t("resume.section.projects.company") } ${ i + 1 }`, key: `projectsProject${ i }` },
+        { header: `${ $t("resume.section.projects") } - ${ $t("resume.section.projects.project") } ${ i + 1 }`, key: `projectsProject${ i }` },
         { header: `${ $t("resume.section.projects") } - ${ $t("resume.section.projects.position") } ${ i + 1 }`, key: `projectsPosition${ i }` },
         { header: `${ $t("resume.section.projects") } - ${ $t("resume.section.projects.duration") } ${ i + 1 }`, key: `projectsDuration${ i }` },
       ]).flat(),

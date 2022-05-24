@@ -211,6 +211,13 @@
               Statistike
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-applications-feedback', params: { season: season.uid } }"
+            >
+              Feedback
+            </nuxt-link>
+          </li>
         </ul>
       </fieldset>
     </div>

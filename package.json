@@ -50,6 +50,7 @@
         "@urql/core": "^2.4.4",
         "@vue/compiler-sfc": "^3.2.33",
         "@vueuse/nuxt": "^7.7.1",
+        "chart.js": "^3.7.1",
         "cssesc": "^3.0.0",
         "eslint": "^8.13.0",
         "eslint-plugin-nuxt": "^3.2.0",

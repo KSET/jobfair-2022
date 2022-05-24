@@ -57,82 +57,87 @@ router.getRaw("/all.xlsx", async (req, res) => {
     cv: true,
   };
 
-  const allResumes = await prisma.resume.findMany({
-    include,
-  });
-
-  const scannedResumes = await prisma.scannedResume.findMany({
-    where: {
-      company: {
-        uid: user.companies?.[0]?.uid || "",
+  const [
+    allResumes,
+    scannedResumes,
+    favouriteResumes,
+    translations,
+  ] = await Promise.all([
+    prisma.resume.findMany({
+      include,
+    }),
+    prisma.scannedResume.findMany({
+      where: {
+        company: {
+          uid: user.companies?.[0]?.uid || "",
+        },
       },
-    },
-    select: {
-      resume: {
-        include,
+      select: {
+        resume: {
+          include,
+        },
       },
-    },
-  });
-
-  const favouriteResumes = await prisma.favouriteResume.findMany({
-    where: {
-      company: {
-        uid: user.companies?.[0]?.uid || "",
+    }),
+    prisma.favouriteResume.findMany({
+      where: {
+        company: {
+          uid: user.companies?.[0]?.uid || "",
+        },
       },
-    },
-    select: {
-      resume: {
-        include,
+      select: {
+        resume: {
+          include,
+        },
       },
-    },
-  });
+    }),
+    prisma.translation.findMany({
+      where: {
+        key: {
+          in: [
+            ...Object.values(ResumeFilters),
+            "resume.name",
+            "resume.city",
+            "resume.phone",
+            "resume.email",
 
-  const translations = await prisma.translation.findMany({
-    where: {
-      key: {
-        in: [
-          ...Object.values(ResumeFilters),
-          "resume.name",
-          "resume.city",
-          "resume.phone",
-          "resume.email",
+            "resume.faculty.name",
+            "resume.faculty.module",
 
-          "resume.faculty.name",
-          "resume.faculty.module",
+            "resume.section.education",
+            "resume.section.education.type",
+            "resume.section.education.years",
 
-          "resume.section.education",
-          "resume.section.education.type",
-          "resume.section.education.years",
+            "resume.section.workExperiences",
+            "resume.section.workExperiences.company",
+            "resume.section.workExperiences.position",
+            "resume.section.workExperiences.duration",
 
-          "resume.section.workExperiences",
-          "resume.section.workExperiences.company",
-          "resume.section.workExperiences.position",
-          "resume.section.workExperiences.duration",
+            "resume.section.projects",
+            "resume.section.projects.project",
+            "resume.section.projects.position",
+            "resume.section.projects.duration",
 
-          "resume.section.projects",
-          "resume.section.projects.project",
-          "resume.section.projects.position",
-          "resume.section.projects.duration",
+            "resume.section.volunteerExperiences",
+            "resume.section.volunteerExperiences.organisation",
+            "resume.section.volunteerExperiences.position",
+            "resume.section.volunteerExperiences.duration",
 
-          "resume.section.volunteerExperiences",
-          "resume.section.volunteerExperiences.organisation",
-          "resume.section.volunteerExperiences.position",
-          "resume.section.volunteerExperiences.duration",
+            "resume.section.technologies",
 
-          "resume.section.technologies",
+            "resume.section.interests",
 
-          "resume.section.interests",
-
-          "resume.section.cv",
-        ],
+            "resume.section.cv",
+          ],
+        },
+        language: "hr_HR" === lang ? "hr_HR" : "en_US",
       },
-      language: "hr_HR" === lang ? "hr_HR" : "en_US",
-    },
-    select: {
-      key: true,
-      value: true,
-    },
-  });
+      select: {
+        key: true,
+        value: true,
+      },
+    }),
+  ]);
+
   const translationsMap = new Map(translations.map((t) => [ t.key, t.value ]));
   const $t = (key: string) => translationsMap.get(key) ?? key;
 

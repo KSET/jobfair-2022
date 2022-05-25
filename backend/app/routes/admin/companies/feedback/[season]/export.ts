@@ -65,6 +65,7 @@ router.getRaw("/all.xlsx", async (req, res) => {
           ...recommended,
         ],
       },
+      language: "hr_HR",
     },
     select: {
       key: true,

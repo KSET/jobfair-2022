@@ -167,6 +167,7 @@
     computed,
     defineComponent,
     ref,
+    useTitle,
   } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
@@ -193,6 +194,8 @@
       const resumeStore = useResumeStore();
       const translationsStore = useTranslationsStore();
       const favouriteLoading = ref(false);
+
+      useTitle(computed(() => `${ resumeStore.resume!.user.name } | ${ translationsStore.translation("profile.company.resumes") }`), false);
 
       return {
         favouriteLoading,

@@ -124,6 +124,7 @@
     useRoute,
     useRouter,
     useThrottleFn,
+    useTitle,
     watch,
   } from "#imports";
   import {
@@ -154,6 +155,8 @@
     },
 
     async setup() {
+      useTitle("profile.company.resumes");
+
       const router = useRouter();
       const route = useRoute();
       const userStore = useUserStore();

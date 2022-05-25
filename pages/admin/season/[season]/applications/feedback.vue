@@ -340,6 +340,13 @@
           max-height: 350px;
         }
 
+        :global(.p-chart) {
+
+          canvas {
+            margin: 0 auto;
+          }
+        }
+
         .commentsContainer {
           display: flex;
           flex-direction: column;

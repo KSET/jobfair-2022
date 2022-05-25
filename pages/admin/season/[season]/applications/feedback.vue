@@ -2,6 +2,16 @@
   <app-max-width-container :class="$style.container">
     <h1>Feedback</h1>
 
+    <div class="mb-4">
+      <a :href="`/api/admin/companies/feedback/${$route.params.season}/export/all.xlsx`">
+        <p-button
+          class="p-button-secondary"
+          icon="pi pi-download"
+          label="Skini podatke"
+        />
+      </a>
+    </div>
+
     <app-dropdown
       v-model="companyFilter"
       :options="companiesOptions"

@@ -80,7 +80,7 @@ router.getRaw("/all.xlsx", async (req, res) => {
     },
   });
 
-  const sentFeedback = Boolean(application?.feedback?.id);
+  const canViewAll = Boolean(application?.feedback?.id) || hasAtLeastRole(Role.Admin, user);
 
   const [
     allResumes,
@@ -88,7 +88,7 @@ router.getRaw("/all.xlsx", async (req, res) => {
     favouriteResumes,
     translations,
   ] = await Promise.all([
-    sentFeedback
+    canViewAll
       ? prisma.resume.findMany({
         include,
       })
@@ -332,7 +332,7 @@ router.getRaw("/all.xlsx", async (req, res) => {
     }
   };
 
-  if (sentFeedback) {
+  if (canViewAll) {
     addResumePage(ResumeFilters.All, allResumes);
   }
   addResumePage(ResumeFilters.Scanned, scannedResumes.map((x) => x.resume));

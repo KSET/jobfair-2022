@@ -48,7 +48,7 @@
           <span>
             <strong>
               <translated-text :trans-key="`form.company-feedback.${key}`" />
-            </strong>: {{ feedbackSummarizedAvg[key] }}
+            </strong>: {{ feedbackSummarizedAvg[key].toFixed(2) }}
           </span>
           <client-only>
             <Chart
@@ -278,7 +278,7 @@
         feedbackSummarizedAvg,
         toGraphData(ratings: number[]) {
           const entries = ratings.reduce((acc, a) => ({ ...acc, [a]: (acc[a] ?? 0) + 1 }), {} as { [key: number]: number, });
-          const labels = Object.keys(entries);
+          const labels = Object.keys(entries).map((x) => `Ocjena ${ x }`);
           const data = Object.values(entries);
 
           const colours = [
@@ -294,7 +294,7 @@
             "#42cc27",
           ];
 
-          const backgroundColor = colours.filter((_, i) => labels.includes(String(i)));
+          const backgroundColor = colours.filter((_, i) => labels.includes(String(i + 1)));
 
           return <ChartData<"pie", unknown>> {
             labels,

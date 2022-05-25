@@ -66,7 +66,7 @@
               <translated-text :trans-key="`form.company-feedback.${key}`" />
             </strong>
           </span>
-          <div>
+          <div :class="$style.commentsContainer">
             <fieldset
               v-for="(item, uid) in feedbackSummarized[key]"
               :key="uid"
@@ -340,10 +340,16 @@
           max-height: 350px;
         }
 
-        .comment {
-          overflow: auto;
-          white-space: pre-wrap;
-          word-break: break-word;
+        .commentsContainer {
+          display: flex;
+          flex-direction: column;
+          gap: 1em;
+
+          .comment {
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+          }
         }
       }
     }

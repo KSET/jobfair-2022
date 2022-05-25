@@ -278,7 +278,7 @@
         feedbackSummarizedAvg,
         toGraphData(ratings: number[]) {
           const entries = ratings.reduce((acc, a) => ({ ...acc, [a]: (acc[a] ?? 0) + 1 }), {} as { [key: number]: number, });
-          const labels = Object.keys(entries).map((x) => `Ocjena ${ x }`);
+          const labels = Object.keys(entries);
           const data = Object.values(entries);
 
           const colours = [
@@ -297,7 +297,7 @@
           const backgroundColor = colours.filter((_, i) => labels.includes(String(i + 1)));
 
           return <ChartData<"pie", unknown>> {
-            labels,
+            labels: labels.map((x) => `Ocjena ${ x }`),
             datasets: [
               {
                 data,

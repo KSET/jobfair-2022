@@ -61,6 +61,25 @@ fragment frag_ApplicationPresenter on ApplicationPresenter {
     }
 }
 
+fragment frag_AllFeedback on CompanyApplicationFeedback {
+    applicationComments
+    applicationRating
+    attendanceRating
+    dateComments
+    dateRating
+    experienceComments
+    foodRating
+    mostLiked
+    onsiteRating
+    overallComment
+    overallRating
+    recommended
+    testimonial
+    timeRating
+    createdAt
+    updatedAt
+}
+
 fragment frag_CompanyApplication on CompanyApplication {
     booth
     wantsPanel
@@ -106,22 +125,7 @@ fragment frag_CompanyApplication on CompanyApplication {
         booth
     }
     feedback {
-        applicationComments
-        applicationRating
-        attendanceRating
-        dateComments
-        dateRating
-        experienceComments
-        foodRating
-        mostLiked
-        onsiteRating
-        overallComment
-        overallRating
-        recommended
-        testimonial
-        timeRating
-        createdAt
-        updatedAt
+        ...frag_AllFeedback
     }
 }
 
@@ -546,4 +550,16 @@ query Resume($uid: String!) {
         extraField
     }
     resumeIsFavourite(uid: $uid)
+}
+
+query AdminFeedbackInfo($seasonUid: String!) {
+    companyApplications(season: $seasonUid, orderBy: { forCompany: { brandName: desc } }) {
+        forCompany {
+            uid
+            brandName
+        }
+        feedback {
+            ...frag_AllFeedback
+        }
+    }
 }

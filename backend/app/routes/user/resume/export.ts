@@ -57,6 +57,8 @@ router.getRaw("/all.xlsx", async (req, res) => {
     cv: true,
   };
 
+  const now = new Date();
+
   const application = await prisma.companyApplication.findFirst({
     where: {
       forCompany: {
@@ -64,10 +66,10 @@ router.getRaw("/all.xlsx", async (req, res) => {
       },
       forSeason: {
         startsAt: {
-          gte: new Date(),
+          lte: now,
         },
         endsAt: {
-          lte: new Date(),
+          gte: now,
         },
       },
     },

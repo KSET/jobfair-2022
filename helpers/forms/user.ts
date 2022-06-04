@@ -87,7 +87,6 @@ export const userRegister =
         password: {
           value: "",
           type: "password",
-          required: false,
           placeholder: "••••••••",
           attrs: {
             minlength: 8,
@@ -96,7 +95,6 @@ export const userRegister =
         passwordRepeat: {
           value: "",
           type: "password",
-          required: false,
           placeholder: "••••••••",
           attrs: {
             minlength: 8,

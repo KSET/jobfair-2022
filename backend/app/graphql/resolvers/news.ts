@@ -1380,18 +1380,13 @@ const news = [
           <h3>Prijave bez kraja!</h3>
 
           <p>
-            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
+            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register" rel="noopener noreferrer" target="_blank">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
           </p>
 
           <p>
-            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
-            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
-            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
-            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
-            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
-            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
-            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
-          </p>`,
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a> stranici te nas na <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a> i <a href="https://www.linkedin.com/company/jobfairfer/" rel="noopener noreferrer" target="_blank">LinkedInu</a>. Također, pretplati se na naš <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a> kanal gdje možeš vidjeti kako nam je bilo ove i prošlih godina! Job Fair organiziraju <a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a>, <a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a>, <a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a> (SS FER) i <a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a> (KSET).
+          </p>
+`,
   },
   {
     lang: "en_US",
@@ -1533,17 +1528,11 @@ const news = [
           <h3>Prijave bez kraja!</h3>
 
           <p>
-            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
+            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register" rel="noopener noreferrer" target="_blank">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
           </p>
 
           <p>
-            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
-            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
-            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
-            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
-            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
-            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
-            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a> stranici te nas na <a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a> i <a href="https://www.linkedin.com/company/jobfairfer/" rel="noopener noreferrer" target="_blank">LinkedInu</a>. Također, pretplati se na naš <a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a> kanal gdje možeš vidjeti kako nam je bilo ove i prošlih godina! Job Fair organiziraju <a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a>, <a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a>, <a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a> (SS FER) i <a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a> (KSET).
           </p>
 `,
   },

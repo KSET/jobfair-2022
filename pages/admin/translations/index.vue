@@ -22,10 +22,10 @@
             <input v-model="newTranslation.key" placeholder="key" type="text">
           </td>
           <td>
-            <input v-model="newTranslation.hr" placeholder="hr" type="text">
+            <textarea v-model="newTranslation.hr" placeholder="hr" />
           </td>
           <td>
-            <input v-model="newTranslation.en" placeholder="en" type="text">
+            <textarea v-model="newTranslation.en" placeholder="en" />
             <input type="submit" value="Save" @click.prevent="createTranslation">
           </td>
         </tr>

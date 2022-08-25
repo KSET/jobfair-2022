@@ -1337,7 +1337,7 @@ const news = [
           <p>
             U srijedu i četvrtak, <strong>11. i 12. svibnja</strong>, održali smo 15. Job Fair. Sportsku dvoranu Martinovka
             na ta dva dana pretvorili smo u mjesto za upoznavanje <strong>134 poduzeća</strong> iz <strong>15 različitih industrija</strong>
-            i preko <strong>2 tisuće studenata</strong> STEM usmjerenja.
+            i preko <strong>5 tisuća studenata</strong> STEM usmjerenja.
           </p>
 
           <h3>Martinovka puna iznenađenja</h3>
@@ -1377,11 +1377,10 @@ const news = [
             20 tisuća Slack poruka. Na sajmu je okinuto 10 366 fotografija.
           </p>
 
-          <h3>Još se stigneš prijaviti!</h3>
+          <h3>Prijave bez kraja!</h3>
 
           <p>
-            Registrirati se možeš na službenoj stranici tijekom cijele godine, a životopis za ovogodišnji Job Fair predati
-            <strong>do kraja 29. svibnja</strong> kako bi poduzećima koja su sudjelovala na ovogodišnjem sajmu postao dostupan.
+            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
           </p>
 
           <p>
@@ -1404,7 +1403,7 @@ const news = [
           <p>
             The 15th Job Fair took place on Wednesday and Thursday, May 11 and 12. During those two days, we transformed
             Martinovka Sports Hall into a meeting spot for <strong>134 companies</strong> from 15 different industries
-            and over <strong>2 thousand STEM students</strong>.
+            and over <strong>5 thousand STEM students</strong>.
           </p>
 
           <h3>Martinovka full of surprises</h3>
@@ -1446,12 +1445,11 @@ const news = [
             10366 photos were taken.
           </p>
 
-          <h3>You still have time to apply!</h3>
+          <h3>Signups without an end in sight!</h3>
 
           <p>
-            You can register on the official web page all year long, and you can submit your CV for this
-            year's Job Fair until <strong>May 29, EOD</strong> so companies which participated in the Fair
-            can have it available.
+            From now on you can register on the official web page all year long, and you can prepare
+            your CV for next year's Job Fair!
           </p>
 
           <p>
@@ -1464,6 +1462,90 @@ const news = [
             <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">FER Student Association (SS FER)</a></strong> and the
             <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Club of Students of Electrical Engineering (KSET)</a></strong>.
           </p>`,
+  },
+
+
+  {
+    lang: "hr_HR",
+    date: new Date("08-25-2022"),
+    image: "/tmp/blog12.png",
+    title: "Luka Drezga o 15. Job Fairu: Ostavlja li Hot Talk ljuti okus?",
+    description: "Kakvi su dojmovi nakon 15. Job Faira i 3. Hot Talka u kojem je sudjelovao, kroz intervju nam otkriva Luka Drezga iz Ars Future.",
+    content: `
+          <p>
+            U srijedu i četvrtak, <strong>11. i 12. svibnja</strong>, održali smo <strong>15. Job Fair</strong>. Sportsku dvoranu Martinovka
+            smo na ta dva dana pretvorili u mjesto za upoznavanje <strong>134 poduzeća</strong> iz <strong>15 različitih industrija</strong>
+            i preko <strong>5 tisuće studenata</strong> STEM usmjerenja.
+          </p>
+
+          <p>
+            Među poduzećima koja su se ove godine predstavljala na Job Fairu našla se i Ars Futura čiji se COO (Chief Operating Officer), Luka Drezga, odlučio uključiti u treći po redu Hot Talk. Luka je odnio titulu novog Hot Talkera s najviše do sada stečenih bodova pa smo ga odlučili pitati kako mu je bilo na 15. Job Fairu.
+          </p>
+
+          <h3>Sada kada su se slegli dojmovi s Job Faira, opiši nam malo kako ti je bilo na sajmu i naravno, na Hot talku?</h3>
+
+          <p>
+            Vatreno 🔥😁! Šalu na stranu, ne znam jel’ bilo do mene i konzumacije opasnih količina Volim Ljuto rukotvorina ili do prostora, ali i temperatura i atmosfera je bila uzavrela. Svaka čast i pohvale organizatorima Job Faira, ali i svim tvrtkama koje su sudjelovale. Siguran sam da nije bilo lako organizirati event s ovoliko sudionika, s obje strane.
+          </p>
+
+          <p>
+            <em>Hvala ti Luka, drago nam je čuti da si se zabavio. Vatreno je bilo i nama, ali samo u dobrom smislu!</em>
+          </p>
+
+          <p>
+            U nastavku slijede pitanja koja je medijska kuća VIDI odabrala, a koja su pristigla u sklopu Natječaja za najkreativnije pitanje koje još od 2020. godine VIDI nagrađuje tehnološkim nagradama. Pa krenimo!
+          </p>
+
+          <h3>Znajući što sad radiš i čime se baviš, koji bi savjet dodijelio sebi prije 5 godina?</h3>
+
+          <p>
+            You do you bby — ok je da ne znaš što sa sobom i u kojem se smjeru razvijaš i ok je tražit’ se u životu koliko god ti trebalo da se nađeš. Mislim da je u današnjim vremenima to dobar savjet svim mladim ljudima koji su pod konstantnim pritiskom da nakon završene osnovne škole moraju znati svoj životni put. Znam, zvuči malo klišejasto, ali to je tako. Brini se o sebi i da si zadovoljan sam sa sobom. Kad si tu ok, ostale se stvari nekako slože. Ne postoji jedinstveno mjerilo uspjeha, nekome je to raditi visoko plaćeni posao, nekome je to ustati se iz kreveta. Sve su to pobjede u svojoj suštini, tako da — you do you bby.
+          </p>
+
+          <h3>Misliš li da se u marketinškim odjelima IT firmi bolje snalaze ljudi baš iz tog područja ili FER-ovci koji se ipak odluče na marketing i slične pozicije?</h3>
+
+          <p>
+            Nikako ne mislim da FER-ovci imaju prednost u snalaženju u marketingu unutar IT-a. Danas dobar dio mladih ljudi ima odlične predispozicije za biti uspješan “marketingaš” u IT-u, razumiju se u tehnologiju, koriste i prate web i mobilne aplikacije i razne tehnološkei digitalne brendove. Mislim da za uspjeh u marketingu, osoba mora prvo imati “žicu” za to, a onda tek moći razumjeti za koga radi marketing. Bitno je upoznati brend na kojem radiš i ekosustav u kojem se on nalazi, nakon toga nije bitno uopće dolaziš li s tehničkog fakulteta ili nekog drugog.
+          </p>
+
+          <h3>Koja su tri savjeta koja bi rekao FER-ovcu koji želi postati UI/UX dizajner?</h3>
+
+          <p>
+            Biti FER-ovac inherentno znači biti dobar <em>problem solver</em>, bilo to u matematici, fizici ili <em>product developmentu</em> i dizajnu. Svaka aplikacija koju dizajniraš ili kodiraš, rješava neki problem i za to ćeš dobiti super podlogu na FER-u. Prvi savjet koji bi dao je da se priključiš u lokalnu zajednicu. Živimo u krasnim vremenima kada su ti sve potrebne informacije udaljene par klikova. Istraži lokalne grupe i okupljanja i sudjeluj, pričaj s ljudima i skupljaj njihova iskustva, iz toga ćeš najviše naučiti. Drugi savjet je — stvaraj. Nema veze radiš li na nekom stvarnom projektu ili sam sebi zadaješ zadatke. Uzmi neku postojeću aplikaciju i napravi svoj verziju, dizajniraj aplikaciju za rezervaciju termina kod frizera ljubimaca, uzmi neki <em>UI challenge</em> i pokušaj ga riješiti, bitno je samo da stvaraš. Na ovaj način, jednom kad kreneš u potragu za poslom i radom u nekoj IT firmi, dolaziš spreman i bogatog portfolia, a to najviše mi kao poslodavci volimo vidjeti. Zadnji savjet koji bi dao je —<em> imitation is the best form of flattery</em>. Zapamtio sam to s jednog predavanja menadžmenta u inženjerstvu, prije nego pristupiš rješavanju nekog problema pogledaj kako su to veliki igrači riješili i vidi možeš li iz njihovog pristupa izvući nešto što će pomoći tebi.
+          </p>
+
+          <h3>Ako bi se mogao baviti bilo kojim poslom iz bilo koje videoigrice, koji bi to posao bio?</h3>
+
+          <p>
+            Uf, koje lagano pitanje, isto kao i u stvarnom životu, barmen u nekoj RPG krčmi koji igraču uz čašu žestice daje neku pomoć za misiju koju trenutno prolazi, ali i koji topli, životni savjet. Ako se ikad dogodi krah IT-a, možete me potražiti iza šanka u nekoj konobi kako laštim krigle piva.
+          </p>
+
+          <h3>Za kraj, reci nam zašto misliš da je važno da studenti sudjeluju na Job Fairu, a zašto je to također važno i za poslodavce?</h3>
+
+          <p>
+            Studenti preko Job Faira danas mogu lako saznati apsolutno sve što ih zanima o budućem poslodavcu, mogu doći do štanda i jedan na jedan porazgovarati s ljudima i postaviti detaljna pitanja o poslovanju i projektima jedne IT firme. Nakon toga dobiju super sliku o zajednici i puno im je lakše odlučiti koje je poslovno okruženje najbolje za njih. Poslodavci, u drugu ruku, dobiju super priliku predstaviti se svojim budućim kolegama i umrežiti se sa zajednicom!
+          </p>
+
+          <p>
+            <em>Super Luka, hvala ti još jednom što si odvojio vrijeme i razgovarao s nama o Job Fairu. Drago nam je da ti je iskustvo bilo vrlo pozitivno. Također, nadamo se da će to i druga tehnološka poduzeća i studenti prepoznati te nam se priključiti iduće godine. Što drugo reći nego: vidimo se dogodine!</em>
+          </p>
+
+          <h3>Prijave bez kraja!</h3>
+
+          <p>
+            Od sada se možeš registrirati na <a href="https://jobfair.fer.unizg.hr/register">službenoj stranici</a> tijekom cijele godine i pripremiti svoj životopis za idući Job Fair!
+          </p>
+
+          <p>
+            Za više informacija čitaj naš blog na internetskoj stranici, lajkaj nas na našoj <strong><a href="https://www.facebook.com/JobFair.FER/" rel="noopener noreferrer" target="_blank">Facebook</a></strong> stranici i prati
+            nas na <strong><a href="https://www.instagram.com/jobfairfer/?hl=en" rel="noopener noreferrer" target="_blank">Instagramu</a></strong>. Također, pretplati se na naš
+            <strong><a href="https://www.youtube.com/c/JobFairFER" rel="noopener noreferrer" target="_blank">YouTube</a></strong> kanal gdje možeš pratiti Job Fair od doma, ali i vidjeti kako nam je bilo prošle godine! Job Fair
+            organiziraju <strong><a href="https://www.fer.unizg.hr/" rel="noopener noreferrer" target="_blank">FER</a></strong>,
+            <strong><a href="https://karijere.fer.hr/en/" rel="noopener noreferrer" target="_blank">Centar karijera FER-a</a></strong>,
+            <strong><a href="http://www.ssfer.hr/index.html" rel="noopener noreferrer" target="_blank">Savez studenata FER-a</a></strong> (SS FER) i
+            <strong><a href="https://www.kset.org/" rel="noopener noreferrer" target="_blank">Klub studenata elektrotehnike</a></strong> (KSET).
+          </p>
+`,
   },
 ].map((obj) => ({
   ...obj,

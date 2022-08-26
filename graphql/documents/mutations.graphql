@@ -51,6 +51,10 @@ mutation UsePasswordReset($info: PasswordResetUseInput!) {
     }
 }
 
+mutation RequestPasswordResetFor($uid: String!) {
+    requestPasswordResetFor(uid: $uid)
+}
+
 mutation UpdateTranslation($data: TranslationCreateInput!) {
     updateTranslation(data: $data) {
         key

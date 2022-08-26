@@ -1,5 +1,6 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   Field,
   Info,
@@ -44,6 +45,10 @@ import {
 import {
   PasswordService,
 } from "../../services/password-service";
+import {
+  hasAtLeastRole,
+  Role,
+} from "../../helpers/auth";
 import {
   transformSelect as transformSelectUser,
 } from "./user";
@@ -327,5 +332,106 @@ export class PasswordResetMutationResolver {
 
       return err?.data || { entity: false };
     });
+  }
+
+  @Authorized()
+  @Mutation(() => String)
+  async requestPasswordResetFor(
+    @Ctx() ctx: Context,
+      @Arg("uid") forUid: string,
+  ): GQLResponse<string, "nullable"> {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return "Insufficient permissions";
+    }
+
+    const {
+      forUser,
+      reset,
+    } = await ctx.prisma.$transaction(async (prisma) => {
+      const forUser = await prisma.user.findFirst({
+        where: {
+          uid: forUid,
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          language: true,
+        },
+      });
+
+      if (!forUser) {
+        return {
+          forUser,
+          reset: null,
+        };
+      }
+
+      const reset = await prisma.passwordReset.create({
+        data: {
+          forUser: {
+            connect: {
+              id: forUser.id,
+            },
+          },
+        },
+      });
+
+      return {
+        forUser,
+        reset,
+      };
+    });
+
+    await EventsService.logEvent(
+      "passwordReset:request:by",
+      forUser?.id,
+      {
+        email: forUser?.email,
+        resetId: reset?.id,
+        requestedBy: ctx.user.id,
+        ip: ctx.req.ip,
+      },
+    );
+
+    if (!forUser) {
+      return "User does not exist";
+    }
+
+    if (!reset) {
+      return "Something went wrong. Please try again.";
+    }
+
+    const $t = await TranslationService.getTranslationFor(
+      [
+        "email.passwordReset.subject",
+        "email.passwordReset.body",
+        "email.passwordReset.linkText",
+      ],
+      forUser.language.replace("-", "_"),
+    );
+
+    await EmailService.sendMail(
+      {
+        name: `${ forUser.firstName } ${ forUser.lastName }`,
+        address: forUser.email,
+      },
+      $t["email.passwordReset.subject"],
+      {
+        name: "emailForgotPassword",
+        parameters: {
+          content:
+            $t["email.passwordReset.body"]
+              .replace(/\$\{\s*name\s*}/gi, `${ forUser.firstName } ${ forUser.lastName }`)
+              .trim()
+              .split("\n"),
+          token: reset.uid,
+          resetPasswordLinkText: $t["email.passwordReset.linkText"],
+        },
+      },
+    );
+
+    return "ok";
   }
 }

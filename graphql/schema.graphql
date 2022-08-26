@@ -1069,6 +1069,7 @@ type Mutation {
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
   requestPasswordReset(identifier: String!): String!
+  requestPasswordResetFor(uid: String!): String!
   resumeEntryScan(userUid: String!): Resume
   resumeScan(userUid: String!): String
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!

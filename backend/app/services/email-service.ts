@@ -3,10 +3,14 @@ import {
 } from "node:path";
 import HtmlMinifier from "html-minifier";
 import {
+  Address,
   Options as MailerOptions,
 } from "nodemailer/lib/mailer";
 import inlineCss from "inline-css";
 import * as Sentry from "@sentry/node";
+import {
+  compile as compileHtmlToTextFn,
+} from "html-to-text";
 import {
   smtpTransport,
 } from "../providers/email";
@@ -15,6 +19,11 @@ import {
   TemplateParameters,
   Templates,
 } from "../providers/template";
+import {
+  Dict,
+} from "../types/helpers";
+
+type EmailTo = string | Address | (string | Address)[];
 
 const asset =
   (...filePath: string[]) =>
@@ -34,7 +43,7 @@ const asset =
 
 const sendMail =
   (
-    to: string,
+    to: EmailTo,
     subject: string,
     html: string,
     text: string,
@@ -69,9 +78,39 @@ const sendMail =
   }
 ;
 
+const htmlToText = compileHtmlToTextFn({
+  formatters: {
+    "altText"(elem, walk, builder, formatOptions) {
+      builder.openBlock({
+        leadingLineBreaks: formatOptions.leadingLineBreaks || 0,
+      });
+      const text = (elem.attribs as Dict<string>)?.alt;
+      builder.addInline(text || "");
+      builder.closeBlock({
+        trailingLineBreaks: formatOptions.trailingLineBreaks || 0,
+      });
+    },
+  },
+  selectors: [
+    {
+      selector: "img",
+      format: "skip",
+    },
+    {
+      selector: "#logo",
+      format: "skip",
+    },
+    {
+      selector: "a > img",
+      format: "altText",
+    },
+  ],
+  hideLinkHrefIfSameAsText: true,
+});
+
 export class EmailService {
   public static async sendMail<Template extends keyof ITemplates>(
-    to: string,
+    to: EmailTo,
     subject: string,
     template: {
       name: Template,
@@ -79,14 +118,17 @@ export class EmailService {
     },
     options: Partial<MailerOptions> = {},
   ) {
+    const html = await this.renderTemplate(
+      template.name,
+      template.parameters,
+    );
+    const text = htmlToText(html);
+
     return sendMail(
       to,
       subject,
-      await this.renderTemplate(
-        template.name,
-        template.parameters,
-      ),
-      `${ template.parameters.content.join("\n") }\n\nPozdrav,\nJob Fair Tim\n\nUnska 3, 10000 Zagreb, Hrvatska\ne-mail: jobfair@fer.hr\nweb: jobfair.fer.unizg.hr\nsocial: jobfairfer`,
+      html,
+      text,
       options,
     );
   }
@@ -95,11 +137,15 @@ export class EmailService {
     name: Template,
     parameters: TemplateParameters<Template>,
   ) {
-    const rendered = Templates[name](parameters);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const rendered = Templates[name]({
+      ...parameters,
+      PUBLIC_URL: (process.env.PUBLIC_URL || "").replace(/\/$/, ""),
+    } as any);
     const inlinedCss = await inlineCss(
       rendered,
       {
-        url: "https://jobfair.fer.unizg.hr/",
+        url: process.env.PUBLIC_URL || "",
         preserveMediaQueries: true,
         applyTableAttributes: true,
         removeHtmlSelectors: false,

@@ -55,22 +55,22 @@
     padding: 10px;
   }
 
-  .container .logoContainer {
+  .container #logo {
     padding-top: 20px;
     padding-bottom: 30px;
   }
 
-  .logoContainer td {
+  #logo td {
     text-align: center;
     vertical-align: top;
   }
 
-  .logoContainer a {
+  #logo a {
     display: inline-block;
   }
 
   .bodyContainer > table {
-    line-height: 1.15;
+    line-height: 1.35;
     width: 100%;
     min-width: 100%;
     border-radius: 4px;
@@ -82,13 +82,13 @@
     vertical-align: top;
   }
 
-  .content > p {
+  #content > p {
     font-weight: normal;
     margin: 0;
     color: #000000;
   }
 
-  .content > p:last-child {
+  #content > p:last-child {
     margin-top: 15px;
   }
 
@@ -162,12 +162,12 @@
     <tbody>
       <tr>
         <td class="tableContainer">
-          <div class="logoContainer">
+          <div id="logo">
             <table role="presentation">
               <tbody>
                 <tr>
                   <td align="center" valign="top" width="100%">
-                    <a href="https://jobfair.fer.unizg.hr" target="_blank">
+                    <a href="{{PUBLIC_URL}}" target="_blank">
                       <img
                           alt="Job Fair"
                           height="50"
@@ -187,7 +187,7 @@
                     <table role="presentation">
                       <tbody>
                         <tr>
-                          <td class="content">
+                          <td id="content">
                             {{#each content}}
                               <p>{{this}}</p>
                             {{/each}}
@@ -251,6 +251,7 @@
                         src="cid:sprites_icon-ig.png@jobfair.fer.unizg.hr"
                     >
                   </a>
+                  <br>
                 </td>
                 <td>
                   <a href="https://fb.com/JobFair.FER">
@@ -260,6 +261,7 @@
                         src="cid:sprites_icon-fb.png@jobfair.fer.unizg.hr"
                     >
                   </a>
+                  <br>
                 </td>
                 <td>
                   <a href="https://linkedin.com/company/jobfairfer">
@@ -269,6 +271,7 @@
                         src="cid:sprites_icon-in.png@jobfair.fer.unizg.hr"
                     >
                   </a>
+                  <br>
                 </td>
                 <td>
                   <a href="https://youtube.com/c/jobfairfer">
@@ -279,6 +282,7 @@
                         class="yt"
                     >
                   </a>
+                  <br>
                 </td>
               </tr>
             </table>

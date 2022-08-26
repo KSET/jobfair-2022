@@ -1045,6 +1045,7 @@ input IntFilter {
 type Mutation {
   addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
+  checkPasswordReset(token: String!): Boolean!
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
@@ -1067,6 +1068,7 @@ type Mutation {
   removeCompanyMember(email: String!): String
   renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
+  requestPasswordReset(identifier: String!): String!
   resumeEntryScan(userUid: String!): Resume
   resumeScan(userUid: String!): String
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
@@ -1085,6 +1087,7 @@ type Mutation {
   updateSeason(info: SeasonUpdateInput!): Season
   updateTranslation(data: TranslationCreateInput!): Translation
   updateUser(info: UserUpdateInput!, uid: String!): UpdateProfileResponse
+  usePasswordReset(info: PasswordResetUseInput!): PasswordResetUseResponse!
   validateVat(vat: String!): ValidateVatResponse!
 }
 
@@ -1203,6 +1206,17 @@ input PartnerWhereInput {
   order: IntFilter
   photo: ImageRelationFilter
   url: StringFilter
+}
+
+input PasswordResetUseInput {
+  newPassword: String = ""
+  newPasswordRepeat: String = ""
+  token: String = ""
+}
+
+type PasswordResetUseResponse {
+  entity: Boolean
+  errors: [FieldError!]
 }
 
 input PresenterCreateInput {
@@ -2061,6 +2075,7 @@ type UserCount {
   events: Int!
   files: Int!
   images: Int!
+  passwordResets: Int!
   pressReleases: Int!
   reservations: Int!
   roles: Int!

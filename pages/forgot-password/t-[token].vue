@@ -4,8 +4,15 @@
       <translated-text trans-key="forgot-password.header" />
     </h1>
 
+    <h2
+      v-if="userInfo"
+      :class="$style.infoContainer"
+    >
+      {{ userInfo.firstName }} {{ userInfo.lastName }} ({{ userInfo.email }})
+    </h2>
+
     <form
-      v-if="isTokenValid"
+      v-if="userInfo"
       :aria-disabled="isLoading"
       :class="$style.formContainer"
       method="POST"
@@ -122,7 +129,6 @@
       const toast = useToast();
 
       const isLoading = ref(false);
-      const isTokenValid = ref(true);
       const token = String(route.params.token);
 
       const info = reactive({
@@ -139,15 +145,15 @@
       }));
       const resetErrors = () => Object.keys(errors).forEach((key) => errors[key] = []);
 
-      const resp = await useMutation<ICheckPasswordResetMutation, ICheckPasswordResetMutationVariables>(CheckPasswordReset)({
-        token,
-      });
-
-      isTokenValid.value = Boolean(resp?.data?.checkPasswordReset) || true;
+      const userInfo = ref(
+        await useMutation<ICheckPasswordResetMutation, ICheckPasswordResetMutationVariables>(CheckPasswordReset)({
+          token,
+        }).then((resp) => resp?.data?.checkPasswordReset),
+      );
 
       return {
         isLoading,
-        isTokenValid,
+        userInfo,
         info,
         errors,
         async handleSubmit() {
@@ -203,11 +209,20 @@
 <style lang="scss" module>
   @import "assets/styles/include";
 
+  .infoContainer,
+  .formContainer {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  .infoContainer {
+    margin-bottom: 1.5rem;
+    color: $fer-dark-blue;
+  }
+
   .formContainer {
     display: flex;
     flex-direction: column;
-    max-width: 450px;
-    margin: 0 auto;
     gap: 2.5rem;
   }
 

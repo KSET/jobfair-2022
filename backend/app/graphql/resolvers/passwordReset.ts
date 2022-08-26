@@ -2,15 +2,22 @@ import {
   Arg,
   Ctx,
   Field,
+  Info,
   InputType,
   Mutation,
   ObjectType,
   Resolver,
 } from "type-graphql";
 import {
+  User,
   PasswordReset,
 } from "@generated/type-graphql";
 import {
+  GraphQLResolveInfo,
+} from "graphql";
+import {
+  toSelect,
+  transformSelectDefault,
   transformSelectFor,
 } from "../helpers/resolver";
 import {
@@ -37,12 +44,17 @@ import {
 import {
   PasswordService,
 } from "../../services/password-service";
+import {
+  transformSelect as transformSelectUser,
+} from "./user";
 
 @Resolver(() => PasswordReset)
 export class PasswordResetFieldResolver {
 }
 
-export const transformSelect = transformSelectFor<PasswordResetFieldResolver>({});
+export const transformSelect = transformSelectFor<PasswordResetFieldResolver>({
+  ...transformSelectDefault("user", transformSelectUser),
+});
 
 
 @InputType()
@@ -180,11 +192,12 @@ export class PasswordResetMutationResolver {
     return "ok";
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => User, { nullable: true })
   async checkPasswordReset(
     @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
       @Arg("token") token: string,
-  ): GQLResponse<boolean> {
+  ): GQLResponse<User, "nullable"> {
     const reset = await ctx.prisma.passwordReset.findFirst({
       where: {
         uid: token,
@@ -192,10 +205,13 @@ export class PasswordResetMutationResolver {
       },
       select: {
         id: true,
+        forUser: {
+          select: toSelect(info, transformSelectUser),
+        },
       },
     });
 
-    return Boolean(reset?.id);
+    return reset?.forUser;
   }
 
   @Mutation(() => PasswordResetUseResponse)

@@ -1045,7 +1045,7 @@ input IntFilter {
 type Mutation {
   addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
-  checkPasswordReset(token: String!): Boolean!
+  checkPasswordReset(token: String!): User
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry

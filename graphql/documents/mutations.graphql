@@ -33,7 +33,11 @@ mutation RequestPasswordReset($identifier: String!) {
 }
 
 mutation CheckPasswordReset($token: String!) {
-    checkPasswordReset(token: $token)
+    checkPasswordReset(token: $token) {
+        firstName
+        lastName
+        email
+    }
 }
 
 mutation UsePasswordReset($info: PasswordResetUseInput!) {

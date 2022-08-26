@@ -6,6 +6,8 @@ import {
   ILoginMutationVariables,
   ILogoutMutation,
   ILogoutMutationVariables,
+  IRequestPasswordResetMutation,
+  IRequestPasswordResetMutationVariables,
   IProfileQuery,
   IProfileQueryVariables,
   IRegisterMutation,
@@ -15,6 +17,7 @@ import {
   IUpdateProfileMutation,
   IUpdateProfileMutationVariables,
   Login,
+  RequestPasswordReset,
   Logout,
   Profile,
   Register,
@@ -65,6 +68,12 @@ export const useUserStore = defineStore(
         }
 
         return info;
+      },
+
+      async requestResetPassword(data: IRequestPasswordResetMutationVariables) {
+        const resp = await useMutation<IRequestPasswordResetMutation, IRequestPasswordResetMutationVariables>(RequestPasswordReset)(data);
+
+        return resp?.data?.requestPasswordReset ?? false;
       },
 
       async logout() {

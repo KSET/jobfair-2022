@@ -56,6 +56,29 @@ model User {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedEntries EntryResumeLog[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  passwordResets PasswordReset[]
+}
+
+model PasswordReset {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  /// @TypeGraphQL.omit(input: true)
+  forUser User @relation(fields: [userId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  userId  Int
+
+  /// @TypeGraphQL.omit(input: true)
+  usedAt DateTime?
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
 }
 
 model Translation {
@@ -264,7 +287,7 @@ model Season {
   applicationsUntil DateTime
 
   applicationsEditableFrom  DateTime
-  applicationsEditableUntil  DateTime
+  applicationsEditableUntil DateTime
 
   showParticipantsFrom  DateTime
   showParticipantsUntil DateTime

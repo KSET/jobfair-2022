@@ -1,5 +1,5 @@
 <template>
-  <app-max-width-container :not-found="!userExists" :class="$style.container">
+  <app-max-width-container :class="$style.container" :not-found="!userExists">
     <h1>Edit user</h1>
 
     <client-only>
@@ -38,6 +38,17 @@
         </template>
       </app-formgroup>
     </client-only>
+
+    <h2>Reset password</h2>
+    <div class="flex">
+      <p-button
+        :loading="isLoading || isResetPasswordLoading"
+        class="p-button-secondary font-bold ml-auto"
+        @click="handleSendPasswordReset"
+      >
+        Send password reset email
+      </p-button>
+    </div>
   </app-max-width-container>
 </template>
 
@@ -60,16 +71,22 @@
     mapObject,
     pipe,
   } from "rambdax";
+  import {
+    useToast,
+  } from "primevue/usetoast";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
+    IRequestPasswordResetForMutation,
+    IRequestPasswordResetForMutationVariables,
     IRole,
     IUpdateUserMutation,
     IUpdateUserMutationVariables,
     IUser,
+    RequestPasswordResetFor,
     UpdateUser,
   } from "~/graphql/schema";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -90,6 +107,7 @@
     async setup() {
       const $route = useRoute();
       const $router = useRouter();
+      const toast = useToast();
 
       const uid = $route.params.uid as string;
 
@@ -126,8 +144,9 @@
       })();
 
       const isLoading = ref(false);
+      const isResetPasswordLoading = ref(false);
 
-      const info_ = userEdit(resp?.data?.user)(resp?.data?.roles || []);
+      const info_ = userEdit(resp?.data?.user as any)(resp?.data?.roles || []);
       const info = reactive({
         ...info_,
       });
@@ -146,6 +165,7 @@
         info,
         errors,
         isLoading,
+        isResetPasswordLoading,
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;
@@ -185,6 +205,38 @@
             });
           }
         },
+        async handleSendPasswordReset() {
+          isResetPasswordLoading.value = true;
+          const resp = await useMutation<IRequestPasswordResetForMutation, IRequestPasswordResetForMutationVariables>(RequestPasswordResetFor)({
+            uid,
+          }).then((resp) => resp?.data?.requestPasswordResetFor);
+          isResetPasswordLoading.value = false;
+
+          if ("ok" === resp) {
+            return toast.add({
+              severity: "success",
+              summary: "Sent reset link",
+              closable: true,
+              life: 3000,
+            });
+          }
+
+          if (!resp) {
+            return toast.add({
+              severity: "error",
+              summary: "Something went wrong",
+              closable: true,
+              life: 3000,
+            });
+          }
+
+          return toast.add({
+            severity: "error",
+            summary: resp,
+            closable: true,
+            life: 3000,
+          });
+        },
       };
     },
   });
@@ -194,6 +246,13 @@
   @import "assets/styles/include";
 
   .container {
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 4rem;
+      text-align: center;
+      color: $fer-dark-blue;
+    }
 
     .form {
       display: flex;

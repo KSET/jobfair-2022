@@ -28,6 +28,33 @@ mutation Logout {
     logout
 }
 
+mutation RequestPasswordReset($identifier: String!) {
+    requestPasswordReset(identifier: $identifier)
+}
+
+mutation CheckPasswordReset($token: String!) {
+    checkPasswordReset(token: $token) {
+        firstName
+        lastName
+        email
+    }
+}
+
+mutation UsePasswordReset($info: PasswordResetUseInput!) {
+    usePasswordReset(info: $info) {
+        errors {
+            field
+            message
+        }
+
+        entity
+    }
+}
+
+mutation RequestPasswordResetFor($uid: String!) {
+    requestPasswordResetFor(uid: $uid)
+}
+
 mutation UpdateTranslation($data: TranslationCreateInput!) {
     updateTranslation(data: $data) {
         key

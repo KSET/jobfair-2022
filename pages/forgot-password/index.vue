@@ -1,7 +1,7 @@
 <template>
   <app-max-width-container>
     <h1>
-      <translated-text trans-key="login.header" />
+      <translated-text trans-key="forgot-password.header" />
     </h1>
 
     <form
@@ -13,22 +13,12 @@
       <app-input
         v-model="info.username"
         :class="$style.formElement"
+        :disabled="isLoading"
         label-key="form.email"
         name="identifier"
         placeholder="user@example.com"
         required
         type="email"
-      />
-
-      <app-input
-        v-model="info.password"
-        :class="$style.formElement"
-        :minlength="8"
-        label-key="form.password"
-        name="password"
-        placeholder="••••••••"
-        required
-        type="password"
       />
 
       <div
@@ -50,18 +40,6 @@
         >
           <translated-text trans-key="form.submit" />
         </p-button>
-        <div :class="$style.registerText">
-          <translated-text trans-key="login.no-account" />
-          <nuxt-link :to="{ name: 'register', query: { r: redirectInfo, }, }">
-            <translated-text trans-key="login.register" />
-          </nuxt-link>
-        </div>
-        <div :class="$style.registerText">
-          <translated-text trans-key="login.forgot-password" />
-          <nuxt-link :to="{ name: 'forgot-password', }">
-            <translated-text trans-key="login.forgot-password.text" />
-          </nuxt-link>
-        </div>
       </div>
     </form>
   </app-max-width-container>
@@ -69,18 +47,11 @@
 
 <script lang="ts">
   import {
-    defineComponent,
-    nextTick,
-    reactive,
-    ref,
-  } from "vue";
-  import {
     mapObject,
   } from "rambdax";
   import {
-    useRouter,
-    useRoute,
-  } from "vue-router";
+    useToast,
+  } from "primevue/usetoast";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useTitle from "~/composables/useTitle";
@@ -89,15 +60,15 @@
     useUserStore,
   } from "~/store/user";
   import {
-    decodeRedirectParam,
-  } from "~/helpers/url";
-  import {
-    computed,
+    defineComponent,
     onBeforeMount,
+    reactive,
+    ref,
+    useRouter,
   } from "#imports";
 
   export default defineComponent({
-    name: "PageLogin",
+    name: "PageForgotPassword",
 
     components: {
       AppInput,
@@ -106,10 +77,10 @@
     },
 
     setup() {
-      useTitle("login.header");
+      useTitle("forgot-password.header");
       const router = useRouter();
-      const route = useRoute();
       const userStore = useUserStore();
+      const toast = useToast();
 
       const isLoading = ref(false);
 
@@ -132,61 +103,33 @@
           return;
         }
 
-        const redirectInfo = (() => {
-          const queryRedirect = route.query?.r;
-
-          if (!queryRedirect || !("string" === typeof queryRedirect)) {
-            return null;
-          }
-
-          return decodeRedirectParam(queryRedirect);
-        })();
-
-        await router.push(redirectInfo || { name: "profile-me" });
+        await router.push({ name: "profile-me-settings" });
       });
 
       return {
         info,
         errors,
         isLoading,
-        redirectInfo: computed(() => route.query?.r),
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;
-          const resp = await userStore.login({
+          const success = await userStore.requestResetPassword({
             identifier: info.username,
-            password: info.password,
           });
           isLoading.value = false;
 
-          if (!resp) {
+          if (!success) {
             errors.user.push({
               message: "errors.somethingWentWrong",
             });
             return;
           }
 
-          const errorList = resp.errors;
-
-          if (!errorList) {
-            const redirectInfo = route.query?.r;
-            if (redirectInfo && "string" === typeof redirectInfo) {
-              await router.push(decodeRedirectParam(redirectInfo) || "/");
-            } else {
-              await router.push("/");
-            }
-
-            await nextTick();
-            window.location.reload();
-
-            return;
-          }
-
-          for (const error of errorList) {
-            errors[error.field].push({
-              message: error.message,
-            });
-          }
+          toast.add({
+            severity: "success",
+            summary: "Sent code. Check your email!",
+            life: 3000,
+          });
         },
       };
     },
@@ -195,7 +138,7 @@
 
 <style lang="scss" module>
   @use "sass:color";
-  @import "assets/styles/include";
+  @import "../../assets/styles/include/index";
 
   .formContainer {
     display: flex;

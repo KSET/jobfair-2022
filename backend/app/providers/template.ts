@@ -61,6 +61,14 @@ export const Templates = {
     "email",
     "content",
   ),
+  emailForgotPassword: template<{
+    content: string[],
+    token: string,
+    resetPasswordLinkText: string,
+  }>(
+    "email",
+    "forgot-password",
+  ),
 };
 
 export type ITemplates = typeof Templates;

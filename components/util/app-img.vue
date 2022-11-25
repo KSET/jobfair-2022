@@ -46,6 +46,7 @@
   import {
     computed,
     defineComponent,
+    defineEmits,
     onMounted,
     ref,
     toRefs,
@@ -73,7 +74,6 @@
       const img = new Image();
 
       img.addEventListener("load", () => {
-        // eslint-disable-next-line no-void
         void img
           .decode()
           .then(() => resolve(url))
@@ -119,12 +119,11 @@
       },
     },
 
-    setup(
-      propValues: Props,
-      {
-        emit,
-      },
-    ) {
+    setup(propValues: Props) {
+      type Emits = {
+        (e: "load", src: string | undefined): void,
+      };
+      const emit = defineEmits<Emits>();
       const props = toRefs(propValues);
 
       const imgEl = ref<HTMLImageElement | null>(null);

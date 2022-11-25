@@ -46,7 +46,7 @@
           <div :class="$style.afterJobfairText">
             <translated-text trans-key="footer.legal.allRightsReserved" />
           </div>
-          <client-only>
+          <LazyClientOnly>
             <div
               v-if="!showConsent"
               :class="$style.afterJobfairText"
@@ -54,7 +54,7 @@
               <translated-text
                 style="cursor: pointer;"
                 trans-key="footer.legal.cookiesReset"
-                @click.native.prevent="clearConsent"
+                @click.prevent="clearConsent"
               />
             </div>
             <div
@@ -63,10 +63,10 @@
               <translated-text
                 style="cursor: pointer;"
                 trans-key="footer.legal.privacyPolicy"
-                @click.native.prevent="privacyPolicyOpen = true"
+                @click.prevent="privacyPolicyOpen = true"
               />
             </div>
-            <Dialog
+            <PDialog
               v-model:visible="privacyPolicyOpen"
               :class="$style.dialog"
               dismissable-mask
@@ -75,11 +75,13 @@
               position="bottom"
             >
               <template #header>
-                <strong><translated-text trans-key="footer.legal.privacyPolicy.header" /></strong>
+                <strong>
+                  <translated-text trans-key="footer.legal.privacyPolicy.header" />
+                </strong>
               </template>
               <translated-text trans-key="footer.legal.privacyPolicy.text" />
-            </Dialog>
-          </client-only>
+            </PDialog>
+          </LazyClientOnly>
         </div>
         <div
           class="col-6 lg:col-2 flex-order-1 lg:flex-order-2"
@@ -160,19 +162,13 @@
   import {
     ref,
   } from "#imports";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const SocialIconLogos = import.meta.globEager("../../assets/images/component/AppFooter/icons/socials/*.png");
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const LogoImages = import.meta.globEager("../../assets/images/component/AppFooter/logo/*.png");
 
   export default defineComponent({
     components: {
       TranslatedText,
       AppImg,
       PDivider: Divider,
-      Dialog,
+      PDialog: Dialog,
     },
 
     props: {
@@ -186,24 +182,6 @@
     setup() {
       const cookieConsentStore = useCookieConsentStore();
 
-      const socialIcons: Record<string, string> =
-        Object.fromEntries(
-          Object
-            .entries(SocialIconLogos)
-            .map(([ k, v ]) => [ k.replace(/.*\/icon-(.*)\..*?$/, "$1"), v.default ])
-          ,
-        )
-      ;
-
-      const logos: Record<string, string> =
-        Object.fromEntries(
-          Object
-            .entries(LogoImages)
-            .map(([ k, v ]) => [ k.replace(/.*\/(.*)\..*?$/, "$1"), v.default ])
-          ,
-        )
-      ;
-
       const settingsStore = useSettingsStore();
 
       const getSetting = computed(() => settingsStore.getSetting);
@@ -211,6 +189,37 @@
       const privacyPolicyOpen = ref(false);
 
       const style = useCssModule();
+
+      const globResult = import.meta.glob([
+        "../../assets/images/component/AppFooter/icons/socials/*.png",
+        "../../assets/images/component/AppFooter/logo/*.png",
+      ], { eager: true }) as unknown as Record<string, { default: string, }>;
+
+      const socialIcons =
+        Object.fromEntries(
+          Object
+            .entries(globResult)
+            .filter(([ key ]) => key.startsWith("../../assets/images/component/AppFooter/icons/socials/"))
+            .map(([ key, value ]) => [
+              key.replace(/.*\/icon-(.*)\..*?$/, "$1"),
+              value.default,
+            ])
+          ,
+        )
+      ;
+
+      const logos =
+        Object.fromEntries(
+          Object
+            .entries(globResult)
+            .filter(([ key ]) => key.startsWith("../../assets/images/component/AppFooter/logo/"))
+            .map(([ key, value ]) => [
+              key.replace(/.*\/(.*)\..*?$/, "$1"),
+              value.default,
+            ])
+          ,
+        )
+      ;
 
       return {
         clearConsent: () => cookieConsentStore.clearConsent(),

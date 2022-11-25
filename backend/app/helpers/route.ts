@@ -128,7 +128,6 @@ export class Router {
   }
 
   addWrappedRoute<T extends RequestMethod, R>(requestMethod: T, path: string, handlersList: RouteHandlers<R>, wrapper: ((handler: RouteHandler<R>) => RouteHandler<R>)) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const handler = handlersList.pop()!;
 
     this.router[requestMethod](path, ...[ ...handlersList, wrapper(handler) ]);

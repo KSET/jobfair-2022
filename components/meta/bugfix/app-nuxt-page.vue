@@ -24,7 +24,6 @@
     defineComponent,
   } from "vue";
   import {
-    // eslint-disable-next-line import/named
     RouteLocationNormalizedLoaded,
     useRoute,
   } from "vue-router";

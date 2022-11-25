@@ -4,7 +4,7 @@
       Edit press release
     </h1>
 
-    <client-only>
+    <LazyClientOnly>
       <app-formgroup
         :class="$style.form"
         :errors="errors"
@@ -39,7 +39,7 @@
           </div>
         </template>
       </app-formgroup>
-    </client-only>
+    </LazyClientOnly>
   </app-max-width-container>
 </template>
 <script lang="ts">

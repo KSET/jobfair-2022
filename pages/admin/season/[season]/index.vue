@@ -10,7 +10,7 @@
     </div>
     <div>
       <h1>Sponzori</h1>
-      <client-only>
+      <LazyClientOnly>
         <TransitionGroup :class="$style.sponsors" name="smooth-list" tag="div">
           <edit-sponsor
             key="new"
@@ -35,12 +35,12 @@
             @save="handleUpdateSponsors"
           />
         </TransitionGroup>
-      </client-only>
+      </LazyClientOnly>
     </div>
 
     <div>
       <h1>Partneri</h1>
-      <client-only>
+      <LazyClientOnly>
         <TransitionGroup :class="$style.sponsors" name="smooth-list" tag="div">
           <edit-partner
             key="new"
@@ -65,7 +65,7 @@
             @save="handleUpdatePartners"
           />
         </TransitionGroup>
-      </client-only>
+      </LazyClientOnly>
     </div>
     <div class="mt-5">
       <nuxt-link

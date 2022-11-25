@@ -23,7 +23,6 @@ const calendarTypeLabels: Record<CalendarType, string> = {
   [CalendarType.Talk]: "Talk",
   [CalendarType.LoosenUp]: "Loosen Up",
   [CalendarType.Panel]: "Panel",
-  [CalendarType.Talk]: "Talk",
   [CalendarType.Workshop]: "Workshop",
 };
 

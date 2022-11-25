@@ -8,10 +8,6 @@ import {
   TypedDocumentNode,
 } from "@urql/core";
 import {
-  isFunction,
-  mergeDeepRight,
-} from "rambdax";
-import {
   MaybeRef,
 } from "~/helpers/type";
 import {
@@ -49,30 +45,14 @@ function doQuery<TData, TVars extends object>(
   query: Query,
   {
     variables,
-    headers,
   } = {} as QueryData<TVars>,
 ) {
   const nuxt = useNuxtApp();
 
-  const baseFetchOptions =
-    (
-      isFunction(nuxt.$urql.fetchOptions)
-        ? (nuxt.$urql.fetchOptions as () => RequestInit)()
-        : (nuxt.$urql.fetchOptions as RequestInit | undefined)
-    ) || {}
-  ;
-
-  const newFetchOptions: RequestInit = {};
-  if (headers) {
-    newFetchOptions.headers = headers;
-  }
-
   return (
     nuxt
       .$urql
-      .query<TData, TVars>(query, variables, {
-        fetchOptions: mergeDeepRight(baseFetchOptions, newFetchOptions),
-      })
+      .query<TData, TVars | undefined>(query, variables)
       .toPromise()
       .catch(() => Promise.resolve(null))
   );
@@ -82,30 +62,14 @@ function doMutation<TData, TVars extends object>(
   query: Query,
   {
     variables,
-    headers,
   } = {} as QueryData<TVars>,
 ) {
   const nuxt = useNuxtApp();
 
-  const baseFetchOptions =
-    (
-      isFunction(nuxt.$urql.fetchOptions)
-        ? (nuxt.$urql.fetchOptions as () => RequestInit)()
-        : (nuxt.$urql.fetchOptions as RequestInit | undefined)
-    ) || {}
-  ;
-
-  const newFetchOptions: RequestInit = {};
-  if (headers) {
-    newFetchOptions.headers = headers;
-  }
-
   return (
     nuxt
       .$urql
-      .mutation<TData, TVars>(query, variables, {
-        fetchOptions: mergeDeepRight(baseFetchOptions, newFetchOptions),
-      })
+      .mutation<TData, TVars | undefined>(query, variables)
       .toPromise()
       .catch(() => Promise.resolve(null))
   );

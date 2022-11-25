@@ -41,7 +41,7 @@
         v-if="previewSrc"
         :class="$style.dropAreaPreview"
       >
-        <client-only>
+        <LazyClientOnly>
           <template #fallback>
             <icon-file-generic
               :aria-label="previewName"
@@ -64,7 +64,7 @@
             contain
             @load="freeFileUrl(previewSrc)"
           />
-        </client-only>
+        </LazyClientOnly>
         <span
           v-if="previewName"
           :class="$style.dropAreaPreviewText"

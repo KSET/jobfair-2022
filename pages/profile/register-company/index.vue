@@ -175,7 +175,7 @@
             const vat = info.vat.value;
             const resp = await companyStore.validateVat(vat);
 
-            if (!resp || !resp.valid) {
+            if (!resp?.valid) {
               errors.vat.push({
                 message: "errors.vat.invalid",
               });

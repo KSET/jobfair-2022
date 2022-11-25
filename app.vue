@@ -1,42 +1,41 @@
 <template>
-  <div>
-    <Html :lang="currentLanguage">
-      <Head>
-        <Meta :content="currentLanguage" name="locale" />
-        <Meta :content="currentLanguage" name="og:locale" property="og:locale" />
-        <Meta
-          v-for="language in otherLanguages"
-          :key="language"
-          :content="language"
-          name="locale:alternative"
-        />
-        <Meta
-          v-for="language in otherLanguages"
-          :key="language"
-          :content="language"
-          name="og:locale:alternative"
-          property="og:locale:alternative"
-        />
-      </Head>
-    </Html>
+  <Html :lang="currentLanguage">
+    <Head>
+      <Meta :content="currentLanguage" name="locale" />
+      <Meta :content="currentLanguage" name="og:locale" property="og:locale" />
+      <Meta
+        v-for="language in otherLanguages"
+        :key="language"
+        :content="language"
+        name="locale:alternative"
+      />
+      <Meta
+        v-for="language in otherLanguages"
+        :key="language"
+        :content="language"
+        name="og:locale:alternative"
+        property="og:locale:alternative"
+      />
+    </Head>
 
-    <client-only>
-      <app-progress-bar />
-    </client-only>
+    <NuxtLoadingIndicator
+      :height="8"
+      color="#ecb000"
+    />
 
     <NuxtLayout>
       <nuxt-page />
     </NuxtLayout>
 
-    <client-only>
+    <LazyClientOnly>
       <p-toast />
-    </client-only>
+    </LazyClientOnly>
 
-    <client-only>
+    <LazyClientOnly>
       <cookie-consent />
-    </client-only>
+    </LazyClientOnly>
 
-    <client-only>
+    <LazyClientOnly>
       <p-dialog
         :class="$style.translationsLoading"
         :visible="isTranslationsLoading"
@@ -47,8 +46,8 @@
           class="pi pi-spin"
         />
       </p-dialog>
-    </client-only>
-  </div>
+    </LazyClientOnly>
+  </Html>
 </template>
 
 <script lang="ts">
@@ -72,7 +71,6 @@
     generateMetadata,
   } from "~/helpers/head";
   import FacebookShareImage from "~/assets/images/share/facebook.png";
-  import AppProgressBar from "~/components/nav/AppProgressBar.vue";
   import {
     useUserStore,
   } from "~/store/user";
@@ -103,7 +101,6 @@
 
   export default defineComponent({
     components: {
-      AppProgressBar,
       CookieConsent,
       PToast: Toast,
       PDialog: Dialog,
@@ -137,8 +134,8 @@
 
       useHead({
         title: "Job Fair",
-        charset: "utf-8",
         meta: [
+          { charset: "utf-8" },
           ...generateMetadata({
             title: "Job Fair",
             type: "website",
@@ -200,6 +197,22 @@
     },
   });
 </script>
+
+<style lang="scss">
+  .page-fade {
+
+    &-enter-active,
+    &-leave-active {
+      transition-property: opacity;
+      transition-duration: .25s;
+    }
+
+    &-enter-from,
+    &-leave-to {
+      opacity: 0;
+    }
+  }
+</style>
 
 <style lang="scss" module>
   @import "assets/styles/include";

@@ -284,6 +284,7 @@
 
       const company = computed(() => companyStore.companyInfo!);
       const translateFor =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         <Key extends string, Item extends Record<`${ Key }En` | `${ Key }Hr`, any>>(
           item: Item,
           key: Key,

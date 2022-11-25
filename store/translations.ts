@@ -74,6 +74,18 @@ export const useTranslationsStore = defineStore(
         return (key: string, language?: Language) => state.translations[language ?? state.currentLanguage]?.[key] || key;
       },
 
+      hasTranslation(state): (key: string, language?: Language) => boolean {
+        return (key: string, language?: Language) => {
+          const translations = state.translations[language ?? state.currentLanguage];
+
+          return (
+            translations
+              ? key in translations
+              : false
+          );
+        };
+      },
+
       translationLoading(state): (key: string, language?: Language) => boolean {
         return (key: string, language?: Language): boolean => state.translationsLoading[language ?? state.currentLanguage]?.[key] ?? false;
       },
@@ -158,7 +170,7 @@ export const useTranslationsStore = defineStore(
           this.translations[respLanguage] = {};
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         this.translations[respLanguage]![translation.key] = translation.value;
 
         return true;

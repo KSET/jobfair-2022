@@ -1,6 +1,6 @@
 <template>
   <div style="display: contents;">
-    <nuxt-nested-page v-if="hasCompany" />
+    <NuxtPage v-if="hasCompany" />
     <page-not-found v-else />
   </div>
 </template>

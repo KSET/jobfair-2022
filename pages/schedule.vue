@@ -181,7 +181,6 @@
       VueCalendar,
       TranslatedText,
       AppMaxWidthContainer,
-      // eslint-disable-next-line vue/no-unused-components
       IconStar,
     },
 

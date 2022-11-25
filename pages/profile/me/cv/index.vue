@@ -26,7 +26,7 @@
 
         <template v-if="name === FormFor.Interests || name === FormFor.Technologies">
           <div :class="$style.autocomplete">
-            <client-only>
+            <LazyClientOnly>
               <form :class="$style.contents" @submit.prevent="noop">
                 <AutoComplete
                   v-model="item.fields.name.value"
@@ -44,7 +44,7 @@
               <template #fallback>
                 ...
               </template>
-            </client-only>
+            </LazyClientOnly>
             <div :class="$style.autocompleteChips">
               <Chip
                 v-for="sel in infoFor[name].selected"
@@ -341,7 +341,6 @@
         let index = 0;
 
         return () => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return fn(index++);
         };
       };
@@ -428,7 +427,8 @@
         <Key extends FormFor>(key: Key) => {
           type Items = typeof items;
           type FieldObj = Items[Key]["fields"];
-          type Fields = FieldObj extends readonly any[] ? ArrayElement<FieldObj> : FieldObj;
+          type Fields = FieldObj extends readonly unknown[] ? ArrayElement<FieldObj> : FieldObj;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type Returns = Record<keyof Fields, any>;
 
           const fields = items[key].fields as FieldObj;
@@ -437,7 +437,7 @@
             [key]: Array.isArray(fields)
               ? fields.map((field) => toData(field as Dict<InputEntry>))
               : toData(fields as Dict<InputEntry>),
-          }) as Record<Key, FieldObj extends readonly any[] ? Returns[] : Returns>;
+          }) as Record<Key, FieldObj extends readonly unknown[] ? Returns[] : Returns>;
         }
       ;
 

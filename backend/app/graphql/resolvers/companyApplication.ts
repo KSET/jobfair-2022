@@ -1813,6 +1813,8 @@ export class CompanyApplicationCreateResolver {
           const oldPhotoPresenters =
             (
               oldApplication
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               && "presenters" in oldApplication
             )
               ? oldApplication.presenters[i]?.photo

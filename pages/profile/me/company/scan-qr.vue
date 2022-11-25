@@ -150,7 +150,6 @@
           );
 
           await qrScanner.start().catch((err) => {
-            // eslint-disable-next-line no-console
             console.error(err);
             alert("Something went wrong. Please try again");
           });

@@ -34,8 +34,8 @@
         </select>
       </label>
     </div>
-    <client-only>
-      <Dialog v-model:visible="resumeBool" @hide="handleModalClose">
+    <LazyClientOnly>
+      <PDialog v-model:visible="resumeBool" @hide="handleModalClose">
         <h3 v-text="resume.user.name" />
         <h3 v-text="resume.user.phone" />
 
@@ -44,8 +44,8 @@
         <template #footer>
           <p-button label="OK" icon="pi pi-times" class="p-button-text" @click="handleModalClose" />
         </template>
-      </Dialog>
-    </client-only>
+      </PDialog>
+    </LazyClientOnly>
   </div>
 </template>
 <script lang="ts">
@@ -85,7 +85,7 @@
     name: "GateGuardian",
 
     components: {
-      Dialog,
+      PDialog: Dialog,
     },
 
     setup() {
@@ -181,7 +181,6 @@
           );
 
           await qrScanner.start().catch((err) => {
-            // eslint-disable-next-line no-console
             console.error(err);
             alert("Something went wrong. Please try again");
           });

@@ -1,6 +1,6 @@
 <template>
   <div style="display: contents;">
-    <nuxt-nested-page
+    <NuxtPage
       v-if="season"
     />
     <page-not-found

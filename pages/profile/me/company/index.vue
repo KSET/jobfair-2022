@@ -148,7 +148,7 @@
       const isLoading = ref(false);
 
       const user = computed(() => userStore.user!);
-      const { vat } = unref(user).companies[0];
+      const [ { vat } ] = unref(user).companies;
 
       type QData = {
         industries: Pick<IIndustry, "name">[],

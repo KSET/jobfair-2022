@@ -1,6 +1,6 @@
 <template>
   <div style="display: contents;">
-    <nuxt-nested-page v-if="resumeExists" />
+    <NuxtPage v-if="resumeExists" />
     <page-not-found v-else />
   </div>
 </template>

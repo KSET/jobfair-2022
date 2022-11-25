@@ -1,5 +1,7 @@
 import axios, {
   AxiosError,
+} from "axios";
+import type {
   AxiosRequestConfig,
 } from "axios";
 
@@ -20,7 +22,7 @@ export function get<T>(url: string, config: AxiosRequestConfig = {}) {
   });
 }
 
-export function post<T>(url: string, data: unknown = undefined, config: AxiosRequestConfig = {}) {
+export function post<T, TData extends unknown | undefined>(url: string, data = undefined as TData, config: AxiosRequestConfig<TData> = {}) {
   return request<T>({
     headers: {
       "Content-Type": "application/json",

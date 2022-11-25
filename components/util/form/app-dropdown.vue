@@ -25,7 +25,7 @@
         />
       </slot>
     </label>
-    <client-only>
+    <LazyClientOnly>
       <p-multi-select
         v-if="isMultiple"
         v-model="input"
@@ -96,7 +96,7 @@
           />
         </select>
       </template>
-    </client-only>
+    </LazyClientOnly>
     <transition name="input-message">
       <small
         v-if="visible.message"

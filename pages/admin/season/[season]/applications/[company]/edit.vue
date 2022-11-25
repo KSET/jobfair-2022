@@ -75,7 +75,7 @@
                 <translated-text :trans-key="`form.legend.${formName}`" />
               </legend>
 
-              <client-only>
+              <LazyClientOnly>
                 <app-formgroup
                   :class="$style.formContainer"
                   :errors="item.errors[formName]"
@@ -96,7 +96,7 @@
                     </div>
                   </template>
                 </app-formgroup>
-              </client-only>
+              </LazyClientOnly>
             </fieldset>
           </template>
         </Panel>
@@ -311,7 +311,7 @@
           for (const item of Object.values(items)) {
             if (item.errors) {
               for (const errors of Object.values(item.errors)) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-explicit-any
                 resetErrorsFor(errors as any);
               }
             }

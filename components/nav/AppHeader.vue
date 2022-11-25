@@ -71,7 +71,7 @@
         >
           <icon-menu-open />
         </p-button>
-        <client-only>
+        <LazyClientOnly>
           <Sidebar
             v-model:visible="sidebarOpen"
             :class="$style.sidebar"
@@ -115,7 +115,7 @@
               </li>
             </ul>
           </Sidebar>
-        </client-only>
+        </LazyClientOnly>
       </div>
     </div>
   </header>

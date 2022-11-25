@@ -3,13 +3,13 @@ import "dotenv/config";
 import Icons from "unplugin-icons/vite";
 import ShortUniqueId from "short-unique-id";
 import cssesc from "cssesc";
-import {
-  defineNuxtConfig,
-} from "nuxt";
 import StylelintPlugin from "@frsource/vite-plugin-stylelint";
 import SvgLoader from "vite-svg-loader";
+import {
+  defineNuxtConfig,
+} from "nuxt/config";
 
-const ASSETS_PATH = "/assets/";
+const ASSETS_PATH = "/_assets/";
 
 const uid = new ShortUniqueId();
 
@@ -24,18 +24,15 @@ const cssClassNameBlacklist = new Set([
 
 const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
 
-// https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
-  features: {
-    transitions: false,
-    store: false,
+  experimental: {
+    reactivityTransform: true,
   },
 
-  buildModules: [
+  modules: [
     "@vueuse/nuxt",
-    "@nuxtjs/eslint-module",
-    "@nuxtjs/stylelint-module",
     "@pinia/nuxt",
+    "nuxt-icons",
   ],
 
   build: {
@@ -45,7 +42,6 @@ export default defineNuxtConfig({
       "primevue",
       "graphql",
     ],
-    publicPath: ASSETS_PATH,
   },
 
   css: [
@@ -58,13 +54,18 @@ export default defineNuxtConfig({
 
   app: {
     buildAssetsDir: ASSETS_PATH,
-    baseURL: "/",
+    rootId: "__jobfair",
+
+    pageTransition: {
+      name: "page-fade",
+      mode: "out-in",
+    },
   },
 
   vite: {
     css: {
       modules: {
-        generateScopedName(name, absoluteFilePath) {
+        generateScopedName(name: string, absoluteFilePath: string) {
           const relativeFilePath =
             absoluteFilePath
               .substring(__dirname.length + 1)
@@ -100,8 +101,6 @@ export default defineNuxtConfig({
       },
     },
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     plugins: [
       Icons({
         compiler: "vue3",
@@ -115,9 +114,13 @@ export default defineNuxtConfig({
     ],
   },
 
-  publicRuntimeConfig: {
-    API_BASE: process.env.API_URL,
-    SENTRY_DSN: process.env.SENTRY_DSN,
-    NODE_ENV: process.env.NODE_ENV,
+  runtimeConfig: {
+    public: {
+      API_BASE: "/api",
+      SENTRY_DSN: process.env.SENTRY_DSN,
+      NODE_ENV: process.env.NODE_ENV,
+    },
   },
+
+  telemetry: false,
 });

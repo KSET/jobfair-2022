@@ -310,10 +310,10 @@
         />
       </svg>
       <h1 :class="$style.headline">
-        <translated-text trans-key="page.error.notFound.title" />
+        <translated-text :trans-key="translations.title" />
       </h1>
       <p :class="$style.text">
-        <translated-text trans-key="page.error.notFound.text" />
+        <translated-text :trans-key="translations.text" />
       </p>
       <nuxt-link
         :to="{ name: 'index' }"
@@ -341,6 +341,9 @@
     useTranslationsStore,
   } from "~/store/translations";
   import useTitle from "~/composables/useTitle";
+  import {
+    unref,
+  } from "#imports";
 
   export default defineComponent({
     components: {
@@ -356,15 +359,31 @@
       },
     },
 
-    setup() {
+    setup(props) {
       const translationsStore = useTranslationsStore();
 
-      const notFoundText = computed(() => `404 - ${ translationsStore.translation("page.error.notFound.title") }`);
+      const translations = computed(() => {
+        const title = `page.error.${ props.status }.title`;
+        const text = `page.error.${ props.status }.text`;
+
+        return {
+          title:
+            translationsStore.hasTranslation(title)
+              ? title
+              : "page.error.notFound.title",
+          text:
+            translationsStore.hasTranslation(text)
+              ? text
+              : "page.error.notFound.text",
+        };
+      });
+
+      const notFoundText = computed(() => `${ props.status } - ${ translationsStore.translation(unref(translations).title) }`);
 
       useTitle(notFoundText);
 
       return {
-        notFoundText,
+        translations,
       };
     },
   });

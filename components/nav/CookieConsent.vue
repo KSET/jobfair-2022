@@ -55,8 +55,8 @@
         </p-button>
       </div>
 
-      <client-only>
-        <Dialog
+      <LazyClientOnly>
+        <PDialog
           v-model:visible="dialog"
           :style="{ maxWidth: '700px' }"
           dismissable-mask
@@ -186,8 +186,8 @@
               However if you are still looking for more information then you can contact us through our email: <a href="mailto:jobfair@fer.hr" target="_blank" rel="noopener noreferrer">jobfair@fer.hr</a>.
             </p>
           </div>
-        </Dialog>
-      </client-only>
+        </PDialog>
+      </LazyClientOnly>
     </div>
   </transition>
 </template>
@@ -214,7 +214,7 @@
     components: {
       TranslatedText,
       AppImg,
-      Dialog,
+      PDialog: Dialog,
       IconClose,
     },
 

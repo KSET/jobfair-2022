@@ -88,6 +88,9 @@
     useToast,
   } from "primevue/usetoast";
   import {
+    $toRef,
+  } from "vue/macros";
+  import {
     partnerCreate,
   } from "~/helpers/forms/partner";
   import {
@@ -157,16 +160,14 @@
       const $style = useCssModule();
 
       const isLoading = ref(false);
-      const {
-        partner,
-      } = props;
+      const partner = $toRef(props, "partner");
 
       const info = reactive(partnerCreate(partner));
       const resetInfo =
         () =>
           toPairs(partnerCreate())
             .forEach(([ key, { value } ]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               info[key].value = value;
             })
       ;

@@ -273,15 +273,6 @@
   import AppImg from "~/components/util/app-img.vue";
   import useTitle from "~/composables/useTitle";
   import TranslatedText from "~/components/TranslatedText.vue";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const IllustrationImages = import.meta.globEager("../assets/images/page/about/illustrations/*.png");
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const IllustrationIcons = import.meta.globEager("../assets/images/page/about/icons/*.png");
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const EventIcons = import.meta.globEager("../assets/images/icon/event-icons/*.png");
 
   export default defineComponent({
     name: "PageAbout",
@@ -296,23 +287,32 @@
     setup() {
       useTitle("about-meetup.header");
 
+      const globResult = import.meta.glob([
+        "../assets/images/page/about/illustrations/*.png",
+        "../assets/images/page/about/icons/*.png",
+        "../assets/images/icon/event-icons/*.png",
+      ], { eager: true }) as unknown as Record<string, { default: string, }>;
+
       return {
         img: {
           illustrations: Object.fromEntries(
             Object
-              .entries(IllustrationImages)
+              .entries(globResult)
+              .filter(([ key ]) => key.startsWith("../assets/images/page/about/illustrations/"))
               .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),
           icons: Object.fromEntries(
             Object
-              .entries(IllustrationIcons)
+              .entries(globResult)
+              .filter(([ key ]) => key.startsWith("../assets/images/page/about/icons/"))
               .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),
           eventIcons: Object.fromEntries(
             Object
-              .entries(EventIcons)
+              .entries(globResult)
+              .filter(([ key ]) => key.startsWith("../assets/images/icon/event-icons/"))
               .map(([ k, v ]) => [ k.split("/").pop()?.replace(/\.[^.]*/, "") ?? "", v.default ])
             ,
           ),

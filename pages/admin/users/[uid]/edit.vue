@@ -2,7 +2,7 @@
   <app-max-width-container :class="$style.container" :not-found="!userExists">
     <h1>Edit user</h1>
 
-    <client-only>
+    <LazyClientOnly>
       <app-formgroup
         :class="$style.form"
         :errors="errors"
@@ -37,7 +37,7 @@
           </div>
         </template>
       </app-formgroup>
-    </client-only>
+    </LazyClientOnly>
 
     <h2>Reset password</h2>
     <div class="flex">
@@ -146,7 +146,7 @@
       const isLoading = ref(false);
       const isResetPasswordLoading = ref(false);
 
-      const info_ = userEdit(resp?.data?.user as any)(resp?.data?.roles || []);
+      const info_ = userEdit(resp?.data?.user as never)(resp?.data?.roles || []);
       const info = reactive({
         ...info_,
       });

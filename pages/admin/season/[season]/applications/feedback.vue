@@ -60,7 +60,7 @@
               <translated-text :trans-key="`form.company-feedback.${key}`" />
             </strong>: {{ feedbackSummarizedAvg[key].toFixed(2) }}
           </span>
-          <client-only>
+          <LazyClientOnly>
             <Chart
               :data="toGraphData(feedbackSummarized[key])"
               :height="280"
@@ -68,7 +68,7 @@
               :width="280"
               type="pie"
             />
-          </client-only>
+          </LazyClientOnly>
         </template>
         <template v-else>
           <span class="mb-3">
@@ -102,10 +102,7 @@
   import {
     cloneDeepWith,
   } from "lodash-es";
-  import Chart from "primevue/chart";
-  import type {
-    ChartData,
-  } from "chart.js";
+  import Chart from "~/components/util/chart/app-chart.vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     computed,
@@ -306,7 +303,7 @@
 
           const backgroundColor = colours.filter((_, i) => labels.includes(String(i + 1)));
 
-          return <ChartData<"pie", unknown>> {
+          return {
             labels: labels.map((x) => `Ocjena ${ x }`),
             datasets: [
               {

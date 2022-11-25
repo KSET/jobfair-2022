@@ -9,13 +9,13 @@ import {
   unref,
 } from "vue";
 import {
-  mergeDeepRight,
-} from "rambdax";
-import {
   defineNuxtPlugin,
   useCookie,
   useRuntimeConfig,
 } from "#app";
+import {
+  Dict,
+} from "~/helpers/type";
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
@@ -23,24 +23,22 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       urql: createClient({
-        url: `${ config.API_BASE as string }/graphql`,
+        url: `${ config.API_BASE as unknown as string }/graphql`,
         exchanges: [
           dedupExchange,
           multipartFetchExchange,
         ],
         fetchOptions: () => {
-          let config: RequestInit = {};
+          const config: RequestInit = {
+            headers: {},
+          };
 
           // Session ID header for server
           {
             const sessionId = unref(useCookie("jobfair-session"));
 
             if (sessionId) {
-              config = mergeDeepRight(config, {
-                headers: {
-                  "x-session-id": sessionId,
-                },
-              });
+              (config.headers as Dict<string>)["X-Session-Id"] = sessionId;
             }
           }
 

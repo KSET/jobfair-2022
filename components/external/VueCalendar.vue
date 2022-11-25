@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <client-only>
+    <LazyClientOnly>
       <vue-cal
         :hide-weekdays="hideWeekdays"
         :hide-weekends="hideWeekends"
@@ -19,7 +19,7 @@
           />
         </template>
       </vue-cal>
-    </client-only>
+    </LazyClientOnly>
   </div>
 </template>
 
@@ -31,9 +31,6 @@
   import type {
     PropType,
   } from "vue";
-  import {
-    Component,
-  } from "@nuxt/schema";
   import {
     computed,
     unref,
@@ -51,7 +48,7 @@
     components: {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: No type definitions available
-      VueCal: defineAsyncComponent(() => import("vue-cal") as Component),
+      VueCal: defineAsyncComponent(() => import("vue-cal/dist/vue-cal.es.js")),
     },
 
     inheritAttrs: false,

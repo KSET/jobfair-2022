@@ -42,14 +42,14 @@
                   <span v-if="form.length > 1">&nbsp;{{ i + 1 }}</span>
                 </legend>
 
-                <client-only>
+                <LazyClientOnly>
                   <app-formgroup
                     :errors="item.errors[formName][i]"
                     :inputs="inputs"
                     :loading="isLoading"
                     no-form
                   />
-                </client-only>
+                </LazyClientOnly>
               </fieldset>
             </template>
             <fieldset
@@ -60,7 +60,7 @@
                 <translated-text :trans-key="`form.legend.${formName}`" />
               </legend>
 
-              <client-only>
+              <LazyClientOnly>
                 <app-formgroup
                   :class="$style.formContainer"
                   :errors="item.errors[formName]"
@@ -81,7 +81,7 @@
                     </div>
                   </template>
                 </app-formgroup>
-              </client-only>
+              </LazyClientOnly>
             </fieldset>
           </div>
         </Panel>

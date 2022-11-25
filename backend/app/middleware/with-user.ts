@@ -14,6 +14,7 @@ import {
 export default (app: Router) => {
   const TIMER_NAME = "session-user";
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   app.use(async (req, res, next) => {
     res.startTime(TIMER_NAME, "Session user");
     const session = req.session as (Session | undefined);

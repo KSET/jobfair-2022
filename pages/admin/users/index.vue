@@ -9,7 +9,7 @@
       <li>Admini: {{ stats.admins }}</li>
     </ul>
 
-    <client-only>
+    <LazyClientOnly>
       <DataTable
         ref="dt"
         v-model:filters="filters"
@@ -61,7 +61,7 @@
           </template>
         </Column>
       </DataTable>
-    </client-only>
+    </LazyClientOnly>
   </app-max-width-container>
 </template>
 

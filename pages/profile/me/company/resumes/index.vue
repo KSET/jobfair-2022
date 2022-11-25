@@ -1,6 +1,6 @@
 <template>
   <app-max-width-container :class="$style.container">
-    <client-only>
+    <LazyClientOnly>
       <template #fallback>
         <h2>Loading...</h2>
       </template>
@@ -86,7 +86,7 @@
           </template>
         </Column>
       </DataTable>
-    </client-only>
+    </LazyClientOnly>
     <div class="flex mt-3">
       <a class="ml-auto" href="/api/user/resume/export/all.xlsx" target="_blank">
         <p-button class="p-button-text">

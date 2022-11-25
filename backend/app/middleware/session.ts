@@ -8,11 +8,13 @@ import {
   redis,
 } from "../providers/redis";
 
-export default (app: Router) => {
+export default async (app: Router) => {
   const COOKIE_NAME = "jobfair-session" as const;
   const SESSION_SECRET = process.env.SESSION_SECRET || `${ Date.now().toString(36) }-${ Math.random().toString(36) }`;
   const SESSION_TTL = Number.parseInt(process.env.SESSION_TTL || "0");
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const RedisStore = connectRedis(session);
 
   app.use((req, res, next) => {
@@ -44,7 +46,7 @@ export default (app: Router) => {
 
   app.use(session({
     store: new RedisStore({
-      client: redis,
+      client: await redis(),
       prefix: "jobfair:session:",
     }) as unknown as session.Store,
     saveUninitialized: false,

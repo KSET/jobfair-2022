@@ -1,9 +1,8 @@
-import graphqlFields from "graphql-fields";
 import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
-  transformFields,
+  transformInfoIntoPrismaArgs,
 } from "@generated/type-graphql/helpers";
 import {
   keys,
@@ -21,8 +20,7 @@ export const toSelect =
     info: GraphQLResolveInfo,
     transformSelect: SelectTransformer,
   ) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    transformSelect(transformFields(graphqlFields(info)))
+    transformSelect(transformInfoIntoPrismaArgs(info))
 ;
 
 export const transformSelectFor =

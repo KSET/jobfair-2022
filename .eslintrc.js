@@ -27,6 +27,7 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
@@ -119,7 +120,12 @@ module.exports = {
         maxBOF: 1,
       },
     ],
-    "no-console": "warn",
+    "no-console": [
+        "warn",
+        {
+            "allow": ["warn", "error", "info"],
+        },
+    ],
     "no-nested-ternary": "error",
     "no-new-object": "error",
     "no-tabs": "warn",

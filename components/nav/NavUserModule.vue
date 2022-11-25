@@ -19,7 +19,7 @@
         }"
       />
     </p-button>
-    <client-only>
+    <LazyClientOnly>
       <p-overlay-panel
         :id="panelId"
         ref="op$"
@@ -92,7 +92,7 @@
           </ul>
         </div>
       </p-overlay-panel>
-    </client-only>
+    </LazyClientOnly>
   </div>
   <nuxt-link
     v-else

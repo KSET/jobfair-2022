@@ -4,7 +4,7 @@
       Uredi firmu
     </h1>
 
-    <client-only>
+    <LazyClientOnly>
       <app-formgroup
         :class="$style.form"
         :errors="errors"
@@ -87,7 +87,7 @@
           </template>
         </app-formgroup>
       </div>
-    </client-only>
+    </LazyClientOnly>
   </app-max-width-container>
 </template>
 

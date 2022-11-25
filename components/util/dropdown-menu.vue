@@ -62,6 +62,7 @@
 <script lang="ts">
   import {
     defineComponent,
+    defineEmits,
     nextTick,
     onBeforeUnmount,
     onMounted,
@@ -153,12 +154,16 @@
       },
     },
 
-    setup(props, { emit }) {
+    setup(props) {
+      type Emits = {
+        (e: "update:isOpen", open: boolean): void,
+      };
+      const emit = defineEmits<Emits>();
       const menu = reactive({
         ...toRefs(props),
         isOpen: props.isOpen,
       });
-      const dropdown$ = ref();
+      const dropdown$ = ref<HTMLDivElement>();
 
       watch(toRef(props, "isOpen"), (value) => {
         menu.isOpen = value;

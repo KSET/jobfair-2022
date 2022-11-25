@@ -88,6 +88,9 @@
     useToast,
   } from "primevue/usetoast";
   import {
+    $toRef,
+  } from "vue/macros";
+  import {
     sponsorCreate,
   } from "~/helpers/forms/sponsor";
   import {
@@ -157,16 +160,14 @@
       const $style = useCssModule();
 
       const isLoading = ref(false);
-      const {
-        sponsor,
-      } = props;
+      const sponsor = $toRef(props, "sponsor");
 
       const info = reactive(sponsorCreate(sponsor));
       const resetInfo =
         () =>
           toPairs(sponsorCreate())
             .forEach(([ key, { value } ]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               info[key].value = value;
             })
       ;

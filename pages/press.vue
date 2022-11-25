@@ -159,9 +159,6 @@
   import {
     useGalleryStore,
   } from "~/store/gallery";
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore: Type declaration stuff
-  const PreviewIcons = import.meta.globEager("../assets/images/page/press/*.png");
 
   export default defineComponent({
     name: "PagePress",
@@ -184,6 +181,7 @@
 
       const releases = resp?.data?.pressReleases || [];
 
+      const PreviewIcons = import.meta.glob("../assets/images/page/press/*.png", { eager: true }) as unknown as Record<string, { default: string, }>;
       const previewIcons =
         Object.fromEntries(
           Object

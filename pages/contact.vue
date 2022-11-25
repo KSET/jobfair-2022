@@ -185,9 +185,7 @@
           mapKeys(replace(/^(\.\.\/)*/, "@/")),
           map(path("default")),
         )(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore: Type declaration stuff
-          import.meta.globEager("../assets/images/page/contact/icons/*.png") as Record<string, { default: string, }>,
+          import.meta.glob("../assets/images/page/contact/icons/*.png", { eager: true }) as unknown as Record<string, { default: string, }>,
         )
       ;
 

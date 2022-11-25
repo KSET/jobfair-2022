@@ -107,7 +107,7 @@ export const asyncWrapper =
         .catch()
 ;
 
-export type RouteHandler<P> = RequestHandler<P>;
+export type RouteHandler<P> = (...args: Parameters<RequestHandler<P>>) => unknown;
 
 export const routeWrapper =
   <T>(fn: RouteHandler<T>) =>
@@ -118,7 +118,7 @@ export const rawRoute =
   <T>(fn: RouteHandler<T>) =>
     asyncWrapper<RouteHandler<T>>(async (req, res, next) => {
       try {
-        const result = await fn(req, res, next) as unknown;
+        const result = await fn(req, res, next);
 
         if (result instanceof Buffer || "string" === typeof result) {
           return res.end(result);
@@ -157,7 +157,7 @@ export const apiRoute =
   <T>(fn: RouteHandler<T>) =>
     asyncWrapper<RouteHandler<T>>(async (req, res, next) => {
       try {
-        const result = await fn(req, res, next) as unknown;
+        const result = await fn(req, res, next);
 
         if (result === res) {
           return res.end();

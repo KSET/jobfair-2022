@@ -10,10 +10,10 @@
   } from "@urql/core";
   import {
     defineComponent,
-    onBeforeMount,
+    definePageMeta,
+    navigateTo,
     useQuery,
-    useRoute,
-    useRouter,
+    useState,
   } from "#imports";
   import {
     ICalendarItem,
@@ -22,45 +22,55 @@
   export default defineComponent({
     name: "PageCalendarEventRedirector",
 
-    async setup() {
-      const route = useRoute();
-      const router = useRouter();
+    setup() {
+      type TData = { calendarItem: Pick<ICalendarItem, "hasEvent" | "type">, calendarItemCompanyUid: string | null, };
 
-      onBeforeMount(async () => {
-        const route =
-          resp
-            ? router.resolve({
+      definePageMeta({
+        title: "Redirecting...",
+        middleware: [
+          async (route) => {
+            const data = useState<TData | null>(JSON.stringify([ "calendar-item", route.params.uid ]));
+
+            const resp = await useQuery<TData, { uid: string, }>({
+              query: gql`
+                query Data($uid: String!) {
+                  calendarItem(uid: $uid) {
+                      hasEvent
+                      type
+                  }
+                  calendarItemCompanyUid(uid: $uid)
+                }
+              `,
+              variables: {
+                uid: route.params.uid as string,
+              },
+            })().then((resp) => resp?.data);
+
+            if (resp) {
+              data.value = resp;
+            }
+          },
+          (route) => {
+            const data = useState<TData | null>(JSON.stringify([ "calendar-item", route.params.uid ])).value;
+
+            if (!data) {
+              return navigateTo({
+                name: "schedule",
+              });
+            }
+
+            return navigateTo({
               name: "company-uid",
               params: {
-                uid: resp.calendarItemCompanyUid,
+                uid: data.calendarItemCompanyUid,
               },
               query: {
-                tab: resp.calendarItem.type,
+                tab: data.calendarItem.type,
               },
-            })
-            : router.resolve({
-              name: "schedule",
-            })
-        ;
-        await router.replace(route);
+            });
+          },
+        ],
       });
-
-      const resp = await useQuery<{ calendarItem: Pick<ICalendarItem, "hasEvent" | "type">, calendarItemCompanyUid: string | null, }, { uid: string, }>({
-        query: gql`
-          query Data($uid: String!) {
-            calendarItem(uid: $uid) {
-                hasEvent
-                type
-            }
-            calendarItemCompanyUid(uid: $uid)
-          }
-        `,
-        variables: {
-          uid: route.params.uid as string,
-        },
-      })().then((resp) => resp?.data);
-
-      return {};
     },
   });
 </script>

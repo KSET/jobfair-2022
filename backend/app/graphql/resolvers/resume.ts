@@ -1075,10 +1075,10 @@ export class ResumeModifyResolver {
             },
           },
         }).catch((e) => {
-          console.log(e);
+          console.error(e);
         });
       }).catch((e) => {
-        console.log(e);
+        console.error(e);
       });
     } else {
       await ctx.prisma.favouriteResume.deleteMany({
@@ -1094,7 +1094,7 @@ export class ResumeModifyResolver {
           },
         },
       }).catch((e) => {
-        console.log(e);
+        console.error(e);
       });
     }
 
@@ -1200,10 +1200,10 @@ export class ResumeModifyResolver {
           },
         },
       }).catch((e) => {
-        console.log(e);
+        console.error(e);
       });
     }).catch((e) => {
-      console.log(e);
+      console.error(e);
     });
 
     return resume.uid;
@@ -1290,7 +1290,7 @@ export class ResumeModifyResolver {
         },
       },
     }).catch((e) => {
-      console.log(e);
+      console.error(e);
     });
 
     return resumeUser.resume as Resume;

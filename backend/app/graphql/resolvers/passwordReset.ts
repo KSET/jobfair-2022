@@ -194,7 +194,7 @@ export class PasswordResetMutationResolver {
       },
     );
 
-    console.log(result);
+    console.info(result);
 
     return "ok";
   }

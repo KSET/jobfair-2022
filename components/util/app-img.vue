@@ -46,7 +46,6 @@
   import {
     computed,
     defineComponent,
-    defineEmits,
     onMounted,
     ref,
     toRefs,
@@ -119,11 +118,11 @@
       },
     },
 
-    setup(propValues: Props) {
-      type Emits = {
-        (e: "load", src: string | undefined): void,
-      };
-      const emit = defineEmits<Emits>();
+    emits: [
+      "load",
+    ],
+
+    setup(propValues: Props, { emit }) {
       const props = toRefs(propValues);
 
       const imgEl = ref<HTMLImageElement | null>(null);

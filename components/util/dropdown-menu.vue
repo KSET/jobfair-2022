@@ -62,7 +62,6 @@
 <script lang="ts">
   import {
     defineComponent,
-    defineEmits,
     nextTick,
     onBeforeUnmount,
     onMounted,
@@ -154,11 +153,11 @@
       },
     },
 
-    setup(props) {
-      type Emits = {
-        (e: "update:isOpen", open: boolean): void,
-      };
-      const emit = defineEmits<Emits>();
+    emits: [
+      "update:isOpen",
+    ],
+
+    setup(props, { emit }) {
       const menu = reactive({
         ...toRefs(props),
         isOpen: props.isOpen,

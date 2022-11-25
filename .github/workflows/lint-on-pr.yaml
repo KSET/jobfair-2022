@@ -1,0 +1,18 @@
+name: lint-on-pr
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  lint-frontend:
+    uses: KSET/jobfair-2022/.github/workflows/do-lint.yaml@development
+    with:
+      working-directory: .
+
+  lint-backend:
+    uses: KSET/jobfair-2022/.github/workflows/do-lint.yaml@development
+    with:
+      working-directory: ./backend

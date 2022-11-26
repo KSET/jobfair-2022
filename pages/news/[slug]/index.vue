@@ -142,6 +142,7 @@
 <style lang="scss" module>
   @use "sass:color";
   @import "assets/styles/include";
+  @import "assets/styles/page/news";
 
   .container {
 
@@ -210,62 +211,7 @@
         > main {
           margin-top: calc(3.625rem - #{$item-gap});
 
-          * {
-            line-height: 1.5;
-            color: #{color.adjust($fer-black, $alpha: -.2)};
-          }
-
-          p {
-            margin-block: 1rem;
-
-            @include media(md) {
-              margin-block: .5rem;
-            }
-          }
-
-          h1,
-          h2,
-          h3,
-          h4,
-          h5 {
-            $this: &;
-
-            font-size: 1rem;
-            font-weight: bold;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            color: $fer-dark-blue;
-
-            @include media(md) {
-              margin-bottom: .5rem;
-            }
-
-            & + p {
-              margin-top: 0;
-            }
-          }
-
-          h1 {
-            font-size: 1.25rem;
-          }
-
-          p + h1,
-          p + h2 {
-            margin-top: 3.5rem;
-
-            @include media(md) {
-              margin-top: 2.5rem;
-            }
-          }
-
-          a {
-            text-decoration: none;
-            color: #{color.adjust($fer-dark-blue, $alpha: -.2)};
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
+          @extend %news-styles;
         }
       }
     }

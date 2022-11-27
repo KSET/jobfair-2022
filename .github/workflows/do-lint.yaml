@@ -9,6 +9,9 @@ on:
         default: '.'
         type: string
 
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
 jobs:
   lint:
     name: Run linter for Node ${{ matrix.node }} on ${{ matrix.os }}
@@ -21,7 +24,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        node: [ lts/*, 16, 18 ]
+        node: [ 16 ]
 
     steps:
       - name: Checkout 🛎
@@ -47,7 +50,7 @@ jobs:
 #          restore-keys: |
 #            ${{ runner.os }}-yarn-
       - name: Install dependencies ‍💻
-        run: install --immutable --inline-builds
+        run: yarn install --immutable --inline-builds
 
       - name: Run linter 👀
         run: yarn lint

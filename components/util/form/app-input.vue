@@ -1,7 +1,7 @@
 <template>
   <div
     :aria-disabled="orNull(disabled)"
-    :class="[$style.container, { [$style.checkbox]: type === 'checkbox' }]"
+    :class="[$style.container, { [$style.checkbox]: type === 'checkbox' }, $attrs.class]"
   >
     <label
       v-if="visible.label"
@@ -45,7 +45,7 @@
       :placeholder="orNull(placeholder)"
       :required="required"
       :type="type"
-      v-bind="$attrs || {}"
+      v-bind="omit(['class'], $attrs) || {}"
     >
     <transition name="input-message">
       <small
@@ -69,6 +69,9 @@
     ref,
     unref,
   } from "vue";
+  import {
+    omit,
+  } from "rambdax";
   import useModelWrapper from "~/composables/useModelWrapper";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -185,6 +188,7 @@
         labelTranslated: ref(""),
         elseNull,
         orNull,
+        omit,
       };
     },
   });

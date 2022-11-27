@@ -88,9 +88,6 @@
     useToast,
   } from "primevue/usetoast";
   import {
-    $toRef,
-  } from "vue/macros";
-  import {
     partnerCreate,
   } from "~/helpers/forms/partner";
   import {
@@ -104,6 +101,9 @@
   } from "~/graphql/schema";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import {
+    toRef,
+  } from "#imports";
 
   export default defineComponent({
     name: "EditPartner",
@@ -160,9 +160,9 @@
       const $style = useCssModule();
 
       const isLoading = ref(false);
-      const partner = $toRef(props, "partner");
+      const partner = toRef(props, "partner");
 
-      const info = reactive(partnerCreate(partner));
+      const info = reactive(partnerCreate(partner.value));
       const resetInfo =
         () =>
           toPairs(partnerCreate())
@@ -187,7 +187,7 @@
         info.photo.classes[$style.span2] = true;
       }
 
-      if (partner) {
+      if (partner.value) {
         for (const item of Object.values(info)) {
           item.disabled = true;
         }
@@ -276,22 +276,22 @@
         },
 
         async handleDelete() {
-          if (!partner) {
+          if (!partner.value) {
             return;
           }
 
-          if (!confirm(`Are you sure you want to delete \`${ partner.name }\`?`)) {
+          if (!confirm(`Are you sure you want to delete \`${ partner.value.name }\`?`)) {
             return;
           }
 
           isLoading.value = true;
           const resp = await handleDelete({
-            partner: partner.uid,
+            partner: partner.value.uid,
           });
           isLoading.value = false;
 
           if (resp?.data) {
-            return emit("delete", partner);
+            return emit("delete", partner.value);
           }
 
           alert("Something went wrong. Please try again.");

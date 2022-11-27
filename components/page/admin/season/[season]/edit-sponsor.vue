@@ -88,9 +88,6 @@
     useToast,
   } from "primevue/usetoast";
   import {
-    $toRef,
-  } from "vue/macros";
-  import {
     sponsorCreate,
   } from "~/helpers/forms/sponsor";
   import {
@@ -104,6 +101,9 @@
   } from "~/graphql/schema";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import {
+    toRef,
+  } from "#imports";
 
   export default defineComponent({
     name: "EditSponsor",
@@ -160,9 +160,9 @@
       const $style = useCssModule();
 
       const isLoading = ref(false);
-      const sponsor = $toRef(props, "sponsor");
+      const sponsor = toRef(props, "sponsor");
 
-      const info = reactive(sponsorCreate(sponsor));
+      const info = reactive(sponsorCreate(sponsor.value));
       const resetInfo =
         () =>
           toPairs(sponsorCreate())
@@ -187,7 +187,7 @@
         info.photo.classes[$style.span2] = true;
       }
 
-      if (sponsor) {
+      if (sponsor.value) {
         for (const item of Object.values(info)) {
           item.disabled = true;
         }
@@ -276,22 +276,22 @@
         },
 
         async handleDelete() {
-          if (!sponsor) {
+          if (!sponsor.value) {
             return;
           }
 
-          if (!confirm(`Are you sure you want to delete \`${ sponsor.name }\`?`)) {
+          if (!confirm(`Are you sure you want to delete \`${ sponsor.value.name }\`?`)) {
             return;
           }
 
           isLoading.value = true;
           const resp = await handleDelete({
-            sponsor: sponsor.uid,
+            sponsor: sponsor.value.uid,
           });
           isLoading.value = false;
 
           if (resp?.data) {
-            return emit("delete", sponsor);
+            return emit("delete", sponsor.value);
           }
 
           alert("Something went wrong. Please try again.");

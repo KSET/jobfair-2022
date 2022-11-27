@@ -15,7 +15,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -40,7 +40,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -67,7 +67,7 @@
         :accept="input.accept"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :file-name="input.fileName"
@@ -95,7 +95,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -122,7 +122,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -148,7 +148,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -174,7 +174,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -200,7 +200,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -226,7 +226,7 @@
         v-model="input.value"
         :class="[
           $style.formElement,
-          ...(input.classes ?? [])
+          ...toClass(input.classes)
         ]"
         :disabled="input.disabled || input.loading || loading"
         :invalid="errors[inputName].length > 0"
@@ -438,6 +438,18 @@
 
           return prefix;
         }),
+
+        toClass(classList: InputBase["classes"]) {
+          if (!classList) {
+            return [];
+          }
+
+          if (Array.isArray(classList)) {
+            return classList;
+          }
+
+          return [ classList ];
+        },
       };
     },
   });

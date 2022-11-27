@@ -198,22 +198,6 @@
   });
 </script>
 
-<style lang="scss">
-  .page-fade {
-
-    &-enter-active,
-    &-leave-active {
-      transition-property: opacity;
-      transition-duration: .25s;
-    }
-
-    &-enter-from,
-    &-leave-to {
-      opacity: 0;
-    }
-  }
-</style>
-
 <style lang="scss" module>
   @import "assets/styles/include";
 

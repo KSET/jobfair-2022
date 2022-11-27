@@ -55,11 +55,6 @@ export default defineNuxtConfig({
   app: {
     buildAssetsDir: ASSETS_PATH,
     rootId: "__jobfair",
-
-    pageTransition: {
-      name: "page-fade",
-      mode: "out-in",
-    },
   },
 
   vite: {

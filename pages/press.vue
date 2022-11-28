@@ -247,6 +247,7 @@
 
 <style lang="scss" module>
   @use "sass:color";
+  @use "sass:map";
   @import "assets/styles/include";
 
   .container {
@@ -372,7 +373,7 @@
 
           .pressKitItemImage {
             transition-duration: 0s;
-            border-color: #{color.adjust($fer-black, $alpha: -.6)};
+            border-color: #{map.get($input-colors, "border")};
 
             .pressItemImageElement {
               transition-duration: 0s;

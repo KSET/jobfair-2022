@@ -1,3 +1,4 @@
+@use "sass:map";
 @import "variables";
 @import "functions";
 @import "mixins";
@@ -145,6 +146,39 @@
 
     &:last-child {
       margin-bottom: 0 !important;
+    }
+  }
+}
+
+%input-template {
+  font-size: 1em;
+  width: 100%;
+  padding: .625em;
+  transition-duration: .15s;
+  transition-property: outline-color, border-color;
+  color: $fer-black;
+  border: 1px solid #{map.get($input-colors, "border")};
+  border-radius: 4px;
+  outline: transparent solid 2px;
+  appearance: none;
+
+  &:not(:disabled):hover {
+    transition-duration: 0s;
+    border-color: #{map.get($input-colors, "border-hover")};
+  }
+
+  &:focus {
+    border-color: #{$fer-yellow};
+    outline-color: #{$fer-yellow};
+  }
+
+  &:global(.invalid),
+  &:not(:placeholder-shown):invalid {
+    transition-duration: .25s;
+    border-color: #{$fer-error};
+
+    &:focus {
+      outline-color: #{$fer-error};
     }
   }
 }

@@ -37,7 +37,7 @@
         :aria-required="orNull(required)"
         :class="{
           [$style.input]: true,
-          [$style.invalid]: invalid,
+          ['invalid']: invalid,
         }"
         :disabled="disabled"
         :filter="!noFilter"
@@ -60,7 +60,7 @@
         :aria-required="orNull(required)"
         :class="{
           [$style.input]: true,
-          [$style.invalid]: invalid,
+          ['invalid']: invalid,
         }"
         :disabled="disabled"
         :filter="!noFilter"
@@ -243,6 +243,7 @@
 
 <style lang="scss" module>
   @use "sass:color";
+  @use "sass:map";
   @import "assets/styles/include";
 
   .container {
@@ -278,58 +279,21 @@
     }
 
     .input {
-      font-size: 1em;
-      width: 100%;
-      transition-property: outline-color, border-color;
-      color: $fer-black;
-      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
-      border-radius: 4px;
-      outline: transparent solid 2px;
-      appearance: none;
+      @extend %input-template;
+
+      padding: 0;
 
       :global(.p-dropdown-label) {
         padding: .625em;
       }
-
-      &:focus {
-        border-color: #{$fer-yellow};
-        outline-color: #{$fer-yellow};
-      }
-
-      &.invalid {
-        border-color: #{$fer-error};
-
-        &:focus {
-          outline-color: #{$fer-error};
-        }
-      }
     }
 
     .fallbackSelect {
-      font-size: 1em;
+      @extend %input-template;
+
       position: relative;
       display: flex;
-      width: 100%;
-      padding: .625em;
-      transition-property: outline-color, border-color;
-      color: $fer-black;
-      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
-      border-radius: 4px;
-      outline: transparent solid 2px;
       background-color: $fer-white;
-
-      &:focus {
-        border-color: #{$fer-yellow};
-        outline-color: #{$fer-yellow};
-      }
-
-      &.invalid {
-        border-color: #{$fer-error};
-
-        &:focus {
-          outline-color: #{$fer-error};
-        }
-      }
     }
 
     $message-margin: .25em;

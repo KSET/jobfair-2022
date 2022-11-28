@@ -29,7 +29,7 @@
       :class="{
         [$style.dropArea]: true,
         [$style.dragover]: isDragOver,
-        [$style.invalid]: invalid,
+        ['invalid']: invalid,
       }"
       :for="id.input"
       @dragover.prevent="() => false"
@@ -107,7 +107,7 @@
       :aria-required="orNull(required)"
       :class="{
         [$style.input]: true,
-        [$style.invalid]: invalid,
+        ['invalid']: invalid,
       }"
       :disabled="disabled"
       :multiple="multiple"
@@ -415,6 +415,7 @@
 <style lang="scss" module>
   @use "sass:color";
   @use "sass:math";
+  @use "sass:map";
   @import "assets/styles/include";
 
   .container {
@@ -450,40 +451,23 @@
     }
 
     .dropArea {
+      @extend %input-template;
+
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
       height: 11em;
       padding: .625em;
-      transition-property: outline-color, border-color;
-      color: $fer-black;
-      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
-      border-radius: 4px;
-      outline: transparent solid 2px;
-      appearance: none;
 
       @include media(md) {
         height: 115px;
       }
 
-      &:focus {
-        border-color: #{$fer-yellow};
-        outline-color: #{$fer-yellow};
-      }
-
-      &.invalid {
-        border-color: #{$fer-error};
-
-        &:focus {
-          outline-color: #{$fer-error};
-        }
-      }
-
       &.dragover,
-      &:hover {
+      &:not(:disabled):hover {
         border-style: dashed;
+        border-color: #{map.get($input-colors, "border")};
 
         .dropAreaIcon {
           transform: translateY(-10%);

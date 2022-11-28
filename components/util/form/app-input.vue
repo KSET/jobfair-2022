@@ -36,7 +36,7 @@
       :aria-required="orNull(required)"
       :class="{
         [$style.input]: true,
-        [$style.invalid]: invalid,
+        ['invalid']: invalid,
       }"
       :disabled="disabled"
       :maxlength="elseNull(maxlength >= 0, maxlength)"
@@ -196,6 +196,7 @@
 
 <style lang="scss" module>
   @use "sass:color";
+  @use "sass:map";
   @import "assets/styles/include";
 
   .container {
@@ -231,28 +232,7 @@
     }
 
     .input {
-      font-size: 1em;
-      width: 100%;
-      padding: .625em;
-      transition-property: outline-color, border-color;
-      color: $fer-black;
-      border: 1px solid #{color.adjust($fer-black, $alpha: -.6)};
-      border-radius: 4px;
-      outline: transparent solid 2px;
-      appearance: none;
-
-      &:focus {
-        border-color: #{$fer-yellow};
-        outline-color: #{$fer-yellow};
-      }
-
-      &.invalid {
-        border-color: #{$fer-error};
-
-        &:focus {
-          outline-color: #{$fer-error};
-        }
-      }
+      @extend %input-template;
     }
 
     $message-margin: .25em;

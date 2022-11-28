@@ -1,5 +1,6 @@
 /* stylelint-disable-next-line at-rule-no-unknown */
 @use "sass:map";
+@use "sass:color";
 
 /* stylelint-disable-next-line max-line-length */
 $font-stack: "Raleway", "Frutiger", "Frutiger Linotype", "Univers", "Calibri", "Gill Sans", "Gill Sans MT", "Myriad Pro", "Myriad", "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", "Tahoma", "Geneva", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
@@ -25,6 +26,10 @@ $event-icons: (
   "loosen-up": url("@/assets/images/icon/event-icons/party.svg?url"),
   "talk": url("@/assets/images/icon/event-icons/talks.svg?url"),
   "workshop": url("@/assets/images/icon/event-icons/workshops.svg?url"),
+);
+$input-colors: (
+  "border": #{color.adjust($fer-black, $alpha: -.6)},
+  "border-hover": #{color.adjust($fer-dark-blue, $alpha: -.3)},
 );
 $transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 $transition-bounce-function: cubic-bezier(.35, 1.55, .65, 1);

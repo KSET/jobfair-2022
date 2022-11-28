@@ -26,25 +26,18 @@
 
         <template v-if="name === FormFor.Interests || name === FormFor.Technologies">
           <div :class="$style.autocomplete">
-            <LazyClientOnly>
-              <form :class="$style.contents" @submit.prevent="noop">
-                <AutoComplete
-                  v-model="item.fields.name.value"
-                  :class="$style.autocompleteInput"
-                  :delay="0"
-                  :loading="isLoading"
-                  :suggestions="infoFor[name].suggestions"
-                  auto-highlight
-                  complete-on-focus
-                  @complete="searchFields(name, $event)"
-                  @item-select="onSelected(name)"
-                />
-              </form>
-
-              <template #fallback>
-                ...
-              </template>
-            </LazyClientOnly>
+            <div :class="$style.contents">
+              <AppAutocomplete
+                v-model="item.fields.name.value"
+                :class="$style.autocompleteInput"
+                :loading="isLoading"
+                :suggestions="infoFor[name].suggestions"
+                :name="name"
+                @keydown.enter="noop"
+                @complete="searchFields(name, $event)"
+                @item-select="onSelected(name, $event)"
+              />
+            </div>
             <div :class="$style.autocompleteChips">
               <Chip
                 v-for="sel in infoFor[name].selected"
@@ -166,7 +159,6 @@
     defineComponent,
     reactive,
   } from "vue";
-  import AutoComplete from "primevue/autocomplete";
   import Chip from "primevue/chip";
   import {
     keys,
@@ -220,6 +212,7 @@
     useThrottleFn,
   } from "#imports";
   import AppTime from "~/components/util/app-time.vue";
+  import AppAutocomplete from "~/components/util/form/app-autocomplete.vue";
 
   enum FormFor {
     Faculty = "faculty",
@@ -247,7 +240,7 @@
       AppFormgroup,
       AppUserProfileContainer,
       TranslatedText,
-      AutoComplete,
+      AppAutocomplete,
       Chip,
     },
 
@@ -470,12 +463,16 @@
 
           info.suggestions = result.entities.filter((item) => item && !info.selected.has(item));
         }, 350, true),
-        onSelected(name: Autocompetable) {
-          const form = items[name] as unknown as Dict<Dict<Dict<string>>>;
+        onSelected(name: Autocompetable, value: string) {
+          if (!value) {
+            return false;
+          }
+
           const info = infoFor[name];
+          const form = items[name] as unknown as Dict<Dict<Dict<string>>>;
 
           info.suggestions = [];
-          info.selected.add(form.fields.name.value);
+          info.selected.add(value);
           form.fields.name.value = "";
 
           return false;

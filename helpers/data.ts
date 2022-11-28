@@ -49,3 +49,16 @@ export const dotGet = <TObject,
 
   return get(obj, prop) as TReturns;
 };
+
+export const try$ =
+  <TRet, TFallback = null>(
+    fn: (...args: never[]) => TRet,
+    fallback?: TFallback,
+  ) => {
+    try {
+      return fn();
+    } catch {
+      return (fallback ?? null) as (TFallback extends (null | undefined) ? null : TFallback);
+    }
+  }
+;

@@ -25,28 +25,31 @@
         />
       </slot>
     </label>
-    <input
-      :id="id.input"
-      v-model="input"
-      :aria-describedby="elseNull(visible.message, id.message)"
-      :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-      :aria-invalid="orNull(invalid)"
-      :aria-label="orNull(label || labelTranslated)"
-      :aria-labelledby="elseNull(visible.label, id.label)"
-      :aria-required="orNull(required)"
-      :class="{
-        [$style.input]: true,
-        ['invalid']: invalid,
-      }"
-      :disabled="disabled"
-      :maxlength="elseNull(maxlength >= 0, maxlength)"
-      :minlength="elseNull(minlength >= 0, minlength)"
-      :name="name"
-      :placeholder="orNull(placeholder)"
-      :required="required"
-      :type="type"
-      v-bind="omit(['class'], $attrs) || {}"
-    >
+    <span :class="$style.inputIconContainer" class="p-input-icon-right">
+      <i v-if="loading" class="pi pi-spin pi-spinner" />
+      <input
+        :id="id.input"
+        v-model="input"
+        :aria-describedby="elseNull(visible.message, id.message)"
+        :aria-errormessage="elseNull(visible.label && invalid, id.label)"
+        :aria-invalid="orNull(invalid)"
+        :aria-label="orNull(label || labelTranslated)"
+        :aria-labelledby="elseNull(visible.label, id.label)"
+        :aria-required="orNull(required)"
+        :class="{
+          [$style.input]: true,
+          ['invalid']: invalid,
+        }"
+        :disabled="disabled"
+        :maxlength="elseNull(maxlength >= 0, maxlength)"
+        :minlength="elseNull(minlength >= 0, minlength)"
+        :name="name"
+        :placeholder="orNull(placeholder)"
+        :required="required"
+        :type="type"
+        v-bind="omit(['class'], $attrs) || {}"
+      >
+    </span>
     <transition name="input-message">
       <small
         v-if="visible.message"
@@ -96,6 +99,12 @@
       },
 
       required: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+
+      loading: {
         required: false,
         type: Boolean,
         default: () => false,
@@ -229,6 +238,10 @@
           color: $fer-error;
         }
       }
+    }
+
+    .inputIconContainer {
+      display: contents;
     }
 
     .input {

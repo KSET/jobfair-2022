@@ -64,6 +64,7 @@
         name="new-member"
         label-key="profile.about-company.add-member"
         required
+        placeholder="eg. marko.horvat@kset.org"
       />
       <p-button
         :loading="newMember.loading"

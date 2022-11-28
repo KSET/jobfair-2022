@@ -10,6 +10,11 @@
             "unplugin-icons/types/vue"
         ]
     },
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".output",
+    ],
     "types": [
         "node",
         "@pinia/nuxt"

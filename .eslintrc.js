@@ -27,6 +27,14 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    "import/named": "off",
+    "import/namespace": "off",
+    "import/default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-named-as-default": "off",
+    "import/no-cycle": "off",
+    "import/no-unused-modules": "off",
+    "import/no-deprecated": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
     "@typescript-eslint/await-thenable": "off",

@@ -366,7 +366,7 @@
       watch(
         queryFilter,
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        useThrottleFn(refreshResumes, 350),
+        useThrottleFn(refreshResumes, 350, true),
       );
 
       return {

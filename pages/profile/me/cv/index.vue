@@ -469,7 +469,7 @@
           }
 
           info.suggestions = result.entities.filter((item) => item && !info.selected.has(item));
-        }, 350),
+        }, 350, true),
         onSelected(name: Autocompetable) {
           const form = items[name] as unknown as Dict<Dict<Dict<string>>>;
           const info = infoFor[name];

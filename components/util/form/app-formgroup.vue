@@ -259,6 +259,7 @@
     defineComponent,
   } from "vue";
   import {
+    ClassList,
     MaybeRef,
   } from "~/helpers/type";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -266,8 +267,9 @@
   import {
     computed,
   } from "#imports";
-
-  type ClassDefinition = Record<string, boolean> | string;
+  import {
+    toClass,
+  } from "~/helpers/style";
 
   type InputBase = {
     placeholder?: string,
@@ -275,7 +277,7 @@
     required?: boolean,
     disabled?: boolean,
     attrs?: Record<string, unknown>,
-    classes?: ClassDefinition | ClassDefinition[],
+    classes?: ClassList,
   };
 
   type InputText = InputBase & (
@@ -439,17 +441,7 @@
           return prefix;
         }),
 
-        toClass(classList: InputBase["classes"]) {
-          if (!classList) {
-            return [];
-          }
-
-          if (Array.isArray(classList)) {
-            return classList;
-          }
-
-          return [ classList ];
-        },
+        toClass,
       };
     },
   });

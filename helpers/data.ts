@@ -1,7 +1,14 @@
 import {
-  type,
-  path,
-} from "rambda";
+  get,
+} from "lodash";
+import {
+  isFunction,
+} from "lodash-es";
+import {
+  Path,
+  PathValue,
+  RecursiveNonPartial,
+} from "~/helpers/type";
 
 export const ensureArray =
   <T>(val: T[]): T[] =>
@@ -16,20 +23,29 @@ export const limitLength =
       array.slice(0, length)
 ;
 
-export const dotGet =
-  <T>(
-    object: Record<string, unknown> | undefined,
-    key: string,
-    defaultValue: T | (() => T),
-  ): T => {
-    const v = path<typeof object, T>(key, object);
+export const dotGet = <TObject,
+  TProp extends Path<RecursiveNonPartial<TObject>> = Path<RecursiveNonPartial<TObject>>,
+  TReturns extends PathValue<RecursiveNonPartial<TObject>, TProp> = PathValue<RecursiveNonPartial<TObject>, TProp>,
+  TFallback extends (TReturns | (() => TReturns) | undefined) = undefined,
+  >
+(
+  obj: TObject | undefined,
+  prop: TProp,
+  fallback?: TFallback,
+) => {
+  type FallbackReturn =
+    TFallback extends undefined
+      ? undefined
+      : (
+        TFallback extends (() => infer TFbRet)
+          ? TFbRet
+          : TFallback
+        )
+    ;
 
-    if (v !== undefined) {
-      return v;
-    } else if ("Function" !== type(defaultValue)) {
-      return defaultValue as T;
-    } else {
-      return (defaultValue as (() => T))();
-    }
+  if (!obj) {
+    return (isFunction(fallback) ? fallback() : fallback) as FallbackReturn;
   }
-;
+
+  return get(obj, prop) as TReturns;
+};

@@ -461,6 +461,7 @@
             return;
           }
 
+          info.lastIndex = result.index;
           info.suggestions = result.entities.filter((item) => item && !info.selected.has(item));
         }, 350, true),
         onSelected(name: Autocompetable, value: string) {

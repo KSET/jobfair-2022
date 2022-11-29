@@ -2,6 +2,7 @@ import {
   Arg,
   Field,
   InputType,
+  Int,
   MaybePromise,
   ObjectType,
   Query,
@@ -1545,7 +1546,7 @@ const news = [
 
 @InputType()
 class NewsFilter {
-  @Field(() => Number, { nullable: true })
+  @Field(() => Int, { nullable: true })
     take: number = 0;
 }
 

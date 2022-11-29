@@ -1171,7 +1171,7 @@ type News {
 }
 
 input NewsFilter {
-  take: Float = 0
+  take: Int = 0
 }
 
 type Partner {

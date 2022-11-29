@@ -2,10 +2,10 @@
 @import "../include/index";
 
 %news-styles {
+  color: #{color.adjust($fer-black, $alpha: -.2)};
 
   * {
     line-height: 1.5;
-    color: #{color.adjust($fer-black, $alpha: -.2)};
   }
 
   p {
@@ -52,11 +52,19 @@
   }
 
   a {
+    line-height: 1em;
+    display: inline-block;
+    transition-duration: .15s;
+    transition-property: color;
     text-decoration: none;
     color: #{color.adjust($fer-dark-blue, $alpha: -.2)};
+    border-bottom: 1px solid #{color.adjust($fer-dark-blue, $alpha: -.95)};
 
     &:hover {
+      transition-duration: 0s;
       text-decoration: underline;
+      color: $fer-dark-blue;
+      border-bottom-color: transparent;
     }
   }
 }

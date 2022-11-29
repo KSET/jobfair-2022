@@ -148,7 +148,12 @@
       const suggestions$ = ref<HTMLUListElement | null>(null);
 
       watch(searchInput, (val) => {
+        isLoading.value = true;
         emit("complete", val);
+      });
+
+      watch(() => props.suggestions, () => {
+        isLoading.value = false;
       });
 
       watch(isOpen, (val, oldVal) => {
@@ -161,6 +166,7 @@
             }
           });
 
+          isLoading.value = true;
           emit("complete", searchInput.value);
         }
       });

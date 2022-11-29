@@ -47,10 +47,16 @@
 </template>
 
 <script lang="ts">
+  import type {
+    PropType,
+  } from "vue";
   import {
     defineComponent,
   } from "vue";
   import AppImg from "~/components/util/app-img.vue";
+  import {
+    INews,
+  } from "~/graphql/schema";
 
   export default defineComponent({
     name: "NewsCard",
@@ -62,7 +68,7 @@
     props: {
       newsItem: {
         required: true,
-        type: Object,
+        type: Object as PropType<INews>,
       },
 
       noBoxShadow: {

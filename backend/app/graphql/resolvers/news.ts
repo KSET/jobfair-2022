@@ -55,6 +55,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  captureError,
+} from "../../services/error-service";
+import {
   transformSelect as transformSelectUser,
 } from "./user";
 import {
@@ -429,7 +432,7 @@ export class NewsMutationResolver {
       return true;
     }
 
-    console.warn(ret.err);
+    captureError(ret.err);
 
     return false;
   }

@@ -1,6 +1,9 @@
 import {
   Client,
 } from "minio";
+import {
+  captureError,
+} from "../services/error-service";
 
 export const BUCKET_NAME = process.env.MINIO_BUCKET ?? "";
 
@@ -25,7 +28,7 @@ export const init = async () => {
     await minio.makeBucket(BUCKET_NAME, region);
     return true;
   } catch (e) {
-    console.error(e);
+    captureError(e);
     return false;
   }
 };

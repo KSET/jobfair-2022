@@ -1,7 +1,6 @@
 import "reflect-metadata";
 
 import express from "express";
-import * as Sentry from "@sentry/node";
 import serverTiming from "server-timing";
 import withSessionMiddleware from "./middleware/session";
 import withGraphqlMiddleware from "./middleware/graphql";
@@ -15,6 +14,10 @@ import {
 import {
   init as initMinio,
 } from "./providers/minio";
+import {
+  getSentryRequestHandler,
+  initSentry,
+} from "./services/error-service";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -40,12 +43,8 @@ export async function start() {
   app.set("query parser", "simple");
   app.set("x-powered-by", false);
 
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-  });
-  app.use(Sentry.Handlers.requestHandler({
-    ip: true,
-  }) as express.RequestHandler);
+  const Sentry = initSentry();
+  app.use(getSentryRequestHandler());
 
   app.use(serverTiming());
 

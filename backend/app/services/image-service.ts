@@ -21,6 +21,9 @@ import {
 import {
   prisma as prismaClient,
 } from "../providers/prisma";
+import {
+  captureError,
+} from "./error-service";
 
 export type ImageBase = Opaque<string, "MinioBaseImage">;
 
@@ -205,6 +208,7 @@ export class ImageService {
         },
       });
     } catch (e) {
+      captureError(e);
       return null;
     }
   }
@@ -269,6 +273,7 @@ export class ImageService {
 
       return true;
     } catch (e) {
+      captureError(e);
       return false;
     }
   }

@@ -7,7 +7,6 @@ import {
   Options as MailerOptions,
 } from "nodemailer/lib/mailer";
 import inlineCss from "inline-css";
-import * as Sentry from "@sentry/node";
 import {
   compile as compileHtmlToTextFn,
 } from "html-to-text";
@@ -22,6 +21,9 @@ import {
 import {
   Dict,
 } from "../types/helpers";
+import {
+  captureError,
+} from "./error-service";
 
 type EmailTo = string | Address | (string | Address)[];
 
@@ -72,7 +74,7 @@ const sendMail =
 
       return smtpTransport.sendMail(message);
     } catch (e) {
-      Sentry.captureException(e);
+      captureError(e);
       return null;
     }
   }

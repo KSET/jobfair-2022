@@ -42,7 +42,6 @@ import {
 import {
   FileUpload,
 } from "graphql-upload";
-import * as Sentry from "@sentry/node";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -77,6 +76,9 @@ import {
   Dict,
   GQLField,
 } from "../../types/helpers";
+import {
+  captureError,
+} from "../../services/error-service";
 import {
   TalkCreateInput,
   TalksCreateInput,
@@ -953,7 +955,7 @@ export class CompanyApplicationAdminResolver {
 
       return entity;
     }).catch((err) => {
-      Sentry.captureException(err);
+      captureError(err);
 
       return {
         errors: [
@@ -1541,7 +1543,7 @@ export class CompanyApplicationCreateResolver {
 
       return entity;
     }).catch((err) => {
-      console.error(err);
+      captureError(err);
 
       return {
         errors: [

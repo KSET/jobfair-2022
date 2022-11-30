@@ -32,7 +32,6 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
-import * as Sentry from "@sentry/node";
 import {
   clamp,
   mergeDeepRight,
@@ -64,6 +63,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
+import {
+  captureError,
+} from "../../services/error-service";
 import {
   ResumeFacultyCreateInput,
   transformSelect as transformSelectFaculty,
@@ -910,7 +912,7 @@ export class ResumeModifyResolver {
 
       return newResume;
     }).catch((e) => {
-      Sentry.captureException(e);
+      captureError(e);
       return null;
     }) as Resume | null;
 
@@ -1075,10 +1077,10 @@ export class ResumeModifyResolver {
             },
           },
         }).catch((e) => {
-          console.error(e);
+          captureError(e);
         });
       }).catch((e) => {
-        console.error(e);
+        captureError(e);
       });
     } else {
       await ctx.prisma.favouriteResume.deleteMany({
@@ -1094,7 +1096,7 @@ export class ResumeModifyResolver {
           },
         },
       }).catch((e) => {
-        console.error(e);
+        captureError(e);
       });
     }
 
@@ -1200,10 +1202,10 @@ export class ResumeModifyResolver {
           },
         },
       }).catch((e) => {
-        console.error(e);
+        captureError(e);
       });
     }).catch((e) => {
-      console.error(e);
+      captureError(e);
     });
 
     return resume.uid;

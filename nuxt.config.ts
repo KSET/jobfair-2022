@@ -25,10 +25,6 @@ const cssClassNameBlacklist = new Set([
 const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
 
 export default defineNuxtConfig({
-  experimental: {
-    reactivityTransform: true,
-  },
-
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",

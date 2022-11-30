@@ -6,13 +6,13 @@ export const generateTitle =
 const aliasMap: Map<string, string[]> = new Map(Object.entries({
   "og:title": [ "apple-mobile-web-app-title" ],
   "og:image": [ "og:image:secure_url" ],
+  description: [ "og:description" ],
   locale: [ "og:locale" ],
   "locale:alternative": [ "og:locale:alternative" ],
 }));
 
 const renameMap: Map<string, string> = new Map(Object.entries({
   title: "og:title",
-  description: "og:description",
   image: "og:image",
   type: "og:type",
   siteName: "og:site_name",

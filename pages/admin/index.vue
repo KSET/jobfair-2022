@@ -9,11 +9,11 @@
 
       <dl>
         <dd>
-          <h3>
+          <strong>
             <nuxt-link :to="{ name: 'admin-translations' }">
               Uredi
             </nuxt-link>
-          </h3>
+          </strong>
         </dd>
       </dl>
     </div>
@@ -39,6 +39,20 @@
         <dd>
           <strong>
             <nuxt-link :to="{ name: 'admin-companies' }">
+              Uredi
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
+      <h2>Novosti</h2>
+
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-news' }">
               Uredi
             </nuxt-link>
           </strong>

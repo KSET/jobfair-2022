@@ -274,3 +274,33 @@ mutation UpdateResume($info: ResumeCreateInput!) {
         }
     }
 }
+
+mutation CreateNews($info: NewsCreateInput!) {
+    createNews(info: $info) {
+        errors {
+            field
+            message
+        }
+        entity {
+            uid
+            slug
+        }
+    }
+}
+
+mutation EditNews($uid: String!, $info: NewsCreateInput!) {
+    editNews(uid: $uid, info: $info) {
+        errors {
+            field
+            message
+        }
+        entity {
+            uid
+            ...frag_News
+        }
+    }
+}
+
+mutation DeleteNews($uid: String!) {
+    deleteNews(uid: $uid)
+}

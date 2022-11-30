@@ -7,7 +7,8 @@
         <app-img
           :alt="newsItem.title"
           :aspect-ratio="921/515"
-          :src="newsItem.image"
+          :src="newsItem.photo?.fullUrl"
+          :lazy-src="newsItem.photo?.thumbUrl"
         />
       </div>
 
@@ -127,7 +128,7 @@
       if (newsItem) {
         title.value = newsItem.title;
 
-        metaData.image = newsItem.image;
+        metaData.image = newsItem.photo?.fullUrl ?? "";
         metaData.description = newsItem.description;
       }
 

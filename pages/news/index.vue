@@ -7,7 +7,8 @@
     <app-img
       v-if="newsItem"
       :alt="newsItem.title"
-      :src="newsItem.image"
+      :src="newsItem.photo?.fullUrl"
+      :lazy-src="newsItem.photo?.thumbUrl"
       aspect-ratio="1.78"
       class="hidden md:flex"
     >

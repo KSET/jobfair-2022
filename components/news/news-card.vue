@@ -18,9 +18,10 @@
         }"
       >
         <app-img
-          v-if="newsItem.image"
+          v-if="newsItem.photo"
           :alt="newsItem.title"
-          :src="newsItem.image"
+          :lazy-src="newsItem.photo.thumbUrl"
+          :src="newsItem.photo.fullUrl"
           aspect-ratio="1.85"
         />
 

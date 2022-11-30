@@ -8,7 +8,7 @@
         "lint:style": "stylelint \"**/*.{scss,css,vue}\" --ignore-path .gitignore",
         "prepare": "husky install",
         "lint": "yarn lint:js . && yarn lint:style",
-        "cache:clear": "rimraf .nuxt/ .output/ node_modules/.cache/",
+        "cache:clear": "nuxi clean",
         "graphql:schema:dump": "cd ./backend && yarn graphql:schema:dump",
         "graphql:schema:gen": "graphql-codegen --config codegen.yml"
     },
@@ -80,7 +80,6 @@
         "primeicons": "^6.0.1",
         "rambda": "^7.4.0",
         "rambdax": "^9.0.0",
-        "rimraf": "^3.0.2",
         "sass": "^1.56.1",
         "short-unique-id": "^4.4.4",
         "stylelint": "^14.15.0",

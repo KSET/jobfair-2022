@@ -350,11 +350,13 @@ export class NewsMutationResolver {
         select: transformSelect(toSelect(gqlInfo, (x) => x).entity as Dict || { uid: true }),
       });
 
-      await ImageService.deleteImage(
-        oldNewsExists.photo.uid,
-        user,
-        prisma,
-      ).catch(() => null);
+      if (photoConnect) {
+        await ImageService.deleteImage(
+          oldNewsExists.photo.uid,
+          user,
+          prisma,
+        ).catch(() => null);
+      }
 
       return res;
     }).then((res) => ({ success: true as const, res: res as News })).catch((err: Error) => ({ success: false as const, err }));

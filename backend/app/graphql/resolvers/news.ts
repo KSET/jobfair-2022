@@ -119,7 +119,7 @@ const dateFilter =
     hasAtLeastRole(Role.PR, user)
       ? undefined
       : {
-        gte: new Date(),
+        lte: new Date(),
       }
 ;
 

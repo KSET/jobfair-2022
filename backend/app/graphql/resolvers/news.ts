@@ -29,6 +29,7 @@ import {
 } from "graphql";
 import {
   Context,
+  SessionUser,
 } from "../../types/apollo-context";
 import {
   Dict,
@@ -113,6 +114,15 @@ class NewsCreateError extends Error {
   }
 }
 
+const dateFilter =
+  (user?: SessionUser | null) =>
+    hasAtLeastRole(Role.PR, user)
+      ? undefined
+      : {
+        gte: new Date(),
+      }
+;
+
 export class NewsQueryResolver {
   @Query(() => [ News ])
   async allNews(
@@ -124,10 +134,18 @@ export class NewsQueryResolver {
 
     return await ctx.prisma.news.findMany({
       take: filter?.take,
-      select,
-      orderBy: {
-        date: "desc",
+      where: {
+        date: dateFilter(ctx.user),
       },
+      select,
+      orderBy: [
+        {
+          date: "desc",
+        },
+        {
+          lang: "desc",
+        },
+      ],
     });
   }
 
@@ -140,6 +158,7 @@ export class NewsQueryResolver {
     return ctx.prisma.news.findFirst({
       where: {
         slug,
+        date: dateFilter(ctx.user),
       },
       select: toSelect(info, transformSelect),
     });
@@ -155,6 +174,7 @@ export class NewsQueryResolver {
     return ctx.prisma.news.findMany({
       where: {
         lang,
+        date: dateFilter(ctx.user),
       },
       take: filter?.take || undefined,
       select: toSelect(info, transformSelect),
@@ -173,6 +193,7 @@ export class NewsQueryResolver {
     return ctx.prisma.news.findFirst({
       where: {
         uid,
+        date: dateFilter(ctx.user),
       },
       select: toSelect(info, transformSelect),
     });

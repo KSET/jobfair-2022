@@ -368,12 +368,9 @@
     }
 
     .jobfairLogo {
-      $height: 3em;
-      $aspect-ratio: math.div(110, 40);
-
-      width: $height * $aspect-ratio;
-      height: $height;
+      height: 3em;
       margin-bottom: 1em;
+      object-fit: contain;
     }
 
     .afterJobfairText {

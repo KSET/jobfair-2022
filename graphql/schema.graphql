@@ -946,6 +946,7 @@ type Image {
 type ImageCount {
   ApplicationPresenter: Int!
   Company: Int!
+  News: Int!
   Partner: Int!
   Sponsor: Int!
 }
@@ -1049,6 +1050,7 @@ type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
+  createNews(info: NewsCreateInput!): NewsCreateResponse
   createPartner(info: PartnerCreateInput!, season: String!): CreatePartnerResponse!
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   createSeason(info: SeasonCreateInput!): Season
@@ -1056,11 +1058,13 @@ type Mutation {
   createTalkCategory(name: String!): ApplicationTalkCategory
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
+  deleteNews(uid: String!): Boolean
   deletePartner(partner: String!): Boolean!
   deleteResume: Boolean!
   deleteSeason(uid: String!): Season
   deleteSponsor(sponsor: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
+  editNews(info: NewsCreateInput!, uid: String!): NewsCreateResponse
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
@@ -1161,13 +1165,31 @@ input NestedStringNullableFilter {
 }
 
 type News {
+  author: User
+  content: String!
+  createdAt: DateTime!
+  date: DateTime!
+  description: String!
+  lang: String!
+  photo: Image
+  slug: String!
+  title: String!
+  uid: String!
+  updatedAt: DateTime!
+}
+
+input NewsCreateInput {
   content: String!
   date: DateTime!
   description: String!
-  image: String!
   lang: String!
-  slug: String!
+  photo: Upload = null
   title: String!
+}
+
+type NewsCreateResponse {
+  entity: News
+  errors: [FieldError!]
 }
 
 input NewsFilter {
@@ -1288,6 +1310,7 @@ input PressReleaseWithFilesCreateInput {
 }
 
 type Query {
+  allNews(filter: NewsFilter): [News!]!
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
   booths: [Booth!]!
@@ -1306,6 +1329,7 @@ type Query {
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
+  newsItemByUid(uid: String!): News
   participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   partners(season: String): [Partner!]!
   pressRelease(uid: String!): PressRelease
@@ -2072,6 +2096,7 @@ type User {
 }
 
 type UserCount {
+  News: Int!
   companies: Int!
   events: Int!
   files: Int!

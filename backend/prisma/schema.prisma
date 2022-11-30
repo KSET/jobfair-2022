@@ -35,7 +35,6 @@ model User {
 
   language String @default("hr-HR")
 
-
   /// @TypeGraphQL.omit(output: true, input: true)
   companies     Company[]
   /// @TypeGraphQL.omit(output: true, input: true)
@@ -46,6 +45,8 @@ model User {
   pressReleases PressRelease[]
   /// @TypeGraphQL.omit(output: true, input: true)
   images        Image[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  News          News[]
 
   /// @TypeGraphQL.omit(input: true)
   resume   Resume? @relation(fields: [resumeId], references: [id])
@@ -257,6 +258,9 @@ model Image {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   Partner Partner[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  News News[]
 }
 
 model ImageVariation {
@@ -879,6 +883,38 @@ model FormAnswers {
   formQuestionId Int
 
   answer Json @default("{}")
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+}
+
+model News {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  lang String
+  date DateTime
+
+  /// @TypeGraphQL.omit(input: true)
+  slug String @unique
+
+  /// @TypeGraphQL.omit(input: true)
+  photo   Image @relation(fields: [photoId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  photoId Int
+
+  title       String
+  description String
+  content     String
+
+  /// @TypeGraphQL.omit(input: true)
+  author   User @relation(fields: [authorId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  authorId Int
 
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime @default(now())

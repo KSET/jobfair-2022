@@ -4,8 +4,11 @@ import {
 import {
   INews,
 } from "~/graphql/schema";
+import {
+ RecursivePartial,
+} from "~/helpers/type";
 
-export type NewsWithDate = Partial<INews> & { date: unknown, };
+export type NewsWithDate = RecursivePartial<INews> & { date: unknown, };
 export type NewsWithFormattedDate<T = NewsWithDate> = T & { date: Date, formattedDate: string, };
 
 export const processNewsItem =

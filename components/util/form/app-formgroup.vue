@@ -220,6 +220,31 @@
           />
         </template>
       </app-input>
+      <AppEditor
+        v-else-if="input.type === 'editor'"
+        :key="`${input.type}-${inputName}`"
+        v-model="input.value"
+        :class="[
+          $style.formElement,
+          ...toClass(input.classes)
+        ]"
+        :disabled="input.disabled || input.loading || loading"
+        :invalid="errors[inputName].length > 0"
+        :label-key="`form.${prefix}${inputName}`"
+        :name="inputName"
+        :placeholder="input.placeholder"
+        :required="input.required ?? true"
+        v-bind="input.attrs || {}"
+      >
+        <template v-if="errors[inputName].length > 0" #message>
+          <translated-text
+            v-for="err in errors[inputName]"
+            :key="err.message"
+            :trans-key="err.message"
+            class="block"
+          />
+        </template>
+      </AppEditor>
       <app-input
         v-else
         :key="`${input.type}-${inputName}`"
@@ -327,6 +352,11 @@
     type: "textarea",
   };
 
+  type InputEditor = InputBase & {
+    value: string,
+    type: "editor",
+  };
+
   type InputFile = InputBase & {
     value: string,
     type: "file",
@@ -378,6 +408,7 @@
     | InputNumberRange
     | InputMultiPick
     | InputSinglePick
+    | InputEditor
   ;
 
   export default defineComponent({
@@ -390,6 +421,7 @@
       AppNumberRangeInput: defineAsyncComponent(() => import("~/components/util/form/app-number-range-input.vue")),
       AppMultiPick: defineAsyncComponent(() => import("~/components/util/form/app-multi-pick.vue")),
       AppSinglePick: defineAsyncComponent(() => import("~/components/util/form/app-single-pick.vue")),
+      AppEditor: defineAsyncComponent(() => import("~/components/util/form/app-editor.vue")),
       TranslatedText,
     },
 

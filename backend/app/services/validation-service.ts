@@ -215,3 +215,13 @@ const resumeValidation = z.object({
   ]),
 });
 export const ResumeValidation = <T>(resume: T) => formatValidation(resumeValidation, resume);
+
+const newsValidation = z.object({
+  lang: z.string().min(1),
+  date: z.union([ z.date(), z.string().min(1) ]),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  content: z.string().min(1),
+  photo: z.any(),
+});
+export const NewsValidation = <T>(news: T) => formatValidation(newsValidation, news);

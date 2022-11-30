@@ -19,6 +19,10 @@ export type RecursiveMutable<T> = {
   -readonly [P in keyof T]: RecursiveMutable<T[P]>;
 };
 
+// eslint-disable-next-line no-use-before-define
+type RecursiveNonNullable1<T> = { [K in keyof T]: RecursiveNonNullable<T[K]> };
+export type RecursiveNonNullable<T> = RecursiveNonNullable1<NonNullable<T>>;
+
 type PathImpl<T, K extends keyof T> =
   K extends string
     ? T[K] extends Record<string, any>

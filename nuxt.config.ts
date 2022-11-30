@@ -25,6 +25,10 @@ const cssClassNameBlacklist = new Set([
 const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
 
 export default defineNuxtConfig({
+  typescript: {
+    strict: true,
+  },
+
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",

@@ -13,6 +13,7 @@
             "esnext.asynciterable"
         ],
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
     }
 }

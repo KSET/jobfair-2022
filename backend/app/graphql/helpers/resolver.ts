@@ -45,7 +45,7 @@ export const transformSelectDefault =
         select: transformer(select[key] as Dict),
       };
 
-      return select;
+      return select as typeof select & Record<Key, { select: unknown, }>;
     }
 ;
 
@@ -59,7 +59,7 @@ export const transformSelectDefaults =
               [
                 key,
                 transformSelectDefault(key, transformer),
-              ],
+              ] as const,
           ),
-      ) as Record<Keys, SelectTransformer>
+      ) as unknown as Record<Keys, SelectTransformer>
 ;

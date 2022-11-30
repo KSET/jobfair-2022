@@ -8,8 +8,8 @@
     :to="{ name: 'news-slug', params: { slug: newsItem.slug } }"
   >
     <p-button
+      class="flex border-noround text-left align-self-stretch p-0 p-button-secondary p-button-text w-full"
       tabindex="-1"
-      class="flex border-noround text-left align-self-stretch p-0 p-button-secondary p-button-text"
     >
       <div
         :class="{
@@ -97,10 +97,10 @@
   @import "assets/styles/include/all";
 
   .boxShadow {
+    transition-duration: .4s;
     transition-property: box-shadow;
     box-shadow: #{map.get($shadows, "shadow-3")};
     will-change: box-shadow;
-    transition-duration: .4s;
 
     &:hover {
       transition-duration: 0s;
@@ -111,6 +111,7 @@
   .container {
     display: flex;
     overflow: hidden;
+    flex: 1;
     padding: 0;
 
     &.rounded {
@@ -119,6 +120,7 @@
 
     .card {
       overflow: hidden;
+      width: 100%;
       height: 100%;
       box-shadow: none;
 

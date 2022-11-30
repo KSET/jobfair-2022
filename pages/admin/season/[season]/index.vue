@@ -10,62 +10,58 @@
     </div>
     <div>
       <h1>Sponzori</h1>
-      <LazyClientOnly>
-        <TransitionGroup :class="$style.sponsors" name="smooth-list" tag="div">
-          <edit-sponsor
-            key="new"
-            :class="$style.sponsorForm"
-            :loading="isLoading"
-            :season-uid="season.uid"
-            @delete="handleUpdateSponsors"
-            @save="handleUpdateSponsors"
-          />
+      <AppTransitionFadeSmooth group :class="$style.sponsors">
+        <edit-sponsor
+          key="new"
+          :class="$style.sponsorForm"
+          :loading="isLoading"
+          :season-uid="season.uid"
+          @delete="handleUpdateSponsors"
+          @save="handleUpdateSponsors"
+        />
 
-          <edit-sponsor
-            v-for="sponsor in sponsors"
-            :key="sponsor.uid"
-            :class="$style.sponsorForm"
-            :is-first="sponsor === sponsors[0]"
-            :is-last="sponsor === sponsors[sponsors.length - 1]"
-            :loading="isLoading"
-            :season-uid="season.uid"
-            :sponsor="sponsor"
-            @delete="handleUpdateSponsors"
-            @move="handleMoveSponsor(sponsor, $event)"
-            @save="handleUpdateSponsors"
-          />
-        </TransitionGroup>
-      </LazyClientOnly>
+        <edit-sponsor
+          v-for="sponsor in sponsors"
+          :key="sponsor.uid"
+          :class="$style.sponsorForm"
+          :is-first="sponsor === sponsors[0]"
+          :is-last="sponsor === sponsors[sponsors.length - 1]"
+          :loading="isLoading"
+          :season-uid="season.uid"
+          :sponsor="sponsor"
+          @delete="handleUpdateSponsors"
+          @move="handleMoveSponsor(sponsor, $event)"
+          @save="handleUpdateSponsors"
+        />
+      </AppTransitionFadeSmooth>
     </div>
 
     <div>
       <h1>Partneri</h1>
-      <LazyClientOnly>
-        <TransitionGroup :class="$style.sponsors" name="smooth-list" tag="div">
-          <edit-partner
-            key="new"
-            :class="$style.sponsorForm"
-            :loading="isLoading"
-            :season-uid="season.uid"
-            @delete="handleUpdatePartners"
-            @save="handleUpdatePartners"
-          />
+      <AppTransitionFadeSmooth group :class="$style.sponsors">
+        <edit-partner
+          key="new"
+          :class="$style.sponsorForm"
+          :loading="isLoading"
+          :season-uid="season.uid"
+          @delete="handleUpdatePartners"
+          @save="handleUpdatePartners"
+        />
 
-          <edit-partner
-            v-for="partner in partners"
-            :key="partner.uid"
-            :class="$style.sponsorForm"
-            :is-first="partner === partners[0]"
-            :is-last="partner === partners[partners.length - 1]"
-            :loading="isLoading"
-            :partner="partner"
-            :season-uid="season.uid"
-            @delete="handleUpdatePartners"
-            @move="handleMovePartner(partner, $event)"
-            @save="handleUpdatePartners"
-          />
-        </TransitionGroup>
-      </LazyClientOnly>
+        <edit-partner
+          v-for="partner in partners"
+          :key="partner.uid"
+          :class="$style.sponsorForm"
+          :is-first="partner === partners[0]"
+          :is-last="partner === partners[partners.length - 1]"
+          :loading="isLoading"
+          :partner="partner"
+          :season-uid="season.uid"
+          @delete="handleUpdatePartners"
+          @move="handleMovePartner(partner, $event)"
+          @save="handleUpdatePartners"
+        />
+      </AppTransitionFadeSmooth>
     </div>
     <div class="mt-5">
       <nuxt-link
@@ -106,11 +102,13 @@
   } from "~/graphql/schema";
   import EditSponsor from "~/components/page/admin/season/[season]/edit-sponsor.vue";
   import EditPartner from "~/components/page/admin/season/[season]/edit-partner.vue";
+  import AppTransitionFadeSmooth from "~/components/util/app-transition-fade-smooth.vue";
 
   export default defineComponent({
     name: "PageAdminSeasonHome",
 
     components: {
+      AppTransitionFadeSmooth,
       EditPartner,
       EditSponsor,
       AppMaxWidthContainer,
@@ -294,22 +292,6 @@
 
 <style lang="scss" module>
   @import "assets/styles/include";
-
-  :global(.smooth-list-move),
-  :global(.smooth-list-enter-active),
-  :global(.smooth-list-leave-active) {
-    transition: all .3s #{$transition-timing-function};
-  }
-
-  :global(.smooth-list-enter-from),
-  :global(.smooth-list-leave-to) {
-    transform: scaleY(.01) translate(30px, 0);
-    opacity: 0;
-  }
-
-  :global(.smooth-list-leave-active) {
-    position: absolute;
-  }
 
   .container {
 

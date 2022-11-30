@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "dev": "nuxt dev",
-        "build": "yarn graphql:schema:gen && nuxt build",
+        "dev": "nuxi dev",
+        "build": "yarn graphql:schema:gen && nuxi build",
         "start": "node .output/server/index.mjs",
         "lint:js": "NODE_OPTIONS=\"--max-old-space-size=8192\" eslint --ext \".ts,.js,.vue\" --ignore-path .gitignore --ignore-pattern backend/",
         "lint:style": "stylelint \"**/*.{scss,css,vue}\" --ignore-path .gitignore",

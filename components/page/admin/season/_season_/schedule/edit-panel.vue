@@ -75,7 +75,7 @@
   import {
     companyPanelListCreate,
   } from "~/helpers/forms/company";
-  import EditScheduleItemFor from "~/components/page/admin/season/[season]/schedule/edit-schedule-item-for.vue";
+  import EditScheduleItemFor from "~/components/page/admin/season/_season_/schedule/edit-schedule-item-for.vue";
 
   export default defineComponent({
     components: {

@@ -100,8 +100,8 @@
     IPartner,
     ISponsor,
   } from "~/graphql/schema";
-  import EditSponsor from "~/components/page/admin/season/[season]/edit-sponsor.vue";
-  import EditPartner from "~/components/page/admin/season/[season]/edit-partner.vue";
+  import EditSponsor from "~/components/page/admin/season/_season_/edit-sponsor.vue";
+  import EditPartner from "~/components/page/admin/season/_season_/edit-partner.vue";
   import AppTransitionFadeSmooth from "~/components/util/app-transition-fade-smooth.vue";
 
   export default defineComponent({

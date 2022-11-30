@@ -28,7 +28,11 @@ const calendarTypeLabels: Record<CalendarType, string> = {
 
 type Item<T> = Partial<T> | null | undefined;
 
-type CalendarItem = Omit<ICalendarItem, "uid">;
+type CalendarItem = Omit<ICalendarItem,
+  | "uid"
+  | "forWorkshop"
+  | "hasEvent"
+  | never>;
 export const calendarItemCreate =
   <T extends CalendarItem>(item?: Item<T>): Record<keyof CalendarItem, InputEntry> =>
     ({

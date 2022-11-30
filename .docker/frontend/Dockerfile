@@ -1,4 +1,4 @@
-FROM node:16-slim as builder
+FROM node:18-slim as builder
 WORKDIR /app
 ENV YARN_CACHE_FOLDER=/usr/local/yarn-cache
 VOLUME /usr/local/yarn-cache
@@ -14,7 +14,7 @@ RUN node -e 'console.log("|> Memory limit", v8.getHeapStatistics().heap_size_lim
 RUN yarn build
 
 # Copy just the built app to runner container
-FROM node:16-slim as runner
+FROM node:18-slim as runner
 WORKDIR /app
 COPY --from=builder /app/.output /app/.output
 CMD ["node", ".output/server/index.mjs"]

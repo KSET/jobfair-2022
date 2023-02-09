@@ -59,6 +59,19 @@ export const useSeasonsStore = defineStore(
         return areOpen("showParticipants", state.currentSeason);
       },
 
+      isSignUpPossible(store) {
+        const { currentSeason } = store;
+
+        if (!currentSeason) {
+          return false;
+        }
+
+        const start = currentSeason.showParticipantsFrom as Date;
+        const end = currentSeason.eventUntil as Date;
+
+        return inRange(start, end);
+      },
+
       arePartnersShown(state) {
         return areOpen("showPartners", state.currentSeason);
       },

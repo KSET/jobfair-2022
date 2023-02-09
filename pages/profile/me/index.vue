@@ -70,53 +70,55 @@
           </div>
         </div>
 
-        <div :class="[$style.item, $style.signUp]">
-          <div :class="$style.itemContent">
-            <h2 :class="$style.itemHeader">
-              <translated-text trans-key="profile.events.sign-up" />
-            </h2>
-            <dl :class="$style.reservationItems">
-              <dt
-                v-for="item in calendar"
-                :key="item.uid"
-                :class="$style.reservationItem"
+        <template v-if="isSignUpPossible">
+          <div :class="[$style.item, $style.signUp]">
+            <div :class="$style.itemContent">
+              <h2 :class="$style.itemHeader">
+                <translated-text trans-key="profile.events.sign-up" />
+              </h2>
+              <dl :class="$style.reservationItems">
+                <dt
+                  v-for="item in calendar"
+                  :key="item.uid"
+                  :class="$style.reservationItem"
+                >
+                  <p-button
+                    :loading="item.loading"
+                    @click="handleSignupFor(item)"
+                  >
+                    <translated-text v-if="item.forWorkshop.reservation" trans-key="company.event.user.sign-off" />
+                    <translated-text v-else trans-key="company.event.user.sign-up" />
+                  </p-button>
+                  <strong
+                    :title="translateFor(item.forWorkshop, 'description').value"
+                  >
+                    <nuxt-link
+                      :to="{ name: 'calendar-event-uid', params: { uid: item.uid } }"
+                      target="_blank"
+                    >
+                      [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
+                    </nuxt-link>
+                  </strong>
+                </dt>
+              </dl>
+            </div>
+            <div :class="$style.itemActions">
+              <nuxt-link
+                :to="{ name: 'schedule' }"
+                class="ml-auto"
               >
                 <p-button
-                  :loading="item.loading"
-                  @click="handleSignupFor(item)"
+                  class="p-button-secondary"
+                  tabindex="-1"
                 >
-                  <translated-text v-if="item.forWorkshop.reservation" trans-key="company.event.user.sign-off" />
-                  <translated-text v-else trans-key="company.event.user.sign-up" />
+                  <translated-text
+                    trans-key="page.name.schedule"
+                  />
                 </p-button>
-                <strong
-                  :title="translateFor(item.forWorkshop, 'description').value"
-                >
-                  <nuxt-link
-                    :to="{ name: 'calendar-event-uid', params: { uid: item.uid } }"
-                    target="_blank"
-                  >
-                    [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
-                  </nuxt-link>
-                </strong>
-              </dt>
-            </dl>
+              </nuxt-link>
+            </div>
           </div>
-          <div :class="$style.itemActions">
-            <nuxt-link
-              :to="{ name: 'schedule' }"
-              class="ml-auto"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
-              >
-                <translated-text
-                  trans-key="page.name.schedule"
-                />
-              </p-button>
-            </nuxt-link>
-          </div>
-        </div>
+        </template>
       </template>
       <div v-else-if="!hasCompany" :class="$style.item">
         <div :class="$style.itemContent">
@@ -735,6 +737,7 @@
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),
+        isSignUpPossible: computed(() => seasonsStore.isSignUpPossible),
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),

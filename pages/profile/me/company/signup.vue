@@ -54,10 +54,11 @@
               <translated-text :trans-key="`company-signup.form.${name}`" />
             </strong>
 
-            <Checkbox v-model="item.selected" binary disabled />
-            <!-- <app-checkbox
+            <!-- <Checkbox v-model="item.selected" binary disabled /> -->
+            <Checkbox
               v-model="item.selected"
-            /> -->
+              binary
+            />
           </template>
           <template
             v-if="item.selected"

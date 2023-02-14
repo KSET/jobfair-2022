@@ -17,6 +17,7 @@ import {
   File,
   PressRelease,
   FindManyPressReleaseArgs,
+  Season,
 } from "@generated/type-graphql";
 import {
   FileUpload,
@@ -59,12 +60,26 @@ export class PressReleaseFieldResolver {
   ) {
     return pressRelease.file;
   }
+
+  @FieldResolver((_type) => Season, { nullable: true })
+  forSeason(
+  @Root() pressRelease: PressRelease,
+  ) {
+    return pressRelease.forSeason;
+  }
 }
 
 export const transformSelect = transformSelectFor<PressReleaseFieldResolver>({
   file(select) {
     select.file = {
       select: select.file,
+    };
+
+    return select;
+  },
+  forSeason(select) {
+    select.forSeason = {
+      select: select.forSeason,
     };
 
     return select;
@@ -85,6 +100,9 @@ class PressReleaseWithFilesCreateInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
     file: FileUpload | null = null;
+
+  @Field(() => String)
+    season: string = "";
 }
 
 @InputType()
@@ -212,6 +230,11 @@ export class PressReleaseResolver {
         creator: {
           connect: {
             id: user.id,
+          },
+        },
+        forSeason: {
+          connect: {
+            uid: info.season,
           },
         },
       },

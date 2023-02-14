@@ -61,36 +61,6 @@
     </div>
 
     <div>
-      <h2>Press</h2>
-      <ul>
-        <li>
-          <h3>Press Releases</h3>
-          <ul>
-            <li
-              v-for="pressRelease in pressReleases"
-              :key="pressRelease.uid"
-            >
-              <time
-                :datetime="pressRelease.published.toISOString()"
-                :title="pressRelease.published.toLocaleDateString()"
-                v-text="formatDate(pressRelease.published)"
-              />
-              <span v-text="pressRelease.title" />
-              <a :href="$router.resolve({ name: 'admin-press-releases-uid-edit', params: { uid: pressRelease.uid } }).href">
-                Edit
-              </a>
-            </li>
-            <li>
-              <nuxt-link :to="{ name: 'admin-press-releases-new' }">
-                New
-              </nuxt-link>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-
-    <div>
       <h2>Industrije</h2>
 
       <ul>
@@ -230,6 +200,17 @@
               :to="{ name: 'admin-season-season-applications-feedback', params: { season: season.uid } }"
             >
               Feedback
+            </nuxt-link>
+          </li>
+        </ul>
+
+        <h2>Press</h2>
+        <ul>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-press-releases', params: { season: season.uid } }"
+            >
+              <translated-text trans-key="press.for-media" />
             </nuxt-link>
           </li>
         </ul>

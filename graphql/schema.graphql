@@ -1253,6 +1253,7 @@ input PresenterCreateInput {
 type PressRelease {
   createdAt: DateTime!
   file: File
+  forSeason: Season
   published: DateTime!
   title: String!
   uid: String!
@@ -1274,6 +1275,7 @@ input PressReleaseOrderByWithRelationAndSearchRelevanceInput {
   _relevance: PressReleaseOrderByRelevanceInput
   creator: UserOrderByWithRelationAndSearchRelevanceInput
   file: FileOrderByWithRelationAndSearchRelevanceInput
+  forSeason: SeasonOrderByWithRelationAndSearchRelevanceInput
   published: SortOrder
   title: SortOrder
 }
@@ -1282,6 +1284,7 @@ enum PressReleaseScalarFieldEnum {
   createdAt
   creatorId
   fileId
+  forSeasonId
   id
   published
   title
@@ -1295,6 +1298,7 @@ input PressReleaseWhereInput {
   OR: [PressReleaseWhereInput!]
   creator: UserRelationFilter
   file: FileRelationFilter
+  forSeason: SeasonRelationFilter
   published: DateTimeFilter
   title: StringFilter
 }
@@ -1306,6 +1310,7 @@ input PressReleaseWhereUniqueInput {
 input PressReleaseWithFilesCreateInput {
   file: Upload = null
   published: DateTime = null
+  season: String = ""
   title: String = ""
 }
 
@@ -1764,6 +1769,7 @@ type SeasonCount {
   entryLog: Int!
   favouriteResumes: Int!
   partners: Int!
+  pressReleases: Int!
   scannedResumes: Int!
   sponsors: Int!
 }

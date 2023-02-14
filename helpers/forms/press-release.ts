@@ -13,6 +13,7 @@ type PressRelease = Omit<IPressRelease,
     "createdAt"
     | "uid"
     | "file"
+    | "forSeason"
     | "updatedAt">
   & {
   file?: Pick<IFile,

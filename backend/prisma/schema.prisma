@@ -192,6 +192,10 @@ model PressRelease {
   creatorId Int
   /// @TypeGraphQL.omit(output: true, input: true)
   fileId    Int
+
+  forSeason   Season? @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int?
 }
 
 model File {
@@ -316,6 +320,9 @@ model Season {
   partners  Partner[]
 
   calendar CalendarItem[]
+
+  /// @TypeGraphQL.omit(input: true)
+  pressReleases PressRelease[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   panel CompanyPanel?

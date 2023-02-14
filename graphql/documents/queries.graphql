@@ -339,16 +339,24 @@ query PressRelease($uid: String!) {
             mimeType
             uid
         }
+        forSeason {
+            uid
+            name
+        }
     }
 }
 
-query PressReleases {
-    pressReleases(orderBy: { published: desc }) {
+query PressReleases($season: String) {
+    pressReleases(orderBy: { published: desc }, where: { forSeason: { is: { uid: { equals: $season } } } }) {
         uid
         title
         published
         file {
             uid
+        }
+        forSeason {
+            uid
+            name
         }
     }
 }
@@ -396,14 +404,6 @@ query AdminInitialData {
     }
     talkCategories {
         name
-    }
-    pressReleases(orderBy: { published: desc }) {
-        uid
-        title
-        published
-        file {
-            uid
-        }
     }
     seasons(orderBy: { endsAt: desc }) {
         ...frag_Season

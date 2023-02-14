@@ -1,45 +1,43 @@
 <template>
   <app-max-width-container :class="$style.container">
     <h1>
-      New press release
+      Edit press release
     </h1>
 
-    <LazyClientOnly>
-      <app-formgroup
-        :class="$style.form"
-        :errors="errors"
-        :inputs="info"
-        :loading="isLoading"
-        @submit="handleSubmit"
-      >
-        <template #after>
-          <div
-            v-if="errors.entity.length > 0"
-            :class="$style.errorContainer"
+    <app-formgroup
+      :class="$style.form"
+      :errors="errors"
+      :inputs="info"
+      :loading="isLoading"
+      @submit="handleSubmit"
+    >
+      <template #after>
+        <div
+          v-if="errors.entity.length > 0"
+          :class="$style.errorContainer"
+        >
+          <translated-text
+            v-for="err in errors.entity"
+            :key="err.message"
+            :trans-key="err.message"
+          />
+        </div>
+
+        <div class="flex -mt-3">
+          <nuxt-link :to="{ name: 'admin-season-season-press-releases' }">
+            <p-button>Cancel</p-button>
+          </nuxt-link>
+
+          <p-button
+            :loading="isLoading"
+            class="p-button-secondary font-bold ml-auto"
+            type="submit"
           >
-            <translated-text
-              v-for="err in errors.entity"
-              :key="err.message"
-              :trans-key="err.message"
-            />
-          </div>
-
-          <div class="flex -mt-3">
-            <a :href="$router.resolve({ name: 'admin' }).href">
-              <p-button>Cancel</p-button>
-            </a>
-
-            <p-button
-              :loading="isLoading"
-              class="p-button-secondary font-bold ml-auto"
-              type="submit"
-            >
-              <translated-text trans-key="form.save" />
-            </p-button>
-          </div>
-        </template>
-      </app-formgroup>
-    </LazyClientOnly>
+            <translated-text trans-key="form.save" />
+          </p-button>
+        </div>
+      </template>
+    </app-formgroup>
   </app-max-width-container>
 </template>
 <script lang="ts">
@@ -55,6 +53,7 @@
     pipe,
   } from "rambdax";
   import {
+    useRoute,
     useRouter,
   } from "vue-router";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
@@ -65,12 +64,16 @@
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     useMutation,
+    useQuery,
   } from "~/composables/useQuery";
   import {
-    CreatePressRelease,
-    ICreatePressReleaseMutation,
-    ICreatePressReleaseMutationVariables,
+    IPressReleaseQuery,
+    IPressReleaseQueryVariables,
     IPressReleaseWithFilesCreateInput,
+    IUpdatePressReleaseMutation,
+    IUpdatePressReleaseMutationVariables,
+    PressRelease,
+    UpdatePressRelease,
   } from "~/graphql/schema";
   import useTitle from "~/composables/useTitle";
 
@@ -83,12 +86,22 @@
       AppMaxWidthContainer,
     },
 
-    setup() {
-      useTitle("New Press Release", false);
+    async setup() {
+      useTitle("Edit Press Release", false);
 
       const $router = useRouter();
+      const $route = useRoute();
 
-      const info_ = pressReleaseCreate();
+      const uid = $route.params.uid as string;
+
+      const pressRelease = await useQuery<IPressReleaseQuery, IPressReleaseQueryVariables>({
+        query: PressRelease,
+        variables: {
+          uid,
+        },
+      })();
+
+      const info_ = pressReleaseCreate(pressRelease?.data?.pressRelease);
       const info = reactive({
         ...info_,
       });
@@ -116,9 +129,15 @@
             map((key) => [ key, (info[key] as { value: unknown, }).value ]),
             Object.fromEntries,
           )(info);
-          const resp = await useMutation<ICreatePressReleaseMutation, ICreatePressReleaseMutationVariables>(CreatePressRelease)({
+
+          if ("string" === typeof data.file) {
+            delete data.file;
+          }
+
+          const resp = await useMutation<IUpdatePressReleaseMutation, IUpdatePressReleaseMutationVariables>(UpdatePressRelease)({
+            uid,
             info: data,
-          }).then((resp) => resp?.data?.createPressRelease);
+          }).then((resp) => resp?.data?.updatePressRelease);
           isLoading.value = false;
 
           if (!resp) {
@@ -132,7 +151,7 @@
 
           if (!errorList) {
             await $router.push({
-              name: "admin",
+              name: "admin-season-season-press-releases",
             });
             return;
           }

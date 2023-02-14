@@ -1,6 +1,9 @@
 import {
- defineStore,
+  defineStore,
 } from "pinia";
+import {
+  useSeasonsStore,
+} from "./seasons";
 import {
   useMutation,
   useQuery,
@@ -27,7 +30,7 @@ import {
   ValidateVat,
 } from "~/graphql/schema";
 import {
- useTalkCategoriesStore,
+  useTalkCategoriesStore,
 } from "~/store/talkCategories";
 
 type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication">> | null | undefined;
@@ -40,7 +43,7 @@ const isApplicationApproved =
       .values(approval || {})
       .some((x) => x)
     || false
-;
+  ;
 
 export const useCompanyStore = defineStore(
   "companies",
@@ -61,6 +64,16 @@ export const useCompanyStore = defineStore(
 
       hasFeedback(state) {
         return Boolean(state.applicationInfo?.companyApplication?.feedback);
+      },
+
+      canScanUsers() {
+        const seasonsStore = useSeasonsStore();
+
+        return Boolean(this.hasApplicationApproved) && seasonsStore.isEventOngoing;
+      },
+
+      canViewResumes() {
+        return Boolean(this.hasApplicationApproved) && Boolean(this.hasFeedback);
       },
     },
 

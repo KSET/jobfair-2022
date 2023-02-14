@@ -57,7 +57,7 @@
                   />
                 </nuxt-link>
               </li>
-              <li>
+              <li v-if="canViewResumes">
                 <nuxt-link
                   :to="{ name: 'profile-me-company-resumes' }"
                 >
@@ -66,7 +66,7 @@
                   />
                 </nuxt-link>
               </li>
-              <li>
+              <li v-if="canScanUsers">
                 <nuxt-link
                   :to="{ name: 'profile-me-company-scan-qr' }"
                 >
@@ -155,6 +155,8 @@
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         applicationApproved: computed(() => companyStore.hasApplicationApproved),
+        canScanUsers: computed(() => companyStore.canScanUsers),
+        canViewResumes: computed(() => companyStore.canViewResumes),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),
       };

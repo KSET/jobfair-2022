@@ -2,6 +2,9 @@ import {
   toPairs,
 } from "rambdax";
 import {
+  asDate,
+} from "../date";
+import {
   InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
@@ -48,7 +51,7 @@ export const newsEdit =
         })),
       },
       date: {
-        value: news?.date || "",
+        value: asDate(news?.date),
         type: "date",
         placeholder: "Date",
       },

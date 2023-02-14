@@ -1,4 +1,7 @@
 import {
+  asDate,
+} from "../date";
+import {
   IFile,
   IPressRelease,
 } from "~/graphql/schema";
@@ -28,7 +31,7 @@ export const pressReleaseCreate =
       published: {
         value:
           pressRelease?.published
-            ? new Date(pressRelease?.published as (Date | string)).toISOString()
+            ? asDate(pressRelease?.published as (Date | string))
             : "",
         type: "date" as const,
       },

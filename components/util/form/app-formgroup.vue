@@ -194,32 +194,6 @@
           />
         </template>
       </app-single-pick>
-      <app-input
-        v-else-if="input.type === 'datetime-local'"
-        :key="`${input.type}-${inputName}`"
-        v-model="input.value"
-        :class="[
-          $style.formElement,
-          ...toClass(input.classes)
-        ]"
-        :disabled="input.disabled || input.loading || loading"
-        :invalid="errors[inputName].length > 0"
-        :label-key="`form.${prefix}${inputName}`"
-        :name="inputName"
-        :placeholder="input.placeholder"
-        :required="input.required ?? true"
-        type="datetime-local"
-        v-bind="input.attrs || {}"
-      >
-        <template v-if="errors[inputName].length > 0" #message>
-          <translated-text
-            v-for="err in errors[inputName]"
-            :key="err.message"
-            :trans-key="err.message"
-            class="block"
-          />
-        </template>
-      </app-input>
       <AppEditor
         v-else-if="input.type === 'editor'"
         :key="`${input.type}-${inputName}`"

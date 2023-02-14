@@ -1072,6 +1072,7 @@ export class CompanyApplicationCreateResolver {
       },
       select: {
         id: true,
+        uid: true,
         applicationsFrom: true,
         applicationsUntil: true,
       },

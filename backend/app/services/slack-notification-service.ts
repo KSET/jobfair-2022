@@ -19,7 +19,7 @@ import {
   post,
 } from "../helpers/axios";
 
-type CurrentSeason = Pick<Season, "id">;
+type CurrentSeason = Pick<Season, "uid">;
 
 export default class SlackNotificationService {
   static notifyOfNewCompany(
@@ -83,7 +83,7 @@ export default class SlackNotificationService {
   - Panel: ${ has(chosen.panel) }
   - Koktel: ${ has(chosen.cocktail) }
 
-<https://jobfair.fer.unizg.hr/admin/season/${ season.id }/applications/${ company.id }/edit|Link na prijavu :pray:>
+<https://jobfair.fer.unizg.hr/admin/season/${ season.uid }/applications/${ company.uid }/edit|Link na prijavu :pray:>
 -------------------------
 `;
 

@@ -1,6 +1,7 @@
 import {
   Company,
   Industry,
+  Season,
   User,
 } from "@prisma/client";
 import {
@@ -17,6 +18,8 @@ import {
 import {
   post,
 } from "../helpers/axios";
+
+type CurrentSeason = Pick<Season, "id">;
 
 export default class SlackNotificationService {
   static notifyOfNewCompany(
@@ -54,6 +57,7 @@ export default class SlackNotificationService {
 
   static notifyOfNewApplication(
     company: Company,
+    season: CurrentSeason,
     creator: User,
     chosen: {
       booth?: string | null,
@@ -70,6 +74,7 @@ export default class SlackNotificationService {
 -------------------------
 *Poduzeće*
   - Ime: ${ company.brandName }
+  - Prijavio/la: <mailto:${ creator.email }|${ creator.firstName } ${ creator.lastName }>
 
 *Odabrano*
   - Štand: _${ chosen.booth || ":x:" }_
@@ -77,6 +82,8 @@ export default class SlackNotificationService {
   - Workshop: ${ has(chosen.workshop) }
   - Panel: ${ has(chosen.panel) }
   - Koktel: ${ has(chosen.cocktail) }
+
+<https://jobfair.fer.unizg.hr/admin/season/${ season.id }/applications/${ company.id }/edit|Link na prijavu :pray:>
 -------------------------
 `;
 

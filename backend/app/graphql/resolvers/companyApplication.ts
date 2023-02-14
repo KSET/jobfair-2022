@@ -1366,6 +1366,7 @@ export class CompanyApplicationCreateResolver {
         if (entity) {
           void SlackNotificationService.notifyOfNewApplication(
             company,
+            currentSeason,
             ctx.user!,
             chosen,
           );

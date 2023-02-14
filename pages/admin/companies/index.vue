@@ -2,7 +2,28 @@
   <app-max-width-container>
     <h1>Firme ({{ companies.length }})</h1>
 
-    <DataTable :value="companies" data-key="vat" row-hover>
+    <DataTable
+      ref="dt"
+      v-model:filters="filters"
+      :value="companies"
+      data-key="vat"
+      row-hover
+      paginator
+      paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+      :rows="20"
+      :rows-per-page-options="[2,5,10,20,50,100]"
+      responsive-layout="scroll"
+    >
+      <template #header>
+        <div :class="$style.tableHeader">
+          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+
+          <span class="p-input-icon-left">
+            <i class="pi pi-search" />
+            <InputText v-model="filters['global'].value" placeholder="Pretraži firme" />
+          </span>
+        </div>
+      </template>
       <Column field="industry.name" header="Industrija" sortable>
         <template #body="{ data }">
           <p-chip :label="data.industry.name" />
@@ -13,7 +34,7 @@
           <strong v-tooltip.top="data.legalName" v-text="data.brandName" />
         </template>
       </Column>
-      <Column header="Članovi">
+      <Column field="members" header="Članovi">
         <template #body="{ data }">
           <dl v-if="data.members.length > 0" class="m-0">
             <dt
@@ -53,10 +74,18 @@
   } from "@urql/core";
   import DataTable from "primevue/datatable";
   import Column from "primevue/column";
+  import {
+    FilterMatchMode,
+    FilterService,
+  } from "primevue/api";
+  import InputText from "primevue/inputtext";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
     useQuery,
+
+    ref,
+    unref,
   } from "#imports";
   import useTitle from "~/composables/useTitle";
   import {
@@ -73,6 +102,7 @@
       PChip: Chip,
       DataTable,
       Column,
+      InputText,
     },
 
     directives: {
@@ -112,9 +142,89 @@
         `,
       })().then((resp) => resp?.data);
 
+      const filters = ref({
+        global: { value: null as string | null, matchMode: "$global" },
+        "industry.name": { value: null, matchMode: FilterMatchMode.CONTAINS },
+        brandName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        members: { value: null, matchMode: "$members" },
+      });
+
+      const dt = ref<DataTable | null>(null);
+
+      FilterService.register("$global", (value: unknown, filter: string | null | undefined) => {
+        if (filter === undefined || null === filter || "" === filter.trim()) {
+          return true;
+        }
+
+        const lowerFilter = filter.toLocaleLowerCase().trim();
+
+        if ("string" === typeof value) {
+          return value.toLowerCase().includes(lowerFilter);
+        }
+
+        if (Array.isArray(value) && 0 < value.length) {
+          const isStringArray = "string" === typeof value[0];
+          if (isStringArray) {
+            return (value as string[]).some((v) => v.toLowerCase().includes(lowerFilter));
+          }
+
+          const membersArray = value as QMember[];
+          const isMembersArray =
+            "object" === typeof membersArray[0]
+            && null !== membersArray[0]
+            && "name" in membersArray[0]
+            && "email" in membersArray[0]
+          ;
+          if (isMembersArray) {
+            return (value as QMember[]).some(
+              (member) =>
+                member.name.toLowerCase().includes(lowerFilter)
+                || member.email.toLowerCase().includes(lowerFilter)
+              ,
+            );
+          }
+        }
+
+        return false;
+      });
+
+      FilterService.register("$members", (members: QMember[], membersFilter: string | null) => {
+        const filter = (membersFilter)?.toLocaleLowerCase();
+
+        if (filter === undefined || null === filter || "" === filter.trim()) {
+          return true;
+        }
+
+        return members.some(
+          (member) =>
+            member.name.toLowerCase().includes(filter)
+            || member.email.toLowerCase().includes(filter)
+          ,
+        );
+      });
+
       return {
         companies: resp?.companies || [],
+        filters,
+        dt,
+        exportCSV() {
+          const $dt = unref(dt);
+
+          if (!$dt) {
+            return;
+          }
+
+          $dt.exportCSV();
+        },
       };
     },
   });
 </script>
+
+<style lang="scss" module>
+  .tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>

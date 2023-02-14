@@ -18,10 +18,21 @@
         filter-display="menu"
         row-hover
         sort-mode="multiple"
+        :global-filter-fields="['name', 'email']"
+        paginator
+        paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+        :rows="20"
+        :rows-per-page-options="[2,5,10,20,50,100]"
+        responsive-layout="scroll"
       >
         <template #header>
-          <div style="text-align: left;">
+          <div :class="$style.tableHeader">
             <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" />
+              <InputText v-model="filters['global'].value" placeholder="Pretraži ime i email" />
+            </span>
           </div>
         </template>
         <Column field="name" header="Ime" sortable style="min-width: 3em;" />
@@ -78,6 +89,7 @@
   import {
     FilterMatchMode,
   } from "primevue/api";
+  import InputText from "primevue/inputtext";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
@@ -102,6 +114,7 @@
       AppMaxWidthContainer,
       DataTable,
       Column,
+      InputText,
     },
 
     async setup() {
@@ -155,6 +168,7 @@
       };
 
       const filters = ref({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         isStudent: { value: null, matchMode: FilterMatchMode.EQUALS },
         hasResume: { value: null, matchMode: FilterMatchMode.EQUALS },
       });
@@ -179,3 +193,11 @@
     },
   });
 </script>
+
+<style lang="scss" module>
+  .tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>

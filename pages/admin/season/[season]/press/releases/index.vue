@@ -1,7 +1,7 @@
 <template>
   <app-max-width-container :class="$style.container">
     <h1>
-      {{ currentSeasonName }} / <translated-text trans-key="press.header" />
+      {{ seasonName }} / <translated-text trans-key="press.header" />
     </h1>
 
     <div>
@@ -69,11 +69,14 @@
       const translationStore = useTranslationsStore();
       const seasonsStore = useSeasonsStore();
 
-      const title = computed(() => `Admin - ${ seasonsStore.currentSeason?.name ?? "" } - ${ translationStore.capitalizedTranslation("press.header") }`);
+      const title = computed(() => `Admin - ${ seasonsStore.season?.name ?? "" } - ${ translationStore.capitalizedTranslation("press.header") }`);
       useTitle(title, false);
 
       const pressReleases = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
         query: PressReleases,
+        variables: {
+          season: seasonsStore.season!.uid!,
+        },
       })().then((res) =>
         res
           ?.data
@@ -88,7 +91,7 @@
       return {
         pressReleases,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
-        currentSeasonName: computed(() => seasonsStore.currentSeason!.name),
+        seasonName: computed(() => seasonsStore.season!.name),
       };
     },
   });

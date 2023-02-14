@@ -159,6 +159,9 @@
   import {
     useGalleryStore,
   } from "~/store/gallery";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     name: "PagePress",
@@ -174,9 +177,13 @@
       useTitle("press.header");
 
       const galleryStore = useGalleryStore();
+      const seasonsStore = useSeasonsStore();
 
       const resp = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
         query: PressReleases,
+        variables: {
+          season: seasonsStore.currentSeason?.uid,
+        },
       })();
 
       const releases = resp?.data?.pressReleases || [];

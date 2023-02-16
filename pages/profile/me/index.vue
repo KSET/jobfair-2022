@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <template v-if="resume">
+      <template v-if="true || resume">
         <div :class="$style.item">
           <div :class="$style.itemContent">
             <h2 :class="$style.itemHeader">
@@ -120,7 +120,7 @@
           </div>
         </template>
       </template>
-      <div v-else-if="!hasCompany" :class="$style.item">
+      <div v-if="false && !hasCompany" :class="$style.item">
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
             <translated-text trans-key="profile.resume.header" />

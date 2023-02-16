@@ -2,6 +2,9 @@ import {
   defineStore,
 } from "pinia";
 import {
+ useSeasonsStore,
+} from "./seasons";
+import {
   useMutation,
   useQuery,
 } from "~/composables/useQuery";
@@ -12,6 +15,7 @@ import {
   ICreateTalkCategoryMutationVariables,
   IRenameTalkCategoryMutation,
   IRenameTalkCategoryMutationVariables,
+  ISeason,
   ITalkCategoriesQuery,
   ITalkCategoriesQueryVariables,
   RenameTalkCategory,
@@ -26,9 +30,16 @@ export const useTalkCategoriesStore = defineStore(
     }),
 
     actions: {
-      async fetchTalkCategories() {
+      async fetchTalkCategories(forSeason?: ISeason["uid"]) {
+        const seasonsStore = useSeasonsStore();
+
+        const season = forSeason ?? seasonsStore.season?.uid ?? seasonsStore.currentSeason?.uid;
+
         const resp = await useQuery<ITalkCategoriesQuery, ITalkCategoriesQueryVariables>({
           query: TalkCategories,
+          variables: {
+            season,
+          },
         })();
 
         return this.setTalkCategories(resp?.data?.talkCategories);
@@ -42,9 +53,10 @@ export const useTalkCategoriesStore = defineStore(
         this.talkCategories = categories.map(({ name }) => name);
       },
 
-      async createTalkCategory(name: string) {
+      async createTalkCategory(name: string, season: ISeason["uid"]) {
         const resp = await useMutation<ICreateTalkCategoryMutation, ICreateTalkCategoryMutationVariables>(CreateTalkCategory)({
           name,
+          season,
         });
 
         if (!resp?.data?.createTalkCategory) {
@@ -54,10 +66,11 @@ export const useTalkCategoriesStore = defineStore(
         return resp?.data?.createTalkCategory ?? null;
       },
 
-      async renameTalkCategory(oldName: string, newName: string) {
+      async renameTalkCategory(oldName: string, newName: string, season: ISeason["uid"]) {
         const resp = await useMutation<IRenameTalkCategoryMutation, IRenameTalkCategoryMutationVariables>(RenameTalkCategory)({
           oldName,
           newName,
+          season,
         });
 
         if (!resp?.data?.renameTalkCategory) {

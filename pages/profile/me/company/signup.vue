@@ -451,7 +451,7 @@
           if (!resp.errors) {
             return toast.add({
               severity: "success",
-              summary: "Saved",
+              summary: "Company application successfully saved",
               closable: true,
               life: 3000,
             });

@@ -93,63 +93,40 @@
     </div>
 
     <div>
-      <h2>Kategorije talkova</h2>
-
-      <ul>
-        <li
-          v-for="talkCategory in talkCategories"
-          :key="talkCategory"
-        >
-          <editable-field
-            :disabled="info.talkCategoriesLoading"
-            :model-value="talkCategory"
-            @save="handleTalkCategoryEdit(talkCategory, $event)"
-          />
-        </li>
-        <li>
-          <form @submit.prevent="handleTalkCategorySubmit">
-            <input
-              v-model="info.newTalkCategory"
-              :disabled="info.talkCategoriesLoading"
-              type="text"
-            >
-            <button
-              :disabled="info.talkCategoriesLoading"
-              class="ml-3"
-            >
-              Create
-            </button>
-          </form>
-        </li>
-      </ul>
-    </div>
-
-    <div>
       <h2>Sezone</h2>
-
-      <fieldset>
-        <legend>New</legend>
-
-        <edit-season
-          @save="refreshSeasons"
-        />
-      </fieldset>
 
       <fieldset
         v-for="season in seasons"
         :key="season.uid"
-        class="mt-3"
+        class="mb-3"
       >
         <legend v-text="season.name" />
 
-        <edit-season
-          :season="season"
-          :uid="season.uid"
-          @delete="refreshSeasons"
-          @save="refreshSeasons"
-        />
+        <Panel
+          :collapsed="!season.selected"
+        >
+          <template #header>
+            <strong>
+              Uredi datume
+            </strong>
 
-        <hr>
+            <p-button
+              icon="pi pi-chevron-down"
+              class="p-button-text p-button-rounded p-button-secondary ml-auto"
+              :class="{
+                [$style.toggleButton]: true,
+                [$style.toggleButtonActive]: season.selected,
+              }"
+              @click="season.selected = !season.selected"
+            />
+          </template>
+          <edit-season
+            :season="season"
+            :uid="season.uid"
+            @delete="refreshSeasons"
+            @save="refreshSeasons"
+          />
+        </Panel>
 
         <h2>Prijave</h2>
         <ul>
@@ -158,6 +135,13 @@
               :to="{ name: 'admin-season-season-applications', params: { season: season.uid } }"
             >
               Prijave
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-applications-talk-categories', params: { season: season.uid } }"
+            >
+              Kategorije talkova
             </nuxt-link>
           </li>
           <li>
@@ -174,6 +158,10 @@
               Partneri i sponzori
             </nuxt-link>
           </li>
+        </ul>
+
+        <h2>Event</h2>
+        <ul>
           <li>
             <nuxt-link
               :to="{ name: 'admin-season-season-schedule', params: { season: season.uid } }"
@@ -204,7 +192,7 @@
           </li>
         </ul>
 
-        <h2>Press</h2>
+        <h2>PR</h2>
         <ul>
           <li>
             <nuxt-link
@@ -214,6 +202,14 @@
             </nuxt-link>
           </li>
         </ul>
+      </fieldset>
+
+      <fieldset>
+        <legend>New</legend>
+
+        <edit-season
+          @save="refreshSeasons"
+        />
       </fieldset>
     </div>
   </app-max-width-container>
@@ -229,6 +225,7 @@
     gql,
   } from "@urql/core";
   import Tooltip from "primevue/tooltip";
+  import Panel from "primevue/panel";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import {
@@ -242,9 +239,6 @@
     IAdminInitialDataQueryVariables,
     IAdminInitialDataQuery,
   } from "~/graphql/schema";
-  import {
-    useTalkCategoriesStore,
-  } from "~/store/talkCategories";
   import EditableField from "~/components/admin/util/editable-field.vue";
   import EditSeason from "~/components/page/admin/edit-season.vue";
 
@@ -255,6 +249,7 @@
       EditSeason,
       EditableField,
       AppMaxWidthContainer,
+      Panel,
     },
 
     directives: {
@@ -265,7 +260,6 @@
       useTitle("Admin", false);
 
       const industriesStore = useIndustriesStore();
-      const talkCategoriesStore = useTalkCategoriesStore();
 
       const info = reactive({
         newIndustry: "",
@@ -280,29 +274,17 @@
         set: (val) => industriesDelta.value = val,
       });
 
-      const talkCategoriesDelta = ref([] as string[]);
-      const talkCategories = computed({
-        get: () => talkCategoriesStore.talkCategories,
-        set: (val) => talkCategoriesDelta.value = val,
-      });
-
       const res = await useQuery<IAdminInitialDataQuery, IAdminInitialDataQueryVariables>({
         query: AdminInitialData,
       })().then((res) => res?.data);
 
       industriesStore.setIndustries(res?.industries);
-      talkCategoriesStore.setTalkCategories(res?.talkCategories);
 
-      const seasons = ref((res?.seasons || []).map(reactive));
+      const seasons = ref((res?.seasons || []).map((x) => ({ ...x, selected: false })).map(reactive));
 
       return {
         industries,
-        talkCategories,
         seasons,
-        pressReleases: (res?.pressReleases || [] as NonNullable<IAdminInitialDataQuery["pressReleases"]>).map((item) => ({
-          ...item,
-          published: new Date(String(item.published)),
-        })),
         info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
         async handleIndustrySubmit() {
@@ -325,27 +307,6 @@
             await industriesStore.fetchIndustries();
           }
           info.industriesLoading = false;
-        },
-        async handleTalkCategorySubmit() {
-          info.talkCategoriesLoading = true;
-          const resp = await talkCategoriesStore.createTalkCategory(info.newTalkCategory);
-          if (!resp) {
-            alert("Something went wrong. Please try again.");
-          } else {
-            await talkCategoriesStore.fetchTalkCategories();
-            info.newTalkCategory = "";
-          }
-          info.talkCategoriesLoading = false;
-        },
-        async handleTalkCategoryEdit(oldName: string, newName: string) {
-          info.talkCategoriesLoading = true;
-          const resp = await talkCategoriesStore.renameTalkCategory(oldName, newName);
-          if (!resp) {
-            alert("Something went wrong. Please try again.");
-          } else {
-            await talkCategoriesStore.fetchTalkCategories();
-          }
-          info.talkCategoriesLoading = false;
         },
         async refreshSeasons() {
           const resp = await useQuery<{
@@ -386,6 +347,14 @@
   @import "assets/styles/include";
 
   .container {
+
+    .toggleButton {
+      transition-property: transform;
+
+      &.toggleButtonActive {
+        transform: rotate(180deg);
+      }
+    }
 
     .statistics {
       display: flex;

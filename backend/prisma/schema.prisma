@@ -335,6 +335,9 @@ model Season {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   entryLog EntryResumeLog[]
+
+  /// @TypeGraphQL.omit(input: true)
+  talkCategories ApplicationTalkCategory[]
 }
 
 model Sponsor {
@@ -514,10 +517,16 @@ model ApplicationTalk {
 model ApplicationTalkCategory {
   /// @TypeGraphQL.omit(output: true, input: true)
   id   Int    @id @default(autoincrement())
-  name String @unique
+  name String
 
   /// @TypeGraphQL.omit(input: true)
   talks ApplicationTalk[]
+
+  forSeason   Season? @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int?
+
+  @@unique([forSeasonId, name])
 }
 
 model ApplicationCocktail {

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   Arg,
   Args,
@@ -382,7 +383,7 @@ export class CompanyApplicationInfoResolver {
 
     return ctx.prisma.companyApplication.findUnique({
       where: {
-        // eslint-disable-next-line camelcase
+
         forCompanyId_forSeasonId: {
           forCompanyId: company.id,
           forSeasonId: currentSeason.id,
@@ -527,7 +528,7 @@ export class CompanyApplicationAdminResolver {
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
-          // eslint-disable-next-line camelcase
+
           forCompanyId_forSeasonId: {
             forCompanyId: company.id,
             forSeasonId: currentSeason.id,
@@ -716,7 +717,10 @@ export class CompanyApplicationAdminResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -806,7 +810,7 @@ export class CompanyApplicationAdminResolver {
 
       const entity = await prisma.companyApplication.update({
         where: {
-          // eslint-disable-next-line camelcase
+
           forCompanyId_forSeasonId: {
             forCompanyId: company.id,
             forSeasonId: currentSeason.id,
@@ -830,7 +834,10 @@ export class CompanyApplicationAdminResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -848,7 +855,10 @@ export class CompanyApplicationAdminResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -1110,7 +1120,7 @@ export class CompanyApplicationCreateResolver {
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
-          // eslint-disable-next-line camelcase
+
           forCompanyId_forSeasonId: {
             forCompanyId: company.id,
             forSeasonId: currentSeason.id,
@@ -1299,7 +1309,10 @@ export class CompanyApplicationCreateResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -1396,7 +1409,7 @@ export class CompanyApplicationCreateResolver {
 
       const entity = await prisma.companyApplication.update({
         where: {
-          // eslint-disable-next-line camelcase
+
           forCompanyId_forSeasonId: {
             forCompanyId: company.id,
             forSeasonId: currentSeason.id,
@@ -1420,7 +1433,10 @@ export class CompanyApplicationCreateResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -1438,7 +1454,10 @@ export class CompanyApplicationCreateResolver {
                     ),
                     category: {
                       connect: {
-                        name: info.talk.category,
+                        forSeasonId_name: {
+                          name: info.talk.category,
+                          forSeasonId: currentSeason.id,
+                        },
                       },
                     },
                     presenters: {
@@ -1544,6 +1563,9 @@ export class CompanyApplicationCreateResolver {
       }
 
       return entity;
+    }, {
+      maxWait: 10000,
+      timeout: 20000,
     }).catch((err) => {
       captureError(err);
 
@@ -1907,7 +1929,10 @@ export class CompanyApplicationCreateResolver {
             ),
             category: {
               connect: {
-                name: entry.category,
+                forSeasonId_name: {
+                  name: entry.category,
+                  forSeasonId: currentSeason.id,
+                },
               },
             },
             presenters: {

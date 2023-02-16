@@ -125,14 +125,14 @@ mutation RenameIndustry($oldName: String!, $newName: String!) {
     }
 }
 
-mutation CreateTalkCategory($name: String!) {
-    createTalkCategory(name: $name) {
+mutation CreateTalkCategory($name: String!, $season: String!) {
+    createTalkCategory(name: $name, season: $season) {
         name
     }
 }
 
-mutation RenameTalkCategory($oldName: String!, $newName: String!) {
-    renameTalkCategory(oldName: $oldName, newName: $newName) {
+mutation RenameTalkCategory($oldName: String!, $newName: String!, $season: String!) {
+    renameTalkCategory(oldName: $oldName, newName: $newName, season: $season) {
         name
     }
 }

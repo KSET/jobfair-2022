@@ -324,8 +324,8 @@ query Industries {
     }
 }
 
-query TalkCategories {
-    talkCategories {
+query TalkCategories($season: String) {
+    talkCategories(where: { forSeason: { is: { uid: { equals: $season } } } }) {
         name
     }
 }
@@ -402,16 +402,13 @@ query AdminInitialData {
     industries {
         name
     }
-    talkCategories {
-        name
-    }
     seasons(orderBy: { endsAt: desc }) {
         ...frag_Season
     }
 }
 
 query AdminCompanyApplication($company: String!, $season: String!) {
-    talkCategories {
+    talkCategories(where: { forSeason: { is: { uid: { equals: $season } } } }) {
         name
     }
 
@@ -432,7 +429,7 @@ query AdminCompanyApplications($season: String!) {
     industries {
         name
     }
-    talkCategories {
+    talkCategories(where: { forSeason: { is: { uid: { equals: $season } } } }) {
         name
     }
     booths {

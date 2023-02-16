@@ -99,11 +99,17 @@ type ApplicationTalk {
 
 type ApplicationTalkCategory {
   _count: ApplicationTalkCategoryCount
+  forSeason: Season
   name: String!
 }
 
 type ApplicationTalkCategoryCount {
   talks: Int!
+}
+
+input ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput {
+  forSeasonId: Int!
+  name: String!
 }
 
 enum ApplicationTalkCategoryOrderByRelevanceFieldEnum {
@@ -118,6 +124,7 @@ input ApplicationTalkCategoryOrderByRelevanceInput {
 
 input ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput {
   _relevance: ApplicationTalkCategoryOrderByRelevanceInput
+  forSeason: SeasonOrderByWithRelationAndSearchRelevanceInput
   name: SortOrder
 }
 
@@ -127,6 +134,7 @@ input ApplicationTalkCategoryRelationFilter {
 }
 
 enum ApplicationTalkCategoryScalarFieldEnum {
+  forSeasonId
   id
   name
 }
@@ -135,11 +143,12 @@ input ApplicationTalkCategoryWhereInput {
   AND: [ApplicationTalkCategoryWhereInput!]
   NOT: [ApplicationTalkCategoryWhereInput!]
   OR: [ApplicationTalkCategoryWhereInput!]
+  forSeason: SeasonRelationFilter
   name: StringFilter
 }
 
 input ApplicationTalkCategoryWhereUniqueInput {
-  name: String
+  forSeasonId_name: ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput
 }
 
 type ApplicationTalkCount {
@@ -1055,7 +1064,7 @@ type Mutation {
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
   createSeason(info: SeasonCreateInput!): Season
   createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
-  createTalkCategory(name: String!): ApplicationTalkCategory
+  createTalkCategory(name: String!, season: String!): ApplicationTalkCategory
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
   deleteNews(uid: String!): Boolean
@@ -1071,7 +1080,7 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   removeCompanyMember(email: String!): String
   renameIndustry(newName: String!, oldName: String!): Industry
-  renameTalkCategory(newName: String!, oldName: String!): ApplicationTalkCategory
+  renameTalkCategory(newName: String!, oldName: String!, season: String!): ApplicationTalkCategory
   requestPasswordReset(identifier: String!): String!
   requestPasswordResetFor(uid: String!): String!
   resumeEntryScan(userUid: String!): Resume
@@ -1772,6 +1781,7 @@ type SeasonCount {
   pressReleases: Int!
   scannedResumes: Int!
   sponsors: Int!
+  talkCategories: Int!
 }
 
 input SeasonCreateInput {

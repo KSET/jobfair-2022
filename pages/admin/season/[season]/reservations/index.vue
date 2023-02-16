@@ -78,7 +78,7 @@
               }
             }
 
-            participants {
+            participants(season: $season) {
               brandName
               program {
                 workshop {

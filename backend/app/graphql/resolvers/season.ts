@@ -183,7 +183,7 @@ export class SeasonFieldResolver {
     return items.map((row) => ({
       type: row.eventType,
       uid: eventToUid[row.eventType][row.eventId],
-      count: row.count,
+      count: Number(row.count),
     }));
   }
 

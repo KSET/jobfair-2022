@@ -6,6 +6,7 @@
   <span
     v-else
     :class="$style.translatedText"
+    :data-trans-key="translationKey"
     v-text="translatedText"
   />
 </template>
@@ -56,6 +57,8 @@
     ) {
       const translationsStore = useTranslationsStore();
 
+      const isDev = "development" === process.env.NODE_ENV;
+
       const translatedText = computed(() => translationsStore.translation(props.transKey));
       watch(
         translatedText,
@@ -70,6 +73,7 @@
       return {
         translatedText,
         isEditable: computed(() => translationsStore.isEditable),
+        translationKey: isDev ? props.transKey : undefined,
       };
     },
   });

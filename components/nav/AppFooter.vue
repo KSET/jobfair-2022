@@ -86,11 +86,11 @@
         <div
           class="col-6 lg:col-2 flex-order-1 lg:flex-order-2"
         >
-          <div>
+          <!-- <div>
             <strong>
               <translated-text trans-key="footer.qna.header" />
             </strong>
-          </div>
+          </div> -->
         </div>
         <div
           class="col-6 lg:col-2 flex-order-2 lg:flex-order-3"
@@ -395,6 +395,7 @@
     .socialIconContainer {
       display: flex;
       gap: .875rem;
+      max-width: 12em;
 
       .socialIcon {
         flex: 1;

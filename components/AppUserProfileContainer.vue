@@ -87,15 +87,6 @@
                 </nuxt-link>
               </li>
             </template>
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-me-cv' }"
-              >
-                <translated-text
-                  trans-key="profile.cv"
-                />
-              </nuxt-link>
-            </li>
           </ul>
         </div>
       </aside>

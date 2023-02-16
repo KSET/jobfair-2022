@@ -69,11 +69,11 @@ export const useCompanyStore = defineStore(
       canScanUsers() {
         const seasonsStore = useSeasonsStore();
 
-        return Boolean(this.hasApplicationApproved) && seasonsStore.isEventOngoing;
+        return Boolean(this.hasApplicationApproved) && seasonsStore.isEventOngoing && false;
       },
 
       canViewResumes() {
-        return Boolean(this.hasApplicationApproved) && Boolean(this.hasFeedback);
+        return Boolean(this.hasApplicationApproved) && Boolean(this.hasFeedback) && false;
       },
     },
 

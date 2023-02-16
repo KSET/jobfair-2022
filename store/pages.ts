@@ -85,16 +85,17 @@ export const usePagesStore = defineStore(
           {
             name: "profile.company.resumes",
             to: { name: "profile-me-company-resumes" },
-            if: () => userStore.hasCompany,
+            if: () => userStore.hasCompany && companyStore.canViewResumes,
           },
           {
             name: "profile.company.scan-qr",
             to: { name: "profile-me-company-scan-qr" },
-            if: () => userStore.hasCompany,
+            if: () => userStore.hasCompany && companyStore.canScanUsers,
           },
           {
             name: "profile.cv",
             to: { name: "profile-me-cv" },
+            if: () => false,
           },
         ].filter((page) => page.if ? page.if() : true);
       },

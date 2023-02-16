@@ -115,6 +115,7 @@
   } from "~/helpers/type";
   import {
     computed,
+    createError,
     defineComponent,
     reactive,
     ref,
@@ -156,6 +157,10 @@
 
     async setup() {
       useTitle("profile.company.resumes");
+
+      if ("$WITH_CV" !== process.env.NODE_ENV) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
 
       const router = useRouter();
       const route = useRoute();

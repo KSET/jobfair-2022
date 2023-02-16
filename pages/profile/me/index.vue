@@ -53,7 +53,7 @@
               />
             </div>
           </div>
-          <div :class="$style.itemActions">
+          <!-- <div :class="$style.itemActions">
             <nuxt-link
               :to="{ name: 'profile-me-cv' }"
               class="ml-auto"
@@ -67,7 +67,7 @@
                 />
               </p-button>
             </nuxt-link>
-          </div>
+          </div> -->
         </div>
 
         <template v-if="isSignUpPossible">

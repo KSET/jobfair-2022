@@ -208,6 +208,7 @@
     UpdateResume,
   } from "~/graphql/schema";
   import {
+    createError,
     unref,
     useThrottleFn,
   } from "#imports";
@@ -249,6 +250,10 @@
 
       const isLoading = ref(false);
       const toast = useToast();
+
+      if ("$WITH_CV" !== process.env.NODE_ENV) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
 
       type Resume = NonNullable<IMyResumeQuery["profile"]>["resume"];
       const resumeQuery = () => useQuery<IMyResumeQuery, IMyResumeQueryVariables>({

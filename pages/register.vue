@@ -12,6 +12,20 @@
       @submit="handleSubmit"
     >
       <template #after>
+        <div class="mt-3 flex">
+          <label class="flex align-items-center">
+            <input
+              v-model="gdprCheckbox"
+              required
+              type="checkbox"
+            >
+
+            <span class="ml-2">
+              <translated-text trans-key="form.register.gdpr" />
+            </span>
+          </label>
+        </div>
+
         <div
           v-if="errors.user.length > 0"
           :class="$style.errorContainer"
@@ -25,6 +39,7 @@
 
         <div :class="$style.submitContainer">
           <p-button
+            :disabled="!gdprCheckbox"
             :loading="isLoading"
             class="p-button-secondary w-full font-bold"
             type="submit"
@@ -123,11 +138,13 @@
       });
 
       const isLoading = ref(false);
+      const gdprCheckbox = ref(true);
 
       return {
         info,
         errors,
         isLoading,
+        gdprCheckbox,
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;

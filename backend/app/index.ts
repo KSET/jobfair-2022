@@ -18,6 +18,9 @@ import {
   getSentryRequestHandler,
   initSentry,
 } from "./services/error-service";
+import {
+  CORS_ALLOWED_HEADERS_STRING,
+} from "./helpers/request";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -47,6 +50,14 @@ export async function start() {
   app.use(getSentryRequestHandler());
 
   app.use(serverTiming());
+
+  app.use((req, res, next) => {
+    res.set("Access-Control-Allow-Credentials", "true");
+    res.set("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.set("Access-Control-Allow-Headers", CORS_ALLOWED_HEADERS_STRING);
+
+    next();
+  });
 
   await withSessionMiddleware(app);
   await withUserMiddleware(app);

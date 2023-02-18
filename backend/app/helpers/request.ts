@@ -22,6 +22,18 @@ import {
   isDev,
 } from "../services/helpers/status";
 
+export const CORS_ALLOWED_HEADERS = [
+  "Origin",
+  "X-Requested-With",
+  "Content-Type",
+  "Accept",
+  "Authorization",
+  "X-Session-Id",
+  "Cookie",
+  "Set-Cookie",
+];
+export const CORS_ALLOWED_HEADERS_STRING = CORS_ALLOWED_HEADERS.join(", ");
+
 export const response =
   <T>(
     {

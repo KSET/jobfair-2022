@@ -24,6 +24,9 @@ import {
 import {
   schemaFileConfig,
 } from "../graphql/schema/helpers";
+import {
+  CORS_ALLOWED_HEADERS,
+} from "../helpers/request";
 
 export default async (app: Router) => {
   const apollo = new ApolloServer({
@@ -54,7 +57,14 @@ export default async (app: Router) => {
   await apollo.start();
 
   app.use(graphqlUploadExpress());
-  app.use(apollo.getMiddleware());
+  app.use(apollo.getMiddleware({
+    cors: {
+      origin: true,
+      credentials: true,
+      methods: [ "GET", "POST", "OPTIONS" ],
+      allowedHeaders: CORS_ALLOWED_HEADERS,
+    },
+  }));
 
   return app;
 };

@@ -31,6 +31,9 @@ export default defineNuxtPlugin(() => {
         fetchOptions: () => {
           const config: RequestInit = {
             headers: {},
+            credentials: "include",
+            mode: "cors",
+            redirect: "follow",
           };
 
           // Session ID header for server

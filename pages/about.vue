@@ -344,6 +344,7 @@
       .eventIcon {
         width: 100px;
         margin-left: -.25rem;
+        opacity: .3;
 
         @include media(md) {
           margin-bottom: -1.5rem;

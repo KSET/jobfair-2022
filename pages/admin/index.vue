@@ -61,6 +61,20 @@
     </div>
 
     <div>
+      <h2>PR</h2>
+
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-pr' }">
+              PR dio
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
       <h2>Industrije</h2>
 
       <ul>

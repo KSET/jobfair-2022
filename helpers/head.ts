@@ -4,9 +4,9 @@ export const generateTitle =
 ;
 
 const aliasMap: Map<string, string[]> = new Map(Object.entries({
-  "og:title": [ "apple-mobile-web-app-title" ],
-  "og:image": [ "og:image:secure_url" ],
-  description: [ "og:description" ],
+  "og:title": [ "apple-mobile-web-app-title", "twitter:title" ],
+  "og:image": [ "og:image:secure_url", "twitter:image" ],
+  description: [ "og:description", "twitter:description" ],
   locale: [ "og:locale" ],
   "locale:alternative": [ "og:locale:alternative" ],
 }));

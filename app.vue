@@ -1,6 +1,7 @@
 <template>
   <Html :lang="currentLanguage">
     <Head>
+      <Meta name="twitter:card" content="summary_large_image" />
       <Meta :content="currentLanguage" name="locale" />
       <Meta :content="currentLanguage" name="og:locale" property="og:locale" />
       <Meta

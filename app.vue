@@ -64,6 +64,9 @@
     useThrottle,
   } from "@vueuse/core";
   import {
+    useRuntimeConfig,
+  } from "#imports";
+  import {
     useCookieConsentStore,
   } from "~/store/cookieConsent";
   import CookieConsent from "~/components/nav/CookieConsent.vue";
@@ -113,6 +116,7 @@
       const newsStore = useNewsStore();
       const seasonsStore = useSeasonsStore();
       const nuxt = useNuxtApp();
+      const config = useRuntimeConfig();
 
       translationsStore.setLanguageFromCookie();
 
@@ -139,7 +143,7 @@
           ...generateMetadata({
             title: "Job Fair",
             type: "website",
-            image: FacebookShareImage,
+            image: `${ config.public.BASE_URL }${ FacebookShareImage }`,
             viewport: "width=device-width, initial-scale=1, maximum-scale=5.0, minimum-scale=1, minimal-ui",
             "theme-color": "#00003f",
             "background-color": "#00003f",

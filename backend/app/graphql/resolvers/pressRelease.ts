@@ -134,7 +134,7 @@ export class PressReleaseFindResolver {
     const releases = await ctx.prisma.pressRelease.findMany({
       ...args,
       select: toSelect(info, transformSelect),
-    }) as PressRelease[];
+    }) as unknown as PressRelease[];
 
     const canView = canViewRelease(ctx.user);
 

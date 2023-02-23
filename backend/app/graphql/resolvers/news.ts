@@ -380,7 +380,7 @@ export class NewsMutationResolver {
       }
 
       return res;
-    }).then((res) => ({ success: true as const, res: res as News })).catch((err: Error) => ({ success: false as const, err }));
+    }).then((res) => ({ success: true as const, res: res as unknown as News })).catch((err: Error) => ({ success: false as const, err }));
 
     if (ret.success) {
       return {

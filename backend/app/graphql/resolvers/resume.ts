@@ -452,7 +452,7 @@ export class ResumeInfoResolver {
         where,
       }),
       ctx.prisma.resume.findMany({
-        select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }),
+        select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }) as any,
         take,
         skip,
         where,
@@ -464,7 +464,7 @@ export class ResumeInfoResolver {
 
     return {
       total,
-      items: items as Resume[],
+      items: items as unknown as Resume[],
     };
   }
 
@@ -562,7 +562,7 @@ export class ResumeInfoResolver {
 
     return {
       total,
-      items: items.map((item) => item.resume) as Resume[],
+      items: items.map((item) => item.resume) as unknown as Resume[],
     };
   }
 
@@ -660,7 +660,7 @@ export class ResumeInfoResolver {
 
     return {
       total,
-      items: items.map((item) => item.resume) as Resume[],
+      items: items.map((item) => item.resume) as unknown as Resume[],
     };
   }
 }
@@ -899,7 +899,7 @@ export class ResumeModifyResolver {
           extraField: info.extraField || "",
         },
         select: resumeSelect,
-      }) as Resume;
+      }) as unknown as Resume;
 
       if (oldResume.cv && newCvFile?.id !== oldResume.cv?.id) {
         await prisma.file.delete({

@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 generator typegraphql {

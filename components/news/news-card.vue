@@ -28,8 +28,8 @@
         <div :class="$style.body">
           <time
             :class="$style.date"
-            :datetime="new Date(newsItem.date).toISOString()"
-            v-text="newsItem.formattedDate"
+            :datetime="date.toISOString()"
+            v-text="formattedDate"
           />
 
           <h2
@@ -58,6 +58,13 @@
   import {
     INews,
   } from "~/graphql/schema";
+  import {
+    computed,
+    ref,
+  } from "#imports";
+  import {
+    formatDate,
+  } from "~/helpers/date";
 
   export default defineComponent({
     name: "NewsCard",
@@ -89,6 +96,16 @@
         type: Boolean,
         default: () => false,
       },
+    },
+
+    setup(props) {
+      const date = ref(new Date(props.newsItem.date as string));
+      const formattedDate = computed(() => formatDate(date.value));
+
+      return {
+        date,
+        formattedDate,
+      };
     },
   });
 </script>

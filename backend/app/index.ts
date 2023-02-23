@@ -55,7 +55,9 @@ export async function start() {
     res.set("Access-Control-Allow-Credentials", "true");
     res.set("Access-Control-Allow-Origin", req.headers.origin || "*");
     res.set("Access-Control-Allow-Headers", CORS_ALLOWED_HEADERS_STRING);
-
+    if ("OPTIONS" === req.method) {
+      return res.status(200).end();
+    }
     next();
   });
 

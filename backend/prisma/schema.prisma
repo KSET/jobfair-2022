@@ -393,14 +393,14 @@ model CompanyApplication {
 
   panelParticipants ApplicationPresenter[]
 
-  cocktail   ApplicationCocktail? @relation(fields: [cocktailId], references: [id])
+  cocktail   ApplicationCocktail? @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   cocktailId Int?                 @unique()
 
   approval CompanyApplicationApproval?
 
   /// @TypeGraphQL.omit(input: true)
-  feedbackForm   Form? @relation(fields: [feedbackFormId], references: [id])
+  feedbackForm   Form? @relation(fields: [feedbackFormId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   feedbackFormId Int?
 
@@ -425,7 +425,7 @@ model CompanyApplicationFeedback {
   id Int @id @default(autoincrement())
 
   /// @TypeGraphQL.omit(input: true)
-  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id])
+  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplicationId Int                @unique
 
@@ -481,7 +481,7 @@ model CompanyApplicationApproval {
   cocktail             Boolean
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id])
+  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplicationId Int                @unique()
 }
@@ -500,7 +500,7 @@ model ApplicationTalk {
   category       ApplicationTalkCategory @relation(fields: [categoryId], references: [id])
   language       String
   /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication      @relation(fields: [forApplicationId], references: [id])
+  forApplication CompanyApplication      @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(input: true)
   createdAt      DateTime                @default(now())
   /// @TypeGraphQL.omit(input: true)
@@ -579,7 +579,7 @@ model ApplicationWorkshop {
   presenters     ApplicationPresenter[]
   language       String
   /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication     @relation(fields: [forApplicationId], references: [id])
+  forApplication CompanyApplication     @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(input: true)
   createdAt      DateTime               @default(now())
   /// @TypeGraphQL.omit(input: true)

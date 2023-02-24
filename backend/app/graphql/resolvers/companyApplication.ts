@@ -1013,6 +1013,20 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
+    const fields = omit([ "vat" ], info);
+    const hasSomethingSelected = Object.values(fields).some(Boolean);
+
+    if (!hasSomethingSelected) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "You must select at least one option (eg. booth, talk, workshop)",
+          },
+        ],
+      };
+    }
+
     const canPickPanelOrCocktail = Boolean(info.talk || info.workshop || info.booth);
 
     if (!canPickPanelOrCocktail && (info.wantsCocktail || info.wantsPanel)) {

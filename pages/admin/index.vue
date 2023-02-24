@@ -66,8 +66,8 @@
       <dl>
         <dd>
           <strong>
-            <nuxt-link :to="{ name: 'admin-pr' }">
-              PR dio
+            <nuxt-link :to="{ name: 'admin-pr-qr' }">
+              Generiraj Job Fair QR kod
             </nuxt-link>
           </strong>
         </dd>

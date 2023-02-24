@@ -1,6 +1,6 @@
 <template>
   <app-max-width-container>
-    <h1>PR</h1>
+    <h1>PR / QR kod</h1>
 
     <div :class="$style.formContainer">
       <form :class="$style.form" @submit="submitHandler">
@@ -9,6 +9,7 @@
           required
           label="URL"
           name="url"
+          placeholder="https://jobfair.fer.unizg.hr/about"
           type="url"
           :disabled="isLoading"
         />

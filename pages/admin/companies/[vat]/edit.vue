@@ -236,13 +236,7 @@
       industriesStore.setIndustries(res?.data?.industries);
 
       const info_ = companyCreate(res?.data?.company)(industriesOptions);
-      const info = reactive({
-        ...info_,
-        vat: {
-          ...info_.vat,
-          disabled: false,
-        },
-      });
+      const info = reactive(info_);
 
       type AuthError = {
         message: string,

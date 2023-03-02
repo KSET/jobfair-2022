@@ -1,5 +1,6 @@
 import {
   ApolloServer,
+  ApolloServerPlugin,
 } from "@apollo/server";
 import {
   expressMiddleware,
@@ -32,8 +33,60 @@ import {
 import {
   CORS_ALLOWED_HEADERS,
 } from "../helpers/request";
+import {
+  EventsService,
+} from "../services/events-service";
 
 type ApolloContext = Omit<Context, "req" | "res">;
+
+const PASSWORD_KEY_REGEX = /password/i;
+
+const MyGqlPlugin = (): ApolloServerPlugin<ApolloContext> => ({
+  requestDidStart({ request, contextValue }) {
+    return Promise.resolve({
+      async willSendResponse(ctx) {
+        if ("mutation" !== ctx.operation?.operation) {
+          return;
+        }
+
+        const resp = ctx.response.body;
+
+        let result: unknown;
+        switch (resp.kind) {
+          case "single":
+            result = resp.singleResult;
+            break;
+
+          case "incremental":
+            result = resp.initialResult;
+            break;
+
+          default:
+            break;
+        }
+
+        const key = `graphql:mutation:${ ctx.operationName ?? "$unknown$" }`;
+        const userId = contextValue.user?.id;
+
+        const variables = { ...request.variables };
+        for (const key of Object.keys(variables)) {
+          if (PASSWORD_KEY_REGEX.test(key)) {
+            variables[key] = "********";
+          }
+        }
+
+        const data = {
+          operationName: request.operationName,
+          variables,
+          userId,
+          result,
+        };
+
+        await EventsService.logEvent(key, userId, data);
+      },
+    });
+  },
+});
 
 export default async (app: Router) => {
   const apollo = new ApolloServer<ApolloContext>({
@@ -53,6 +106,9 @@ export default async (app: Router) => {
     }),
     introspection: "production" !== process.env.NODE_ENV,
     csrfPrevention: false,
+    plugins: [
+      MyGqlPlugin(),
+    ],
   });
 
   await apollo.start();

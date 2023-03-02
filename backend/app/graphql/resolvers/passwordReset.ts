@@ -90,8 +90,9 @@ export class PasswordResetMutationResolver {
   @Mutation(() => String)
   async requestPasswordReset(
     @Ctx() ctx: Context,
-      @Arg("identifier") identifier: string,
+      @Arg("identifier") identifierRaw: string,
   ): GQLResponse<string> {
+    const identifier = identifierRaw.trim().toLowerCase();
     const {
       user,
       reset,

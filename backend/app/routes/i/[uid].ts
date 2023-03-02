@@ -44,13 +44,10 @@ const serveImage =
         // @ts-ignore
         name: fileObj.name as string,
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         mimeType: fileObj[size].mimeType as string,
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         minioKey: fileObj[size].minioKey as string,
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         etag: fileObj[size].etag as string,
       };
       /* eslint-enable @typescript-eslint/ban-ts-comment */

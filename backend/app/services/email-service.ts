@@ -24,6 +24,9 @@ import {
 import {
   captureError,
 } from "./error-service";
+import {
+  EventsService,
+} from "./events-service";
 
 type EmailTo = string | Address | (string | Address)[];
 
@@ -72,7 +75,21 @@ const sendMail =
         ],
       };
 
-      return smtpTransport.sendMail(message);
+      return (
+        smtpTransport
+          .sendMail(message)
+          .then((status) => {
+            void EventsService.logEvent("email:send", null, {
+              message,
+              status,
+            });
+            return status;
+          })
+          .catch((e) => {
+            captureError(e);
+            return null;
+          })
+      );
     } catch (e) {
       captureError(e);
       return null;

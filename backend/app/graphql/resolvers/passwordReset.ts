@@ -175,7 +175,7 @@ export class PasswordResetMutationResolver {
       user.language.replace("-", "_"),
     );
 
-    const result = await EmailService.sendMail(
+    await EmailService.sendMail(
       {
         name: `${ user.firstName } ${ user.lastName }`,
         address: user.email,
@@ -194,8 +194,6 @@ export class PasswordResetMutationResolver {
         },
       },
     );
-
-    console.info(result);
 
     return "ok";
   }

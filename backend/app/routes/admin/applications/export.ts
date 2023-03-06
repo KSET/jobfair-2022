@@ -205,8 +205,17 @@ router.getRaw("/", async (req, res) => {
         wantsCocktail,
       } = application;
       const [
-        contact,
+        contact = {
+          firstName: "{UNKNOWN FIRST NAME}",
+          lastName: "{UNKNOWN LAST NAME}",
+          email: "{UNKNOWN EMAIL}",
+          phone: "{UNKNOWN PHONE}",
+        },
       ] = company.members;
+
+      if (!contact) {
+        continue;
+      }
 
       const row = worksheet.addRow({
         brandName: company.brandName,

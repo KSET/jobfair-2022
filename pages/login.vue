@@ -70,7 +70,6 @@
 <script lang="ts">
   import {
     defineComponent,
-    nextTick,
     reactive,
     ref,
   } from "vue";
@@ -175,9 +174,6 @@
             } else {
               await router.push("/");
             }
-
-            await nextTick();
-            window.location.reload();
 
             return;
           }

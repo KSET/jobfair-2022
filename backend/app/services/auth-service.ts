@@ -11,6 +11,14 @@ export class AuthService {
       where: {
         email: identifier,
       },
+      include: {
+        roles: true,
+        companies: {
+          include: {
+            industry: true,
+          },
+        },
+      },
     });
 
     const validPassword = await PasswordService.comparePasswords(password, user?.password);

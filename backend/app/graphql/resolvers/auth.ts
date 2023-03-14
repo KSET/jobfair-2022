@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Info,
   InputType,
   Mutation,
   ObjectType,
@@ -14,6 +15,9 @@ import {
 import {
   omit,
 } from "rambdax";
+import {
+  GraphQLResolveInfo,
+} from "graphql";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -32,6 +36,15 @@ import {
 import {
   EventsService,
 } from "../../services/events-service";
+import {
+  toSelect,
+} from "../helpers/resolver";
+import {
+  Dict,
+} from "../../types/helpers";
+import {
+  transformSelect as transformSelectUser,
+} from "./user";
 
 @ObjectType()
 class AuthResponse extends ValidationResponseFor(User) {
@@ -43,11 +56,14 @@ export class UserRegisterInput extends UserCreateInput {
     passwordRepeat: string = "";
 }
 
+const transformSelect = (select: Dict) => transformSelectUser(select.entity as Dict);
+
 @Resolver()
 export class AuthResolver {
   @Mutation((_returns) => AuthResponse)
   async login(
     @Ctx() ctx: Context,
+      @Info() gqlResolveInfo: GraphQLResolveInfo,
       @Arg("identifier") identifier: string,
       @Arg("password") password: string,
   ): Promise<AuthResponse> {
@@ -67,10 +83,17 @@ export class AuthResolver {
 
     ctx.session.userId = user.id;
 
+    const userData = await ctx.prisma.user.findFirst({
+      where: {
+        id: user.id,
+      },
+      select: toSelect(gqlResolveInfo, transformSelect),
+    }) as unknown as User;
+
     void EventsService.logEvent("user:login", user.id);
 
     return {
-      entity: user,
+      entity: userData,
     };
   }
 
@@ -90,6 +113,7 @@ export class AuthResolver {
   @Mutation((_returns) => AuthResponse)
   async register(
     @Ctx() ctx: Context,
+      @Info() gqlResolveInfo: GraphQLResolveInfo,
       @Arg("info") data: UserRegisterInput,
   ): Promise<AuthResponse> {
     data.email = data.email.toLowerCase();
@@ -141,7 +165,8 @@ export class AuthResolver {
         ...omit([ "passwordRepeat" ])(data),
         password: await PasswordService.hashPassword(data.password),
       },
-    });
+      select: toSelect(gqlResolveInfo, transformSelect),
+    }) as unknown as User;
 
     // Log the user in
     ctx.session.userId = user.id;

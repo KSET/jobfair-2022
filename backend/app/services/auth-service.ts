@@ -1,4 +1,7 @@
 import {
+  omit,
+} from "lodash/fp";
+import {
   prisma,
 } from "../providers/prisma";
 import {
@@ -11,20 +14,16 @@ export class AuthService {
       where: {
         email: identifier,
       },
-      include: {
-        roles: true,
-        companies: {
-          include: {
-            industry: true,
-          },
-        },
+      select: {
+        id: true,
+        password: true,
       },
     });
 
     const validPassword = await PasswordService.comparePasswords(password, user?.password);
 
     if (validPassword) {
-      return user;
+      return omit([ "password" ], user);
     } else {
       return null;
     }

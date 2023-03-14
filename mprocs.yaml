@@ -1,0 +1,13 @@
+procs:
+  frontend:
+    cmd: ["yarn", "dev"]
+  backend:
+    cwd: "./backend"
+    cmd: ["yarn", "dev"]
+  caddy:
+    cmd: ["sudo", "caddy", "run"]
+    autostart: false
+  db-studio:
+    cwd: "./backend"
+    cmd: ["yarn", "prisma", "studio", "--browser", "none"]
+    autostart: false

@@ -42,14 +42,12 @@
                   <span v-if="form.length > 1">&nbsp;{{ i + 1 }}</span>
                 </legend>
 
-                <LazyClientOnly>
-                  <app-formgroup
-                    :errors="item.errors[formName][i]"
-                    :inputs="inputs"
-                    :loading="isLoading"
-                    no-form
-                  />
-                </LazyClientOnly>
+                <app-formgroup
+                  :errors="item.errors[formName][i]"
+                  :inputs="inputs"
+                  :loading="isLoading"
+                  no-form
+                />
               </fieldset>
             </template>
             <fieldset
@@ -60,28 +58,26 @@
                 <translated-text :trans-key="`form.legend.${formName}`" />
               </legend>
 
-              <LazyClientOnly>
-                <app-formgroup
-                  :class="$style.formContainer"
-                  :errors="item.errors[formName]"
-                  :inputs="form"
-                  :loading="isLoading"
-                  no-form
-                >
-                  <template #after>
-                    <div
-                      v-if="item.errors[formName].entity.length > 0"
-                      :class="$style.errorContainer"
-                    >
-                      <translated-text
-                        v-for="err in item.errors[formName].entity"
-                        :key="err.message"
-                        :trans-key="err.message"
-                      />
-                    </div>
-                  </template>
-                </app-formgroup>
-              </LazyClientOnly>
+              <app-formgroup
+                :class="$style.formContainer"
+                :errors="item.errors[formName]"
+                :inputs="form"
+                :loading="isLoading"
+                no-form
+              >
+                <template #after>
+                  <div
+                    v-if="item.errors[formName].entity.length > 0"
+                    :class="$style.errorContainer"
+                  >
+                    <translated-text
+                      v-for="err in item.errors[formName].entity"
+                      :key="err.message"
+                      :trans-key="err.message"
+                    />
+                  </div>
+                </template>
+              </app-formgroup>
             </fieldset>
           </div>
         </Panel>

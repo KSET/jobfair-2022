@@ -21,10 +21,10 @@
       const companyStore = useCompanyStore();
       const seasonsStore = useSeasonsStore();
 
+      await companyStore.fetchCurrentApplication();
+
       const hasApplication = Boolean(companyStore.applicationInfo?.companyApplication);
       const applicationsEditable = seasonsStore.areApplicationsEditable;
-
-      await companyStore.fetchCurrentApplication();
 
       if (!hasApplication || !applicationsEditable) {
         throw createError({ statusCode: 404, statusMessage: "Page Not Found" });

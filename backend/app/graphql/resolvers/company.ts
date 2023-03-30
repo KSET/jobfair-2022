@@ -150,10 +150,27 @@ export class CompanyFieldResolver {
   }
 
   @FieldResolver((_type) => CompanyProgram, { nullable: true })
-  program(
+  async program(
     @Root() company: Company,
+      @Ctx() ctx: Context,
   ): GQLResponse<CompanyApplication, "nullable"> {
-    return Promise.resolve(company.applications?.[0] || null);
+    const currentSeason = await ctx.prisma.season.findFirst({
+      where: {
+        startsAt: {
+          lte: new Date(),
+        },
+        endsAt: {
+          gte: new Date(),
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const application = company.applications?.find((application) => application.forSeasonId === currentSeason?.id);
+
+    return application ?? null;
   }
 }
 

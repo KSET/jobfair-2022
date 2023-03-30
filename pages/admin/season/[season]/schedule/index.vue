@@ -48,9 +48,9 @@
       </legend>
 
       <fieldset
-        v-if="participant.program.talk"
+        v-if="participant.program?.talk"
         :class="{
-          [$style.missingItem] : !participant.program.talk.event,
+          [$style.missingItem] : !participant.program?.talk.event,
         }"
       >
         <legend>
@@ -59,14 +59,14 @@
 
         <EditScheduleItemFor
           v-model:item="participant.program.talk.event"
-          :for-uid="participant.program.talk.uid"
+          :for-uid="participant.program?.talk.uid"
           :season="season.uid"
           type="talk"
         />
       </fieldset>
 
       <fieldset
-        v-if="participant.program.workshop"
+        v-if="participant.program?.workshop"
         :class="{
           [$style.missingItem] : !participant.program.workshop.event,
         }"

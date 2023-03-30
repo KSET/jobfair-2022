@@ -47,7 +47,7 @@
         </div>
       </details>
     </div>
-    <span v-else :data-type="type" v-text="value" />
+    <span v-else :data-type="type" :title="value" v-text="value" />
   </div>
 </template>
 

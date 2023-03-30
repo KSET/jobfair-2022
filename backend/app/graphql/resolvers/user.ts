@@ -5,6 +5,7 @@ import {
   FindManyUserArgs,
   Role as QRole,
   UserCreateInput,
+  EventLog,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -65,6 +66,9 @@ import {
 import {
   transformSelect as transformSelectResume,
 } from "./resume";
+import {
+  transformSelect as transformSelectEventLog,
+} from "./eventLog";
 
 @Resolver((_of) => User)
 export class UserFieldResolver {
@@ -94,6 +98,18 @@ export class UserFieldResolver {
     @Root() user: User,
   ): GQLField<Resume, "nullable"> {
     return user.resume;
+  }
+
+  @FieldResolver((_type) => [ EventLog ])
+  eventLog(
+    @Root() user: User,
+      @Ctx() ctx: Context,
+  ): GQLField<EventLog[]> {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return [];
+    }
+
+    return user.events ?? [];
   }
 }
 
@@ -126,6 +142,15 @@ export const transformSelect = transformSelectFor<UserFieldResolver>({
     select.resume = {
       select: transformSelectResume(select.resume as Dict),
     };
+    return select;
+  },
+
+  eventLog(select) {
+    select.events = {
+      select: transformSelectEventLog(select.eventLog as Dict),
+    };
+    delete select.eventLog;
+
     return select;
   },
 });

@@ -2,7 +2,15 @@
   <app-max-width-container>
     <h1>Korisnici ({{ users.length }})</h1>
 
-    <h4>Statustika:</h4>
+    <div>
+      <nuxt-link :to="{ name: 'admin' }">
+        <p-button>
+          &larr; Natrag
+        </p-button>
+      </nuxt-link>
+    </div>
+
+    <h4>Statistika:</h4>
     <ul>
       <li>Studenti: {{ stats.students }}</li>
       <li>Ne-studenti: {{ stats.nonStudents }}</li>

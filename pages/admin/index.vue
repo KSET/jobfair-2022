@@ -29,6 +29,13 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-users-event-log' }">
+              Pregledaj logove
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 

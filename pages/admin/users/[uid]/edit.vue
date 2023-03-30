@@ -2,42 +2,40 @@
   <app-max-width-container :class="$style.container" :not-found="!userExists">
     <h1>Edit user</h1>
 
-    <LazyClientOnly>
-      <app-formgroup
-        :class="$style.form"
-        :errors="errors"
-        :inputs="info"
-        :loading="isLoading"
-        @submit="handleSubmit"
-      >
-        <template #after>
-          <div
-            v-if="errors.entity.length > 0"
-            :class="$style.errorContainer"
+    <app-formgroup
+      :class="$style.form"
+      :errors="errors"
+      :inputs="info"
+      :loading="isLoading"
+      @submit="handleSubmit"
+    >
+      <template #after>
+        <div
+          v-if="errors.entity.length > 0"
+          :class="$style.errorContainer"
+        >
+          <translated-text
+            v-for="err in errors.entity"
+            :key="err.message"
+            :trans-key="err.message"
+          />
+        </div>
+
+        <div class="flex -mt-3">
+          <NuxtLink :to="{ name: 'admin-users' }">
+            <p-button>Cancel</p-button>
+          </NuxtLink>
+
+          <p-button
+            :loading="isLoading"
+            class="p-button-secondary font-bold ml-auto"
+            type="submit"
           >
-            <translated-text
-              v-for="err in errors.entity"
-              :key="err.message"
-              :trans-key="err.message"
-            />
-          </div>
-
-          <div class="flex -mt-3">
-            <a :href="$router.resolve({ name: 'admin-users' }).href">
-              <p-button>Cancel</p-button>
-            </a>
-
-            <p-button
-              :loading="isLoading"
-              class="p-button-secondary font-bold ml-auto"
-              type="submit"
-            >
-              <translated-text trans-key="form.save" />
-            </p-button>
-          </div>
-        </template>
-      </app-formgroup>
-    </LazyClientOnly>
+            <translated-text trans-key="form.save" />
+          </p-button>
+        </div>
+      </template>
+    </app-formgroup>
 
     <h2>Reset password</h2>
     <div class="flex">
@@ -49,6 +47,60 @@
         Send password reset email
       </p-button>
     </div>
+
+    <h2>Event log</h2>
+    <DataTable
+      ref="dt"
+      v-model:filters="filters"
+      :class="$style.table"
+      :rows="20"
+      :rows-per-page-options="[2,5,10,20,50,100]"
+      :value="eventLog"
+      data-key="realId"
+      paginator
+      paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+      removable-sort
+      responsive-layout="scroll"
+      row-hover
+      striped-rows
+    >
+      <template #header>
+        <div :class="$style.tableHeader">
+          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+
+          <span class="p-input-icon-left">
+            <i class="pi pi-search" />
+            <InputText v-model="filters['global'].value" placeholder="Pretraži event log" />
+          </span>
+        </div>
+      </template>
+      <Column :sortable="true" field="id" header="#" header-style="width: 6em">
+        <template #body="{ data }">
+          <pre :data-id="data.realId" v-text="data.id" />
+        </template>
+      </Column>
+      <Column :sortable="true" field="name" header="Ime eventa">
+        <template #body="{ data }">
+          <pre v-text="data.name" />
+        </template>
+      </Column>
+      <Column :sortable="true" field="date" header="Datum">
+        <template #body="{ data }">
+          {{ data.date.toLocaleString() }}
+        </template>
+      </Column>
+      <Column :sortable="true" field="data" header="Podatci">
+        <template #body="{ data }">
+          <pre :class="$style.dataContainer">
+            <AppJsonViewer
+              :json="data.data"
+              json-is-raw
+              expanded
+            />
+          </pre>
+        </template>
+      </Column>
+    </DataTable>
   </app-max-width-container>
 </template>
 
@@ -74,6 +126,13 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import DataTable from "primevue/datatable";
+  import Column from "primevue/column";
+  import {
+    FilterMatchMode,
+    FilterService,
+  } from "primevue/api";
+  import InputText from "primevue/inputtext";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useMutation,
@@ -94,14 +153,22 @@
   import {
     userEdit,
   } from "~/helpers/forms/user";
+  import {
+    unref,
+  } from "#imports";
+  import AppJsonViewer from "~/components/util/app-json-viewer.vue";
 
   export default defineComponent({
     name: "PageAdminUserEdit",
 
     components: {
+      AppJsonViewer,
       AppFormgroup,
       TranslatedText,
       AppMaxWidthContainer,
+      InputText,
+      DataTable,
+      Column,
     },
 
     async setup() {
@@ -131,6 +198,12 @@
                     roles {
                       name
                     }
+                    eventLog {
+                      id
+                      date
+                      name
+                      data
+                    }
                 }
 
                 roles {
@@ -142,6 +215,21 @@
           uid,
         },
       })();
+
+      const eventLog =
+        resp
+          ?.data
+          ?.user
+          ?.eventLog
+          .map((x, i) => ({
+            ...x,
+            id: i + 1,
+            realId: x.id,
+            date: new Date(x.date as string),
+          }))
+          .sort((lt, gt) => gt.date.getTime() - lt.date.getTime())
+        ?? []
+      ;
 
       const isLoading = ref(false);
       const isResetPasswordLoading = ref(false);
@@ -160,8 +248,44 @@
       }) as Record<keyof typeof info | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
+      const dt = ref<DataTable | null>(null);
+
+      const filters_ = <T extends keyof typeof eventLog[number] | "global">(x: Record<T, unknown>) => ref(x);
+      const filters = filters_({
+        global: { value: null as string | null, matchMode: "$global" },
+        name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        data: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        date: { value: null, matchMode: FilterMatchMode.DATE_IS },
+      });
+
+      FilterService.register("$global", (value: unknown, filter: string | null | undefined) => {
+        if (filter === undefined || null === filter || "" === filter.trim()) {
+          return true;
+        }
+
+        const lowerFilter = filter.toLocaleLowerCase().trim();
+
+        if ("string" === typeof value) {
+          return value.toLocaleLowerCase().includes(lowerFilter);
+        }
+
+        return false;
+      });
+
       return {
+        dt,
+        filters,
         userExists: Boolean(resp?.data?.user),
+        eventLog,
+        exportCSV() {
+          const $dt = unref(dt);
+
+          if (!$dt) {
+            return;
+          }
+
+          $dt.exportCSV();
+        },
         info,
         errors,
         isLoading,
@@ -274,5 +398,32 @@
         grid-column: initial;
       }
     }
+
+    .table table {
+      width: 100%;
+      table-layout: fixed;
+
+      tr {
+
+        > td {
+          vertical-align: middle;
+
+          > pre {
+            margin: 0;
+            white-space: pre-line;
+          }
+        }
+      }
+    }
+  }
+
+  .dataContainer {
+    line-height: 0;
+  }
+
+  .tableHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 </style>

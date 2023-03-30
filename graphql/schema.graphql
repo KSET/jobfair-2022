@@ -811,6 +811,41 @@ type EditApprovedCompanyApplicationResponse {
   errors: [FieldError!]
 }
 
+type EventLog {
+  data: String
+  date: DateTime!
+  id: Int!
+  name: String!
+  user: User
+}
+
+enum EventLogOrderByRelevanceFieldEnum {
+  data
+  name
+}
+
+input EventLogOrderByRelevanceInput {
+  fields: [EventLogOrderByRelevanceFieldEnum!]!
+  search: String!
+  sort: SortOrder!
+}
+
+input EventLogOrderByWithRelationAndSearchRelevanceInput {
+  _relevance: EventLogOrderByRelevanceInput
+  data: SortOrder
+  date: String
+  id: String
+  name: SortOrder
+  user: UserOrderByWithRelationAndSearchRelevanceInput
+}
+
+type EventLogPaginationResult {
+  page: Int!
+  perPage: Int!
+  records: [EventLog!]!
+  totalRecords: Int!
+}
+
 input EventReservationCreateManyUserInput {
   eventId: Int!
   eventType: String!
@@ -1341,6 +1376,7 @@ type Query {
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   companyInfo(uid: String!): Company
   currentSeason: Season
+  eventLog(orderBy: [EventLogOrderByWithRelationAndSearchRelevanceInput!], page: Int! = 1, perPage: Int! = 20, where: String): EventLogPaginationResult!
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(filter: NewsFilter, lang: String!): [News!]!
@@ -2102,6 +2138,7 @@ type User {
   companies: [Company!]!
   createdAt: DateTime!
   email: String!
+  eventLog: [EventLog!]!
   firstName: String!
   language: String!
   lastName: String!

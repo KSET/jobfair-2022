@@ -162,7 +162,7 @@ model Industry {
 }
 
 model EventLog {
-  /// @TypeGraphQL.omit(output: true, input: true)
+  /// @TypeGraphQL.omit(input: true)
   id   Int      @id @default(autoincrement())
   name String
   user User?    @relation(fields: [userId], references: [id])

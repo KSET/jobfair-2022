@@ -1,49 +1,34 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage
-      v-if="isAllowed"
-    />
-    <page-not-found
-      v-else
-    />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
   import {
-    computed,
+    createError,
     defineComponent,
-  } from "vue";
-  import PageNotFound from "~/components/page-not-found.vue";
+  } from "#imports";
   import {
     useCompanyStore,
   } from "~/store/company";
   import {
     useSeasonsStore,
   } from "~/store/seasons";
-  import {
-    unref,
-  } from "#imports";
 
   export default defineComponent({
     name: "PageProfileCompanyApplicationHandler",
-
-    components: {
-      PageNotFound,
-    },
 
     async setup() {
       const companyStore = useCompanyStore();
       const seasonsStore = useSeasonsStore();
 
-      const hasApplication = computed(() => Boolean(companyStore.applicationInfo?.companyApplication));
-      const applicationsEditable = computed(() => seasonsStore.areApplicationsEditable);
+      const hasApplication = Boolean(companyStore.applicationInfo?.companyApplication);
+      const applicationsEditable = seasonsStore.areApplicationsEditable;
 
       await companyStore.fetchCurrentApplication();
 
-      return {
-        isAllowed: computed(() => unref(hasApplication) && unref(applicationsEditable)),
-      };
+      if (!hasApplication || !applicationsEditable) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
     },
   });
 </script>

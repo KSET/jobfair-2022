@@ -1,118 +1,112 @@
 <template>
-  <div style="display: contents;">
-    <div v-if="!notFound" :class="$style.container">
-      <aside :class="$style.aside">
-        <div :class="$style.avatarContainer">
-          <profile-picture />
-        </div>
-        <p
-          class="text-center"
-          v-text="user.email"
-        />
-        <div :class="$style.linksContainer">
-          <ul>
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-me' }"
-              >
-                <translated-text
-                  trans-key="profile.my-profile"
-                />
-              </nuxt-link>
-            </li>
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-me-settings' }"
-              >
-                <translated-text
-                  trans-key="profile.settings"
-                />
-              </nuxt-link>
-            </li>
-            <template v-if="hasCompany">
-              <li>
-                <nuxt-link
-                  :to="{ name: 'profile-me-company' }"
-                >
-                  <translated-text
-                    trans-key="profile.company"
-                  />
-                </nuxt-link>
-              </li>
-              <li v-if="applicationsOpen">
-                <nuxt-link
-                  :to="{ name: 'profile-me-company-signup' }"
-                >
-                  <translated-text
-                    trans-key="profile.company.signup"
-                  />
-                </nuxt-link>
-              </li>
-              <li v-else-if="applicationApproved && applicationsEditable">
-                <nuxt-link
-                  :to="{ name: 'profile-me-company-application-edit' }"
-                >
-                  <translated-text
-                    trans-key="profile.company.application.edit"
-                  />
-                </nuxt-link>
-              </li>
-              <li v-if="canViewResumes">
-                <nuxt-link
-                  :to="{ name: 'profile-me-company-resumes' }"
-                >
-                  <translated-text
-                    trans-key="profile.company.resumes"
-                  />
-                </nuxt-link>
-              </li>
-              <li v-if="canScanUsers">
-                <nuxt-link
-                  :to="{ name: 'profile-me-company-scan-qr' }"
-                >
-                  <translated-text
-                    trans-key="profile.company.scan-qr"
-                  />
-                </nuxt-link>
-              </li>
-            </template>
-            <template v-else>
-              <li>
-                <nuxt-link
-                  :to="{ name: 'profile-register-company' }"
-                >
-                  <translated-text
-                    trans-key="profile.company-register"
-                  />
-                </nuxt-link>
-              </li>
-            </template>
-          </ul>
-        </div>
-      </aside>
-
-      <div :class="$style.content">
-        <slot />
+  <div :class="$style.container">
+    <aside :class="$style.aside">
+      <div :class="$style.avatarContainer">
+        <profile-picture />
       </div>
+      <p
+        class="text-center"
+        v-text="user.email"
+      />
+      <div :class="$style.linksContainer">
+        <ul>
+          <li>
+            <nuxt-link
+              :to="{ name: 'profile-me' }"
+            >
+              <translated-text
+                trans-key="profile.my-profile"
+              />
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'profile-me-settings' }"
+            >
+              <translated-text
+                trans-key="profile.settings"
+              />
+            </nuxt-link>
+          </li>
+          <template v-if="hasCompany">
+            <li>
+              <nuxt-link
+                :to="{ name: 'profile-me-company' }"
+              >
+                <translated-text
+                  trans-key="profile.company"
+                />
+              </nuxt-link>
+            </li>
+            <li v-if="applicationsOpen">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-signup' }"
+              >
+                <translated-text
+                  trans-key="profile.company.signup"
+                />
+              </nuxt-link>
+            </li>
+            <li v-else-if="applicationApproved && applicationsEditable">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-application-edit' }"
+              >
+                <translated-text
+                  trans-key="profile.company.application.edit"
+                />
+              </nuxt-link>
+            </li>
+            <li v-if="canViewResumes">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-resumes' }"
+              >
+                <translated-text
+                  trans-key="profile.company.resumes"
+                />
+              </nuxt-link>
+            </li>
+            <li v-if="canScanUsers">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-scan-qr' }"
+              >
+                <translated-text
+                  trans-key="profile.company.scan-qr"
+                />
+              </nuxt-link>
+            </li>
+          </template>
+          <template v-else>
+            <li>
+              <nuxt-link
+                :to="{ name: 'profile-register-company' }"
+              >
+                <translated-text
+                  trans-key="profile.company-register"
+                />
+              </nuxt-link>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </aside>
+
+    <div :class="$style.content">
+      <slot />
     </div>
-    <app-max-width-container v-else>
-      <page-not-found />
-    </app-max-width-container>
   </div>
 </template>
 
 <script lang="ts">
   import {
     computed,
+    createError,
     defineComponent,
-  } from "vue";
+  } from "#imports";
   import TranslatedText from "~/components/TranslatedText.vue";
   import ProfilePicture from "~/components/user/profile/profile-picture.vue";
   import {
     useUserStore,
   } from "~/store/user";
-  import PageNotFound from "~/components/page-not-found.vue";
-  import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useSeasonsStore,
   } from "~/store/seasons";
@@ -122,10 +116,8 @@
 
   export default defineComponent({
     components: {
-      AppMaxWidthContainer,
       TranslatedText,
       ProfilePicture,
-      PageNotFound,
     },
 
     props: {
@@ -136,10 +128,14 @@
       },
     },
 
-    setup() {
+    setup(props) {
       const userStore = useUserStore();
       const seasonsStore = useSeasonsStore();
       const companyStore = useCompanyStore();
+
+      if (props.notFound) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
 
       return {
         isSeasonInProgress: computed(() => Boolean(seasonsStore.currentSeason)),

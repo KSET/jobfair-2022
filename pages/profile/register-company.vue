@@ -1,39 +1,25 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage
-      v-if="!hasCompany"
-    />
-    <page-not-found
-      v-else
-    />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
   import {
-    computed,
+    createError,
     defineComponent,
-  } from "vue";
+  } from "#imports";
   import {
     useUserStore,
   } from "~/store/user";
-  import PageNotFound from "~/components/page-not-found.vue";
 
   export default defineComponent({
     name: "PageRegisterCompanyHandler",
 
-    components: {
-      PageNotFound,
-    },
-
     setup() {
       const userStore = useUserStore();
 
-      const hasCompany = computed(() => userStore.hasCompany);
-
-      return {
-        hasCompany,
-      };
+      if (userStore.hasCompany) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
     },
   });
 </script>

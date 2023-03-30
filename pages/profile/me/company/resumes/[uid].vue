@@ -1,27 +1,19 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage v-if="resumeExists" />
-    <page-not-found v-else />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
   import {
-    computed,
+    createError,
     defineComponent,
     useRoute,
   } from "#imports";
   import {
     useResumeStore,
   } from "~/store/resume";
-  import PageNotFound from "~/components/page-not-found.vue";
 
   export default defineComponent({
     name: "PageResumeDataFlow",
-
-    components: {
-      PageNotFound,
-    },
 
     async setup() {
       const route = useRoute();
@@ -29,9 +21,9 @@
 
       await resumeStore.fetchResumeFor(route.params.uid as string);
 
-      return {
-        resumeExists: computed(() => Boolean(resumeStore.resume)),
-      };
+      if (!resumeStore.resume) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
     },
   });
 </script>

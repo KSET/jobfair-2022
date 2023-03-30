@@ -1,26 +1,18 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage
-      v-if="season"
-    />
-    <page-not-found
-      v-else
-    />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
-  import {
-    computed,
-    defineComponent,
-  } from "vue";
   import {
     gql,
   } from "@urql/core";
   import {
     useRoute,
   } from "vue-router";
-  import PageNotFound from "~/components/page-not-found.vue";
+  import {
+    createError,
+    defineComponent,
+  } from "#imports";
   import {
     useQuery,
   } from "~/composables/useQuery";
@@ -33,10 +25,6 @@
 
   export default defineComponent({
     name: "AdminRouteHandler",
-
-    components: {
-      PageNotFound,
-    },
 
     async setup() {
       const route = useRoute();
@@ -73,11 +61,12 @@
       })();
 
       const season = res?.data?.season;
-      seasonsStore.setSeason(season);
 
-      return {
-        season: computed(() => seasonsStore.season),
-      };
+      if (!season) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
+
+      seasonsStore.setSeason(season);
     },
   });
 </script>

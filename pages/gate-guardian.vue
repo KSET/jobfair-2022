@@ -1,37 +1,27 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage
-      v-if="isKSET"
-    />
-    <page-not-found
-      v-else
-    />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
   import {
-    computed,
+    createError,
     defineComponent,
-  } from "vue";
+  } from "#imports";
   import {
     useUserStore,
   } from "~/store/user";
-  import PageNotFound from "~/components/page-not-found.vue";
 
   export default defineComponent({
     name: "AdminRouteHandler",
 
-    components: {
-      PageNotFound,
-    },
-
     setup() {
       const userStore = useUserStore();
 
-      return {
-        isKSET: computed(() => userStore.user?.email.endsWith("@kset.org")),
-      };
+      const isKset = userStore.user?.email.endsWith("@kset.org");
+
+      if (!isKset) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
     },
   });
 </script>

@@ -1,20 +1,12 @@
 <template>
-  <div style="display: contents;">
-    <NuxtPage
-      v-if="isFeedbackOpen && hasApplication"
-    />
-    <page-not-found
-      v-else
-    />
-  </div>
+  <NuxtPage />
 </template>
 
 <script lang="ts">
   import {
-    computed,
+    createError,
     defineComponent,
-  } from "vue";
-  import PageNotFound from "~/components/page-not-found.vue";
+  } from "#imports";
   import {
     useSeasonsStore,
   } from "~/store/seasons";
@@ -25,20 +17,15 @@
   export default defineComponent({
     name: "PageProfileCompanyFeedbackHandler",
 
-    components: {
-      PageNotFound,
-    },
-
     async setup() {
       const seasonsStore = useSeasonsStore();
       const companyStore = useCompanyStore();
 
       await companyStore.fetchCurrentApplication();
 
-      return {
-        isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
-        hasApplication: computed(() => companyStore.hasApplication),
-      };
+      if (!seasonsStore.isFeedbackOpen || !companyStore.hasApplication) {
+        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      }
     },
   });
 </script>

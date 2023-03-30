@@ -36,10 +36,34 @@ import {
 import {
   EventsService,
 } from "../services/events-service";
+import {
+  Dict,
+} from "../types/helpers";
 
 type ApolloContext = Omit<Context, "req" | "res">;
 
 const PASSWORD_KEY_REGEX = /password/i;
+
+const cleanKeys = <T>(obj: T): T => {
+  if (Array.isArray(obj)) {
+    return (obj as unknown[]).map(cleanKeys) as T;
+  }
+
+  if (obj && "object" === typeof obj) {
+    const o = { ...obj } as Dict;
+    for (const [ key, value ] of Object.entries(o)) {
+      if (PASSWORD_KEY_REGEX.test(key)) {
+        o[key] = "********";
+      } else {
+        o[key] = cleanKeys(value);
+      }
+    }
+
+    return o as unknown as T;
+  }
+
+  return obj;
+};
 
 const MyGqlPlugin = (): ApolloServerPlugin<ApolloContext> => ({
   requestDidStart({ request, contextValue }) {
@@ -68,12 +92,7 @@ const MyGqlPlugin = (): ApolloServerPlugin<ApolloContext> => ({
         const key = `graphql:mutation:${ ctx.operationName ?? "$unknown$" }`;
         const userId = contextValue.user?.id;
 
-        const variables = { ...request.variables };
-        for (const key of Object.keys(variables)) {
-          if (PASSWORD_KEY_REGEX.test(key)) {
-            variables[key] = "********";
-          }
-        }
+        const variables = cleanKeys(request.variables);
 
         const data = {
           operationName: request.operationName,

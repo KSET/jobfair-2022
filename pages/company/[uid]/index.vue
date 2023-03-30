@@ -3,10 +3,12 @@
     <div :class="$style.companyInfo">
       <nuxt-link
         :class="$style.backButton"
-        :to="{ name: 'schedule' }"
+        :to="isScheduleShown ? { name: 'schedule' } : { name: 'participants' }"
       >
         <i class="pi pi-chevron-left" />
-        <span :class="$style.backButtonText"><translated-text trans-key="back" /></span>
+        <span :class="$style.backButtonText">
+          <translated-text trans-key="back" />
+        </span>
       </nuxt-link>
       <app-img
         :alt="`${company.brandName} logo`"
@@ -25,7 +27,15 @@
     </div>
     <div :class="$style.eventContainer">
       <h2 :class="$style.companyName" v-text="company.brandName" />
-      <template v-if="programItems">
+      <template v-if="!isScheduleShown">
+        <h2>
+          <translated-text trans-key="company.info.schedule-not-shown.title" />
+        </h2>
+        <p>
+          <translated-text trans-key="company.info.schedule-not-shown.text" />
+        </p>
+      </template>
+      <template v-else-if="programItems">
         <TabView
           v-model:activeIndex="activeIndex"
           :class="$style.eventItems"
@@ -216,6 +226,14 @@
           </TabPanel>
         </TabView>
       </template>
+      <template v-else>
+        <h2>
+          <translated-text trans-key="company.info.no-program-items.title" />
+        </h2>
+        <p>
+          <translated-text trans-key="company.info.no-program-items.text" />
+        </p>
+      </template>
     </div>
   </app-max-width-container>
 </template>
@@ -264,6 +282,9 @@
     EventType,
     statusFromEventList,
   } from "~/helpers/event-status";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
 
   export default defineComponent({
     name: "PageCompanyInfo",
@@ -281,6 +302,7 @@
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
       const userStore = useUserStore();
+      const seasonsStore = useSeasonsStore();
 
       const company = computed(() => companyStore.companyInfo!);
       const translateFor =
@@ -340,6 +362,7 @@
 
       return {
         loggedIn: computed(() => userStore.isLoggedIn),
+        isScheduleShown: computed(() => seasonsStore.isScheduleShown),
         signupLoading,
         activeIndex,
         company,

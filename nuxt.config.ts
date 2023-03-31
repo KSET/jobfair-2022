@@ -9,7 +9,7 @@ import {
   defineNuxtConfig,
 } from "nuxt/config";
 
-const ASSETS_PATH = "/_assets/";
+const ASSETS_PATH = "_assets";
 
 const uid = new ShortUniqueId();
 
@@ -53,7 +53,7 @@ export default defineNuxtConfig({
   ],
 
   app: {
-    buildAssetsDir: ASSETS_PATH,
+    buildAssetsDir: `/${ ASSETS_PATH }/`,
     rootId: "__jobfair",
   },
 
@@ -107,6 +107,16 @@ export default defineNuxtConfig({
         fix: true,
       }),
     ],
+
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: `${ ASSETS_PATH }/[hash][extname]`,
+          chunkFileNames: `${ ASSETS_PATH }/[hash].js`,
+          entryFileNames: `${ ASSETS_PATH }/[hash].js`,
+        },
+      },
+    },
   },
 
   runtimeConfig: {

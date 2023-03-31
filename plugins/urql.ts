@@ -10,9 +10,6 @@ import {
   unref,
 } from "vue";
 import {
-  SSRData,
-} from "@urql/core/dist/types/exchanges/ssr";
-import {
   defineNuxtPlugin,
   useCookie,
   useRuntimeConfig,
@@ -33,7 +30,7 @@ export default defineNuxtPlugin((nuxt) => {
   // when app is created in browser, restore SSR state from nuxt payload
   if (process.client) {
     nuxt.hook("app:created", () => {
-      ssr.restoreData(nuxt.payload[SSR_KEY] as SSRData);
+      ssr.restoreData(nuxt.payload[SSR_KEY] as never);
     });
   }
 
@@ -45,11 +42,11 @@ export default defineNuxtPlugin((nuxt) => {
   }
 
   const client = createClient({
-    url: `${ config.API_BASE as unknown as string }/graphql`,
+    url: `${ config.public.API_BASE }/graphql`,
     exchanges: [
       dedupExchange,
       ssr,
-      multipartFetchExchange,
+      multipartFetchExchange as never,
     ],
     fetchOptions: () => {
       const config: RequestInit = {

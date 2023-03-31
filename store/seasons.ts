@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+
 import {
   defineStore,
 } from "pinia";
@@ -59,8 +61,8 @@ export const useSeasonsStore = defineStore(
         return areOpen("showParticipants", state.currentSeason);
       },
 
-      isSignUpPossible(store) {
-        const { currentSeason } = store;
+      isSignUpPossible() {
+        const { currentSeason } = this;
 
         if (!currentSeason) {
           return false;
@@ -69,7 +71,10 @@ export const useSeasonsStore = defineStore(
         const start = currentSeason.showParticipantsFrom as Date;
         const end = currentSeason.eventUntil as Date;
 
-        return inRange(start, end);
+        const inEventRange = inRange(start, end);
+        const scheduleShown = this.isScheduleShown;
+
+        return inEventRange && scheduleShown;
       },
 
       arePartnersShown(state) {

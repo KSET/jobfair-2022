@@ -11,7 +11,6 @@ module.exports = {
     "assets/styles/theme/**/*",
   ],
   "rules": {
-    "number-leading-zero": "never",
     "selector-class-pattern": null,
     "declaration-block-no-redundant-longhand-properties": null,
     "no-invalid-position-at-import-rule": null,
@@ -21,14 +20,6 @@ module.exports = {
       {
         "except": [
           "after-single-line-comment",
-        ],
-      },
-    ],
-    "block-closing-brace-empty-line-before": [
-      "never",
-      {
-        "except": [
-          "after-closing-brace",
         ],
       },
     ],
@@ -42,7 +33,6 @@ module.exports = {
         ],
       },
     ],
-    "color-hex-case": "lower",
     "color-hex-length": "long",
   },
 };

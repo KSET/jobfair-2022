@@ -17,7 +17,8 @@
     defineComponent,
     unref,
     watch,
-  } from "vue";
+    useRuntimeConfig,
+  } from "#imports";
   import {
     useTranslationsStore,
   } from "~/store/translations";
@@ -56,8 +57,9 @@
       { emit },
     ) {
       const translationsStore = useTranslationsStore();
+      const runtimeConfig = useRuntimeConfig();
 
-      const isDev = "development" === process.env.NODE_ENV;
+      const isDev = "development" === runtimeConfig.public.NODE_ENV;
 
       const translatedText = computed(() => translationsStore.translation(props.transKey));
       watch(

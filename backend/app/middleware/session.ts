@@ -44,7 +44,7 @@ export default async (app: Router) => {
     next();
   });
 
-  app.use(session({
+  const sessionMiddleware = session({
     store: new RedisStore({
       client: await redis(),
       prefix: "jobfair:session:",
@@ -62,7 +62,9 @@ export default async (app: Router) => {
       ,
     },
     name: COOKIE_NAME,
-  }));
+  });
+
+  app.use(sessionMiddleware as never);
 
   return app;
 };

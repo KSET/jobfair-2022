@@ -141,7 +141,7 @@ export default async (app: Router) => {
       allowedHeaders: CORS_ALLOWED_HEADERS,
     }),
     bodyParser.json(),
-    graphqlUploadExpress(),
+    graphqlUploadExpress() as never,
     expressMiddleware(apollo, {
       context: ({ req, res }) => Promise.resolve({
         prisma,

@@ -123,8 +123,13 @@ const htmlToText = compileHtmlToTextFn({
       selector: "a > img",
       format: "altText",
     },
+    {
+      selector: "a",
+      options: {
+        hideLinkHrefIfSameAsText: true,
+      },
+    },
   ],
-  hideLinkHrefIfSameAsText: true,
 });
 
 export class EmailService {

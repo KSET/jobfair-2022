@@ -21,7 +21,6 @@ import {
   Image,
   Industry,
   User,
-  CompanyApplication,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
@@ -33,6 +32,9 @@ import {
   FileUpload,
   GraphQLUpload,
 } from "graphql-upload";
+import type {
+  Prisma,
+} from "@prisma/client";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -150,27 +152,10 @@ export class CompanyFieldResolver {
   }
 
   @FieldResolver((_type) => CompanyProgram, { nullable: true })
-  async program(
+  program(
     @Root() company: Company,
-      @Ctx() ctx: Context,
-  ): GQLResponse<CompanyApplication, "nullable"> {
-    const currentSeason = await ctx.prisma.season.findFirst({
-      where: {
-        startsAt: {
-          lte: new Date(),
-        },
-        endsAt: {
-          gte: new Date(),
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    const application = company.applications?.find((application) => application.forSeasonId === currentSeason?.id);
-
-    return application ?? null;
+  ): GQLResponse<CompanyProgram, "nullable"> {
+    return Promise.resolve(company.applications?.[0]);
   }
 }
 
@@ -757,57 +742,75 @@ export class CompanyListResolver {
 
     const seasonUid = args.season;
 
-    return ctx.prisma.company.findMany({
-      ...omit([ "season" ], args),
-      where: {
-        applications: {
-          some: {
-            forSeason: seasonUid
-              ? {
-                uid: seasonUid,
-              }
-              : {
-                startsAt: {
-                  lte: now,
-                },
-                endsAt: {
-                  gte: now,
+    const applicationsForSeasonWhere: Prisma.SeasonWhereInput =
+      seasonUid
+        ? {
+          uid: seasonUid,
+        }
+        : {
+          startsAt: {
+            lte: now,
+          },
+          endsAt: {
+            gte: now,
+          },
+        }
+    ;
+
+    const where: Prisma.CompanyWhereInput = {
+      applications: {
+        some: {
+          forSeason: applicationsForSeasonWhere,
+          approval: {
+            OR: [
+              {
+                booth: true,
+              },
+              {
+                panel: true,
+              },
+              {
+                cocktail: true,
+              },
+              {
+                talkParticipants: {
+                  gt: 0,
                 },
               },
-            approval: {
-              OR: [
-                {
-                  booth: true,
+              {
+                workshopParticipants: {
+                  gt: 0,
                 },
-                {
-                  panel: true,
-                },
-                {
-                  cocktail: true,
-                },
-                {
-                  talkParticipants: {
-                    gt: 0,
-                  },
-                },
-                {
-                  workshopParticipants: {
-                    gt: 0,
-                  },
-                },
-              ],
-            },
+              },
+            ],
           },
         },
       },
-      select: {
-        ...toSelect(info, transformSelect),
-        brandName: true,
-      },
+    };
+
+    const select_ = <T extends Prisma.CompanySelect>(x: T) => x;
+    const select = select_({
+      ...toSelect<Prisma.CompanySelect>(info, transformSelect),
+      brandName: true,
+    });
+
+    if (select.applications) {
+      const applications = select.applications as Exclude<typeof select.applications, boolean>;
+      applications.where = {
+        forSeason: {
+          uid: seasonUid,
+        },
+      };
+    }
+
+    return ctx.prisma.company.findMany({
+      ...omit([ "season" ], args),
+      where,
+      select,
       orderBy: {
         brandName: "asc",
       },
-    }).then((x) => x.sort((a, b) => a.brandName.localeCompare(b.brandName)));
+    }).then((x) => x.sort((a, b) => a.brandName!.localeCompare(b.brandName!)));
   }
 
   @Query(() => Company, { nullable: true })
@@ -842,10 +845,24 @@ export class CompanyListResolver {
       @Info() info: GraphQLResolveInfo,
       @Arg("uid") uid: string,
   ): GQLResponse<Company, "nullable"> {
-    const select = toSelect(info, transformSelect);
+    const select = toSelect<Prisma.CompanySelect>(info, transformSelect);
 
     const hasMembers = Boolean(select.members);
     const hasVat = Boolean(select.vat);
+
+    if (select.applications) {
+      const applications = select.applications as Exclude<typeof select.applications, boolean>;
+      applications.where = {
+        forSeason: {
+          startsAt: {
+            lte: new Date(),
+          },
+          endsAt: {
+            gte: new Date(),
+          },
+        },
+      };
+    }
 
     delete select.members;
     delete select.vat;

@@ -16,11 +16,11 @@ import {
 type SelectTransformer<T extends Dict = Dict> = (select: T) => T;
 
 export const toSelect =
-  (
+  <TReturn = undefined>(
     info: GraphQLResolveInfo,
     transformSelect: SelectTransformer,
   ) =>
-    transformSelect(transformInfoIntoPrismaArgs(info))
+    transformSelect(transformInfoIntoPrismaArgs(info)) as TReturn extends undefined ? ReturnType<typeof transformSelect> : TReturn
 ;
 
 export const transformSelectFor =

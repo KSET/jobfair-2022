@@ -39,6 +39,11 @@ export const usePagesStore = defineStore(
             to: { name: "about" },
           },
           {
+            name: "page.name.participants",
+            to: { name: "participants" },
+            if: () => seasonsStore.areParticipantsShown,
+          },
+          {
             name: "page.name.contact",
             to: { name: "contact" },
           },

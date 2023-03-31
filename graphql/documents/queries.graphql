@@ -206,7 +206,9 @@ query PageIndexData($language: String!) {
     news(lang: $language, filter: { take: 3 }) {
         ...frag_News
     }
+}
 
+query PageParticipantsData {
     participants {
         uid
         website
@@ -232,6 +234,7 @@ query CompanyInfo($uid: String!) {
         brandName
         descriptionEn
         descriptionHr
+        website
         rasterLogo {
             thumbUrl
             fullUrl

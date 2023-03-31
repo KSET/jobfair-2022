@@ -104,47 +104,6 @@
     </div>
 
     <div
-      v-if="participantsShown && participants.length > 0"
-      :class="$style.sectionContainer"
-    >
-      <div class="grid">
-        <div class="col-12">
-          <h2 :class="$style.header">
-            <translated-text trans-key="index.participants.header" />
-          </h2>
-          <h3 :class="$style.subHeader">
-            <translated-text trans-key="index.participants.subheader" />
-          </h3>
-        </div>
-
-        <div class="col-12">
-          <div :class="$style.companyGrid">
-            <div
-              v-for="participant in participants"
-              :key="participant.uid"
-              :class="$style.companyGridCell"
-            >
-              <a
-                :href="participant.website"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <app-img
-                  :alt="`${participant.brandName} logo`"
-                  :lazy-src="participant.rasterLogo.thumbUrl"
-                  :src="participant.rasterLogo.fullUrl"
-                  :title="participant.titleText"
-                  aspect-ratio="1.78"
-                  contain
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
       v-if="sponsorsShown && projectFriends.length > 0"
       :class="$style.sectionContainer"
     >
@@ -259,7 +218,6 @@
     PageIndexData,
   } from "~/graphql/schema";
   import {
-    Language,
     useTranslationsStore,
   } from "~/store/translations";
   import {
@@ -296,41 +254,15 @@
 
       const gallery = computed(() => galleryStore.items);
 
-      const getParticipantTitleText =
-        ({
-          brandName,
-          descriptionEn,
-          descriptionHr,
-        }: IPageIndexDataQuery["participants"][0]) => {
-          const separator = "----------";
-          const description =
-            translationsStore.currentLanguage === Language.HR
-              ? descriptionHr
-              : descriptionEn
-          ;
-
-          return `${ brandName }\n${ separator }\n${ description }`;
-        }
-      ;
-
-      const withTitleText =
-        (item: IPageIndexDataQuery["participants"][0]) => ({
-          ...item,
-          titleText: getParticipantTitleText(item),
-        })
-      ;
-
       return {
         isLoggedIn: computed(() => userStore.isLoggedIn),
         hasCompany: computed(() => userStore.hasCompany),
         currentSeason: computed(() => seasonsStore.currentSeason),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
-        participantsShown: computed(() => seasonsStore.areParticipantsShown),
         partnersShown: computed(() => seasonsStore.arePartnersShown),
         sponsorsShown: computed(() => seasonsStore.areSponsorsShown),
         news,
         gallery,
-        participants: initialData?.participants.map(withTitleText) ?? [],
         projectFriends: initialData?.sponsors ?? [],
         mediaPartners: initialData?.partners ?? [],
         joinNowRoute,

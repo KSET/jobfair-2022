@@ -5,10 +5,12 @@
         :class="$style.backButton"
         :to="isScheduleShown ? { name: 'schedule' } : { name: 'participants' }"
       >
-        <i class="pi pi-chevron-left" />
-        <span :class="$style.backButtonText">
-          <translated-text trans-key="back" />
-        </span>
+        <strong>
+          <i class="pi pi-chevron-left" />
+          <span :class="$style.backButtonText">
+            <translated-text trans-key="back" />
+          </span>
+        </strong>
       </nuxt-link>
       <app-img
         :alt="`${company.brandName} logo`"
@@ -23,6 +25,21 @@
           <translated-text trans-key="company.info.about-company" />
         </h4>
         <p :class="$style.companyDescriptionText" v-text="translateFor(company, 'description').value" />
+        <hr>
+        <p>
+          <translated-text
+            trans-key="company.info.website"
+          />&#58;
+          <a
+            :href="company.website"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <strong>
+              {{ formatWebsite(company.website) }}
+            </strong>
+          </a>
+        </p>
       </div>
     </div>
     <div :class="$style.eventContainer">
@@ -322,7 +339,9 @@
 
       useTitle(computed(() => `${ unref(company).brandName } - Info`));
 
-      const programItems = computed<NonNullable<typeof companyStore.companyInfo>["program"]>(() => filterObject((x) => Boolean(x), unref(company).program || {}));
+      type TCompanyProgram = NonNullable<typeof companyStore.companyInfo>["program"];
+
+      const programItems = computed(() => filterObject(Boolean, unref(company).program || {}) as Partial<TCompanyProgram>);
 
       const tabs: Record<string, number> = Object.fromEntries(
         [
@@ -382,6 +401,15 @@
             unref(eventTimeFormatter).format(start),
             event.location,
           ].filter((x) => x).join(" | "));
+        },
+        formatWebsite(website: string) {
+          try {
+            const url = new URL(website);
+
+            return url.hostname;
+          } catch {
+            return website;
+          }
         },
         async handleSignup() {
           const loggedIn = userStore.isLoggedIn;

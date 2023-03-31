@@ -1715,6 +1715,9 @@ export class CompanyApplicationCreateResolver {
 
             approval: true,
           },
+          where: {
+            forSeasonId: currentSeason.id,
+          },
         },
       },
       where: {

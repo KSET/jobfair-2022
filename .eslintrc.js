@@ -27,6 +27,11 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    // <Very slow>
+    //    "@typescript-eslint/no-misused-promises": "off",
+    //    "@typescript-eslint/no-unsafe-argument": "off",
+    //    "@typescript-eslint/no-unsafe-return": "off",
+    // </Very slow>
     "import/named": "off",
     "import/namespace": "off",
     "import/default": "off",

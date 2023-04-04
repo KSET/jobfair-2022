@@ -287,7 +287,7 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
-    info.vat = info.vat.toUpperCase();
+    info.vat = info.vat.trim().toUpperCase();
 
     const vatValidation = await CompanyService.validateVat(info.vat);
 
@@ -465,7 +465,7 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
-    info.vat = info.vat.toUpperCase();
+    info.vat = info.vat.trim().toUpperCase();
 
     const [ company ] = ctx.user.companies;
     const isInCompany = company && company.vat === info.vat;

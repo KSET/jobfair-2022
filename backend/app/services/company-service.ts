@@ -7,6 +7,8 @@ import {
 
 export class CompanyService {
   public static async validateVat(vat: string) {
+    vat = vat.trim().toUpperCase();
+
     const exists = await prisma.company.findFirst({
       where: {
         vat,

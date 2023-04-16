@@ -215,31 +215,33 @@
               <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
             </div>
 
-            <h4>
-              <translated-text trans-key="company.info.program.other-panelists" />
-            </h4>
+            <template v-if="panelCompanies.length > 0">
+              <h4>
+                <translated-text trans-key="company.info.program.other-panelists" />
+              </h4>
 
-            <div
-              :class="$style.companyChips"
-            >
-              <nuxt-link
-                v-for="otherCompany in panelCompanies"
-                :key="otherCompany.uid"
-                :to="{ name: 'company-uid', params: { uid: otherCompany.uid }, query: { tab: 'panel' } }"
-                target="_blank"
+              <div
+                :class="$style.companyChips"
               >
-                <div :class="$style.companyChip">
-                  <app-img
-                    :alt="`${otherCompany.brandName} logo`"
-                    :class="$style.companyChipImage"
-                    :lazy-src="otherCompany.rasterLogo.thumbUrl"
-                    :src="otherCompany.rasterLogo.fullUrl"
-                    contain
-                  />
-                  <div class="p-chip-text" v-text="otherCompany.brandName" />
-                </div>
-              </nuxt-link>
-            </div>
+                <nuxt-link
+                  v-for="otherCompany in panelCompanies"
+                  :key="otherCompany.uid"
+                  :to="{ name: 'company-uid', params: { uid: otherCompany.uid }, query: { tab: 'panel' } }"
+                  target="_blank"
+                >
+                  <div :class="$style.companyChip">
+                    <app-img
+                      :alt="`${otherCompany.brandName} logo`"
+                      :class="$style.companyChipImage"
+                      :lazy-src="otherCompany.rasterLogo.thumbUrl"
+                      :src="otherCompany.rasterLogo.fullUrl"
+                      contain
+                    />
+                    <div class="p-chip-text" v-text="otherCompany.brandName" />
+                  </div>
+                </nuxt-link>
+              </div>
+            </template>
           </TabPanel>
         </TabView>
       </template>

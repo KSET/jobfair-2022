@@ -29,6 +29,7 @@
         ]"
         :src="imgSrc"
         aria-hidden="true"
+        decoding="async"
         draggable="false"
         loading="lazy"
       >

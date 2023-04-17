@@ -31,6 +31,8 @@ type Item<T> = Partial<T> | null | undefined;
 type CalendarItem = Omit<ICalendarItem,
   | "uid"
   | "forWorkshop"
+  | "forTalk"
+  | "forPanel"
   | "hasEvent"
   | never>;
 export const calendarItemCreate =

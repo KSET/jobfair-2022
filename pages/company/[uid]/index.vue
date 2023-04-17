@@ -82,6 +82,7 @@
                 :src="eventIcons.talk"
                 alt="Talk"
                 aspect-ratio="1"
+                contain
               />
               <span
                 v-if="programItems.talk.event"
@@ -134,6 +135,7 @@
                 :src="eventIcons.workshop"
                 alt="Workshop"
                 aspect-ratio="1"
+                contain
               />
               <span
                 v-if="programItems.workshop.event"
@@ -706,8 +708,6 @@
     display: inline-block;
     flex: inherit;
     width: $size;
-    height: $size;
-    filter: invert(1);
   }
 
   .itemLocation {

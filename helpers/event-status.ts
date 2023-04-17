@@ -1,16 +1,13 @@
 import {
   toPairs,
 } from "rambdax";
+import {
+ IEventType as EventType,
+} from "~/graphql/schema";
 
-const ensureEnumKeysSameAsValues = <T>(_kv: { [K in keyof T]: K }) => null;
-
-export enum EventType {
-  workshop = "workshop",
-  talk = "talk",
-  panel = "panel",
-}
-
-ensureEnumKeysSameAsValues(EventType);
+export {
+  IEventType as EventType,
+} from "~/graphql/schema";
 
 export type Event = {
   type: EventType,
@@ -30,11 +27,11 @@ export const EventStatus = _es({
   },
   networking: {
     value: 2 ** (i++),
-    filter: ({ type }) => EventType.talk === type,
+    filter: ({ type }) => EventType.Talk === type,
   },
   online: {
     value: 2 ** (i++),
-    filter: ({ type }) => EventType.workshop !== type,
+    filter: ({ type }) => EventType.Workshop !== type,
   },
 });
 export type EventStatusType = typeof EventStatus;
@@ -73,10 +70,11 @@ export const eventListFromStatus =
 export const getParticipantCapacityFor =
   (eventType: EventType) => {
     switch (eventType) {
-      case EventType.workshop:
+      case EventType.Workshop:
         return 15;
-      case EventType.talk:
-      case EventType.panel:
+      case EventType.Talk:
+      case EventType.Panel:
+      case EventType.HotTalk:
         return 50;
       default:
         return 0;

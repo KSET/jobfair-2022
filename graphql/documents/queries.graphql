@@ -248,6 +248,7 @@ query CompanyInfo($uid: String!) {
                 descriptionHr
                 descriptionEn
                 language
+                reservation
                 presenters {
                     bioHr
                     bioEn
@@ -301,8 +302,10 @@ query CompanyInfo($uid: String!) {
                 }
             }
             panel {
+                uid
                 name
                 description
+                reservation
                 companies {
                     uid
                     brandName
@@ -570,6 +573,66 @@ query Resume($uid: String!) {
     resumeIsFavourite(uid: $uid)
 }
 
+query ProfileBaseData {
+    booths {
+        key
+        name
+    }
+    companyApplication {
+        workshop {
+            titleEn
+        }
+        talk {
+            titleEn
+        }
+        booth
+        wantsPanel
+        wantsCocktail
+        approval {
+            booth
+            workshopParticipants
+            talkParticipants
+            panel
+            cocktail
+        }
+        userApplications {
+            workshop
+            talk
+        }
+    }
+    profile {
+        resume {
+            uid
+        }
+    }
+    calendar {
+        uid
+        title
+        forWorkshop {
+            uid
+            titleHr
+            titleEn
+            descriptionHr
+            descriptionEn
+            reservation
+        }
+        forTalk {
+            uid
+            titleHr
+            titleEn
+            descriptionHr
+            descriptionEn
+            reservation
+        }
+        forPanel {
+            uid
+            name
+            description
+            reservation
+        }
+    }
+}
+
 query AdminFeedbackInfo($seasonUid: String!) {
     companyApplications(season: $seasonUid, orderBy: { forCompany: { brandName: desc } }) {
         forCompany {
@@ -578,6 +641,36 @@ query AdminFeedbackInfo($seasonUid: String!) {
         }
         feedback {
             ...frag_AllFeedback
+        }
+    }
+}
+
+query AdminReservationsData($seasonUid: String!) {
+    season(uid: $seasonUid) {
+        reservations {
+            uid
+            type
+            count
+        }
+    }
+
+    participants(season: $seasonUid) {
+        uid
+        vat
+        brandName
+        program {
+            workshop {
+                uid
+                titleHr
+            }
+            talk {
+                uid
+                titleHr
+            }
+            panel {
+                uid
+                name
+            }
         }
     }
 }

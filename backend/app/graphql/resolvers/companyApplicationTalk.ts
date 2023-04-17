@@ -5,6 +5,7 @@ import {
   CalendarItem,
 } from "@generated/type-graphql";
 import {
+  Ctx,
   Field,
   FieldResolver,
   InputType,
@@ -18,6 +19,9 @@ import {
   Dict,
   GQLField,
 } from "../../types/helpers";
+import {
+  Context,
+} from "../../types/apollo-context";
 import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
@@ -48,6 +52,31 @@ export class CompanyApplicationTalkFieldResolver {
   ): GQLField<CalendarItem, "nullable"> {
     return application.event;
   }
+
+  @FieldResolver(() => Number)
+  async reservation(
+    @Root() application: ApplicationTalk,
+      @Ctx() ctx: Context,
+  ): Promise<GQLField<number>> {
+    const { user } = ctx;
+
+    if (!user) {
+      return 0;
+    }
+
+    const reservation = await ctx.prisma.eventReservation.findUnique({
+      where: {
+        // eslint-disable-next-line camelcase
+        eventId_eventType_userId: {
+          eventType: "talk",
+          eventId: application.id!,
+          userId: user.id,
+        },
+      },
+    });
+
+    return reservation?.status ?? 0;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldResolver>({
@@ -71,6 +100,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldRes
     select.event = {
       select: transformSelectEvent(select.event as Dict),
     };
+
+    return select;
+  },
+
+  reservation(select) {
+    select.id = true;
+
+    delete select.reservation;
 
     return select;
   },

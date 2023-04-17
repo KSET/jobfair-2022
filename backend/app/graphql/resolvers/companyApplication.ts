@@ -8,6 +8,7 @@ import {
   FieldResolver,
   Info,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -124,8 +125,11 @@ const photoExtensions = [
 
 @ObjectType()
 export class EventUserApplications {
-  @Field()
+  @Field(() => Int)
     workshop?: number;
+
+  @Field(() => Int)
+    talk?: number;
 }
 
 @Resolver(() => CompanyApplication)
@@ -184,10 +188,16 @@ export class CompanyApplicationFieldResolver {
     @Root() application: CompanyApplication,
       @Ctx() ctx: Context,
   ): Promise<GQLField<EventUserApplications>> {
-    const [
-      workshop,
-    ] = await Promise.all([
+    const entries = await Promise.all([
       ctx.prisma.applicationWorkshop.findFirst({
+        where: {
+          forApplicationId: application.id,
+        },
+        select: {
+          id: true,
+        },
+      }),
+      ctx.prisma.applicationTalk.findFirst({
         where: {
           forApplicationId: application.id,
         },
@@ -197,23 +207,26 @@ export class CompanyApplicationFieldResolver {
       }),
     ] as const);
 
-    type Row = { eventId: number, eventType: string, status: number, count: number, };
+    const ids = entries.map((x) => Number(x?.id || -1));
+
+    type Row = { eventId: number, eventType: string, status: number, count: bigint, };
     const items = await ctx.prisma.$queryRaw<Row[]>`
       select
         "eventId", "eventType", "status", count("status")
       from
         "EventReservation"
       where
-        "status" <> 0 and "eventId" = ${ workshop?.id || -1 }
+        "status" <> 0 and "eventId" = ANY(${ ids })
       group by
         "eventId", "eventType", "status"
     `;
 
     const byType = groupBy((x) => x.eventType, items);
-    const summed = mapObject((rows: Row[]) => rows.reduce((acc, row) => acc + row.count, 0), byType);
+    const summed = mapObject((rows: Row[]) => Number(rows.reduce((acc, row) => acc + row.count, 0n)), byType);
 
     return {
-      workshop: summed.workshop || 0,
+      workshop: summed.workshop ?? 0,
+      talk: summed.talk ?? 0,
     };
   }
 

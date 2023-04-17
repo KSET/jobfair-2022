@@ -86,17 +86,15 @@
                     :loading="item.loading"
                     @click="handleSignupFor(item)"
                   >
-                    <translated-text v-if="item.forWorkshop.reservation" trans-key="company.event.user.sign-off" />
+                    <translated-text v-if="item.reservation" trans-key="company.event.user.sign-off" />
                     <translated-text v-else trans-key="company.event.user.sign-up" />
                   </p-button>
-                  <strong
-                    :title="translateFor(item.forWorkshop, 'description').value"
-                  >
+                  <strong :title="item.description">
                     <nuxt-link
                       :to="{ name: 'calendar-event-uid', params: { uid: item.uid } }"
                       target="_blank"
                     >
-                      [{{ item.title }}] {{ translateFor(item.forWorkshop, "title").value }}
+                      [{{ item.companyName }}] {{ item.title }}
                     </nuxt-link>
                   </strong>
                 </dt>
@@ -397,11 +395,14 @@
             <ul
               :class="$style.applicationItems"
             >
-              <li>
+              <li
+                v-for="(participants, name) in userApplications"
+                :key="name"
+              >
                 <strong>
-                  <translated-text trans-key="profile.company.workshop" />
+                  <translated-text :trans-key="`profile.company.${name}`" />
                 </strong>
-                <em v-text="companyApplication.userApplications.workshop" />
+                <em v-text="participants" />
               </li>
             </ul>
           </div>
@@ -555,8 +556,10 @@
     gql,
   } from "@urql/core";
   import {
+    fromPairs,
     omit,
     pick,
+    toPairs,
   } from "rambdax";
   import AppImg from "../../../components/util/app-img.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
@@ -565,13 +568,11 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IApplicationWorkshop,
-    IBooth,
     ICalendarItem,
-    ICompanyApplication,
-    IEventUserApplications,
     IMutationUpdateEventReservationArgs,
-    IResume,
+    IProfileBaseDataQuery,
+    IProfileBaseDataQueryVariables,
+    ProfileBaseData,
   } from "~/graphql/schema";
   import {
     useSeasonsStore,
@@ -598,6 +599,9 @@
     Language,
     useTranslationsStore,
   } from "~/store/translations";
+  import {
+    Dict,
+  } from "~/helpers/type";
 
   export default defineComponent({
     name: "PageProfileHome",
@@ -615,79 +619,8 @@
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
-
-      type QData = {
-        companyApplication: {
-          workshop: Pick<NonNullable<ICompanyApplication["workshop"]>, "titleEn">,
-          talk: Pick<NonNullable<ICompanyApplication["talk"]>, "titleEn">,
-          booth: ICompanyApplication["booth"],
-          wantsPanel: ICompanyApplication["wantsPanel"],
-          wantsCocktail: ICompanyApplication["wantsCocktail"],
-          approval: ICompanyApplication["approval"],
-          userApplications: IEventUserApplications,
-        },
-        booths: Pick<IBooth, "key" | "name">[],
-        profile: {
-          resume: Pick<IResume, "uid">,
-        },
-        calendar: (Pick<ICalendarItem, "uid" | "title"> & {
-          forWorkshop: Pick<IApplicationWorkshop,
-                            "uid"
-                              | "titleEn"
-                              | "titleHr"
-                              | "descriptionEn"
-                              | "descriptionHr"
-                              | "reservation">,
-        })[],
-      };
-      type QArgs = never;
-      const resp = await useQuery<QData, QArgs>({
-        query: gql`
-        query {
-            booths {
-                key
-                name
-            }
-            companyApplication {
-                workshop {
-                    titleEn
-                }
-                talk {
-                    titleEn
-                }
-                booth
-                wantsPanel
-                wantsCocktail
-                approval {
-                    booth
-                    workshopParticipants
-                    talkParticipants
-                    panel
-                    cocktail
-                }
-                userApplications {
-                  workshop
-                }
-            }
-            profile {
-                resume {
-                    uid
-                }
-            }
-            calendar(filter: { type: "workshop" }) {
-                uid
-                title
-                forWorkshop {
-                    uid
-                    titleHr
-                    titleEn
-                    descriptionHr
-                    descriptionEn
-                    reservation
-                }
-            }
-        }
-        `,
+      const resp = await useQuery<IProfileBaseDataQuery, IProfileBaseDataQueryVariables>({
+        query: ProfileBaseData,
       })();
 
       const signupQuery = useMutation<{ updateEventReservation: number | null, }, IMutationUpdateEventReservationArgs>(gql`
@@ -711,25 +644,108 @@
           )
       ;
 
-      const booths = computed(() => Object.fromEntries((resp?.data?.booths || []).map((b) => [ b.key || "", b.name ])));
+      const booths = computed(() => Object.fromEntries((resp?.data?.booths ?? []).map((b) => [ b.key ?? "", b.name ])));
       const approval = resp?.data?.companyApplication?.approval;
       const isApproved = companyStore.isApplicationApproved(approval);
       const isApprovedWithoutBooth = companyStore.isApplicationApproved(omit([
         "booth",
-      ], approval || {}));
+      ], approval ?? {}));
       const isApprovedWithEvents = companyStore.isApplicationApproved(pick([
         "workshopParticipants",
-      ], approval || {}));
+        "talkParticipants",
+        "panel",
+      ], approval ?? {}));
       const resume = resp?.data?.profile?.resume;
-      const calendar = reactive((resp?.data?.calendar || []).map((x) => ({
-        ...x,
-        loading: false,
-      })));
+      const hasReservation = <T>(x: T): T extends { reservation: unknown, } ? true : false => {
+        if ("object" !== typeof x || null === x) {
+          return false as T extends { reservation: unknown, } ? true : false;
+        }
+
+        return "reservation" in x as T extends { reservation: unknown, } ? true : false;
+      };
+      const calendarWithEventItems = resp?.data?.calendar?.filter((x) => Object.values(x).some(hasReservation));
+      const calendar = reactive(
+        calendarWithEventItems
+          ?.map((x) => {
+            type TEvent = NonNullable<ICalendarItem["forWorkshop"] | ICalendarItem["forTalk"] | ICalendarItem["forPanel"]>;
+            const [ key, event ] = Object.entries(x).find(([ _, x ]) => hasReservation(x)) as [ string, TEvent ];
+
+            const type = (() => {
+              switch (key) {
+                case "forWorkshop":
+                  return EventType.Workshop;
+                case "forTalk":
+                  return EventType.Talk;
+                case "forPanel":
+                  return EventType.Panel;
+              }
+            })()!;
+            const {
+              uid,
+              reservation,
+            } = event;
+
+            const base = {
+              uid,
+              type,
+              reservation,
+              loading: false,
+              companyName: x.title,
+              title: computed(() => "[unknown]"),
+              description: computed(() => "[unknown]"),
+            };
+
+            if ("name" in event) {
+              base.title = computed(() => event.name);
+              base.description = computed(() => event.description);
+            } else {
+              base.title = translateFor(event, "title");
+              base.description = translateFor(event, "description");
+            }
+
+            return base;
+          }) ?? []
+        ,
+      );
+
+      type ObjectFilters<T extends Dict | null | undefined> = { [Key in keyof NonNullable<T>]: ((param: NonNullable<T>[Key]) => boolean) };
+      type ObjectFiltersPartial<TDict extends Dict, TFilters extends Partial<ObjectFilters<TDict>>> =
+        {
+          [Key in keyof TDict]: TFilters[Key] extends never ? TDict[Key] : (TDict[Key] | undefined);
+        }
+      ;
+
+      const pickIf = <TFrom extends Dict | null | undefined, TFilter extends Partial<ObjectFilters<TFrom>>>(obj: TFrom, filter: TFilter) => {
+        if (!obj) {
+          return null;
+        }
+
+        const objParis = toPairs(obj);
+
+        return fromPairs(objParis.filter(([ key, value ]) => {
+          if (!(key in filter)) {
+            return true;
+          }
+
+          return filter[key]?.(value as never);
+        })) as unknown as ObjectFiltersPartial<NonNullable<TFrom>, TFilter>;
+      };
+
+      const userApplications = computed(() => {
+        const approvedItems = resp?.data?.companyApplication?.approval;
+        const userApplications = resp?.data?.companyApplication?.userApplications;
+
+        return pickIf(userApplications!, {
+          talk: () => 0 < (approvedItems?.talkParticipants ?? 0),
+          workshop: () => 0 < (approvedItems?.workshopParticipants ?? 0),
+        })!;
+      });
 
       return {
         calendar,
+        userApplications,
         translateFor,
-        user: computed(() => userStore.user),
+        user: computed(() => userStore.user!),
         resume,
         formatDate,
         booths,
@@ -744,13 +760,13 @@
         isApproved,
         isApprovedWithoutBooth,
         isApprovedWithEvents,
-        async handleSignupFor(item: (typeof calendar)[0]) {
+        async handleSignupFor(item: (typeof calendar)[number]) {
           item.loading = true;
           const resp = await signupQuery({
             input: {
-              id: item.forWorkshop.uid,
-              type: EventType.workshop,
-              status: statusFromEventList(item.forWorkshop.reservation ? [] : [ "event" ]),
+              id: item.uid,
+              type: item.type,
+              status: statusFromEventList(item.reservation ? [] : [ "event" ]),
             },
           }).then((resp) => resp?.data?.updateEventReservation);
           item.loading = false;
@@ -759,7 +775,7 @@
             alert("Something went wrong");
           }
 
-          item.forWorkshop.reservation = resp!;
+          item.reservation = resp!;
         },
       };
     },
@@ -793,78 +809,78 @@
     @include media(lg) {
       --item-columns: 1;
     }
+  }
 
-    .item {
-      display: flex;
-      flex-direction: column;
-      padding: var(--item-padding);
-      transition-property: padding;
-      background-color: $fer-gray;
-      box-shadow: #{map.get($shadows, "shadow-3")};
-      gap: var(--item-padding);
+  .item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--item-padding);
+    transition-property: padding;
+    background-color: $fer-gray;
+    box-shadow: #{map.get($shadows, "shadow-3")};
+    gap: var(--item-padding);
 
-      &.signUp {
-        min-height: fit-content;
-        grid-column: span 1;
+    &.signUp {
+      min-height: fit-content;
+      grid-column: span 1;
 
-        @media screen and (max-width: 1500px) {
-          grid-column: span var(--item-columns);
-        }
-      }
-
-      --item-padding: .875rem;
-
-      @include media(lg) {
-        --item-padding: .5rem;
-      }
-
-      .itemContent {
-        display: inline-block;
-        height: 100%;
-        padding: 1rem;
-        border-radius: 4px;
-        background-color: $fer-white;
-        box-shadow: #{map.get($shadows, "shadow-3")};
-
-        > * {
-          opacity: .7;
-        }
-
-        .qrCode {
-          opacity: 1;
-        }
-      }
-
-      .itemHeader {
-        margin: 0 0 2.5rem;
-        opacity: 1;
-        color: $fer-dark-blue;
-      }
-
-      .itemActions {
-        display: flex;
-        margin-top: auto;
-
-        :global(.p-button) {
-          padding: .625rem 1.125rem;
-          transition-property: padding;
-
-          @include media(lg) {
-            padding: .875rem 1.25rem;
-          }
-        }
+      @media screen and (max-width: 1500px) {
+        grid-column: span var(--item-columns);
       }
     }
 
-    .itemApproval {
+    --item-padding: .875rem;
 
-      .itemContent {
+    @include media(lg) {
+      --item-padding: .5rem;
+    }
+  }
 
-        .applicationItems {
+  .itemContent {
+    display: inline-block;
+    height: 100%;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: $fer-white;
+    box-shadow: #{map.get($shadows, "shadow-3")};
 
-          :global(.pi-check) {
-            color: $fer-success;
-          }
+    > * {
+      opacity: .7;
+    }
+  }
+
+  .qrCode {
+    opacity: 1;
+  }
+
+  .itemHeader {
+    margin: 0 0 2.5rem;
+    opacity: 1;
+    color: $fer-dark-blue;
+  }
+
+  .itemActions {
+    display: flex;
+    margin-top: auto;
+
+    :global(.p-button) {
+      padding: .625rem 1.125rem;
+      transition-property: padding;
+
+      @include media(lg) {
+        padding: .875rem 1.25rem;
+      }
+    }
+  }
+
+  .itemApproval {
+
+    .itemContent {
+
+      .applicationItems {
+
+        :global(.pi-check) {
+          color: $fer-success;
         }
       }
     }
@@ -899,18 +915,18 @@
     max-height: 25em;
     opacity: 1 !important;
     gap: 1em;
+  }
 
-    .reservationItem {
-      display: flex;
-      align-items: center;
-      gap: 1em;
+  .reservationItem {
+    display: flex;
+    align-items: center;
+    gap: 1em;
 
-      a {
-        color: $fer-black;
+    a {
+      color: $fer-black;
 
-        &:hover {
-          text-decoration: underline;
-        }
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

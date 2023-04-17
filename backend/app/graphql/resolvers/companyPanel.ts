@@ -55,6 +55,31 @@ export class CompanyPanelFieldResolver {
   ): GQLField<CalendarItem, "nullable"> {
     return companyPanel.event || null;
   }
+
+  @FieldResolver(() => Number)
+  async reservation(
+    @Root() application: CompanyPanel,
+      @Ctx() ctx: Context,
+  ): Promise<GQLField<number>> {
+    const { user } = ctx;
+
+    if (!user) {
+      return 0;
+    }
+
+    const reservation = await ctx.prisma.eventReservation.findUnique({
+      where: {
+        // eslint-disable-next-line camelcase
+        eventId_eventType_userId: {
+          eventType: "panel",
+          eventId: application.id!,
+          userId: user.id,
+        },
+      },
+    });
+
+    return reservation?.status ?? 0;
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyPanelFieldResolver>({
@@ -74,6 +99,14 @@ export const transformSelect = transformSelectFor<CompanyPanelFieldResolver>({
     select.event = {
       select: transformSelectCalendarItem(select.event as Dict),
     };
+
+    return select;
+  },
+
+  reservation(select) {
+    select.id = true;
+
+    delete select.reservation;
 
     return select;
   },

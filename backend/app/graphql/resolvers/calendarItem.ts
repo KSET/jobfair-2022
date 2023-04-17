@@ -1,6 +1,8 @@
 import {
   CalendarItem,
   ApplicationWorkshop,
+  ApplicationTalk,
+  CompanyPanel,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -40,6 +42,12 @@ import {
 import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
+import {
+  transformSelect as transformSelectTalk,
+} from "./companyApplicationTalk";
+import {
+  transformSelect as transformSelectPanel,
+} from "./companyPanel";
 
 @Resolver(() => CalendarItem)
 export class CalendarItemFieldResolver {
@@ -60,6 +68,20 @@ export class CalendarItemFieldResolver {
     @Root() calendarItem: CalendarItem,
   ): GQLField<ApplicationWorkshop, "nullable"> {
     return calendarItem.forWorkshop;
+  }
+
+  @FieldResolver(() => ApplicationTalk, { nullable: true })
+  forTalk(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<ApplicationTalk, "nullable"> {
+    return calendarItem.forTalk;
+  }
+
+  @FieldResolver(() => CompanyPanel, { nullable: true })
+  forPanel(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<CompanyPanel, "nullable"> {
+    return calendarItem.forPanel;
   }
 }
 
@@ -106,6 +128,22 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
   forWorkshop(select) {
     select.forWorkshop = {
       select: transformSelectWorkshop(select.forWorkshop as Dict),
+    };
+
+    return select;
+  },
+
+  forTalk(select) {
+    select.forTalk = {
+      select: transformSelectTalk(select.forTalk as Dict),
+    };
+
+    return select;
+  },
+
+  forPanel(select) {
+    select.forPanel = {
+      select: transformSelectPanel(select.forPanel as Dict),
     };
 
     return select;

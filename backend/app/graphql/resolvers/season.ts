@@ -127,6 +127,18 @@ export class SeasonFieldResolver {
             uid: true,
           },
         },
+        panel: {
+          select: {
+            id: true,
+            uid: true,
+          },
+        },
+        talk: {
+          select: {
+            id: true,
+            uid: true,
+          },
+        },
       },
     });
 

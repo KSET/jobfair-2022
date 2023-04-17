@@ -8,6 +8,7 @@ import {
   Field,
   InputType,
   Mutation,
+  registerEnumType,
   Resolver,
 } from "type-graphql";
 import {
@@ -20,6 +21,17 @@ import {
   GQLResponse,
 } from "../../types/helpers";
 
+enum EventType {
+  workshop = "workshop",
+  talk = "talk",
+  panel = "panel",
+  hotTalk = "hot-talk",
+}
+
+registerEnumType(EventType, {
+  name: "EventType",
+});
+
 @Resolver(() => EventReservation)
 export class EventReservationFieldResolver {
 }
@@ -31,8 +43,8 @@ class EventReservationUpdateInput {
   @Field(() => String)
     id: string = "";
 
-  @Field(() => String)
-    type: string = "";
+  @Field(() => EventType)
+    type: EventType = EventType.workshop;
 
   @Field(() => Number)
     status: number = 0;
@@ -63,13 +75,35 @@ export class EventReservationUpdateResolver {
           });
           break;
         }
+        case "talk": {
+          event = await prisma.applicationTalk.findFirst({
+            where: {
+              uid: input.id,
+            },
+            select: {
+              id: true,
+            },
+          });
+          break;
+        }
+        case "panel": {
+          event = await prisma.companyPanel.findFirst({
+            where: {
+              uid: input.id,
+            },
+            select: {
+              id: true,
+            },
+          });
+          break;
+        }
       }
 
       if (!event) {
-        return false;
+        throw new Error("Event not found");
       }
 
-      return await prisma.eventReservation.upsert({
+      return prisma.eventReservation.upsert({
         create: {
           eventType,
           eventId: event.id,
@@ -91,7 +125,7 @@ export class EventReservationUpdateResolver {
           status: true,
         },
       });
-    });
+    }).catch(() => null);
 
     if (!res) {
       return null;

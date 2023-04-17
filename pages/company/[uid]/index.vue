@@ -12,14 +12,19 @@
           </span>
         </strong>
       </nuxt-link>
-      <app-img
-        :alt="`${company.brandName} logo`"
-        :class="$style.companyLogo"
-        :lazy-src="company.rasterLogo.thumbUrl"
-        :src="company.rasterLogo.fullUrl"
-        aspect-ratio="1.78"
-        contain
-      />
+      <template v-if="company.rasterLogo">
+        <app-img
+          :alt="`${company.brandName} logo`"
+          :class="$style.companyLogo"
+          :lazy-src="company.rasterLogo!.thumbUrl"
+          :src="company.rasterLogo!.fullUrl"
+          aspect-ratio="1.78"
+          contain
+        />
+      </template>
+      <template v-else>
+        <div :class="$style.companyLogo" />
+      </template>
       <div :class="$style.companyDescriptionContainer">
         <h4 :class="$style.companyDescriptionHeader">
           <translated-text trans-key="company.info.about-company" />
@@ -83,6 +88,15 @@
                 :class="$style.itemLocation"
                 v-text="formatLocation(programItems.talk.event).value"
               />
+              <p-button
+                v-if="loggedIn"
+                :class="$style.signupButton"
+                :loading="signupLoading"
+                @click="handleSignup('talk')"
+              >
+                <translated-text v-if="programItems.talk.reservation" trans-key="company.event.user.sign-off" />
+                <translated-text v-else trans-key="company.event.user.sign-up" />
+              </p-button>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.talk, 'title').value" />
@@ -130,7 +144,7 @@
                 v-if="loggedIn"
                 :class="$style.signupButton"
                 :loading="signupLoading"
-                @click="handleSignup"
+                @click="handleSignup('workshop')"
               >
                 <translated-text v-if="programItems.workshop.reservation" trans-key="company.event.user.sign-off" />
                 <translated-text v-else trans-key="company.event.user.sign-up" />
@@ -190,6 +204,15 @@
                 :class="$style.itemLocation"
                 v-text="formatLocation(programItems.panel.event).value"
               />
+              <p-button
+                v-if="loggedIn"
+                :class="$style.signupButton"
+                :loading="signupLoading"
+                @click="handleSignup('panel')"
+              >
+                <translated-text v-if="programItems.panel.reservation" trans-key="company.event.user.sign-off" />
+                <translated-text v-else trans-key="company.event.user.sign-up" />
+              </p-button>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="programItems.panel.name" />
@@ -341,9 +364,11 @@
 
       useTitle(computed(() => `${ unref(company).brandName } - Info`));
 
-      type TCompanyProgram = NonNullable<typeof companyStore.companyInfo>["program"];
+      type TCompanyProgram = NonNullable<NonNullable<typeof companyStore.companyInfo>["program"]>;
+      type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "panel");
 
-      const programItems = computed(() => filterObject(Boolean, unref(company).program || {}) as Partial<TCompanyProgram>);
+      const programItemsEmpty = {} as Partial<TCompanyProgram>;
+      const programItems = computed(() => filterObject(Boolean, unref(company).program! || programItemsEmpty) as Partial<TCompanyProgram>);
 
       const tabs: Record<string, number> = Object.fromEntries(
         [
@@ -413,25 +438,42 @@
             return website;
           }
         },
-        async handleSignup() {
+        async handleSignup(type: TReservableEntryName) {
           const loggedIn = userStore.isLoggedIn;
 
           if (!loggedIn) {
             return;
           }
 
-          const workshop = unref(company).program?.workshop;
+          const eventType = (() => {
+            switch (type) {
+              case "talk":
+                return EventType.Talk;
+              case "workshop":
+                return EventType.Workshop;
+              case "panel":
+                return EventType.Panel;
+            }
 
-          if (!workshop) {
+            return null;
+          })();
+
+          if (!eventType) {
+            return;
+          }
+
+          const event = unref(company).program?.[type];
+
+          if (!event) {
             return;
           }
 
           signupLoading.value = true;
           const resp = await signupQuery({
             input: {
-              id: unref(programItems)?.workshop?.uid,
-              type: EventType.workshop,
-              status: statusFromEventList(workshop.reservation ? [] : [ "event" ]),
+              id: unref(programItems)?.[type]?.uid,
+              type: eventType,
+              status: statusFromEventList(event.reservation ? [] : [ "event" ]),
             },
           }).then((resp) => resp?.data?.updateEventReservation);
           signupLoading.value = false;
@@ -440,8 +482,8 @@
             alert("Something went wrong");
           }
 
-          if (workshop) {
-            workshop.reservation = resp!;
+          if (event) {
+            event.reservation = resp!;
           }
         },
       };
@@ -464,184 +506,6 @@
     h2,
     h4 {
       color: $fer-dark-blue;
-    }
-
-    .companyInfo {
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      flex-grow: 0;
-      gap: $gap-size;
-
-      > * {
-        flex: inherit;
-      }
-
-      .backButton {
-        display: flex;
-        align-items: center;
-
-        .backButtonText {
-          margin-left: .5rem;
-        }
-      }
-
-      .companyLogo {
-        width: 100%;
-      }
-
-      .companyDescriptionContainer {
-
-        .companyDescriptionHeader {
-          font-size: 1rem;
-          margin: 0;
-          text-transform: uppercase;
-        }
-
-        .companyDescriptionText {
-          margin: 0;
-          margin-top: .5rem;
-          white-space: break-spaces;
-        }
-      }
-    }
-
-    .eventContainer {
-
-      .companyName {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin: 0;
-        color: $fer-dark-blue;
-      }
-
-      .eventItems {
-        margin-top: 2.5rem;
-
-        .itemHeader {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-
-          .itemIcon {
-            $size: 1.3125rem;
-
-            display: inline-block;
-            flex: inherit;
-            width: $size;
-            height: $size;
-            filter: invert(1);
-          }
-
-          .itemLocation {
-            font-size: 1rem;
-            opacity: .7;
-            color: $fer-black;
-          }
-        }
-
-        :global(.p-tabview-panels) {
-          margin-top: $gap-size;
-          padding: 0;
-        }
-
-        :global(.p-tabview-nav-link) {
-          padding: .5rem 1rem;
-        }
-
-        :global(.p-tabview-panel) {
-          $presenter-photo-size: 4rem;
-          $presenter-bio-offset: .75rem;
-
-          .itemTitle {
-            font-size: 1.875rem;
-            font-weight: 700;
-            margin-top: 1rem;
-            margin-bottom: 0;
-            color: $fer-dark-blue;
-          }
-
-          .itemDescription {
-            white-space: break-spaces;
-          }
-
-          h4 {
-            margin-top: $gap-size;
-            margin-bottom: 0;
-            text-transform: uppercase;
-          }
-
-          .presenter {
-            display: inline-block;
-            margin-top: .5rem;
-            padding-top: .5rem;
-          }
-
-          .presenter + .presenter {
-            border-top: 1px solid #{$fer-gray};
-          }
-
-          .presenterName {
-            font-size: 1em;
-            margin-top: 0;
-            margin-bottom: 0;
-            margin-left: calc(#{$presenter-photo-size} + #{$presenter-bio-offset} / 2);
-          }
-
-          .presenterPhoto {
-            float: left;
-            width: $presenter-photo-size;
-            height: $presenter-photo-size;
-            margin-right: $presenter-bio-offset;
-            border-radius: 100%;
-            clip-path: circle();
-            shape-outside: circle();
-          }
-
-          .presenterDescription {
-            margin-top: .5rem;
-            white-space: break-spaces;
-          }
-
-          .companyChips {
-            display: flex;
-            margin-top: 1rem;
-            gap: 1rem;
-
-            > a {
-              display: inline-flex;
-            }
-          }
-
-          .companyChip {
-            display: inline-flex;
-            align-items: center;
-            padding: 0 .75rem;
-            transition-property: background-color;
-            color: $fer-black;
-            border-radius: 16px;
-            background-color: transparent;
-            -webkit-box-align: center;
-            -moz-box-align: center;
-
-            .companyChipImage {
-              width: 2.5rem;
-              height: 2.5rem;
-              margin-right: .5rem;
-            }
-
-            &:hover {
-              background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};
-            }
-          }
-
-          .signupButton {
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: .85rem 1rem;
-          }
-        }
-      }
     }
 
     @include media(md) {
@@ -670,5 +534,185 @@
         }
       }
     }
+  }
+
+  .companyInfo {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-grow: 0;
+    gap: $gap-size;
+
+    > * {
+      flex: inherit;
+    }
+  }
+
+  .backButton {
+    display: flex;
+    align-items: center;
+  }
+
+  .backButtonText {
+    margin-left: .5rem;
+  }
+
+  .companyLogo {
+    width: 100%;
+  }
+
+  .companyDescriptionContainer {
+    display: block;
+  }
+
+  .companyDescriptionHeader {
+    font-size: 1rem;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .companyDescriptionText {
+    margin: 0;
+    margin-top: .5rem;
+    white-space: break-spaces;
+  }
+
+  .eventContainer {
+    display: block;
+  }
+
+  .companyName {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    color: $fer-dark-blue;
+  }
+
+  .eventItems {
+    margin-top: 2.5rem;
+
+    :global(.p-tabview-panels) {
+      margin-top: $gap-size;
+      padding: 0;
+    }
+
+    :global(.p-tabview-nav-link) {
+      padding: .5rem 1rem;
+    }
+
+    :global(.p-tabview-panel) {
+      $presenter-photo-size: 4rem;
+      $presenter-bio-offset: .75rem;
+
+      .itemTitle {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-top: 1rem;
+        margin-bottom: 0;
+        color: $fer-dark-blue;
+      }
+
+      .itemDescription {
+        white-space: break-spaces;
+      }
+
+      h4 {
+        margin-top: $gap-size;
+        margin-bottom: 0;
+        text-transform: uppercase;
+      }
+
+      .presenter {
+        display: inline-block;
+        margin-top: .5rem;
+        padding-top: .5rem;
+      }
+
+      .presenter + .presenter {
+        border-top: 1px solid #{$fer-gray};
+      }
+
+      .presenterName {
+        font-size: 1em;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: calc(#{$presenter-photo-size} + #{$presenter-bio-offset} / 2);
+      }
+
+      .presenterPhoto {
+        float: left;
+        width: $presenter-photo-size;
+        height: $presenter-photo-size;
+        margin-right: $presenter-bio-offset;
+        border-radius: 100%;
+        clip-path: circle();
+        shape-outside: circle();
+      }
+
+      .presenterDescription {
+        margin-top: .5rem;
+        white-space: break-spaces;
+      }
+
+      .companyChips {
+        display: flex;
+        margin-top: 1rem;
+        gap: 1rem;
+
+        > a {
+          display: inline-flex;
+        }
+      }
+
+      .companyChip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 .75rem;
+        transition-property: background-color;
+        color: $fer-black;
+        border-radius: 16px;
+        background-color: transparent;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+
+        .companyChipImage {
+          width: 2.5rem;
+          height: 2.5rem;
+          margin-right: .5rem;
+        }
+
+        &:hover {
+          background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};
+        }
+      }
+
+      .signupButton {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: .85rem 1rem;
+      }
+    }
+  }
+
+  .itemHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .itemIcon {
+    $size: 1.3125rem;
+
+    display: inline-block;
+    flex: inherit;
+    width: $size;
+    height: $size;
+    filter: invert(1);
+  }
+
+  .itemLocation {
+    font-size: 1rem;
+    opacity: .7;
+    color: $fer-black;
   }
 </style>

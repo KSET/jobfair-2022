@@ -1,5 +1,5 @@
 import session from "express-session";
-import connectRedis from "connect-redis";
+import RedisStore from "connect-redis";
 import {
   Router,
 } from "express";
@@ -8,14 +8,12 @@ import {
   redis,
 } from "../providers/redis";
 
-export default async (app: Router) => {
+export const SESSION_KEY_PREFIX = "jobfair:session:";
+
+export default (app: Router) => {
   const COOKIE_NAME = "jobfair-session" as const;
   const SESSION_SECRET = process.env.SESSION_SECRET || `${ Date.now().toString(36) }-${ Math.random().toString(36) }`;
   const SESSION_TTL = Number.parseInt(process.env.SESSION_TTL || "0");
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const RedisStore = connectRedis(session);
 
   app.use((req, res, next) => {
     const sessionIdHeader = req.headers["x-session-id"];
@@ -46,9 +44,9 @@ export default async (app: Router) => {
 
   const sessionMiddleware = session({
     store: new RedisStore({
-      client: await redis(),
-      prefix: "jobfair:session:",
-    }) as unknown as session.Store,
+      client: redis(),
+      prefix: SESSION_KEY_PREFIX,
+    }),
     saveUninitialized: false,
     secret: SESSION_SECRET,
     resave: false,

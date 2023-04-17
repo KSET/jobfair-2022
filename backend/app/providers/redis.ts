@@ -1,14 +1,17 @@
-import {
-  createClient,
-} from "redis";
+import Redis from "ioredis";
 
-const client = createClient({
-  url: process.env.REDIS_URL,
-  legacyMode: true,
-});
+export const newClient = () => {
+  return new Redis(process.env.REDIS_URL!, {
+    retryStrategy: (times) => {
+      return Math.min(times * 50, 2000);
+    },
+    enableAutoPipelining: true,
+    showFriendlyErrorStack: true,
+  });
+};
 
-export const redis = async () => {
-  await client.connect();
+const client = newClient();
 
+export const redis = () => {
   return client;
 };

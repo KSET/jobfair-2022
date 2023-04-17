@@ -153,6 +153,17 @@
         isLoading,
         async handleSubmit() {
           resetErrors();
+
+          const end = (formModel.end as { value: string, }).value;
+          const start = (formModel.start as { value: string, }).value;
+
+          if (new Date(end) < new Date(start)) {
+            errors.end.push({
+              message: "End date must be after start date",
+            });
+            return;
+          }
+
           const formData = pipe(
             (x: typeof formModel) => keys(x),
             map((key) => [

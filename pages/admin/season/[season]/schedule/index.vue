@@ -102,13 +102,10 @@
     ref,
   } from "#imports";
   import {
-    IApplicationPresenter,
-    IApplicationTalk,
-    IApplicationWorkshop,
-    ICalendarItem,
-    ICompany,
-    ICompanyPanel,
-    IImage,
+    IPageAdminSeasonScheduleBaseQuery,
+    IPageAdminSeasonScheduleBaseQueryVariables,
+    ISeason,
+    PageAdminSeasonScheduleBase,
   } from "~/graphql/schema";
   import {
     useSeasonsStore,
@@ -128,110 +125,14 @@
     async setup() {
       const route = useRoute();
       const seasonsStore = useSeasonsStore();
-      const season = route.params.season as string;
+      const seasonUid = route.params.season as string;
 
-      type QEvent = ICalendarItem;
-      type QParticipant = Pick<ICompany, "uid" | "brandName"> & {
-        program: {
-          talk: Pick<IApplicationTalk, "titleHr" | "event"> & { event: QEvent, } | null,
-          workshop: Pick<IApplicationWorkshop, "titleHr" | "event"> & { event: QEvent, } | null,
-          panelParticipants: (Pick<IApplicationPresenter, "firstName" | "lastName"> & {
-            photo: Pick<IImage, "fullUrl" | "thumbUrl">,
-          })[],
-        },
-      };
-      type QSeason = {
-        panel: Pick<ICompanyPanel, "uid" | "name"> & {
-          companies: Pick<ICompany, "brandName">,
-          event: QEvent,
-        },
-        calendar: QEvent[],
-      };
-      type QData = {
-        participants: QParticipant[],
-        season: QSeason,
-      };
-      type QArgs = {
-        season: string,
-      };
-      const queryData = useQuery<QData, QArgs>({
-        query: gql`
-          query Data($season: String!) {
-            participants(season: $season) {
-              uid
-              brandName
-              program {
-                talk {
-                  uid
-                  event {
-                    uid
-                    type
-                    title
-                    start
-                    end
-                    location
-                    text
-                    grouped
-                  }
-                }
-                workshop {
-                  uid
-                  event {
-                    uid
-                    type
-                    title
-                    start
-                    end
-                    location
-                    text
-                    grouped
-                  }
-                }
-                panelParticipants {
-                  firstName
-                  lastName
-                  photo {
-                    fullUrl
-                    thumbUrl
-                  }
-                }
-              }
-            }
-            season(uid: $season) {
-              panel {
-                uid
-                name
-                description
-                companies {
-                  uid
-                }
-                event {
-                  uid
-                  type
-                  title
-                  start
-                  end
-                  location
-                  text
-                  grouped
-                }
-              }
-
-              calendar {
-                uid
-                type
-                title
-                start
-                end
-                location
-                text
-                grouped
-              }
-            }
-          }
-        `,
+      type QData = IPageAdminSeasonScheduleBaseQuery;
+      type QEvent = NonNullable<QData["season"]>["calendar"][number];
+      const queryData = useQuery<IPageAdminSeasonScheduleBaseQuery, IPageAdminSeasonScheduleBaseQueryVariables>({
+        query: PageAdminSeasonScheduleBase,
         variables: {
-          season,
+          seasonUid,
         },
       });
 
@@ -253,7 +154,7 @@
           }
         `,
         variables: {
-          season,
+          season: seasonUid,
         },
       });
 
@@ -272,13 +173,11 @@
       ));
 
       const otherCalendarItems = computed(() => [
-        ...resp.season.calendar.filter((x) => !unref(preparedCalendarIds).has(x.uid)).map((value) => ({ value })),
+        ...resp.season!.calendar.filter((x) => !unref(preparedCalendarIds).has(x.uid)).map((value) => ({ value })),
         { value: null },
       ]);
 
-      type Panelist = Pick<IApplicationPresenter, "firstName" | "lastName"> & {
-        company: Pick<ICompany, "uid" | "brandName">,
-      };
+      type Panelist = NonNullable<QData["participants"][number]>;
 
       const isCalendarLoading = ref(false);
 
@@ -286,12 +185,12 @@
         otherCalendarItems,
         participants,
         isCalendarLoading,
-        season: computed(() => seasonsStore.season!),
-        panel: toRef(resp.season, "panel"),
-        calendar: resp.season.calendar,
+        season: computed(() => seasonsStore.season as ISeason),
+        panel: toRef(resp.season!, "panel"),
+        calendar: resp.season!.calendar,
         panelists: computed(() => unref(participants).filter((p) => 0 < (p?.program?.panelParticipants?.length ?? 0)).map((p): Panelist => ({
-          firstName: p.program.panelParticipants[0].firstName,
-          lastName: p.program.panelParticipants[0].lastName,
+          firstName: p.program!.panelParticipants[0]!.firstName,
+          lastName: p.program!.panelParticipants[0]!.lastName,
           company: {
             uid: p.uid,
             brandName: p.brandName,
@@ -302,7 +201,7 @@
           const calendar = await queryCalendar().then((resp) => resp?.data?.season?.calendar || []);
           isCalendarLoading.value = false;
 
-          resp.season.calendar = calendar;
+          resp.season!.calendar = calendar;
         },
       };
     },

@@ -366,6 +366,10 @@ export class CalendarUpdateResolver {
       @Arg("input", () => CalendarUpdateInput) input: CalendarUpdateInput,
       @Info() gqlInfo: GraphQLResolveInfo,
   ): GQLResponse<CalendarItem, "nullable"> {
+    if (input.start > input.end) {
+      throw new Error("Start date must be before end date");
+    }
+
     const { type } = input;
 
     const data = {

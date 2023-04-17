@@ -645,6 +645,80 @@ query AdminFeedbackInfo($seasonUid: String!) {
     }
 }
 
+query PageAdminSeasonScheduleBase($seasonUid: String!) {
+    participants(season: $seasonUid) {
+        uid
+        brandName
+        program {
+            talk {
+                uid
+                event {
+                    uid
+                    type
+                    title
+                    start
+                    end
+                    location
+                    text
+                    grouped
+                }
+            }
+            workshop {
+                uid
+                event {
+                    uid
+                    type
+                    title
+                    start
+                    end
+                    location
+                    text
+                    grouped
+                }
+            }
+            panelParticipants {
+                firstName
+                lastName
+                photo {
+                    fullUrl
+                    thumbUrl
+                }
+            }
+        }
+    }
+    season(uid: $seasonUid) {
+        panel {
+            uid
+            name
+            description
+            companies {
+                uid
+            }
+            event {
+                uid
+                type
+                title
+                start
+                end
+                location
+                text
+                grouped
+            }
+        }
+
+        calendar {
+            uid
+            type
+            title
+            start
+            end
+            location
+            text
+            grouped
+        }
+    }
+}
+
 query AdminReservationsData($seasonUid: String!) {
     season(uid: $seasonUid) {
         reservations {
@@ -672,5 +746,19 @@ query AdminReservationsData($seasonUid: String!) {
                 name
             }
         }
+    }
+}
+
+query PageScheduleBase {
+    calendar {
+        uid
+        title
+        text
+        start
+        end
+        type
+        grouped
+        location
+        hasEvent
     }
 }

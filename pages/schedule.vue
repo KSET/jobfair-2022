@@ -51,7 +51,8 @@
               v-if="event.location"
               :class="$style.eventLocation"
             >
-              <i class="pi pi-map-marker" /> {{ event.location }}
+              <i class="pi pi-map-marker" />
+              {{ event.location }}
             </div>
             <div
               v-if="event.text"
@@ -111,7 +112,8 @@
                 v-if="event.location"
                 :class="$style.eventLocation"
               >
-                <i class="pi pi-map-marker" /> {{ event.location }}
+                <i class="pi pi-map-marker" />
+                {{ event.location }}
               </div>
               <div
                 v-if="event.text"
@@ -139,9 +141,6 @@
     groupBy,
     map,
   } from "rambda";
-  import {
-    gql,
-  } from "@urql/core";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import VueCalendar from "~/components/external/VueCalendar.vue";
@@ -163,7 +162,9 @@
     capitalize,
   } from "~/helpers/string";
   import {
-    ICalendarItem,
+    IPageScheduleBaseQuery,
+    IPageScheduleBaseQueryVariables,
+    PageScheduleBase,
   } from "~/graphql/schema";
   import {
     useTranslationsStore,
@@ -190,53 +191,35 @@
       const translationsStore = useTranslationsStore();
       const seasonsStore = useSeasonsStore();
 
-      type QData = {
-        calendar: (Pick<ICalendarItem,
-                        "uid"
-                          | "title"
-                          | "text"
-                          | "type"
-                          | "grouped"
-                          | "location"
-                          | "hasEvent"> & {
-          split?: number,
-          start: string,
-          end: string,
-        })[],
-      };
-      type QArgs = never;
-      const events = await useQuery<QData, QArgs>({
-        query: gql`
-          query {
-            calendar {
-              uid
-              title
-              text
-              start
-              end
-              type
-              grouped
-              location
-              hasEvent
-            }
-          }
-        `,
+      const events = await useQuery<IPageScheduleBaseQuery, IPageScheduleBaseQueryVariables>({
+        query: PageScheduleBase,
       })()
-        .then((resp) => resp?.data?.calendar || [])
+        .then((resp) => resp?.data?.calendar ?? [])
         .then(
           (resp) =>
             map(
               (x) => ({
                 ...x,
-                start: new Date(x.start),
-                end: new Date(x.end),
+                start: new Date(String(x.start as unknown)),
+                end: new Date(String(x.end as unknown)),
                 class: x.type,
                 noGroup: !x.grouped,
+                split: 0,
               }),
               resp,
-            ).sort(
-              (a, b) => a.start.getTime() - b.start.getTime(),
             )
+              .sort(
+                (a, b) => Number(a.start) - Number(b.start),
+              )
+              .filter((x) => {
+                const is = x.start <= x.end;
+
+                if (!is) {
+                  console.error("Start date is after end date", x);
+                }
+
+                return is;
+              })
           ,
         )
       ;

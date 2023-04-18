@@ -48,6 +48,13 @@
       </p-button>
     </div>
 
+    <h2>Sessions</h2>
+    <div class="flex flex-column">
+      <div v-for="session in sessions" :key="session.sessionId">
+        <pre style="white-space: pre-wrap" v-text="session" />
+      </div>
+    </div>
+
     <h2>Event log</h2>
     <DataTable
       ref="dt"
@@ -111,9 +118,6 @@
     ref,
   } from "vue";
   import {
-    gql,
-  } from "@urql/core";
-  import {
     useRoute,
     useRouter,
   } from "vue-router";
@@ -139,12 +143,13 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
+    IPageAdminUserEditBaseQuery,
+    IPageAdminUserEditBaseQueryVariables,
     IRequestPasswordResetForMutation,
     IRequestPasswordResetForMutationVariables,
-    IRole,
     IUpdateUserMutation,
     IUpdateUserMutationVariables,
-    IUser,
+    PageAdminUserEditBase,
     RequestPasswordResetFor,
     UpdateUser,
   } from "~/graphql/schema";
@@ -178,39 +183,8 @@
 
       const uid = $route.params.uid as string;
 
-      type QueryData = {
-        user: IUser | null,
-        roles: IRole[],
-      };
-      type QueryArgs = {
-        uid: string,
-      };
-      const resp = await useQuery<QueryData, QueryArgs>({
-        query: gql`
-            query User($uid: String!) {
-                user(uid: $uid) {
-                    uid
-                    name
-                    firstName
-                    lastName
-                    email
-                    phone
-                    roles {
-                      name
-                    }
-                    eventLog {
-                      id
-                      date
-                      name
-                      data
-                    }
-                }
-
-                roles {
-                    name
-                }
-            }
-        `,
+      const resp = await useQuery<IPageAdminUserEditBaseQuery, IPageAdminUserEditBaseQueryVariables>({
+        query: PageAdminUserEditBase,
         variables: {
           uid,
         },
@@ -227,14 +201,14 @@
             realId: x.id,
             date: new Date(x.date as string),
           }))
-          .sort((lt, gt) => gt.date.getTime() - lt.date.getTime())
+          .sort((lt, gt) => Number(gt.date) - Number(lt.date))
         ?? []
       ;
 
       const isLoading = ref(false);
       const isResetPasswordLoading = ref(false);
 
-      const info_ = userEdit(resp?.data?.user as never)(resp?.data?.roles || []);
+      const info_ = userEdit(resp?.data?.user as never)(resp?.data?.roles ?? []);
       const info = reactive({
         ...info_,
       });
@@ -272,9 +246,24 @@
         return false;
       });
 
+      const sessions =
+        resp
+          ?.data
+          ?.sessionsFor
+          ?.map(
+            (x) => ({
+              ...x,
+              loggedInAt: new Date(x.loggedInAt),
+            })
+            ,
+          )
+        ?? []
+      ;
+
       return {
         dt,
         filters,
+        sessions,
         userExists: Boolean(resp?.data?.user),
         eventLog,
         exportCSV() {

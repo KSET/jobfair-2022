@@ -1,11 +1,14 @@
 import {
   Arg,
+  Authorized,
   Ctx,
   Field,
   Info,
   InputType,
+  Int,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from "type-graphql";
 import {
@@ -18,6 +21,9 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
+import type {
+  Session as ContextSession,
+} from "../../types/apollo-context";
 import {
   Context,
 } from "../../types/apollo-context";
@@ -41,7 +47,14 @@ import {
 } from "../helpers/resolver";
 import {
   Dict,
+  GQLResponse,
 } from "../../types/helpers";
+import {
+  Role,
+} from "../../helpers/auth";
+import {
+  SessionService,
+} from "../../services/session-service";
 import {
   transformSelect as transformSelectUser,
 } from "./user";
@@ -58,8 +71,70 @@ export class UserRegisterInput extends UserCreateInput {
 
 const transformSelect = (select: Dict) => transformSelectUser(select.entity as Dict);
 
+type Assign<T extends Dict, U extends Dict> = Omit<T, keyof U> & U;
+
+type SessionUser = NonNullable<ContextSession["user"]>;
+type QSessionUser = Assign<SessionUser, {
+  sessionId: string,
+}>;
+
+@ObjectType()
+class Session implements QSessionUser {
+  @Field(() => Int)
+  public id: SessionUser["id"] = 0;
+
+  @Field(() => String)
+  public sessionId: string = "";
+
+  @Field(() => String)
+  public ip: SessionUser["ip"] = "";
+
+  @Field(() => String)
+  public loggedInAt: string = "2023-04-18T11:07:06.478Z";
+
+  @Field(() => String)
+  public userAgent: SessionUser["userAgent"] = "";
+}
+
 @Resolver()
 export class AuthResolver {
+  @Query((_returns) => [ Session ])
+  sessions(
+    @Ctx() ctx: Context,
+  ): GQLResponse<Session[]> {
+    const { user } = ctx;
+
+    if (!user) {
+      return Promise.resolve([]);
+    }
+
+    return SessionService.listSessions(ctx.prisma, user.id);
+  }
+
+  @Authorized(Role.Admin)
+  @Query((_returns) => [ Session ])
+  sessionsFor(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+  ): GQLResponse<Session[]> {
+    return ctx.prisma.$transaction(async (prisma) => {
+      const user = await prisma.user.findFirst({
+        where: {
+          uid,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      return SessionService.listSessions(prisma, user.id);
+    }).catch(() => []);
+  }
+
   @Mutation((_returns) => AuthResponse)
   async login(
     @Ctx() ctx: Context,

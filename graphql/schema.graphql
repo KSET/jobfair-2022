@@ -1410,6 +1410,8 @@ type Query {
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
   season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
+  sessions: [Session!]!
+  sessionsFor(uid: String!): [Session!]!
   sponsors(season: String): [Sponsor!]!
   talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
@@ -1979,6 +1981,14 @@ input SeasonWhereInput {
 
 input SeasonWhereUniqueInput {
   uid: String
+}
+
+type Session {
+  id: Int!
+  ip: String!
+  loggedInAt: String!
+  sessionId: String!
+  userAgent: String!
 }
 
 enum SortOrder {

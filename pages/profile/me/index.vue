@@ -84,6 +84,7 @@
                 >
                   <p-button
                     :loading="item.loading"
+                    :class="[ item.reservation ? $style.signoffButton : $style.signupButton ]"
                     @click="handleSignupFor(item)"
                   >
                     <translated-text v-if="item.reservation" trans-key="company.event.user.sign-off" />
@@ -784,6 +785,7 @@
 
 <style lang="scss" module>
   @use "sass:map";
+  @use "sass:color";
   @import "assets/styles/include";
 
   .success {
@@ -927,6 +929,18 @@
 
       &:hover {
         text-decoration: underline;
+      }
+    }
+
+    .signupButton .signoffButton {
+      transition: background-color .2s ease;
+    }
+
+    .signoffButton {
+      background-color: $fer-dark-blue;
+
+      &:hover {
+        background-color: color.adjust($fer-dark-blue, $alpha: -.12);
       }
     }
   }

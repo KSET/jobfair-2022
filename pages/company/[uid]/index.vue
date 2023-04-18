@@ -91,7 +91,10 @@
               />
               <p-button
                 v-if="loggedIn"
-                :class="$style.signupButton"
+                :class="{
+                  [$style.signupButton]: !programItems.talk.reservation,
+                  [$style.signoffButton]: programItems.talk.reservation,
+                }"
                 :loading="signupLoading"
                 @click="handleSignup('talk')"
               >
@@ -144,7 +147,10 @@
               />
               <p-button
                 v-if="loggedIn"
-                :class="$style.signupButton"
+                :class="{
+                  [$style.signupButton]: !programItems.workshop.reservation,
+                  [$style.signoffButton]: programItems.workshop.reservation,
+                }"
                 :loading="signupLoading"
                 @click="handleSignup('workshop')"
               >
@@ -208,7 +214,10 @@
               />
               <p-button
                 v-if="loggedIn"
-                :class="$style.signupButton"
+                :class="{
+                  [$style.signupButton]: !programItems.panel.reservation,
+                  [$style.signoffButton]: programItems.panel.reservation,
+                }"
                 :loading="signupLoading"
                 @click="handleSignup('panel')"
               >
@@ -688,10 +697,15 @@
         }
       }
 
-      .signupButton {
+      .signupButton, .signoffButton {
         font-size: 1.2rem;
         font-weight: bold;
         padding: .85rem 1rem;
+        transition: background-color .2s ease;
+      }
+
+      .signoffButton {
+        background-color: $fer-dark-blue;
       }
     }
   }

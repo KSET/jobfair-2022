@@ -81,7 +81,12 @@ export class AuthResolver {
       };
     }
 
-    ctx.session.userId = user.id;
+    ctx.session.user = {
+      id: user.id,
+      ip: ctx.req.ip,
+      userAgent: ctx.req.headers["user-agent"] ?? "unknown",
+      loggedInAt: new Date(),
+    };
 
     const userData = await ctx.prisma.user.findFirst({
       where: {
@@ -169,7 +174,12 @@ export class AuthResolver {
     }) as unknown as User;
 
     // Log the user in
-    ctx.session.userId = user.id;
+    ctx.session.user = {
+      id: user.id!,
+      ip: ctx.req.ip,
+      userAgent: ctx.req.headers["user-agent"] ?? "unknown",
+      loggedInAt: new Date(),
+    };
 
     void EventsService.logEvent("user:register", user.id);
 

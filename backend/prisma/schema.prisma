@@ -62,6 +62,13 @@ model User {
   passwordResets PasswordReset[]
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+}
+
 model PasswordReset {
   /// @TypeGraphQL.omit(output: true, input: true)
   id  Int    @id @default(autoincrement())

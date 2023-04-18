@@ -26,13 +26,15 @@ export default (app: Router) => {
       return next();
     };
 
-    if (!session?.userId) {
+    const sessionUser = session?.user;
+
+    if (!sessionUser) {
       return end();
     }
 
     const user = await prisma.user.findUnique({
       where: {
-        id: session.userId,
+        id: sessionUser.id,
       },
       include: {
         roles: {

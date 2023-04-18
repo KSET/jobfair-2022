@@ -18,7 +18,12 @@ import {
 } from "../helpers/auth";
 
 export type Session = ExpressSession & Partial<SessionData> & {
-  userId?: User["id"],
+  user?: {
+    id: User["id"],
+    ip: string,
+    userAgent: string,
+    loggedInAt: Date | string,
+  },
 };
 
 export type SessionUser = User & {

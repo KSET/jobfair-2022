@@ -1,12 +1,15 @@
 import session from "express-session";
-import RedisStore from "connect-redis";
 import {
   Router,
 } from "express";
 import cookie from "cookie";
 import {
-  redis,
-} from "../providers/redis";
+  PrismaSessionStore,
+} from "@quixo3/prisma-session-store";
+import SuperJSON from "superjson";
+import {
+  prisma,
+} from "../providers/prisma";
 
 export const SESSION_KEY_PREFIX = "jobfair:session:";
 
@@ -42,11 +45,18 @@ export default (app: Router) => {
     next();
   });
 
+  const sessionStore = new PrismaSessionStore(
+    prisma,
+    {
+      checkPeriod: 2 * 60 * 1000,
+      enableConcurrentSetInvocationsForSameSessionID: true,
+      enableConcurrentTouchInvocationsForSameSessionID: true,
+      serializer: SuperJSON,
+    },
+  );
+
   const sessionMiddleware = session({
-    store: new RedisStore({
-      client: redis(),
-      prefix: SESSION_KEY_PREFIX,
-    }),
+    store: sessionStore,
     saveUninitialized: false,
     secret: SESSION_SECRET,
     resave: false,

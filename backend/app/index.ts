@@ -41,7 +41,7 @@ export async function start() {
 
   const app = express();
 
-  app.set("trust proxy", 1);
+  app.set("trust proxy", true);
   app.set("case sensitive routing", true);
   app.set("query parser", "simple");
   app.set("x-powered-by", false);

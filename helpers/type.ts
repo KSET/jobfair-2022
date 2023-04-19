@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  ComputedRef,
   Ref,
 } from "vue";
 
@@ -61,8 +62,14 @@ export type WithoutSuffix<SuffixedKey, Suffix extends string> =
 
 export type Dict<Values = unknown, Keys extends (string | number | symbol) = string> = Record<Keys, Values>;
 
+export type Assign<T extends Dict, U extends Dict> = Omit<T, keyof U> & U;
+
 export type MaybeRef<T> = T | Ref<T>;
+
+export type MaybeComputedRef<T> = T | ComputedRef<T> | Ref<T>;
 
 export type ClassDefinition = Record<string, boolean> | string;
 
 export type ClassList = ClassDefinition | ClassDefinition[];
+
+export type Maybe<T> = T | null | undefined;

@@ -66,6 +66,7 @@
   } from "@vueuse/core";
   import {
     useRuntimeConfig,
+    useHead,
   } from "#imports";
   import {
     useCookieConsentStore,
@@ -82,7 +83,6 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
-    useHead,
     useNuxtApp,
   } from "#app";
   import {

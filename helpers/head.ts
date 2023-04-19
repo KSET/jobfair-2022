@@ -1,3 +1,7 @@
+import {
+ Dict,
+} from "~/helpers/type";
+
 export const generateTitle =
   (title: string): string =>
     `${ title } | Job Fair`
@@ -16,6 +20,7 @@ const renameMap: Map<string, string> = new Map(Object.entries({
   image: "og:image",
   type: "og:type",
   siteName: "og:site_name",
+  "article:published_time": "og:article:published_time",
 }));
 
 const mappedContent: Map<string, (param: string) => string> = new Map(Object.entries({
@@ -28,7 +33,7 @@ const hid = ({ name, content }: { name: string, content: string, }) =>
     : ({ name, content })
 ;
 
-const getMappedContent = (key: string, content: string) => (mappedContent.get(key) || ((x) => x))(content);
+const getMappedContent = (key: string, content: unknown) => (mappedContent.get(key) || ((x) => x))(String(content));
 const getRenamedKey = (key: string) => renameMap.get(key) || key;
 const getKeyAliases = (key: string) => aliasMap.get(key) || [];
 const getKeyWithAliases =
@@ -52,7 +57,7 @@ export const generateMetadataFor =
 ;
 
 export const generateMetadata =
-  (pageData: Record<string, string>): Record<string, string>[] =>
+  (pageData: Dict): Record<string, string>[] =>
     Object
       .entries(pageData)
       .map(

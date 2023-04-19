@@ -54,7 +54,6 @@
 
 <script lang="ts">
   import {
-    computed,
     defineComponent,
     reactive,
     ref,
@@ -62,6 +61,7 @@
   import Divider from "primevue/divider";
   import {
     useRoute,
+    useHeadMetadata,
   } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
@@ -71,12 +71,6 @@
     ensureArray,
   } from "~/helpers/data";
   import NewsCard from "~/components/news/news-card.vue";
-  import {
-    useHead,
-  } from "#app";
-  import {
-    generateMetadata,
-  } from "~/helpers/head";
   import useTitle from "~/composables/useTitle";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppImg from "~/components/util/app-img.vue";
@@ -103,18 +97,13 @@
       const $route = useRoute();
 
       const metaData = reactive({
+        type: "article",
         image: "",
         description: "",
+        "article:published_time": "",
       });
       const title = ref("");
-      useHead({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        meta: computed(() => generateMetadata({
-          image: metaData.image,
-          description: metaData.description,
-        })),
-      });
+      useHeadMetadata(metaData);
       useTitle(title, false);
 
       const {
@@ -130,6 +119,7 @@
 
         metaData.image = newsItem.photo?.fullUrl ?? "";
         metaData.description = newsItem.description;
+        metaData["article:published_time"] = new Date(String(newsItem.date)).toISOString();
       }
 
       return {

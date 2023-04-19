@@ -314,7 +314,7 @@
     unref,
     useMutation,
     useRoute,
-    useHead,
+    useHeadMetadata,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
   import ReRenderClientside from "~/components/util/re-render-clientside.vue";
@@ -345,10 +345,6 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
-  import {
-    generateMetadata,
-    generateTitle,
-  } from "~/helpers/head";
 
   export default defineComponent({
     name: "PageCompanyInfo",
@@ -405,7 +401,7 @@
       const activeIndex = ref(tabs[preselectedTab] ?? 0);
       const activeTab = computed(() => Object.keys(tabs)[activeIndex.value]);
 
-      const pageInfo = computed(() => {
+      useHeadMetadata(computed(() => {
         const { brandName } = unref(company);
         const info = {
           title: `${ brandName } - Info`,
@@ -445,17 +441,7 @@
         }
 
         return info;
-      });
-
-      useHead(computed(() => {
-        const info = unref(pageInfo);
-        const title = generateTitle(info.title);
-
-        return ({
-          title,
-          meta: generateMetadata(info),
-        });
-      }));
+      }), false);
 
       const eventTimeFormatter = computed(() => new Intl.DateTimeFormat(
         translationsStore.currentLanguageIso,

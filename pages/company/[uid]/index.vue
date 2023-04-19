@@ -315,6 +315,8 @@
     useMutation,
     useRoute,
     useHeadMetadata,
+    watch,
+    useRouter,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
   import ReRenderClientside from "~/components/util/re-render-clientside.vue";
@@ -360,6 +362,7 @@
 
     setup() {
       const route = useRoute();
+      const router = useRouter();
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
       const userStore = useUserStore();
@@ -400,6 +403,21 @@
       const preselectedTab = String(route.query.tab) || "talk";
       const activeIndex = ref(tabs[preselectedTab] ?? 0);
       const activeTab = computed(() => Object.keys(tabs)[activeIndex.value]);
+
+      watch(
+        activeTab,
+        (tab) => {
+          void router.replace({
+            query: {
+              ...route.query,
+              tab,
+            },
+          });
+        },
+        {
+          immediate: true,
+        },
+      );
 
       useHeadMetadata(computed(() => {
         const { brandName } = unref(company);

@@ -23,11 +23,11 @@
   export default defineComponent({
     components: { AppImg },
     setup() {
-      const config: Record<string, string> = useRuntimeConfig();
+      const config = useRuntimeConfig();
       const userStore = useUserStore();
 
       return {
-        profileImage: computed(() => `${ config.API_BASE }/placeholder/${ userStore.user?.uid ?? "profile" }/avatar.svg`),
+        profileImage: computed(() => `${ config.public.API_BASE }/placeholder/${ userStore.user?.uid ?? "profile" }/avatar.svg`),
       };
     },
   });

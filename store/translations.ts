@@ -86,6 +86,25 @@ export const useTranslationsStore = defineStore(
         };
       },
 
+      translateFor() {
+        return (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          <TKey extends string, TItem extends Record<`${ TKey }En` | `${ TKey }Hr`, any>>(
+            item: TItem,
+            key: TKey,
+          ) => {
+            type TItemValue = TItem[`${ TKey }Hr` | `${ TKey }En`];
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return (
+              this.currentLanguage === Language.HR
+                ? item[`${ key }Hr`]
+                : item[`${ key }En`]
+            ) as TItemValue;
+          }
+        );
+      },
+
       translationLoading(state): (key: string, language?: Language) => boolean {
         return (key: string, language?: Language): boolean => state.translationsLoading[language ?? state.currentLanguage]?.[key] ?? false;
       },

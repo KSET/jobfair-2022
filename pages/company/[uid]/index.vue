@@ -29,7 +29,7 @@
         <h4 :class="$style.companyDescriptionHeader">
           <translated-text trans-key="company.info.about-company" />
         </h4>
-        <p :class="$style.companyDescriptionText" v-text="translateFor(company, 'description').value" />
+        <p :class="$style.companyDescriptionText" v-text="translateFor(company, 'description')" />
         <hr>
         <p>
           <translated-text
@@ -88,7 +88,7 @@
                 <span
                   v-if="programItems.talk.event"
                   :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.talk.event).value"
+                  v-text="formatLocation(programItems.talk.event)"
                 />
               </ReRenderClientside>
               <p-button
@@ -105,9 +105,9 @@
               </p-button>
             </div>
 
-            <h3 :class="$style.itemTitle" v-text="translateFor(programItems.talk, 'title').value" />
+            <h3 :class="$style.itemTitle" v-text="translateFor(programItems.talk, 'title')" />
 
-            <p :class="$style.itemDescription" v-text="translateFor(programItems.talk, 'description').value" />
+            <p :class="$style.itemDescription" v-text="translateFor(programItems.talk, 'description')" />
 
             <h4>
               <translated-text trans-key="company.info.program.about-presenters" />
@@ -124,7 +124,7 @@
                   :lazy-src="presenter.photo.thumbUrl"
                   :src="presenter.photo.fullUrl"
                 />
-                <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
+                <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
               </div>
             </div>
           </TabPanel>
@@ -146,7 +146,7 @@
                 <span
                   v-if="programItems.workshop.event"
                   :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.workshop.event).value"
+                  v-text="formatLocation(programItems.workshop.event)"
                 />
               </ReRenderClientside>
               <p-button
@@ -163,11 +163,11 @@
               </p-button>
             </div>
 
-            <h3 :class="$style.itemTitle" v-text="translateFor(programItems.workshop, 'title').value" />
+            <h3 :class="$style.itemTitle" v-text="translateFor(programItems.workshop, 'title')" />
 
-            <p :class="$style.itemDescription" v-text="translateFor(programItems.workshop, 'description').value" />
+            <p :class="$style.itemDescription" v-text="translateFor(programItems.workshop, 'description')" />
 
-            <template v-for="note in [ translateFor(programItems.workshop, 'notes').value ]">
+            <template v-for="note in [ translateFor(programItems.workshop, 'notes') ]">
               <template v-if="note">
                 <div :key="note">
                   <h4>
@@ -194,7 +194,7 @@
                 :src="presenter.photo.fullUrl"
                 contain
               />
-              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
+              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
             </div>
           </TabPanel>
 
@@ -215,7 +215,7 @@
                 <span
                   v-if="programItems.panel.event"
                   :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.panel.event).value"
+                  v-text="formatLocation(programItems.panel.event)"
                 />
               </ReRenderClientside>
               <p-button
@@ -252,7 +252,7 @@
                 :lazy-src="presenter.photo.thumbUrl"
                 :src="presenter.photo.fullUrl"
               />
-              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio').value" />
+              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
             </div>
 
             <template v-if="panelCompanies.length > 0">
@@ -328,7 +328,6 @@
   import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?url";
   import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?url";
   import {
-    Language,
     useTranslationsStore,
   } from "~/store/translations";
   import {
@@ -369,26 +368,12 @@
       const seasonsStore = useSeasonsStore();
 
       const company = computed(() => companyStore.companyInfo!);
-      const translateFor =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <Key extends string, Item extends Record<`${ Key }En` | `${ Key }Hr`, any>>(
-          item: Item,
-          key: Key,
-          ) =>
-          computed<Item[`${ Key }Hr` | `${ Key }En`]>(
-            () =>
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              translationsStore.currentLanguage === Language.HR
-                ? item[`${ key }Hr`]
-                : item[`${ key }En`],
-          )
-      ;
 
       type TCompanyProgram = NonNullable<NonNullable<typeof companyStore.companyInfo>["program"]>;
       type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "panel");
 
       const programItemsEmpty = {} as Partial<TCompanyProgram>;
-      const programItems = computed(() => filterObject(Boolean, unref(company).program! || programItemsEmpty) as Partial<TCompanyProgram>);
+      const programItems = computed(() => filterObject(Boolean, unref(company).program ?? programItemsEmpty) as Partial<TCompanyProgram>);
 
       const tabs: Record<string, number> = Object.fromEntries(
         [
@@ -433,8 +418,8 @@
           case "talk": {
             const item = unref(programItems).talk;
             if (item) {
-              info.title = `[Talk] ${ brandName }: ${ unref(translateFor(item, "title")) }`;
-              info.description = unref(translateFor(item, "description"));
+              info.title = `[Talk] ${ brandName }: ${ unref(translationsStore.translateFor(item, "title")) }`;
+              info.description = unref(translationsStore.translateFor(item, "description"));
             }
             break;
           }
@@ -442,8 +427,8 @@
           case "workshop": {
             const item = unref(programItems).workshop;
             if (item) {
-              info.title = `[Workshop] ${ brandName }: ${ unref(translateFor(item, "title")) }`;
-              info.description = unref(translateFor(item, "description"));
+              info.title = `[Workshop] ${ brandName }: ${ unref(translationsStore.translateFor(item, "title")) }`;
+              info.description = unref(translationsStore.translateFor(item, "description"));
             }
             break;
           }
@@ -490,7 +475,7 @@
         signupLoading,
         activeIndex,
         company,
-        translateFor,
+        translateFor: computed(() => translationsStore.translateFor),
         programItems,
         eventIcons: {
           workshop: EventIconWorkshop,
@@ -498,15 +483,19 @@
           panel: EventIconPanel,
         },
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
-        formatLocation(event: { start: string, end?: string, location?: string, }) {
+        formatLocation: computed(() => (event: { start: string, end?: string, location?: string | null, }) => {
           const start = new Date(event.start);
 
-          return computed(() => [
-            unref(eventDayFormatter).format(start),
-            unref(eventTimeFormatter).format(start),
-            event.location,
-          ].filter((x) => x).join(" | "));
-        },
+          return (
+            [
+              unref(eventDayFormatter).format(start),
+              unref(eventTimeFormatter).format(start),
+              event.location,
+            ]
+              .filter(Boolean)
+              .join(" | ")
+          );
+        }),
         formatWebsite(website: string) {
           try {
             const url = new URL(website);

@@ -597,11 +597,11 @@
     statusFromEventList,
   } from "~/helpers/event-status";
   import {
-    Language,
     useTranslationsStore,
   } from "~/store/translations";
   import {
     Dict,
+    MaybeComputedRef,
   } from "~/helpers/type";
 
   export default defineComponent({
@@ -629,21 +629,6 @@
           updateEventReservation(input: $input)
         }
       `);
-
-      const translateFor =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <Key extends string, Item extends Record<`${ Key }En` | `${ Key }Hr`, any>>(
-          item: Item,
-          key: Key,
-          ) =>
-          computed<Item[`${ Key }Hr` | `${ Key }En`]>(
-            () =>
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              translationsStore.currentLanguage === Language.HR
-                ? item[`${ key }Hr`]
-                : item[`${ key }En`],
-          )
-      ;
 
       const booths = computed(() => Object.fromEntries((resp?.data?.booths ?? []).map((b) => [ b.key ?? "", b.name ])));
       const approval = resp?.data?.companyApplication?.approval;
@@ -693,16 +678,16 @@
               reservation,
               loading: false,
               companyName: x.title,
-              title: computed(() => "[unknown]"),
-              description: computed(() => "[unknown]"),
+              title: "[unknown]" as MaybeComputedRef<string>,
+              description: "[unknown]" as MaybeComputedRef<string>,
             };
 
             if ("name" in event) {
-              base.title = computed(() => event.name);
-              base.description = computed(() => event.description);
+              base.title = event.name;
+              base.description = event.description;
             } else {
-              base.title = translateFor(event, "title");
-              base.description = translateFor(event, "description");
+              base.title = computed(() => translationsStore.translateFor(event, "title"));
+              base.description = computed(() => translationsStore.translateFor(event, "description"));
             }
 
             return base;
@@ -746,7 +731,6 @@
       return {
         calendar,
         userApplications,
-        translateFor,
         user: computed(() => userStore.user!),
         resume,
         formatDate,

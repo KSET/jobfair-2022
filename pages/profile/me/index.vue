@@ -92,7 +92,7 @@
                   </p-button>
                   <strong :title="item.description">
                     <nuxt-link
-                      :to="{ name: 'calendar-event-uid', params: { uid: item.uid } }"
+                      :to="{ name: 'calendar-event-uid', params: { uid: item.calendarUid } }"
                       target="_blank"
                     >
                       [{{ item.companyName }}] {{ item.title }}
@@ -687,6 +687,7 @@
             } = event;
 
             const base = {
+              calendarUid: x.uid,
               uid,
               type,
               reservation,
@@ -804,7 +805,7 @@
     gap: 1rem;
     grid-template-columns: repeat(var(--item-columns), minmax(0, 1fr));
 
-    @media screen and (max-width: 1500px) {
+    @media screen and (width <= 1500px) {
       --item-columns: 2;
     }
 
@@ -826,7 +827,7 @@
       min-height: fit-content;
       grid-column: span 1;
 
-      @media screen and (max-width: 1500px) {
+      @media screen and (width <= 1500px) {
         grid-column: span var(--item-columns);
       }
     }

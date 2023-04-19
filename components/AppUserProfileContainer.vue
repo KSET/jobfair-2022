@@ -10,82 +10,14 @@
       />
       <div :class="$style.linksContainer">
         <ul>
-          <li>
-            <nuxt-link
-              :to="{ name: 'profile-me' }"
-            >
-              <translated-text
-                trans-key="profile.my-profile"
-              />
+          <li
+            v-for="page in pages"
+            :key="page.id"
+          >
+            <nuxt-link :to="page.to">
+              <translated-text :trans-key="page.name" />
             </nuxt-link>
           </li>
-          <li>
-            <nuxt-link
-              :to="{ name: 'profile-me-settings' }"
-            >
-              <translated-text
-                trans-key="profile.settings"
-              />
-            </nuxt-link>
-          </li>
-          <template v-if="hasCompany">
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-me-company' }"
-              >
-                <translated-text
-                  trans-key="profile.company"
-                />
-              </nuxt-link>
-            </li>
-            <li v-if="applicationsOpen">
-              <nuxt-link
-                :to="{ name: 'profile-me-company-signup' }"
-              >
-                <translated-text
-                  trans-key="profile.company.signup"
-                />
-              </nuxt-link>
-            </li>
-            <li v-else-if="applicationApproved && applicationsEditable">
-              <nuxt-link
-                :to="{ name: 'profile-me-company-application-edit' }"
-              >
-                <translated-text
-                  trans-key="profile.company.application.edit"
-                />
-              </nuxt-link>
-            </li>
-            <li v-if="canViewResumes">
-              <nuxt-link
-                :to="{ name: 'profile-me-company-resumes' }"
-              >
-                <translated-text
-                  trans-key="profile.company.resumes"
-                />
-              </nuxt-link>
-            </li>
-            <li v-if="canScanUsers">
-              <nuxt-link
-                :to="{ name: 'profile-me-company-scan-qr' }"
-              >
-                <translated-text
-                  trans-key="profile.company.scan-qr"
-                />
-              </nuxt-link>
-            </li>
-          </template>
-          <template v-else>
-            <li>
-              <nuxt-link
-                :to="{ name: 'profile-register-company' }"
-              >
-                <translated-text
-                  trans-key="profile.company-register"
-                />
-              </nuxt-link>
-            </li>
-          </template>
         </ul>
       </div>
     </aside>
@@ -113,6 +45,9 @@
   import {
     useCompanyStore,
   } from "~/store/company";
+  import {
+    usePagesStore,
+  } from "~/store/pages";
 
   export default defineComponent({
     components: {
@@ -132,6 +67,7 @@
       const userStore = useUserStore();
       const seasonsStore = useSeasonsStore();
       const companyStore = useCompanyStore();
+      const pagesStore = usePagesStore();
 
       if (props.notFound) {
         throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
@@ -146,6 +82,7 @@
         canViewResumes: computed(() => companyStore.canViewResumes),
         user: computed(() => userStore.user),
         hasCompany: computed(() => userStore.hasCompany),
+        pages: computed(() => pagesStore.profilePages.filter((x) => "page.name.home" !== x.name)),
       };
     },
   });

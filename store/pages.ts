@@ -11,6 +11,21 @@ import {
   useCompanyStore,
 } from "~/store/company";
 
+export type Page = {
+  name: string,
+  to: Record<string, unknown>,
+  if?: () => boolean,
+};
+
+const toPages = <T extends Page>(pages: T[] | readonly T[]) =>
+  pages
+    .map((x) => ({
+      ...x,
+      id: `${ x.name }_${ JSON.stringify(x.to) }`,
+    }))
+    .filter((x) => x.if ? x.if() : true)
+;
+
 export const usePagesStore = defineStore(
   "pages",
   {
@@ -20,7 +35,7 @@ export const usePagesStore = defineStore(
       pages() {
         const seasonsStore = useSeasonsStore();
 
-        return [
+        return toPages([
           {
             name: "page.name.home",
             to: { name: "index" },
@@ -51,7 +66,7 @@ export const usePagesStore = defineStore(
             name: "page.name.press",
             to: { name: "press" },
           },
-        ].filter((page) => page.if ? page.if() : true);
+        ] as const);
       },
 
       profilePages() {
@@ -59,7 +74,7 @@ export const usePagesStore = defineStore(
         const seasonsStore = useSeasonsStore();
         const companyStore = useCompanyStore();
 
-        return [
+        return toPages([
           {
             name: "page.name.home",
             to: { name: "index" },
@@ -102,7 +117,7 @@ export const usePagesStore = defineStore(
             to: { name: "profile-me-cv" },
             if: () => false,
           },
-        ].filter((page) => page.if ? page.if() : true);
+        ] as const);
       },
     },
   },

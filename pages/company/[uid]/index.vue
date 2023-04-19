@@ -314,7 +314,7 @@
     unref,
     useMutation,
     useRoute,
-    useTitle,
+    useHead,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
   import ReRenderClientside from "~/components/util/re-render-clientside.vue";
@@ -345,6 +345,10 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import {
+    generateMetadata,
+    generateTitle,
+  } from "~/helpers/head";
 
   export default defineComponent({
     name: "PageCompanyInfo",
@@ -381,8 +385,6 @@
           )
       ;
 
-      useTitle(computed(() => `${ unref(company).brandName } - Info`));
-
       type TCompanyProgram = NonNullable<NonNullable<typeof companyStore.companyInfo>["program"]>;
       type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "panel");
 
@@ -396,11 +398,64 @@
           "panel",
         ]
           .filter((x) => (unref(programItems) as Dict | null)?.[x])
-          .map((x, i) => [ x, i ]),
+          .map((x, i) => [ x, i ] as const),
       );
 
       const preselectedTab = String(route.query.tab) || "talk";
       const activeIndex = ref(tabs[preselectedTab] ?? 0);
+      const activeTab = computed(() => Object.keys(tabs)[activeIndex.value]);
+
+      const pageInfo = computed(() => {
+        const { brandName } = unref(company);
+        const info = {
+          title: `${ brandName } - Info`,
+          description: undefined,
+        } as {
+          title: string,
+          description?: string,
+        };
+
+        switch (unref(activeTab)) {
+          case "talk": {
+            const item = unref(programItems).talk;
+            if (item) {
+              info.title = `[Talk] ${ brandName }: ${ unref(translateFor(item, "title")) }`;
+              info.description = unref(translateFor(item, "description"));
+            }
+            break;
+          }
+
+          case "workshop": {
+            const item = unref(programItems).workshop;
+            if (item) {
+              info.title = `[Workshop] ${ brandName }: ${ unref(translateFor(item, "title")) }`;
+              info.description = unref(translateFor(item, "description"));
+            }
+            break;
+          }
+
+          case "panel": {
+            const item = unref(programItems).panel;
+            if (item) {
+              info.title = `[Panel] ${ brandName }: ${ item.name }`;
+              info.description = item.description;
+            }
+            break;
+          }
+        }
+
+        return info;
+      });
+
+      useHead(computed(() => {
+        const info = unref(pageInfo);
+        const title = generateTitle(info.title);
+
+        return ({
+          title,
+          meta: generateMetadata(info),
+        });
+      }));
 
       const eventTimeFormatter = computed(() => new Intl.DateTimeFormat(
         translationsStore.currentLanguageIso,

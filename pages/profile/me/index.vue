@@ -83,21 +83,22 @@
                   :class="$style.reservationItem"
                 >
                   <p-button
-                    :loading="item.loading"
                     :class="[ item.reservation ? $style.signoffButton : $style.signupButton ]"
+                    :loading="item.loading"
                     @click="handleSignupFor(item)"
                   >
                     <translated-text v-if="item.reservation" trans-key="company.event.user.sign-off" />
                     <translated-text v-else trans-key="company.event.user.sign-up" />
                   </p-button>
-                  <strong :title="item.description">
-                    <nuxt-link
-                      :to="{ name: 'calendar-event-uid', params: { uid: item.calendarUid } }"
-                      target="_blank"
-                    >
+                  <nuxt-link
+                    :class="$style.itemLink"
+                    :to="{ name: 'calendar-event-uid', params: { uid: item.calendarUid } }"
+                    target="_blank"
+                  >
+                    <strong :title="item.description">
                       [{{ item.companyName }}] {{ item.title }}
-                    </nuxt-link>
-                  </strong>
+                    </strong>
+                  </nuxt-link>
                 </dt>
               </dl>
             </div>
@@ -909,8 +910,29 @@
     align-items: center;
     gap: 1em;
 
+    @include media(lg) {
+      flex-direction: column-reverse;
+      margin: .25em;
+      padding: .5em;
+      border: 1px solid #{$fer-off-gray};
+      border-radius: 4px;
+      box-shadow: #{map.get($shadows, "shadow-1")};
+
+      .signupButton, .signoffButton {
+        flex: 1 0 auto;
+        width: 100%;
+      }
+
+      .itemLink {
+        font-size: 1.25rem;
+        display: block;
+        margin-top: .5em;
+        text-align: center;
+      }
+    }
+
     a {
-      color: $fer-black;
+      color: $fer-dark-blue;
 
       &:hover {
         text-decoration: underline;

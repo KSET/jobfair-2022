@@ -169,6 +169,10 @@
       flex: 1;
       padding: 2.5rem;
 
+      @include media(md) {
+        padding: 1rem;
+      }
+
       > h1 {
         font-size: 2.5rem;
         font-weight: 800;

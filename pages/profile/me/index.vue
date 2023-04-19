@@ -933,8 +933,12 @@
       }
     }
 
-    .signupButton .signoffButton {
+    .signupButton, .signoffButton {
       transition: background-color .2s ease;
+
+      &:hover {
+        transition: none;
+      }
     }
 
     .signoffButton {

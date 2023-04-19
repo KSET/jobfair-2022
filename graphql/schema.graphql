@@ -316,6 +316,7 @@ input CalendarFilterInput {
 }
 
 type CalendarItem {
+  companies: [Company!]
   end: DateTime!
   forPanel: CompanyPanel
   forTalk: ApplicationTalk

@@ -810,7 +810,7 @@ export class CompanyListResolver {
       orderBy: {
         brandName: "asc",
       },
-    }).then((x) => x.sort((a, b) => a.brandName!.localeCompare(b.brandName!)));
+    }).then((x) => x.sort((a, b) => a.brandName.localeCompare(b.brandName)));
   }
 
   @Query(() => Company, { nullable: true })

@@ -921,6 +921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@total-typescript/ts-reset@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@total-typescript/ts-reset@npm:0.4.2"
+  checksum: e3681b8fb48cf63538c19e7f203de5ec8b1abdcd0db5c6bd48e0881e2a86977771118c6c2930691947d11213b10a654bc2328b479c4dc0ddec7dfde129d08569
+  languageName: node
+  linkType: hard
+
 "@ts-morph/common@npm:~0.19.0":
   version: 0.19.0
   resolution: "@ts-morph/common@npm:0.19.0"
@@ -1798,6 +1805,7 @@ __metadata:
     "@prisma/client": ^4.12.0
     "@quixo3/prisma-session-store": ^3.1.11
     "@sentry/node": ^7.48.0
+    "@total-typescript/ts-reset": ^0.4.2
     "@types/content-disposition": ^0.5.5
     "@types/cookie": ^0.5.1
     "@types/cors": ^2.8.13

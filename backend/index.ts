@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import "dotenv/config";
+import "@total-typescript/ts-reset";
 import {
   start,
 } from "./app";

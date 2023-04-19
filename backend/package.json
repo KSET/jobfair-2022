@@ -60,6 +60,7 @@
         "zod": "^3.21.4"
     },
     "devDependencies": {
+        "@total-typescript/ts-reset": "^0.4.2",
         "@types/content-disposition": "^0.5.5",
         "@types/cookie": "^0.5.1",
         "@types/cors": "^2.8.13",

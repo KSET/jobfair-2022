@@ -23,8 +23,8 @@
         >
           <AppImg
             :alt="`${participant.brandName} logo`"
-            :lazy-src="participant.rasterLogo.thumbUrl"
-            :src="participant.rasterLogo.fullUrl"
+            :lazy-src="participant.rasterLogo?.thumbUrl"
+            :src="participant.rasterLogo?.fullUrl"
             :title="participant.titleText"
             aspect-ratio="1.78"
             contain

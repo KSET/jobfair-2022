@@ -3,6 +3,7 @@ import {
   ApplicationWorkshop,
   ApplicationTalk,
   CompanyPanel,
+  Company,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -24,6 +25,9 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
+import {
+  set,
+} from "lodash";
 import {
   toSelect,
   transformSelectFor,
@@ -48,6 +52,25 @@ import {
 import {
   transformSelect as transformSelectPanel,
 } from "./companyPanel";
+import {
+  transformSelect as transformSelectCompany,
+} from "./company";
+
+const firstDefinedAsArray = <T>(args: (T | T[] | null | undefined)[]): T[] => {
+  for (const arg of args) {
+    if (null === arg || undefined === arg) {
+      continue;
+    }
+
+    if (Array.isArray(arg)) {
+      return arg;
+    } else {
+      return [ arg ];
+    }
+  }
+
+  return [];
+};
 
 @Resolver(() => CalendarItem)
 export class CalendarItemFieldResolver {
@@ -82,6 +105,17 @@ export class CalendarItemFieldResolver {
     @Root() calendarItem: CalendarItem,
   ): GQLField<CompanyPanel, "nullable"> {
     return calendarItem.forPanel;
+  }
+
+  @FieldResolver(() => [ Company ], { nullable: true })
+  companies(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<Company[], "nullable"> {
+    return firstDefinedAsArray([
+      calendarItem.forTalk?.forApplication?.forCompany,
+      calendarItem.forWorkshop?.forApplication?.forCompany,
+      calendarItem.forPanel?.companies?.map((company) => company.forCompany).filter(Boolean),
+    ]);
   }
 }
 
@@ -126,25 +160,34 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
   },
 
   forWorkshop(select) {
-    select.forWorkshop = {
-      select: transformSelectWorkshop(select.forWorkshop as Dict),
-    };
+    select = set(select, "forWorkshop.select", transformSelectWorkshop({ ...(select.forWorkshop as Dict) }));
+    select.forWorkshop = pick([ "select" ], select.forWorkshop as Dict);
 
     return select;
   },
 
   forTalk(select) {
-    select.forTalk = {
-      select: transformSelectTalk(select.forTalk as Dict),
-    };
+    select = set(select, "forTalk.select", transformSelectTalk({ ...(select.forTalk as Dict) }));
+    select.forTalk = pick([ "select" ], select.forTalk as Dict);
 
     return select;
   },
 
   forPanel(select) {
-    select.forPanel = {
-      select: transformSelectPanel(select.forPanel as Dict),
-    };
+    select = set(select, "forPanel.select", transformSelectPanel({ ...(select.forPanel as Dict) }));
+    select.forPanel = pick([ "select" ], select.forPanel as Dict);
+
+    return select;
+  },
+
+  companies(select) {
+    const transformed = transformSelectCompany(select.companies as Dict);
+
+    select = set(select, "forTalk.select.forApplication.select.forCompany.select", transformed);
+    select = set(select, "forWorkshop.select.forApplication.select.forCompany.select", transformed);
+    select = set(select, "forPanel.select.companies.select.forCompany.select", transformed);
+
+    delete select.companies;
 
     return select;
   },
@@ -260,7 +303,7 @@ export class CalendarItemInfoResolver {
       },
     });
 
-    return item?.forTalk?.forApplication.forCompany.uid || item?.forWorkshop?.forApplication.forCompany.uid || item?.forPanel?.companies?.[0].forCompany.uid;
+    return item?.forTalk?.forApplication.forCompany.uid || item?.forWorkshop?.forApplication.forCompany.uid || item?.forPanel?.companies?.find((x) => x.forCompany.uid)?.forCompany.uid;
   }
 
   @Query(() => [ CalendarItem ])

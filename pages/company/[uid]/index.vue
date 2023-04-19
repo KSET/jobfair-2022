@@ -84,11 +84,13 @@
                 aspect-ratio="1"
                 contain
               />
-              <span
-                v-if="programItems.talk.event"
-                :class="$style.itemLocation"
-                v-text="formatLocation(programItems.talk.event).value"
-              />
+              <ReRenderClientside>
+                <span
+                  v-if="programItems.talk.event"
+                  :class="$style.itemLocation"
+                  v-text="formatLocation(programItems.talk.event).value"
+                />
+              </ReRenderClientside>
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -140,11 +142,13 @@
                 aspect-ratio="1"
                 contain
               />
-              <span
-                v-if="programItems.workshop.event"
-                :class="$style.itemLocation"
-                v-text="formatLocation(programItems.workshop.event).value"
-              />
+              <ReRenderClientside>
+                <span
+                  v-if="programItems.workshop.event"
+                  :class="$style.itemLocation"
+                  v-text="formatLocation(programItems.workshop.event).value"
+                />
+              </ReRenderClientside>
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -207,11 +211,13 @@
                 aspect-ratio="1"
                 contain
               />
-              <span
-                v-if="programItems.panel.event"
-                :class="$style.itemLocation"
-                v-text="formatLocation(programItems.panel.event).value"
-              />
+              <ReRenderClientside>
+                <span
+                  v-if="programItems.panel.event"
+                  :class="$style.itemLocation"
+                  v-text="formatLocation(programItems.panel.event).value"
+                />
+              </ReRenderClientside>
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -311,6 +317,7 @@
     useTitle,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
+  import ReRenderClientside from "~/components/util/re-render-clientside.vue";
   import {
     useCompanyStore,
   } from "~/store/company";
@@ -343,6 +350,7 @@
     name: "PageCompanyInfo",
 
     components: {
+      ReRenderClientside,
       TranslatedText,
       AppImg,
       AppMaxWidthContainer,

@@ -940,7 +940,9 @@
     }
 
     .signupButton, .signoffButton {
+      min-width: 8rem;
       transition: background-color .2s ease;
+      hyphens: auto;
 
       &:hover {
         transition: none;

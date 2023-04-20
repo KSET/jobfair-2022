@@ -29,6 +29,9 @@ import {
   set,
 } from "lodash";
 import {
+  type Prisma,
+} from "@prisma/client";
+import {
   toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
@@ -117,10 +120,7 @@ export class CalendarItemFieldResolver {
       calendarItem.forPanel?.companies?.map((company) => company.forCompany).filter(Boolean),
     ]);
   }
-}
 
-@Resolver(() => CalendarItem)
-export class CalendarItemDumbFieldResolver {
   @FieldResolver(() => String)
   title(
     @Root() calendarItem: CalendarItem,
@@ -149,6 +149,76 @@ export class CalendarItemDumbFieldResolver {
 }
 
 export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
+  title(select) {
+    const data: Prisma.CalendarItemSelect = {
+      forTalk: {
+        select: {
+          forApplication: {
+            select: {
+              forCompany: {
+                select: {
+                  brandName: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      forWorkshop: {
+        select: {
+          forApplication: {
+            select: {
+              forCompany: {
+                select: {
+                  brandName: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      forPanel: {
+        select: {
+          companies: {
+            select: {
+              forCompany: {
+                select: {
+                  brandName: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    return mergeDeepRight(select, data);
+  },
+
+  text(select) {
+    const data: Prisma.CalendarItemSelect = {
+      forTalk: {
+        select: {
+          titleEn: true,
+          titleHr: true,
+        },
+      },
+      forWorkshop: {
+        select: {
+          titleEn: true,
+          titleHr: true,
+        },
+      },
+      forPanel: {
+        select: {
+          name: true,
+        },
+      },
+    };
+
+    return mergeDeepRight(select, data);
+  },
+
   hasEvent(select) {
     select.forTalkId = true;
     select.forWorkshopId = true;
@@ -334,55 +404,7 @@ export class CalendarItemInfoResolver {
         }
     ;
 
-    const select: Dict = mergeDeepRight(
-      toSelect(gqlInfo, transformSelect),
-      {
-        forTalk: {
-          select: {
-            titleEn: true,
-            titleHr: true,
-            forApplication: {
-              select: {
-                forCompany: {
-                  select: {
-                    brandName: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        forWorkshop: {
-          select: {
-            titleEn: true,
-            titleHr: true,
-            forApplication: {
-              select: {
-                forCompany: {
-                  select: {
-                    brandName: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        forPanel: {
-          select: {
-            name: true,
-            companies: {
-              select: {
-                forCompany: {
-                  select: {
-                    brandName: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    );
+    const select = toSelect(gqlInfo, transformSelect);
 
     return ctx.prisma.calendarItem.findMany({
       where: {

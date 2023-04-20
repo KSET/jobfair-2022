@@ -373,7 +373,7 @@
       type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "panel");
 
       const programItemsEmpty = {} as Partial<TCompanyProgram>;
-      const programItems = computed(() => filterObject(Boolean, unref(company).program ?? programItemsEmpty) as Partial<TCompanyProgram>);
+      const programItems = computed(() => filterObject(Boolean, unref(company)?.program ?? programItemsEmpty) as Partial<TCompanyProgram>);
 
       const tabs: Record<string, number> = Object.fromEntries(
         [

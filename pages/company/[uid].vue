@@ -6,7 +6,7 @@
   import {
     createError,
     defineComponent,
-    useRoute,
+    definePageMeta,
   } from "#imports";
   import {
     useCompanyStore,
@@ -15,15 +15,20 @@
   export default defineComponent({
     name: "PageCompanyContainer",
 
-    async setup() {
-      const route = useRoute();
-      const companyStore = useCompanyStore();
+    setup() {
+      definePageMeta({
+        middleware: [
+          async (route) => {
+            const companyStore = useCompanyStore();
 
-      const company = await companyStore.fetchCompanyInfo(route.params.uid as string);
+            const company = await companyStore.fetchCompanyInfo(route.params.uid as string);
 
-      if (!company) {
-        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
-      }
+            if (!company) {
+              throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+            }
+          },
+        ],
+      });
     },
   });
 </script>

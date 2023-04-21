@@ -21,6 +21,9 @@ import {
 import {
   GraphQLResolveInfo,
 } from "graphql";
+import {
+  set,
+} from "lodash";
 import type {
   Session as ContextSession,
 } from "../../types/apollo-context";
@@ -240,12 +243,14 @@ export class AuthResolver {
       }
     }
 
+    let userSelect = toSelect(gqlResolveInfo, transformSelect);
+    userSelect = set(userSelect, "id", true);
     const user = await ctx.prisma.user.create({
       data: {
         ...omit([ "passwordRepeat" ])(data),
         password: await PasswordService.hashPassword(data.password),
       },
-      select: toSelect(gqlResolveInfo, transformSelect),
+      select: userSelect,
     }) as unknown as User;
 
     // Log the user in
@@ -257,6 +262,12 @@ export class AuthResolver {
     };
 
     void EventsService.logEvent("user:register", user.id);
+
+    const sessionSaveError = await new Promise((resolve) => ctx.session.save(resolve));
+
+    if (sessionSaveError) {
+      console.error("Session save error", sessionSaveError);
+    }
 
     return {
       entity: user,

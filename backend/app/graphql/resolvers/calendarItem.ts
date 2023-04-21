@@ -150,71 +150,73 @@ export class CalendarItemFieldResolver {
 
 export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
   title(select) {
-    const data: Prisma.CalendarItemSelect = {
-      forTalk: {
-        select: {
-          forApplication: {
-            select: {
-              forCompany: {
-                select: {
-                  brandName: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      forWorkshop: {
-        select: {
-          forApplication: {
-            select: {
-              forCompany: {
-                select: {
-                  brandName: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      forPanel: {
-        select: {
-          companies: {
-            select: {
-              forCompany: {
-                select: {
-                  brandName: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    };
+    // const data: Prisma.CalendarItemSelect = {
+    //   forTalk: {
+    //     select: {
+    //       forApplication: {
+    //         select: {
+    //           forCompany: {
+    //             select: {
+    //               brandName: true,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   forWorkshop: {
+    //     select: {
+    //       forApplication: {
+    //         select: {
+    //           forCompany: {
+    //             select: {
+    //               brandName: true,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   forPanel: {
+    //     select: {
+    //       companies: {
+    //         select: {
+    //           forCompany: {
+    //             select: {
+    //               brandName: true,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // };
+    const data = {};
 
     return mergeDeepRight(select, data);
   },
 
   text(select) {
-    const data: Prisma.CalendarItemSelect = {
-      forTalk: {
-        select: {
-          titleEn: true,
-          titleHr: true,
-        },
-      },
-      forWorkshop: {
-        select: {
-          titleEn: true,
-          titleHr: true,
-        },
-      },
-      forPanel: {
-        select: {
-          name: true,
-        },
-      },
-    };
+    // const data: Prisma.CalendarItemSelect = {
+    //   forTalk: {
+    //     select: {
+    //       titleEn: true,
+    //       titleHr: true,
+    //     },
+    //   },
+    //   forWorkshop: {
+    //     select: {
+    //       titleEn: true,
+    //       titleHr: true,
+    //     },
+    //   },
+    //   forPanel: {
+    //     select: {
+    //       name: true,
+    //     },
+    //   },
+    // };
+    const data = {};
 
     return mergeDeepRight(select, data);
   },
@@ -230,22 +232,42 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
   },
 
   forWorkshop(select) {
-    select = set(select, "forWorkshop.select", transformSelectWorkshop({ ...(select.forWorkshop as Dict) }));
-    select.forWorkshop = pick([ "select" ], select.forWorkshop as Dict);
+    // select = set(select, "forWorkshop.select", transformSelectWorkshop({ ...(select.forWorkshop as Dict) }));
+    // select.forWorkshop = pick([ "select" ], select.forWorkshop as Dict);
+
+    const entryName = "forWorkshop";
+    const transformer = transformSelectWorkshop;
+
+    select[entryName] = {
+      select: transformer(select[entryName] as Dict),
+    };
 
     return select;
   },
 
   forTalk(select) {
-    select = set(select, "forTalk.select", transformSelectTalk({ ...(select.forTalk as Dict) }));
-    select.forTalk = pick([ "select" ], select.forTalk as Dict);
+    // select = set(select, "forTalk.select", transformSelectTalk({ ...(select.forTalk as Dict) }));
+    // select.forTalk = pick([ "select" ], select.forTalk as Dict);
+
+    const entryName = "forTalk";
+    const transformer = transformSelectTalk;
+
+    select[entryName] = {
+      select: transformer(select[entryName] as Dict),
+    };
 
     return select;
   },
 
   forPanel(select) {
-    select = set(select, "forPanel.select", transformSelectPanel({ ...(select.forPanel as Dict) }));
-    select.forPanel = pick([ "select" ], select.forPanel as Dict);
+    // select = set(select, "forPanel.select", transformSelectPanel({ ...(select.forPanel as Dict) }));
+    // select.forPanel = pick([ "select" ], select.forPanel as Dict);
+    const entryName = "forPanel";
+    const transformer = transformSelectPanel;
+
+    select[entryName] = {
+      select: transformer(select[entryName] as Dict),
+    };
 
     return select;
   },

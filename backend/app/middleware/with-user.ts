@@ -32,6 +32,11 @@ export default (app: Router) => {
       return end();
     }
 
+    if (!sessionUser?.id) {
+      await new Promise((resolve) => session?.regenerate(resolve));
+      return end();
+    }
+
     const user = await prisma.user.findUnique({
       where: {
         id: sessionUser.id,

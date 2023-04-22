@@ -13,7 +13,7 @@ import {
   Dict,
 } from "../../types/helpers";
 
-type SelectTransformer<T extends Dict = Dict> = (select: T) => T;
+type SelectTransformer<T extends Dict = Dict> = (select: T & Dict) => T;
 
 export const toSelect =
   <TReturn = undefined>(
@@ -24,8 +24,8 @@ export const toSelect =
 ;
 
 export const transformSelectFor =
-  <T>(transformers: Record<keyof T, SelectTransformer>) =>
-    (select: Dict): Dict =>
+  <T, TSelectShape extends Dict = Dict>(transformers: Record<keyof T, SelectTransformer<TSelectShape>>) =>
+    (select: TSelectShape & Dict): Dict =>
       reduce(
         (acc, key) =>
           transformers[key as keyof typeof transformers]?.(acc) ?? acc

@@ -814,9 +814,7 @@ export class CompanyListResolver {
     if (select.applications) {
       const applications = select.applications as Exclude<typeof select.applications, boolean>;
       applications.where = {
-        forSeason: {
-          uid: seasonUid,
-        },
+        forSeason: applicationsForSeasonWhere,
       };
     }
 

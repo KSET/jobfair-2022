@@ -309,6 +309,8 @@
       border-radius: 4px;
       background-color: $fer-white;
       box-shadow: #{map.get($shadows, "shadow-3")};
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -333,6 +335,7 @@
 
   .item .itemContent {
     padding: .5rem 1rem;
+    margin-top: auto;
 
     dl {
       line-height: 1.5;

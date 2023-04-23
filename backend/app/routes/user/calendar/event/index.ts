@@ -186,15 +186,22 @@ router.getRaw("/all.:ext", async (req, res) => {
 });
 
 router.getRaw("/:uid.:ext", async (req, res) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      uid: (req.params as Dict<string>).uid ?? "$$NO_USER$$",
+    },
+  });
+
+  if (!user) {
+    return res.sendStatus(StatusCodes.NOT_FOUND);
+  }
+
   const reservations = await prisma.eventReservation.findMany({
-    select: {
-      eventId: true,
-      eventType: true,
+    include: {
+      user: true,
     },
     where: {
-      user: {
-        uid: (req.params as Dict<string>).uid ?? "$$NO_USER$$",
-      },
+      userId: user.id,
       status: {
         gt: 0,
       },
@@ -204,7 +211,7 @@ router.getRaw("/:uid.:ext", async (req, res) => {
   const eventIds = reservations.map((x) => x.eventId);
 
   const events = await getCalendarItems({
-    calendarSuffix: " - All",
+    calendarSuffix: ` - ${ user.firstName } ${ user.lastName }`,
     markAsBusy: true,
     where: {
       OR: [

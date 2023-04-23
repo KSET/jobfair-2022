@@ -19,6 +19,9 @@ import {
   GraphQLResolveInfo,
 } from "graphql";
 import {
+  Prisma,
+} from "@prisma/client";
+import {
   toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
@@ -156,6 +159,7 @@ export class CompanyPanelUpdateResolver {
             applications: {
               select: {
                 id: true,
+                forSeasonId: true,
               },
             },
           },
@@ -186,24 +190,40 @@ export class CompanyPanelUpdateResolver {
         throw new Error("Season not found");
       }
 
-      const data = {
+      const createData: Prisma.CompanyPanelUpsertArgs["create"] = {
         name: input.name,
         description: input.description,
         companies: {
-          connect: companies.map((a) => a.applications?.[0]).filter((x) => x),
+          connect:
+            companies
+              .map((c) => {
+                const application = c.applications.find((a) => a.forSeasonId === season.id);
+
+                if (!application) {
+                  return null;
+                }
+
+                return {
+                  id: application.id,
+                };
+              })
+              .filter(Boolean)
+          ,
         },
         forSeasonId: season.id,
       };
 
-      return prisma.companyPanel.upsert({
-        create: data,
-        update: {
-          ...data,
-          companies: {
-            ...data.companies,
-            disconnect: oldPanel?.companies || [],
-          },
+      const updateData: Prisma.CompanyPanelUpsertArgs["update"] = {
+        ...createData,
+        companies: {
+          ...createData.companies,
+          disconnect: oldPanel?.companies || [],
         },
+      };
+
+      return prisma.companyPanel.upsert({
+        create: createData,
+        update: updateData,
         where: {
           uid: input.uid || "",
         },

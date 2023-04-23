@@ -130,6 +130,12 @@
         <translated-text trans-key="schedule.no-events" />
       </h2>
     </div>
+
+    <div v-if="events.length > 0" class="text-right my-2 text-xl">
+      <a href="/api/user/calendar/event/all.ics">
+        <translated-text trans-key="schedule.as-ical.public" />
+      </a>
+    </div>
   </app-max-width-container>
 </template>
 

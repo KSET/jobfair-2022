@@ -134,6 +134,12 @@
         </div>
       </div>
     </div>
+
+    <div class="text-right my-2 text-xl">
+      <a :href="`/api/user/calendar/event/${userUid}.ics`">
+        <translated-text trans-key="schedule.as-ical.user-reservations" />
+      </a>
+    </div>
   </AppUserProfileContainer>
 </template>
 
@@ -168,8 +174,12 @@
   import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?component";
   import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?component";
   import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?component";
+  import {
+    useUserStore,
+  } from "~/store/user";
 
   const calendarStore = useCalendarStore();
+  const userStore = useUserStore();
   const toast = useToast();
 
   useTitle("profile.reservations");
@@ -183,6 +193,8 @@
       },
     ],
   });
+
+  const userUid = computed(() => userStore.user!.uid);
 
   const Fuse = await import("fuse.js").then((x) => x.default);
 

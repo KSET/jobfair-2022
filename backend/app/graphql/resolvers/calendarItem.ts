@@ -458,6 +458,14 @@ export class CalendarItemInfoResolver {
         ),
       },
       select,
+      orderBy: [
+        {
+          start: "asc",
+        },
+        {
+          end: "desc",
+        },
+      ],
     });
   }
 }

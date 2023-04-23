@@ -316,6 +316,7 @@ input CalendarFilterInput {
 }
 
 type CalendarItem {
+  capacity: Int!
   companies: [Company!]
   end: DateTime!
   forPanel: CompanyPanel
@@ -896,9 +897,18 @@ input EventReservationOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+type EventReservationResponse {
+  entity: EventReservationStatus
+  errors: [FieldError!]
+}
+
+type EventReservationStatus {
+  status: Int!
+}
+
 input EventReservationUpdateInput {
   id: String! = ""
-  status: Float! = 0
+  status: Int! = 0
   type: EventType! = workshop
 }
 
@@ -1143,7 +1153,7 @@ type Mutation {
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updateCompanyPanel(input: CompanyPanelUpdateInput!): CompanyPanel
-  updateEventReservation(input: EventReservationUpdateInput!): Float
+  updateEventReservation(input: EventReservationUpdateInput!): EventReservationResponse
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse

@@ -1,6 +1,10 @@
 overwrite: true
 schema: "./graphql/schema.graphql"
-documents: "./graphql/documents/**/*.graphql"
+documents:
+  - "./graphql/documents/**/*.graphql"
+  - "./pages/calendar/**/*.vue"
+  - "./pages/profile/me/reservations/**/*.vue"
+  - "./store/**/*.ts"
 generates:
   ./graphql/schema.ts:
     plugins:
@@ -8,6 +12,10 @@ generates:
       - "typescript-operations"
       - "typescript-resolvers"
       - "typescript-document-nodes"
+  ./graphql/client/:
+    preset: "client"
+    config:
+      useTypeImports: true
 
 config:
   typesPrefix: "I"

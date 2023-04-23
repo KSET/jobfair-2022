@@ -7,7 +7,9 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
+  ObjectType,
   registerEnumType,
   Resolver,
 } from "type-graphql";
@@ -20,13 +22,18 @@ import {
 import {
   GQLResponse,
 } from "../../types/helpers";
-
-enum EventType {
-  workshop = "workshop",
-  talk = "talk",
-  panel = "panel",
-  hotTalk = "hot-talk",
-}
+import {
+  CalendarEventService,
+} from "../../services/calendar-event-service";
+import {
+  eventListFromStatus,
+  EventStatusType,
+  EventType,
+  hasParticipantCapacityFor,
+} from "../helpers/event-status";
+import {
+  ValidationResponseFor,
+} from "../helpers/validation";
 
 registerEnumType(EventType, {
   name: "EventType",
@@ -46,61 +53,104 @@ class EventReservationUpdateInput {
   @Field(() => EventType)
     type: EventType = EventType.workshop;
 
-  @Field(() => Number)
+  @Field(() => Int)
     status: number = 0;
+}
+
+@ObjectType()
+class EventReservationStatus {
+  @Field(() => Int)
+    status: number = 0;
+}
+
+@ObjectType()
+class EventReservationResponse extends ValidationResponseFor(EventReservationStatus) {
 }
 
 @Resolver(() => EventReservation)
 export class EventReservationUpdateResolver {
   @Authorized()
-  @Mutation(() => Number, { nullable: true })
+  @Mutation(() => EventReservationResponse, { nullable: true })
   async updateEventReservation(
     @Ctx() ctx: Context,
       @Arg("input") input: EventReservationUpdateInput,
-  ): GQLResponse<number, "nullable"> {
+  ): GQLResponse<EventReservationResponse> {
     const user = ctx.user!;
     const eventType = input.type;
 
-    const res = await ctx.prisma.$transaction(async (prisma) => {
-      let event;
-      switch (eventType) {
-        case "workshop": {
-          event = await prisma.applicationWorkshop.findFirst({
-            where: {
-              uid: input.id,
+    const event = await CalendarEventService.getItemIdForEvent(ctx.prisma, eventType, input.id);
+
+    if (!event) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "errors.event-reservation.event-not-found",
+          },
+        ],
+      };
+    }
+
+    return ctx.prisma.$transaction(async (prisma) => {
+      const [
+        userEntryStatus,
+        rawParticipants,
+      ] = await Promise.all([
+        await prisma.eventReservation.findUnique({
+          where: {
+            // eslint-disable-next-line camelcase
+            eventId_eventType_userId: {
+              eventId: event.id,
+              eventType,
+              userId: user.id,
             },
-            select: {
-              id: true,
-            },
-          });
-          break;
-        }
-        case "talk": {
-          event = await prisma.applicationTalk.findFirst({
-            where: {
-              uid: input.id,
-            },
-            select: {
-              id: true,
-            },
-          });
-          break;
-        }
-        case "panel": {
-          event = await prisma.companyPanel.findFirst({
-            where: {
-              uid: input.id,
-            },
-            select: {
-              id: true,
-            },
-          });
-          break;
+          },
+          select: {
+            status: true,
+          },
+        }),
+        await prisma.$queryRaw<[
+          {
+            eventId: number,
+            eventType: string,
+            status: number,
+            visitorCount: bigint,
+          }
+        ] | []>`
+          select
+              "eventId", "eventType", "status", count("status") as "visitorCount"
+          from
+              "EventReservation"
+          where
+                  "status" <> 0
+              and "eventId" = ${ event.id }
+              and "eventType" = ${ eventType }
+          group by
+              "eventId", "eventType", "status"
+          limit 1
+        `,
+      ] as const);
+
+
+      const participants = {} as Record<keyof EventStatusType, bigint>;
+      for (const { status, visitorCount } of rawParticipants) {
+        for (const selected of eventListFromStatus(status)) {
+          if (!(selected in participants)) {
+            participants[selected] = 0n;
+          }
+
+          participants[selected] += visitorCount;
         }
       }
 
-      if (!event) {
-        throw new Error("Event not found");
+      // eslint-disable-next-line no-bitwise
+      const statusAdded = ((userEntryStatus?.status ?? 0) ^ input.status) & input.status;
+      const newProps = eventListFromStatus(statusAdded);
+
+      for (const prop of newProps) {
+        if (!hasParticipantCapacityFor(eventType, participants[prop])) {
+          throw new Error("errors.event-reservation.capacity-full");
+        }
       }
 
       return prisma.eventReservation.upsert({
@@ -125,12 +175,22 @@ export class EventReservationUpdateResolver {
           status: true,
         },
       });
-    }).catch(() => null);
-
-    if (!res) {
-      return null;
-    }
-
-    return res.status;
+    })
+      .then((entity) => {
+        return {
+          entity,
+        };
+      })
+      .catch((err: Error) => {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: err.message,
+            },
+          ],
+        };
+      })
+    ;
   }
 }

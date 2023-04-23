@@ -28,14 +28,6 @@ type Operation<TVars> = {
   variables?: TVars,
 };
 
-type QueryCompositeOptions<TVars> = {
-  query: MaybeRef<Operation<TVars>["query"]>,
-  variables?: MaybeRef<TVars>,
-  context?: MaybeRef<{
-    headers: Record<string, string>,
-  }>,
-};
-
 type QueryData<TVars> = {
   variables?: TVars,
   headers?: HeadersInit,
@@ -75,14 +67,26 @@ function doMutation<TData, TVars extends object>(
   );
 }
 
-export function useQuery<TData, TVars extends object>(opts: QueryCompositeOptions<TVars>) {
+export function useQuery<TData, TVars extends object>(
+  {
+    query,
+    variables,
+    context,
+  }: {
+    query: TypedDocumentNode<TData, TVars> | MaybeRef<Operation<TVars>["query"]>,
+    variables?: MaybeRef<TVars>,
+    context?: MaybeRef<{
+      headers: Record<string, string>,
+    }>,
+  },
+) {
   return (
     () =>
       doQuery<TData, TVars>(
-        unref(opts.query),
+        unref(query),
         {
-          variables: unref(reactive(opts.variables ?? {}) as TVars),
-          headers: unref(opts.context)?.headers,
+          variables: unref(reactive(variables ?? {}) as TVars),
+          headers: unref(context)?.headers,
         },
       )
   );
@@ -93,10 +97,13 @@ type MutationExecutionOptions = {
   context: MaybeRef<QueryExecutionContext>,
 };
 
-export function useMutation<TData, TVars extends object>(query: Operation<TVars>["query"], opts?: Partial<MutationExecutionOptions>) {
+export function useMutation<TData, TVars extends object>(
+  query: TypedDocumentNode<TData, TVars> | Operation<TVars>["query"],
+  opts?: Partial<MutationExecutionOptions>,
+) {
   return (
     (
-      variables?: QueryCompositeOptions<TVars>["variables"],
+      variables?: MaybeRef<TVars>,
     ) =>
       doMutation<TData, TVars>(
         unref(query),

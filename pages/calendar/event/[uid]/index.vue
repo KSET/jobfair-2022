@@ -6,9 +6,6 @@
 
 <script lang="ts">
   import {
-    gql,
-  } from "@urql/core";
-  import {
     defineComponent,
     definePageMeta,
     navigateTo,
@@ -18,6 +15,9 @@
   import {
     ICalendarItem,
   } from "~/graphql/schema";
+  import {
+    graphql,
+  } from "~/graphql/client";
 
   export default defineComponent({
     name: "PageCalendarEventRedirector",
@@ -31,16 +31,16 @@
           async (route) => {
             const data = useState<TData | null>(JSON.stringify([ "calendar-item", route.params.uid ]));
 
-            const resp = await useQuery<TData, { uid: string, }>({
-              query: gql`
-                query Data($uid: String!) {
+            const resp = await useQuery({
+              query: graphql(/* GraphQL */`
+                query PageCalendarEventData($uid: String!) {
                   calendarItem(uid: $uid) {
                       hasEvent
                       type
                   }
                   calendarItemCompanyUid(uid: $uid)
                 }
-              `,
+              `),
               variables: {
                 uid: route.params.uid as string,
               },

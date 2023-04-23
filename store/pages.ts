@@ -88,6 +88,11 @@ export const usePagesStore = defineStore(
             to: { name: "profile-me-settings" },
           },
           {
+            name: "profile.reservations",
+            to: { name: "profile-me-reservations" },
+            if: () => seasonsStore.isScheduleShown,
+          },
+          {
             name: "profile.company",
             to: { name: "profile-me-company" },
             if: () => userStore.hasCompany,

@@ -110,3 +110,4 @@ docker-compose.*.override.yml
 
 # GraphQL artefacts
 graphql/schema.ts
+graphql/client/

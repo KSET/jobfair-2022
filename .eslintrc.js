@@ -18,6 +18,7 @@ module.exports = {
   },
   ignorePatterns: [
     ".eslintrc.js",
+    "./graphql/client/**/*",
   ],
   extends: [
     "plugin:@typescript-eslint/recommended",

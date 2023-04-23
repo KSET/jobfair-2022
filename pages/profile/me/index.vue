@@ -76,36 +76,13 @@
               <h2 :class="$style.itemHeader">
                 <translated-text trans-key="profile.events.sign-up" />
               </h2>
-              <dl :class="$style.reservationItems">
-                <dt
-                  v-for="item in calendar"
-                  :key="item.uid"
-                  :class="$style.reservationItem"
-                >
-                  <p-button
-                    :class="[ item.reservation ? $style.signoffButton : $style.signupButton ]"
-                    :loading="item.loading"
-                    @click="handleSignupFor(item)"
-                  >
-                    <translated-text v-if="item.reservation" trans-key="company.event.user.sign-off" />
-                    <translated-text v-else trans-key="company.event.user.sign-up" />
-                  </p-button>
-                  <nuxt-link
-                    :class="$style.itemLink"
-                    :to="{ name: 'calendar-event-uid', params: { uid: item.calendarUid } }"
-                    target="_blank"
-                  >
-                    <strong :title="item.description">
-                      [{{ item.companyName }}] {{ item.title }}
-                    </strong>
-                  </nuxt-link>
-                </dt>
-              </dl>
+              <p>
+                <translated-text trans-key="profile.events.sign-up.text" />
+              </p>
             </div>
             <div :class="$style.itemActions">
               <nuxt-link
                 :to="{ name: 'schedule' }"
-                class="ml-auto"
               >
                 <p-button
                   class="p-button-secondary"
@@ -113,6 +90,19 @@
                 >
                   <translated-text
                     trans-key="page.name.schedule"
+                  />
+                </p-button>
+              </nuxt-link>
+              <nuxt-link
+                :to="{ name: 'profile-me-reservations' }"
+                class="ml-auto"
+              >
+                <p-button
+                  class="p-button-secondary"
+                  tabindex="-1"
+                >
+                  <translated-text
+                    trans-key="profile.reservations"
                   />
                 </p-button>
               </nuxt-link>
@@ -326,7 +316,7 @@
                 <strong>
                   <translated-text trans-key="profile.company.booth" />
                 </strong>
-                <em v-text="booths[companyApplication.booth]" />
+                <em v-text="booths[companyApplication.booth!]" />
               </li>
               <li v-if="companyApplication.approval.talkParticipants">
                 <strong>
@@ -555,23 +545,21 @@
     defineComponent,
   } from "vue";
   import {
-    gql,
-  } from "@urql/core";
-  import {
     fromPairs,
     omit,
     pick,
     toPairs,
   } from "rambdax";
+  import {
+    useToast,
+  } from "primevue/usetoast";
   import AppImg from "../../../components/util/app-img.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
   import {
-    useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
     ICalendarItem,
-    IMutationUpdateEventReservationArgs,
     IProfileBaseDataQuery,
     IProfileBaseDataQueryVariables,
     ProfileBaseData,
@@ -595,7 +583,6 @@
   } from "#imports";
   import {
     EventType,
-    statusFromEventList,
   } from "~/helpers/event-status";
   import {
     useTranslationsStore,
@@ -604,6 +591,9 @@
     Dict,
     MaybeComputedRef,
   } from "~/helpers/type";
+  import {
+    useCalendarStore,
+  } from "~/store/calendar";
 
   export default defineComponent({
     name: "PageProfileHome",
@@ -621,15 +611,12 @@
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
       const translationsStore = useTranslationsStore();
+      const calendarStore = useCalendarStore();
+      const toast = useToast();
+
       const resp = await useQuery<IProfileBaseDataQuery, IProfileBaseDataQueryVariables>({
         query: ProfileBaseData,
       })();
-
-      const signupQuery = useMutation<{ updateEventReservation: number | null, }, IMutationUpdateEventReservationArgs>(gql`
-        mutation Signup($input: EventReservationUpdateInput!) {
-          updateEventReservation(input: $input)
-        }
-      `);
 
       const booths = computed(() => Object.fromEntries((resp?.data?.booths ?? []).map((b) => [ b.key ?? "", b.name ])));
       const approval = resp?.data?.companyApplication?.approval;
@@ -736,7 +723,7 @@
         resume,
         formatDate,
         booths,
-        currentSeason: computed(() => seasonsStore.currentSeason),
+        currentSeason: computed(() => seasonsStore.currentSeason!),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),
@@ -748,21 +735,10 @@
         isApprovedWithoutBooth,
         isApprovedWithEvents,
         async handleSignupFor(item: (typeof calendar)[number]) {
-          item.loading = true;
-          const resp = await signupQuery({
-            input: {
-              id: item.uid,
-              type: item.type,
-              status: statusFromEventList(item.reservation ? [] : [ "event" ]),
-            },
-          }).then((resp) => resp?.data?.updateEventReservation);
-          item.loading = false;
-
-          if ("number" !== typeof resp) {
-            alert("Something went wrong");
-          }
-
-          item.reservation = resp!;
+          await calendarStore.toggleEventReservation(item, {
+            toastErrors: toast,
+            updateItem: true,
+          });
         },
       };
     },

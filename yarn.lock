@@ -7579,6 +7579,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fuse.js@npm:^6.6.2":
+  version: 6.6.2
+  resolution: "fuse.js@npm:6.6.2"
+  checksum: 17ae758ce205276ebd88bd9c9f088a100be0b4896abac9f6b09847151269d1690f41d7f98ff5813d4a58973162dbd99d0072ce807020fee6f9de60170f6b08eb
+  languageName: node
+  linkType: hard
+
 "gauge@npm:^3.0.0":
   version: 3.0.2
   resolution: "gauge@npm:3.0.2"
@@ -12229,6 +12236,7 @@ __metadata:
     dotenv: ^16.0.3
     eslint: 8.38.0
     eslint-plugin-nuxt: ^4.0.0
+    fuse.js: ^6.6.2
     graphql: ^16.6.0
     husky: ^8.0.3
     lint-staged: ^13.2.1

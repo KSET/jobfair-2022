@@ -1,9 +1,9 @@
 import {
-  CalendarItem,
-  ApplicationWorkshop,
   ApplicationTalk,
-  CompanyPanel,
+  ApplicationWorkshop,
+  CalendarItem,
   Company,
+  CompanyPanel,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -13,6 +13,7 @@ import {
   FieldResolver,
   Info,
   InputType,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -46,6 +47,10 @@ import {
 import {
   Role,
 } from "../../helpers/auth";
+import {
+  EventType,
+  getParticipantCapacityFor,
+} from "../helpers/event-status";
 import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
@@ -87,6 +92,29 @@ export class CalendarItemFieldResolver {
       || calendarItem.forPanelId
       ,
     );
+  }
+
+  @FieldResolver(() => Int)
+  capacity(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<number> {
+    const eventType = (() => {
+      if (calendarItem.forTalkId) {
+        return EventType.talk;
+      } else if (calendarItem.forWorkshopId) {
+        return EventType.workshop;
+      } else if (calendarItem.forPanelId) {
+        return EventType.panel;
+      }
+
+      return null;
+    })();
+
+    if (!eventType) {
+      return 0;
+    }
+
+    return getParticipantCapacityFor(eventType);
   }
 
   @FieldResolver(() => ApplicationWorkshop, { nullable: true })
@@ -165,7 +193,17 @@ const forItemSelect = <TEntryName extends string>(entryName: TEntryName, transfo
   };
 };
 
-export const transformSelect = transformSelectFor<CalendarItemFieldResolver>({
+export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Prisma.CalendarItemSelect>({
+  capacity(select) {
+    select.forTalkId = true;
+    select.forWorkshopId = true;
+    select.forPanelId = true;
+
+    delete select.capacity;
+
+    return select;
+  },
+
   title(select) {
     const data: Prisma.CalendarItemSelect = {
       forTalk: {

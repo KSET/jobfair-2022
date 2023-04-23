@@ -77,20 +77,7 @@
             </template>
 
             <div :class="$style.itemHeader">
-              <app-img
-                :class="$style.itemIcon"
-                :src="eventIcons.talk"
-                alt="Talk"
-                aspect-ratio="1"
-                contain
-              />
-              <ReRenderClientside>
-                <span
-                  v-if="programItems.talk.event"
-                  :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.talk.event)"
-                />
-              </ReRenderClientside>
+              <event-info-display :event="{ ...programItems.talk.event!, type: EventType.Talk }" />
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -135,20 +122,7 @@
             </template>
 
             <div :class="$style.itemHeader">
-              <app-img
-                :class="$style.itemIcon"
-                :src="eventIcons.workshop"
-                alt="Workshop"
-                aspect-ratio="1"
-                contain
-              />
-              <ReRenderClientside>
-                <span
-                  v-if="programItems.workshop.event"
-                  :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.workshop.event)"
-                />
-              </ReRenderClientside>
+              <event-info-display :event="{ ...programItems.workshop.event!, type: EventType.Workshop }" />
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -204,20 +178,7 @@
             </template>
 
             <div :class="$style.itemHeader">
-              <app-img
-                :class="$style.itemIcon"
-                :src="eventIcons.panel"
-                alt="Workshop"
-                aspect-ratio="1"
-                contain
-              />
-              <ReRenderClientside>
-                <span
-                  v-if="programItems.panel.event"
-                  :class="$style.itemLocation"
-                  v-text="formatLocation(programItems.panel.event)"
-                />
-              </ReRenderClientside>
+              <event-info-display :event="{ ...programItems.panel.event!, type: EventType.Panel }" />
               <p-button
                 v-if="loggedIn"
                 :class="{
@@ -304,29 +265,25 @@
   import TabView from "primevue/tabview";
   import TabPanel from "primevue/tabpanel";
   import {
-    gql,
-  } from "@urql/core";
+    useToast,
+  } from "primevue/usetoast";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     computed,
     defineComponent,
     ref,
     unref,
-    useMutation,
     useRoute,
     useHeadMetadata,
     watch,
     useRouter,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
-  import ReRenderClientside from "~/components/util/re-render-clientside.vue";
+  import EventInfoDisplay from "~/components/page/schedule/event-info-display.vue";
   import {
     useCompanyStore,
   } from "~/store/company";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?url";
-  import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?url";
-  import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?url";
   import {
     useTranslationsStore,
   } from "~/store/translations";
@@ -337,26 +294,25 @@
     useUserStore,
   } from "~/store/user";
   import {
-    IMutationUpdateEventReservationArgs,
-  } from "~/graphql/schema";
-  import {
     EventType,
-    statusFromEventList,
   } from "~/helpers/event-status";
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import {
+    useCalendarStore,
+  } from "~/store/calendar";
 
   export default defineComponent({
     name: "PageCompanyInfo",
 
     components: {
-      ReRenderClientside,
       TranslatedText,
       AppImg,
       AppMaxWidthContainer,
       TabView,
       TabPanel,
+      EventInfoDisplay,
     },
 
     setup() {
@@ -366,6 +322,8 @@
       const translationsStore = useTranslationsStore();
       const userStore = useUserStore();
       const seasonsStore = useSeasonsStore();
+      const calendarStore = useCalendarStore();
+      const toast = useToast();
 
       const company = computed(() => companyStore.companyInfo!);
 
@@ -446,27 +404,6 @@
         return info;
       }), false);
 
-      const eventTimeFormatter = computed(() => new Intl.DateTimeFormat(
-        translationsStore.currentLanguageIso,
-        {
-          hour: "2-digit",
-          minute: "2-digit",
-        },
-      ));
-
-      const eventDayFormatter = computed(() => new Intl.DateTimeFormat(
-        translationsStore.currentLanguageIso,
-        {
-          weekday: "long",
-        },
-      ));
-
-      const signupQuery = useMutation<{ updateEventReservation: number | null, }, IMutationUpdateEventReservationArgs>(gql`
-        mutation Signup($input: EventReservationUpdateInput!) {
-          updateEventReservation(input: $input)
-        }
-      `);
-
       const signupLoading = ref(false);
 
       return {
@@ -477,25 +414,8 @@
         company,
         translateFor: computed(() => translationsStore.translateFor),
         programItems,
-        eventIcons: {
-          workshop: EventIconWorkshop,
-          talk: EventIconTalk,
-          panel: EventIconPanel,
-        },
+        EventType,
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
-        formatLocation: computed(() => (event: { start: string, end?: string, location?: string | null, }) => {
-          const start = new Date(event.start);
-
-          return (
-            [
-              unref(eventDayFormatter).format(start),
-              unref(eventTimeFormatter).format(start),
-              event.location,
-            ]
-              .filter(Boolean)
-              .join(" | ")
-          );
-        }),
         formatWebsite(website: string) {
           try {
             const url = new URL(website);
@@ -535,22 +455,28 @@
             return;
           }
 
-          signupLoading.value = true;
-          const resp = await signupQuery({
-            input: {
-              id: unref(programItems)?.[type]?.uid,
-              type: eventType,
-              status: statusFromEventList(event.reservation ? [] : [ "event" ]),
-            },
-          }).then((resp) => resp?.data?.updateEventReservation);
-          signupLoading.value = false;
+          const uid = unref(programItems)?.[type]?.uid;
 
-          if ("number" !== typeof resp) {
-            alert("Something went wrong");
+          if (!uid) {
+            return;
           }
 
-          if (event) {
-            event.reservation = resp!;
+          signupLoading.value = true;
+          const resp = await calendarStore.toggleEventReservation(
+            {
+              uid,
+              type: eventType,
+              reservation: event?.reservation,
+            },
+            {
+              refetchEvents: false,
+              toastErrors: toast,
+            },
+          );
+          signupLoading.value = false;
+
+          if (resp?.entity) {
+            event.reservation = resp.entity.status;
           }
         },
       };

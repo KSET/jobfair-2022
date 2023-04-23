@@ -40,12 +40,19 @@ const areOpen =
     );
   };
 
+type Reservation = {
+  uid: string,
+  type: string,
+  count: number,
+};
+
 export const useSeasonsStore = defineStore(
   "seasons",
   {
     state: () => ({
       season: null as (Partial<ISeason> | null),
       currentSeason: null as (Partial<ISeason> | null),
+      reservations_: [] as Reservation[],
     }),
 
     getters: {
@@ -96,6 +103,18 @@ export const useSeasonsStore = defineStore(
       isScheduleShown(state) {
         return areOpen("schedule", state.currentSeason);
       },
+
+      reservations(state) {
+        return (
+          state
+            .reservations_
+            .reduce((acc, x) => {
+              acc[x.uid] = x;
+
+              return acc;
+            }, {} as Record<string, Reservation>)
+        );
+      },
     },
 
     actions: {
@@ -104,6 +123,9 @@ export const useSeasonsStore = defineStore(
       },
       setSeason(season?: Partial<ISeason> | null) {
         this.season = season || null;
+      },
+      setReservations(reservations: Reservation[]) {
+        this.reservations_ = reservations;
       },
     },
   },

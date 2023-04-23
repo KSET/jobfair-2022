@@ -2,15 +2,12 @@ import {
   toPairs,
 } from "rambdax";
 
-const ensureEnumKeysSameAsValues = <T>(_kv: { [K in keyof T]: K }) => null;
-
 export enum EventType {
   workshop = "workshop",
   talk = "talk",
   panel = "panel",
+  hotTalk = "hot-talk",
 }
-
-ensureEnumKeysSameAsValues(EventType);
 
 export type Event = {
   type: EventType,
@@ -87,8 +84,11 @@ export const getParticipantCapacityFor =
 export const hasParticipantCapacityFor =
   (
     eventType: EventType,
-    currentParticipants = 0,
-  ) =>
-    currentParticipants < getParticipantCapacityFor(eventType)
+    currentParticipants = 0 as number | bigint,
+  ) => {
+    const capacity = getParticipantCapacityFor(eventType);
+
+    return currentParticipants < capacity;
+  }
 ;
 

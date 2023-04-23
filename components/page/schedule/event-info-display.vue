@@ -7,11 +7,13 @@
     aspect-ratio="1"
     contain
   />
-  <span
-    v-if="info?.text"
-    :class="$style.text"
-    v-text="info.text"
-  />
+  <re-render-clientside>
+    <span
+      v-if="info?.text"
+      :class="$style.text"
+      v-text="info.text"
+    />
+  </re-render-clientside>
 </template>
 
 <script lang="ts" setup>
@@ -25,6 +27,7 @@
     computed,
     unref,
   } from "#imports";
+  import ReRenderClientside from "~/components/util/re-render-clientside.vue";
 
   type Props = {
     event?: TCalendarEvent,

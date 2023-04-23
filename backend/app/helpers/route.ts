@@ -35,8 +35,8 @@ import {
   requireAuthMiddleware,
 } from "./auth";
 
-type RequestMethod = "all" | "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
-type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
+export type RequestMethod = "all" | "get" | "post" | "put" | "delete" | "patch" | "options" | "head";
+export type RouteHandlers<T> = NonEmptyArray<RouteHandler<T>>;
 
 export const DEFAULT_ROUTER_OPTIONS: RouterOptions = {
   mergeParams: true,

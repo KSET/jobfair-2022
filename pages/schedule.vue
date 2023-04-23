@@ -28,6 +28,7 @@
             :class="$style.eventContainer"
             :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
             target="_blank"
+            :title="event.text ? `${event.title}\n----------\n${event.text}` : event.title"
           >
             <strong
               :class="$style.eventTitle"

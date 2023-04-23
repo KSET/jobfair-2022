@@ -42,6 +42,7 @@
         :class="$style.item"
       >
         <nuxt-link
+          class="flex-1"
           :title="event.description"
           :to="{
             name: 'calendar-event-uid',
@@ -50,62 +51,62 @@
         >
           <p-button
             :class="[
-              'p-button-text p-button-secondary',
+              'p-button-text p-button-secondary h-full justify-content-start',
               $style.itemHeaderButton
             ]"
           >
-            <template v-if="event.companies?.length">
-              <template v-if="event.companies?.length === 1">
-                <AppImg
-                  v-for="company in [event.companies[0]]"
-                  :key="company.uid"
-                  :alt="company.brandName"
-                  :aspect-ratio="16/9"
-                  :class="$style.itemImage"
-                  :lazy-src="company.rasterLogo?.thumbUrl"
-                  :src="company.rasterLogo?.fullUrl ?? ''"
-                  contain
-                />
+            <div :class="$style.itemHeader">
+              <template v-if="event.companies?.length">
+                <template v-if="event.companies?.length === 1">
+                  <AppImg
+                    v-for="company in [event.companies[0]]"
+                    :key="company.uid"
+                    :alt="company.brandName"
+                    :aspect-ratio="16/9"
+                    :class="$style.itemImage"
+                    :lazy-src="company.rasterLogo?.thumbUrl"
+                    :src="company.rasterLogo?.fullUrl ?? ''"
+                    contain
+                  />
+                </template>
+                <template v-else>
+                  <Carousel
+                    :value="event.companies.filter((x) => x.rasterLogo)"
+                    :autoplay-interval="6000"
+                    :show-indicators="false"
+                    :show-navigators="false"
+                  >
+                    <template #item="{ data: company }">
+                      <AppImg
+                        :alt="company.brandName"
+                        :aspect-ratio="16/9"
+                        :class="$style.itemImage"
+                        :lazy-src="company.rasterLogo.thumbUrl"
+                        :src="company.rasterLogo.fullUrl"
+                        contain
+                      />
+                    </template>
+                  </Carousel>
+                </template>
               </template>
-              <template v-else>
-                <Carousel
-                  :value="event.companies.filter((x) => x.rasterLogo)"
-                  :autoplay-interval="6000"
-                  :show-indicators="false"
-                  :show-navigators="false"
-                >
-                  <template #item="{ data: company }">
-                    <AppImg
-                      :alt="company.brandName"
-                      :aspect-ratio="16/9"
-                      :class="$style.itemImage"
-                      :lazy-src="company.rasterLogo.thumbUrl"
-                      :src="company.rasterLogo.fullUrl"
-                      contain
-                    />
-                  </template>
-                </Carousel>
-              </template>
-            </template>
-            <p
-              v-if="event.companies?.length"
-              class="m-0 opacity-60 text-lg mt-2"
-              v-text="event.companies.map((x) => x.brandName).join(', ')"
-            />
-            <p
-              class="m-0"
-            >
-              <strong v-text="event.title" />
-            </p>
-            <div
-              class="flex gap-2 flex-wrap text-base align-items-center"
-            >
-              <event-info-display :event="event" />
+              <p
+                v-if="event.companies?.length"
+                class="m-0 opacity-60 text-lg mt-2"
+                v-text="event.companies.map((x) => x.brandName).join(', ')"
+              />
+              <p
+                class="m-0"
+              >
+                <strong v-text="event.title" />
+              </p>
             </div>
           </p-button>
         </nuxt-link>
         <div :class="$style.itemContent">
           <dl>
+            <dd class="flex gap-2 flex-wrap text-base align-items-center">
+              <event-info-display :event="event" />
+            </dd>
             <dd>
               <translated-text
                 :class="$style.itemContentLabel"
@@ -326,6 +327,13 @@
     }
   }
 
+  .item .itemHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .5rem;
+  }
+
   .item .itemHeaderButton {
     font-size: 1.25rem;
     display: flex;
@@ -347,7 +355,6 @@
 
   .item .itemContent {
     padding: .5rem 1rem;
-    margin-top: auto;
 
     dl {
       line-height: 1.5;

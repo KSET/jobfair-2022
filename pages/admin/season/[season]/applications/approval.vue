@@ -34,6 +34,9 @@
             <th>
               Cocktail
             </th>
+            <th>
+              Hide logo
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -104,37 +107,27 @@
 
 <script lang="ts">
   import {
+    useToast,
+  } from "primevue/usetoast";
+  import {
     defineComponent,
     reactive,
     ref,
-  } from "vue";
-  import {
+    createError,
     useRoute,
-  } from "vue-router";
-  import {
-    gql,
-  } from "@urql/core";
-  import {
-    useToast,
-  } from "primevue/usetoast";
+  } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IApplicationTalk,
-    IApplicationWorkshop,
-    IApproveCompanyApplicationsInput,
-    ICompany,
-    ICompanyApplication,
-    ICompanyApplicationApproval,
-    ISeason,
-  } from "~/graphql/schema";
-  import {
     nameAliases,
   } from "~/helpers/company/application";
   import useTitle from "~/composables/useTitle";
+  import {
+    graphql,
+  } from "~/graphql/client";
 
   export default defineComponent({
     name: "PageCompanyApplicationSeasonApprovals",
@@ -152,35 +145,9 @@
       const seasonUid = route.params.season as string;
 
       const isLoading = ref(false);
-
-      type QTalk = Pick<IApplicationTalk, "titleEn" | "titleHr"> | null;
-      type QWorkshop = Pick<IApplicationWorkshop, "titleEn" | "titleHr"> | null;
-      type QCompany = Pick<ICompany, "uid" | "legalName" | "brandName">;
-      type QApproval = Omit<ICompanyApplicationApproval, "forApplication"> | null;
-      type QApplication = Pick<ICompanyApplication,
-                               "wantsCocktail"
-                                 | "booth"
-                                 | "wantsPanel"> & {
-        talk: QTalk,
-        workshop: QWorkshop,
-        forCompany: QCompany,
-        approval: QApproval,
-      };
-      type QSeason = Pick<ISeason,
-                          "name"
-                            | "startsAt"
-                            | "endsAt"> & {
-        applications: QApplication[],
-      };
-      type QData = {
-        season: QSeason | null,
-      };
-      type QVariables = {
-        season: string,
-      };
-      const res = await useQuery<QData, QVariables>({
-        query: gql`
-          query Data($season: String!) {
+      const res = await useQuery({
+        query: graphql(/* GraphQL */`
+          query PageAdminSeasonApplicationsApproval_Base($season: String!) {
             season(uid: $season) {
                 name
                 startsAt
@@ -208,17 +175,28 @@
                         workshopParticipants
                         panel
                         cocktail
+                        logoHidden
                     }
                 }
             }
           }
-        `,
+        `),
         variables: {
           season: seasonUid,
         },
-      })().then((res) => res?.data || null);
+      })().then((res) => res?.data);
 
-      const season = res?.season;
+      if (!res?.season) {
+        throw createError({
+          statusCode: 500,
+        });
+      }
+
+      type QSeason = NonNullable<(typeof res)["season"]>;
+      type QApplication = QSeason["applications"][number];
+      type QApproval = NonNullable<QApplication["approval"]>;
+
+      const { season } = res;
 
       if (season) {
         title.value = `Prijave na ${ season.name }`;
@@ -283,7 +261,7 @@
         return reactive(input()) as unknown as ForInput<T>;
       }
 
-      const applicationInputs = season?.applications.map((application) => ({
+      const applicationInputs = season.applications.map((application) => ({
         ...application.forCompany,
         inputs:
           application.approval
@@ -291,14 +269,21 @@
               Object
                 .entries(application.approval)
                 .map(
-                  ([ name, value ]) =>
-                    forInput(
+                  ([ name, value ]) => {
+                    const fieldName = (nameAliases[name as keyof QApproval] || name) as keyof QApplication;
+                    const enabled =
+                      fieldName in application
+                        ? Boolean(application[fieldName])
+                        : true
+                    ;
+
+                    return forInput(
                       name,
                       "number" === typeof value ? Inputs.Number : Inputs.Checkbox,
-                      application[nameAliases[name as keyof QApproval] || name as keyof QApplication],
+                      enabled,
                       value,
-                    )
-                  ,
+                    );
+                  },
                 )
             )
             : [
@@ -307,9 +292,27 @@
               forInput("workshopParticipants", Inputs.Number, application.workshop),
               forInput("panel", Inputs.Checkbox, application.wantsPanel),
               forInput("cocktail", Inputs.Checkbox, application.wantsCocktail),
+              forInput("logoHidden", Inputs.Checkbox, true, false),
             ]
         ,
       }));
+
+      const approveCompanyApplicationsMutation = useMutation(graphql(/* GraphQL */ `
+        mutation PageAdminSeasonApplicationsApproval_ApproveCompanyApplications($companies: [ApproveCompanyApplicationsInput!]!, $season: String!) {
+          approveCompanyApplications(companies: $companies, season: $season) {
+            booth
+            talkParticipants
+            workshopParticipants
+            panel
+            cocktail
+            forApplication {
+              forCompany {
+                uid
+              }
+            }
+          }
+        }
+      `));
 
       return {
         season,
@@ -329,31 +332,8 @@
             ])),
           }));
 
-          type QData = {
-            approveCompanyApplications: ICompanyApplicationApproval[],
-          };
-          type QVariables = {
-            companies: IApproveCompanyApplicationsInput[],
-            season: string,
-          };
-
           isLoading.value = true;
-          const resp = await useMutation<QData, QVariables>(gql`
-            mutation ApproveCompanyApplications($companies: [ApproveCompanyApplicationsInput!]!, $season: String!) {
-              approveCompanyApplications(companies: $companies, season: $season) {
-                booth
-                talkParticipants
-                workshopParticipants
-                panel
-                cocktail
-                forApplication {
-                  forCompany {
-                    uid
-                  }
-                }
-              }
-            }
-          `)({
+          const resp = await approveCompanyApplicationsMutation({
             season: seasonUid,
             companies: data,
           });

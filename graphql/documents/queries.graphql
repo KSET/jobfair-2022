@@ -208,20 +208,6 @@ query PageIndexData($language: String!) {
     }
 }
 
-query PageParticipantsData {
-    participants {
-        uid
-        website
-        brandName
-        descriptionEn
-        descriptionHr
-        rasterLogo {
-            thumbUrl
-            fullUrl
-        }
-    }
-}
-
 query Company($vat: String!) {
     company(vat: $vat) {
         ...frag_Company

@@ -36,6 +36,9 @@ import type {
   Prisma,
 } from "@prisma/client";
 import {
+  set,
+} from "lodash";
+import {
   Context,
 } from "../../types/apollo-context";
 import {
@@ -157,9 +160,23 @@ export class CompanyFieldResolver {
   ): GQLResponse<CompanyProgram, "nullable"> {
     return Promise.resolve(company.applications?.[0]);
   }
+
+  @FieldResolver((_type) => Boolean)
+  logoHidden(
+    @Root() company: Company,
+  ): GQLResponse<boolean> {
+    const logoHidden = company.applications?.[0]?.approval?.logoHidden ?? false;
+    return Promise.resolve(logoHidden);
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyFieldResolver>({
+  logoHidden(select) {
+    set(select, "applications.select.approval.select.logoHidden", true);
+    delete select.logoHidden;
+    return select;
+  },
+
   industry(select) {
     select.industry = {
       select: select.industry,

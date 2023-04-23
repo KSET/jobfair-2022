@@ -4,6 +4,9 @@ documents:
   - "./graphql/documents/**/*.graphql"
   - "./pages/calendar/**/*.vue"
   - "./pages/profile/me/reservations/**/*.vue"
+  - "./pages/admin/season/*.vue"
+  - "./pages/admin/season/[season]/applications/approval.vue"
+  - "./pages/participants.vue"
   - "./store/**/*.ts"
 generates:
   ./graphql/schema.ts:

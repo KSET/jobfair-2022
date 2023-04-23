@@ -281,6 +281,7 @@ input ApproveCompanyApplicationsInput {
 input ApproveCompanyApplicationsInputParts {
   booth: Boolean! = false
   cocktail: Boolean! = false
+  logoHidden: Boolean! = false
   panel: Boolean! = false
   talkParticipants: Float! = 0
   workshopParticipants: Float! = 0
@@ -414,6 +415,7 @@ type Company {
   descriptionHr: String!
   industry: Industry
   legalName: String!
+  logoHidden: Boolean!
   members: [User!]
   program: CompanyProgram
   rasterLogo: Image
@@ -446,6 +448,7 @@ type CompanyApplicationApproval {
   booth: Boolean!
   cocktail: Boolean!
   forApplication: CompanyApplication!
+  logoHidden: Boolean!
   panel: Boolean!
   talkParticipants: Int!
   workshopParticipants: Int!
@@ -454,6 +457,7 @@ type CompanyApplicationApproval {
 input CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput {
   booth: SortOrder
   cocktail: SortOrder
+  logoHidden: SortOrder
   panel: SortOrder
   talkParticipants: SortOrder
   workshopParticipants: SortOrder
@@ -470,6 +474,7 @@ input CompanyApplicationApprovalWhereInput {
   OR: [CompanyApplicationApprovalWhereInput!]
   booth: BoolFilter
   cocktail: BoolFilter
+  logoHidden: BoolFilter
   panel: BoolFilter
   talkParticipants: IntFilter
   workshopParticipants: IntFilter

@@ -71,6 +71,9 @@ class ApproveCompanyApplicationsInputParts {
 
   @Field()
     workshopParticipants: number = 0;
+
+  @Field()
+    logoHidden: boolean = false;
 }
 
 @InputType()

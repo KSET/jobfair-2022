@@ -24,7 +24,7 @@
           <AppImg
             :alt="`${participant.brandName} logo`"
             :lazy-src="participant.rasterLogo?.thumbUrl"
-            :src="participant.rasterLogo?.fullUrl"
+            :src="participant.rasterLogo?.fullUrl ?? ''"
             :title="participant.titleText"
             aspect-ratio="1.78"
             contain
@@ -43,11 +43,6 @@
     useSeasonsStore,
   } from "~/store/seasons";
   import {
-    IPageParticipantsDataQuery,
-    IPageParticipantsDataQueryVariables,
-    PageParticipantsData,
-  } from "~/graphql/schema";
-  import {
     Language,
     useTranslationsStore,
   } from "~/store/translations";
@@ -57,8 +52,16 @@
     createError,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
+  import {
+    graphql,
+  } from "~/graphql/client";
+  import {
+    // eslint-disable-next-line camelcase
+    IPageParticipants_BaseQuery,
+  } from "~/graphql/schema";
 
-  type QParticipant = IPageParticipantsDataQuery["participants"][number];
+  // eslint-disable-next-line camelcase
+  type QParticipant = IPageParticipants_BaseQuery["participants"][number];
 
   useTitle("participants.header");
 
@@ -96,11 +99,27 @@
   ;
 
   const participants =
-    await useQuery<IPageParticipantsDataQuery, IPageParticipantsDataQueryVariables>({
-      query: PageParticipantsData,
+    await useQuery({
+      query: graphql(/* GraphQL */ `
+        query PageParticipants_Base {
+          participants {
+            uid
+            website
+            brandName
+            descriptionEn
+            descriptionHr
+            logoHidden
+            rasterLogo {
+                thumbUrl
+                fullUrl
+            }
+          }
+        }
+      `),
     })()
       .then((x) => x?.data?.participants ?? [])
-      .then((x) => x?.map(withTitleText))
+      .then((x) => x.filter((x) => !x.logoHidden))
+      .then((x) => x.map(withTitleText))
   ;
 </script>
 

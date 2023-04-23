@@ -486,6 +486,7 @@ model CompanyApplicationApproval {
   workshopParticipants Int
   panel                Boolean
   cocktail             Boolean
+  logoHidden           Boolean @default(false)
 
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)

@@ -4,9 +4,6 @@
 
 <script lang="ts">
   import {
-    gql,
-  } from "@urql/core";
-  import {
     useRoute,
   } from "vue-router";
   import {
@@ -17,11 +14,11 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ISeason,
-  } from "~/graphql/schema";
-  import {
     useSeasonsStore,
   } from "~/store/seasons";
+  import {
+    graphql,
+  } from "~/graphql/client";
 
   export default defineComponent({
     name: "AdminRouteHandler",
@@ -31,20 +28,9 @@
       const seasonsStore = useSeasonsStore();
 
       const seasonUid = route.params.season as string;
-      type QData = {
-        season: Pick<ISeason,
-                     "name"
-                       | "startsAt"
-                       | "endsAt"
-                       | "applicationsFrom"
-                       | "applicationsUntil">,
-      };
-      type QArgs = {
-        uid: string,
-      };
-      const res = await useQuery<QData, QArgs>({
-        query: gql`
-        query Query($uid: String!) {
+      const res = await useQuery({
+        query: graphql(`
+        query PageAdminSeasonSeasonData($uid: String!) {
             season(uid: $uid) {
                 uid
                 name
@@ -54,7 +40,7 @@
                 applicationsUntil
             }
         }
-        `,
+        `),
         variables: {
           uid: seasonUid,
         },

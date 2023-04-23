@@ -1,7 +1,5 @@
 <template>
-  <div :key="mounted" :class="$style.container">
-    <slot />
-  </div>
+  <slot :key="mounted" />
 </template>
 
 <script setup lang="ts">

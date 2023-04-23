@@ -29,7 +29,7 @@ const router = new Router();
 const toDateArray = <TDate extends Date | string>(x: TDate) => {
   const date = new Date(x);
 
-  return [ date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes() ] as [number, number, number, number, number];
+  return [ date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes() ] as [number, number, number, number, number];
 };
 
 const getCalendarItems = async ({

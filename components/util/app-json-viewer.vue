@@ -136,7 +136,7 @@
       const value = computed(
         () => {
           if (props.jsonIsRaw) {
-            return JSON.parse(props.json as string) as unknown;
+            return JSON.parse(props.json as string);
           }
 
           return props.json as unknown;

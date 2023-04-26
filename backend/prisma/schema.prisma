@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "jsonProtocol"]
 }
 
 generator typegraphql {
@@ -60,6 +60,12 @@ model User {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   passwordResets PasswordReset[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  gateGuardianEntryLog GateGuardianLog[] @relation("GateGuardianEntryLog")
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  gateGuardianScannedLog GateGuardianLog[] @relation("GateGuardianScannedLog")
 }
 
 model Session {
@@ -345,6 +351,9 @@ model Season {
 
   /// @TypeGraphQL.omit(input: true)
   talkCategories ApplicationTalkCategory[]
+
+  // @TypeGraphQL.omit(output: true, input: true)
+  gateGuardianLog GateGuardianLog[]
 }
 
 model Sponsor {
@@ -859,6 +868,32 @@ model EntryResumeLog {
 
   /// @TypeGraphQL.omit(input: true)
   scannedBy   User @relation(fields: [scannedById], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  scannedById Int
+
+  /// @TypeGraphQL.omit(input: true)
+  scannedAt DateTime @default(now())
+}
+
+model GateGuardianLog {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  eventType String
+  eventId   Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forUser   User @relation(fields: [forUserId], references: [id], name: "GateGuardianEntryLog", onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forUserId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  scannedBy   User @relation(fields: [scannedById], references: [id], name: "GateGuardianScannedLog", onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedById Int
 

@@ -17,9 +17,7 @@
     setup() {
       const userStore = useUserStore();
 
-      const isKset = userStore.user?.email.endsWith("@kset.org");
-
-      if (!isKset) {
+      if (!userStore.isScanner) {
         throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
       }
     },

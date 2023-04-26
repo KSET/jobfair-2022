@@ -23,7 +23,7 @@
       </template>
       <label class="block mt-2">
         Camera:
-        <select @change="handleCameraChange($event.target.value)">
+        <select @change="handleCameraChange($event.target?.value)">
           <option value="">Change camera</option>
           <option
             v-for="camera in settings.cameras"
@@ -33,13 +33,43 @@
           />
         </select>
       </label>
+      <p>
+        <label>
+          Event:
+          <Dropdown
+            v-model="selectedEvent"
+            :options="eventList.data.value ?? []"
+            filter
+            placeholder="Event"
+            option-label="title"
+            :loading="eventList.pending.value"
+            :panel-class="$style.eventDropdown"
+          >
+            <template #option="{ option: item }">
+              <div :class="$style.dropdownItem">
+                <span :class="$style.dropdownItemType" v-text="item.type" />
+                <span :class="$style.dropdownItemTitle" v-text="item.title" />
+              </div>
+            </template>
+          </Dropdown>
+        </label>
+      </p>
     </div>
     <LazyClientOnly>
       <PDialog v-model:visible="resumeBool" @hide="handleModalClose">
-        <h3 v-text="resume.user.name" />
-        <h3 v-text="resume.user.phone" />
+        <h3 v-text="scanResult!.user.name" />
+        <h3 v-text="scanResult!.user.phone" />
 
-        <a v-if="resume.cv" :href="resume.cv.url" target="_blank">Životopis</a>
+        <p v-if="scanResult!.hasReservation" :class="$style.reservationHas">
+          Ima rezervaciju
+        </p>
+        <p v-else :class="$style.reservationHasNot">
+          Nema rezervaciju
+        </p>
+
+        <p v-if="scanResult!.alreadyScanned" :class="$style.reservationAlreadyScanned">
+          Već je skeniran!
+        </p>
 
         <template #footer>
           <p-button label="OK" icon="pi pi-times" class="p-button-text" @click="handleModalClose" />
@@ -56,12 +86,12 @@
   import {
     throttle,
   } from "rambdax";
-  import {
-    gql,
-  } from "@urql/core";
   import Dialog from "primevue/dialog";
+  import Dropdown from "primevue/dropdown";
+  import z from "zod";
   import {
-    Dict,
+    RecursiveNonNullable,
+    RecursiveNonPartial,
   } from "~/helpers/type";
   import {
     computed,
@@ -72,11 +102,18 @@
     ref,
     unref,
     useMutation,
+    useAsyncData,
   } from "#imports";
   import {
-    IFile,
-    IUser,
+    graphql,
+  } from "~/graphql/client";
+  import {
+    // eslint-disable-next-line camelcase
+    IPageGateGuardian_ScanMutation,
   } from "~/graphql/schema";
+  import {
+    useQuery,
+  } from "~/composables/useQuery";
 
   class ScanError extends Error {
   }
@@ -86,6 +123,7 @@
 
     components: {
       PDialog: Dialog,
+      Dropdown,
     },
 
     setup() {
@@ -102,18 +140,75 @@
         cameras: [] as QrScanner.Camera[],
       });
 
-      type QScan = {
-        user: Pick<IUser, "name" | "phone">,
-        cv: Pick<IFile, "uid">,
-      };
-      type QData = {
-        resumeEntryScan: QScan | null,
-      };
-      type QArgs = {
-        userUid: string,
-      };
+      const scanResumeMutation = useMutation(graphql(/* GraphQL */`
+          mutation PageGateGuardian_Scan($userUid: String!, $eventUid: String!, $eventTyle: String!) {
+              gateGuardianScan(userUid: $userUid, eventUid: $eventUid, eventType: $eventTyle) {
+                  user {
+                      name
+                      phone
+                  }
+                  hasReservation
+                  alreadyScanned
+              }
+          }
+      `));
 
-      const resume = ref<QScan | null>(null);
+      const eventListQuery = useQuery({
+        query: graphql(/* GraphQL */`
+            query PageGateGuardian_EventList {
+                calendar {
+                    uid
+                    title
+                    text
+                    type
+                }
+            }
+        `),
+      });
+
+      // eslint-disable-next-line camelcase
+      type QScan = RecursiveNonPartial<RecursiveNonNullable<IPageGateGuardian_ScanMutation["gateGuardianScan"]>>;
+
+      const scanResult = ref<QScan | null>(null);
+
+      const scanDataValidator = z.object({
+        f: z.literal("user"),
+        u: z.string(),
+      });
+
+      const processScan = async (rawData: string) => {
+        const selectedEventValue = unref(selectedEvent);
+
+        if (!selectedEventValue) {
+          throw new ScanError("No event selected");
+        }
+
+        const validationResult = await scanDataValidator.safeParseAsync(
+          JSON.parse(rawData),
+        );
+
+        if (!validationResult.success) {
+          throw new ScanError(`Invalid QR code: ${ validationResult.error.message }`);
+        }
+
+        const { data } = validationResult;
+
+        const respResume = await scanResumeMutation({
+          userUid: data.u,
+          eventUid: selectedEventValue.uid,
+          eventTyle: selectedEventValue.type,
+        }).then((resp) => resp?.data?.gateGuardianScan);
+
+        if (!respResume) {
+          throw new ScanError("Something went wrong. Please try again.");
+        }
+
+        if (!respResume.user) {
+          throw new ScanError("Couldn't find user");
+        }
+
+        return respResume as QScan;
+      };
 
       let qrScanner: QrScanner | null = null;
       let flashOnInterval: number | null = null;
@@ -130,36 +225,7 @@
             throttle(async (result) => {
               qrScanner?.stop();
               try {
-                const data = JSON.parse(result.data) as Dict;
-
-                if ("user" !== data?.f) {
-                  throw new ScanError(`Wrong QR code type: ${ String(data?.f) }`);
-                }
-
-                if (!data?.u) {
-                  throw new ScanError("No user data");
-                }
-                const respResume = await useMutation<QData, QArgs>(gql`
-                    mutation Scan($userUid: String!) {
-                        resumeEntryScan(userUid: $userUid) {
-                            user {
-                                name
-                                phone
-                            }
-                            cv {
-                                url
-                            }
-                        }
-                    }
-                `)({
-                  userUid: data.u as string,
-                  }).then((resp) => resp?.data?.resumeEntryScan);
-
-                if (!respResume) {
-                  throw new ScanError("Couldn't find user");
-                }
-
-                resume.value = respResume;
+                scanResult.value = await processScan(result.data);
               } catch (e) {
                 if (e instanceof ScanError) {
                   toast.add({
@@ -182,7 +248,7 @@
 
           await qrScanner.start().catch((err) => {
             console.error(err);
-            alert("Something went wrong. Please try again");
+            // alert("Something went wrong. Please try again");
           });
 
           isReady.value = true;
@@ -214,18 +280,48 @@
         });
       }
 
+      const eventList = useAsyncData(async () => {
+        const resp = await eventListQuery().then((res) => res?.data?.calendar ?? []);
+
+        const data = resp.map((x) => {
+          const title = x.text ?? x.title ?? `UNKNOWN$${ x.uid }`;
+          const type = x.type ?? "unknown";
+
+          return {
+            uid: x.uid,
+            type,
+            title,
+          };
+        });
+
+        return [
+          {
+            uid: "",
+            type: "ulaz",
+            title: "ULAZ",
+          },
+          ...data,
+        ];
+      });
+
+      type EventListItem = NonNullable<(typeof eventList)["data"]["value"]>[number];
+
+      const selectedEvent = ref<EventListItem | null>(eventList.data.value?.[0] ?? null);
+
       return {
         vid$,
         isReady,
-        resume,
+        scanResult,
+        selectedEvent,
+        eventList,
         resumeBool: computed({
-          get: () => Boolean(resume.value),
+          get: () => Boolean(scanResult.value),
           set: () => {
-            resume.value = null;
+            scanResult.value = null;
           },
         }),
         settings,
-        async handleCameraChange(cameraId: string) {
+        async handleCameraChange(cameraId: string | null | undefined) {
           if (!cameraId) {
             return;
           }
@@ -261,7 +357,7 @@
           settings.flash.loading = false;
         },
         async handleModalClose() {
-          resume.value = null;
+          scanResult.value = null;
           await qrScanner?.start();
         },
       };
@@ -306,6 +402,59 @@
       padding: .5rem;
       color: $fer-white;
       background-color: rgb(0 0 0 / 50%);
+
+      :global(.p-dropdown) {
+        max-width: calc(min(100vw - 1rem, 16em));
+      }
     }
+  }
+
+  .eventDropdown {
+    max-width: 100%;
+
+    .dropdownItem {
+      display: flex;
+      gap: .5em;
+
+      .dropdownItemType {
+        opacity: .69;
+
+        &::before {
+          content: "[";
+        }
+
+        &::after {
+          content: "]";
+        }
+      }
+
+      .dropdownItemTitle {
+        overflow: auto;
+      }
+    }
+  }
+
+  .reservationHas,
+  .reservationHasNot,
+  .reservationAlreadyScanned {
+    padding: .5em;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+
+  .reservationHas {
+    background-color: $fer-success;
+    color: $fer-white;
+  }
+
+  .reservationHasNot {
+    background-color: $fer-error;
+    color: $fer-white;
+  }
+
+  .reservationAlreadyScanned {
+    background-color: $fer-yellow;
+    color: $fer-black;
   }
 </style>

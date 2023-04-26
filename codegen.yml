@@ -7,6 +7,7 @@ documents:
   - "./pages/admin/season/*.vue"
   - "./pages/admin/season/[season]/applications/approval.vue"
   - "./pages/participants.vue"
+  - "./pages/gate-guardian/**/*.vue"
   - "./store/**/*.ts"
 generates:
   ./graphql/schema.ts:

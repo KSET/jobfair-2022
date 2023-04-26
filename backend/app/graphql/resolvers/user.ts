@@ -29,6 +29,9 @@ import {
   omit,
 } from "rambdax";
 import {
+  Prisma,
+} from "@prisma/client";
+import {
   Context,
 } from "../../types/apollo-context";
 import {
@@ -163,6 +166,18 @@ class UpdateProfileResponse extends ValidationResponseFor(User) {
 class UpdatePasswordResponse extends ValidationResponseFor(User) {
 }
 
+@ObjectType()
+class GateGuardianScanResponse {
+  @Field(() => User, { nullable: true })
+    user: null | User = null;
+
+  @Field()
+    hasReservation: boolean = false;
+
+  @Field()
+    alreadyScanned: boolean = false;
+}
+
 @Resolver((_of) => User)
 export class UserInfoResolver {
   @Query((_type) => [ User ])
@@ -222,6 +237,210 @@ export class UserProfileResolver {
       },
       select: toSelect(info, transformSelect),
     });
+  }
+
+  @Authorized()
+  @Mutation(() => GateGuardianScanResponse, { nullable: true })
+  async gateGuardianScan(
+    @Ctx() ctx: Context,
+      @Arg("userUid") userUid: string,
+      @Arg("eventUid") calendarItemUid: string,
+      @Arg("eventType") calendarItemType: string,
+      @Info() gqlInfo: GraphQLResolveInfo,
+  ): GQLResponse<GateGuardianScanResponse, "nullable"> {
+    const user = ctx.user!;
+
+    const canView =
+      user.roles.includes(Role.Scanner)
+      || hasAtLeastRole(Role.Admin, user)
+    ;
+
+    if (!canView) {
+      return null;
+    }
+
+    const selectItems = toSelect(gqlInfo, (x) => x) as {
+      user: Prisma.UserSelect,
+      hasReservation: boolean,
+    } | undefined;
+
+    if (!selectItems) {
+      return null;
+    }
+
+    const select = transformSelect(selectItems.user);
+    select.id = true;
+
+    const dbUser = await ctx.prisma.user.findFirst({
+      where: {
+        uid: userUid,
+      },
+      select,
+    }) as User | null;
+
+    if (!dbUser) {
+      return {
+        user: null,
+        hasReservation: false,
+      };
+    }
+
+    if ("ulaz" === calendarItemType) {
+      const currentSeason = await ctx.prisma.season.findFirst({
+        where: {
+          startsAt: {
+            lte: new Date(),
+          },
+          endsAt: {
+            gte: new Date(),
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!currentSeason) {
+        return {
+          user: dbUser,
+          hasReservation: false,
+        };
+      }
+
+      const previousScan = await ctx.prisma.gateGuardianLog.findFirst({
+        where: {
+          eventId: 0,
+          eventType: calendarItemType,
+          forSeasonId: currentSeason.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await ctx.prisma.gateGuardianLog.create({
+        data: {
+          eventId: 0,
+          eventType: calendarItemType,
+          forUser: {
+            connect: {
+              id: dbUser.id!,
+            },
+          },
+          scannedBy: {
+            connect: {
+              id: user.id,
+            },
+          },
+          forSeason: {
+            connect: {
+              id: currentSeason.id,
+            },
+          },
+        },
+      });
+
+      return {
+        user: dbUser,
+        hasReservation: true,
+        alreadyScanned: Boolean(previousScan),
+      };
+    }
+
+    const calendarItem = await ctx.prisma.calendarItem.findFirst({
+      where: {
+        uid: calendarItemUid,
+        type: calendarItemType,
+      },
+      select: {
+        forTalkId: true,
+        forWorkshopId: true,
+        forPanelId: true,
+        forSeasonId: true,
+      },
+    });
+
+    if (!calendarItem) {
+      return {
+        user: dbUser,
+        hasReservation: false,
+      };
+    }
+
+    const calendarItemId =
+      calendarItem.forTalkId
+      ?? calendarItem.forWorkshopId
+      ?? calendarItem.forPanelId
+      ?? 0
+      ;
+
+    const reservation = await ctx.prisma.eventReservation.findFirst({
+      where: {
+        userId: dbUser.id,
+        eventId: {
+          in: [
+            calendarItem?.forTalkId,
+            calendarItem?.forWorkshopId,
+            calendarItem?.forPanelId,
+            0,
+          ].filter(Boolean),
+        },
+        eventType: calendarItemType,
+        status: {
+          gt: 0,
+        },
+      },
+      select: {
+        id: true,
+        status: true,
+      },
+    });
+
+    if (!reservation) {
+      return {
+        user: dbUser,
+        hasReservation: false,
+      };
+    }
+
+    const previousScan = await ctx.prisma.gateGuardianLog.findFirst({
+      where: {
+        eventId: calendarItemId,
+        eventType: calendarItemType,
+        forSeasonId: calendarItem.forSeasonId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    await ctx.prisma.gateGuardianLog.create({
+      data: {
+        eventId: calendarItemId,
+        eventType: calendarItemType,
+        forSeason: {
+          connect: {
+            id: calendarItem.forSeasonId,
+          },
+        },
+        forUser: {
+          connect: {
+            id: dbUser.id!,
+          },
+        },
+        scannedBy: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    return {
+      user: dbUser,
+      hasReservation: true,
+      alreadyScanned: Boolean(previousScan),
+    };
   }
 
   @Mutation(() => UpdateProfileResponse, { nullable: true })

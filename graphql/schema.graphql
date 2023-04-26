@@ -1005,6 +1005,30 @@ input FileWhereInput {
   uploader: UserRelationFilter
 }
 
+input GateGuardianLogListRelationFilter {
+  every: GateGuardianLogWhereInput
+  none: GateGuardianLogWhereInput
+  some: GateGuardianLogWhereInput
+}
+
+input GateGuardianLogOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input GateGuardianLogWhereInput {
+  AND: [GateGuardianLogWhereInput!]
+  NOT: [GateGuardianLogWhereInput!]
+  OR: [GateGuardianLogWhereInput!]
+  eventId: IntFilter
+  eventType: StringFilter
+}
+
+type GateGuardianScanResponse {
+  alreadyScanned: Boolean!
+  hasReservation: Boolean!
+  user: User
+}
+
 type Image {
   _count: ImageCount
   createdAt: DateTime!
@@ -1139,6 +1163,7 @@ type Mutation {
   deleteSponsor(sponsor: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
   editNews(info: NewsCreateInput!, uid: String!): NewsCreateResponse
+  gateGuardianScan(eventType: String!, eventUid: String!, userUid: String!): GateGuardianScanResponse
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
@@ -1845,6 +1870,7 @@ type SeasonCount {
   companies: Int!
   entryLog: Int!
   favouriteResumes: Int!
+  gateGuardianLog: Int!
   partners: Int!
   pressReleases: Int!
   scannedResumes: Int!
@@ -1898,6 +1924,7 @@ input SeasonOrderByWithRelationAndSearchRelevanceInput {
   eventUntil: SortOrder
   feedbackFrom: SortOrder
   feedbackUntil: SortOrder
+  gateGuardianLog: GateGuardianLogOrderByRelationAggregateInput
   name: SortOrder
   partners: PartnerOrderByRelationAggregateInput
   scheduleFrom: SortOrder
@@ -1980,6 +2007,7 @@ input SeasonWhereInput {
   eventUntil: DateTimeFilter
   feedbackFrom: DateTimeFilter
   feedbackUntil: DateTimeFilter
+  gateGuardianLog: GateGuardianLogListRelationFilter
   name: StringFilter
   partners: PartnerListRelationFilter
   scheduleFrom: DateTimeFilter
@@ -2193,6 +2221,8 @@ type UserCount {
   companies: Int!
   events: Int!
   files: Int!
+  gateGuardianEntryLog: Int!
+  gateGuardianScannedLog: Int!
   images: Int!
   passwordResets: Int!
   pressReleases: Int!

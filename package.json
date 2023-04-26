@@ -38,7 +38,8 @@
         "postcss": "^8.4.22",
         "primevue": "^3.27.0",
         "qr-scanner": "^1.4.2",
-        "vue": "^3.2.47"
+        "vue": "^3.2.47",
+        "zod": "^3.21.4"
     },
     "lint-staged": {
         "*.{ts,js,vue}": "eslint --cache",

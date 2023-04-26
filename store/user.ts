@@ -48,6 +48,10 @@ export const useUserStore = defineStore(
         return state.user?.roles.some(({ name }) => "admin" === name) ?? false;
       },
 
+      isScanner(state) {
+        return state.user?.roles.some(({ name }) => "scanner" === name) ?? false;
+      },
+
       company(state): Company | null {
         return state.user?.companies?.[0] || null;
       },

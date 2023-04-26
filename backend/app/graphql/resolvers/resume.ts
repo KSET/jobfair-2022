@@ -1222,7 +1222,7 @@ export class ResumeModifyResolver {
     const user = ctx.user!;
 
     const canView =
-      user.email.endsWith("@kset.org")
+      user.roles.includes(Role.Scanner)
       || hasAtLeastRole(Role.Admin, user)
     ;
 

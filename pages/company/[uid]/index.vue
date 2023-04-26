@@ -166,7 +166,7 @@
                 :class="$style.presenterPhoto"
                 :lazy-src="presenter.photo.thumbUrl"
                 :src="presenter.photo.fullUrl"
-                contain
+                cover
               />
               <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
             </div>

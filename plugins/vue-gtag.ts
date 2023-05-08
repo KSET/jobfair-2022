@@ -7,7 +7,7 @@ import {
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(VueGtag, {
     property: {
-      id: "UA-146832367-1",
+      id: "G-TG1E1XGR6F",
     },
     isEnabled: false,
     useDebugger: true,

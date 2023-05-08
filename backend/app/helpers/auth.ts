@@ -12,6 +12,7 @@ import {
 export enum Role {
   Student = "student",
   Company = "company",
+  Scanner = "scanner",
   AccountManager = "account-manager",
   PR = "pr",
   Admin = "admin",
@@ -26,6 +27,7 @@ const roleToPriority: Record<Role, number> = {
   [Role.Company]: 0,
   [Role.AccountManager]: 5,
   [Role.PR]: 5,
+  [Role.Scanner]: 10,
   [Role.Admin]: Infinity,
 };
 

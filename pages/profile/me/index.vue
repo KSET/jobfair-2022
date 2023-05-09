@@ -4,7 +4,7 @@
       <translated-text trans-key="profile.header" />
     </h1>
 
-    <div :class="$style.items">
+    <div v-if="user" :class="$style.items">
       <div :class="$style.item">
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
@@ -719,7 +719,7 @@
       return {
         calendar,
         userApplications,
-        user: computed(() => userStore.user!),
+        user: computed(() => userStore.user),
         resume,
         formatDate,
         booths,

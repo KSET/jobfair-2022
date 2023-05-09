@@ -6,7 +6,7 @@
       </div>
       <p
         class="text-center"
-        v-text="user.email"
+        v-text="user?.email"
       />
       <div :class="$style.linksContainer">
         <ul>

@@ -6,7 +6,7 @@
   import {
     defineComponent,
     unref,
-    useRouter,
+    navigateTo,
   } from "#imports";
   import {
     useUserStore,
@@ -17,7 +17,6 @@
     name: "PageProfileHandler",
 
     async setup() {
-      const router = useRouter();
       const userStore = useUserStore();
       const joinNowRoute = useJoinNowRoute();
 
@@ -25,7 +24,7 @@
         return;
       }
 
-      await router.push(unref(joinNowRoute));
+      await navigateTo(unref(joinNowRoute));
     },
   });
 </script>

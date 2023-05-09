@@ -618,6 +618,7 @@
         query: ProfileBaseData,
       })();
 
+      seasonsStore.setCurrentSeason(resp?.data?.currentSeason ?? null);
       const booths = computed(() => Object.fromEntries((resp?.data?.booths ?? []).map((b) => [ b.key ?? "", b.name ])));
       const approval = resp?.data?.companyApplication?.approval;
       const isApproved = companyStore.isApplicationApproved(approval);

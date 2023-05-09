@@ -617,6 +617,9 @@ query ProfileBaseData {
             reservation
         }
     }
+    currentSeason {
+        ...frag_Season
+    }
 }
 
 query AdminFeedbackInfo($seasonUid: String!) {

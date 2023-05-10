@@ -138,6 +138,35 @@
       </div>
 
       <div
+        v-if="isEventOngoing && isScanner"
+        :class="$style.item"
+      >
+        <div :class="$style.itemContent">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.gate-guardian.header" />
+          </h2>
+          <p>
+            <translated-text trans-key="profile.gate-guardian.text" />
+          </p>
+        </div>
+        <div :class="$style.itemActions">
+          <nuxt-link
+            :to="{ name: 'gate-guardian' }"
+            class="ml-auto"
+          >
+            <p-button
+              class="p-button-secondary"
+              tabindex="-1"
+            >
+              <translated-text
+                trans-key="profile.gate-guardian.go"
+              />
+            </p-button>
+          </nuxt-link>
+        </div>
+      </div>
+
+      <div
         v-if="currentSeason && !hasCompany && false"
         :class="$style.item"
       >
@@ -730,6 +759,7 @@
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),
         isSignUpPossible: computed(() => seasonsStore.isSignUpPossible),
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
+        isScanner: computed(() => userStore.isScanner),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
         isApproved,

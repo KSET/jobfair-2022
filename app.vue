@@ -216,6 +216,11 @@
       transition-duration: .25s;
       transition-property: none;
     }
+
+    ::selection {
+      background: $fer-dark-blue;
+      color: $fer-yellow;
+    }
   }
 
   .translationsLoading {

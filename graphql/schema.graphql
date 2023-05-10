@@ -1188,6 +1188,7 @@ type Mutation {
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
   updateResume(info: ResumeCreateInput!): ResumeCreateResponse
+  updateScannerStatusFor(isScanner: Boolean!, uid: String!): Boolean!
   updateSeason(info: SeasonUpdateInput!): Season
   updateTranslation(data: TranslationCreateInput!): Translation
   updateUser(info: UserUpdateInput!, uid: String!): UpdateProfileResponse

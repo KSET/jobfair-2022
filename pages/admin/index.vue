@@ -36,6 +36,15 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link
+              :to="{ name: 'admin-users-scanners' }"
+            >
+              Ljudi koji skeniraju
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 
@@ -357,7 +366,7 @@
           `,
           })();
 
-          seasons.value = (resp?.data?.seasons || []).map(reactive);
+          seasons.value = (resp?.data?.seasons || []).map((x) => reactive({ ...x, selected: false }));
         },
       };
     },

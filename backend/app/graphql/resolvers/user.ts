@@ -221,6 +221,64 @@ export class UserInfoResolver {
       select: toSelect(info, transformSelect),
     }) as Promise<User | null>;
   }
+
+  @Mutation((_type) => Boolean)
+  async updateScannerStatusFor(
+  @Ctx() ctx: Context,
+    @Arg("uid") uid: string,
+    @Arg("isScanner") isScanner: boolean,
+  ) {
+    if (!ctx.user) {
+      return false;
+    }
+
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return false;
+    }
+
+    const roles = await ctx.prisma.$transaction(async (prisma) => {
+      const userData = await prisma.user.findUnique({
+        where: {
+          uid,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!userData) {
+        throw new Error("User not found");
+      }
+
+      const updateRolesInput = (
+        isScanner
+          ? {
+            connect: {
+              name: Role.Scanner,
+            },
+          }
+          : {
+            disconnect: {
+              name: Role.Scanner,
+            },
+          }
+      ) satisfies Prisma.RoleUpdateManyWithoutUsersNestedInput;
+
+      return prisma.user.update({
+        where: {
+          id: userData.id,
+        },
+        data: {
+          roles: updateRolesInput,
+        },
+        select: {
+          roles: true,
+        },
+      }).then((x) => x.roles);
+    }).catch(() => null);
+
+    return roles?.some((x) => x.name === Role.Scanner) ?? false;
+  }
 }
 
 @Resolver((_of) => User)

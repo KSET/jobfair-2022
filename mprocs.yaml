@@ -5,7 +5,7 @@ procs:
     cwd: "./backend"
     cmd: ["yarn", "dev"]
   caddy:
-    cmd: ["sudo", "caddy", "run"]
+    cmd: ["doas", "caddy", "run"]
     autostart: false
   frontend-gql-schema:
     cmd: ["yarn", "graphql:schema:gen", "--watch"]

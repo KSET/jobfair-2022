@@ -24,7 +24,14 @@
       :class="$style.tabMenu"
     >
       <template #item="{ item }">
-        <a role="menuitem" href="#" :aria-label="String(item.label)" tabindex="0" :class="$style.tabMenuItem">
+        <a
+          role="menuitem"
+          href="#"
+          :aria-label="String(item.label)"
+          tabindex="0"
+          :class="$style.tabMenuItem"
+          @click.prevent=""
+        >
           <img v-if="item.iconImage" :src="item.iconImage" aria-hidden="true">
           <span v-if="item.icon" :class="['pi', 'pi-fw', item.icon]" />
           <template v-if="item.IconComponent">

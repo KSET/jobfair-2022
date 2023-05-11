@@ -1,5 +1,22 @@
-:80, jobfair.loc:80 {
+:80, jobfair.loc:80, jobfair.saturn.ji0.li:80 {
 	reverse_proxy /api/* localhost:3001
+	reverse_proxy localhost:3000
+	header -Server
+	header -X-Powered-By
+}
+
+prod-api.jobfair.loc:80 {
+	reverse_proxy /api/* https://jobfair.fer.unizg.hr {
+		header_up Host jobfair.fer.unizg.hr
+		header_up X-Real-IP {remote}
+		header_down Access-Control-Allow-Origin http://jobfair.loc
+		header_down Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		header_down Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+		header_down Access-Control-Allow-Credentials true
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
 	reverse_proxy localhost:3000
 	header -Server
 	header -X-Powered-By

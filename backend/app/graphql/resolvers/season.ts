@@ -119,6 +119,29 @@ export class SeasonFieldResolver {
     const info = await ctx.prisma.companyApplication.findMany({
       where: {
         forSeasonId: season.id,
+        approval: {
+          OR: [
+            {
+              booth: true,
+            },
+            {
+              panel: true,
+            },
+            {
+              cocktail: true,
+            },
+            {
+              talkParticipants: {
+                gt: 0,
+              },
+            },
+            {
+              workshopParticipants: {
+                gt: 0,
+              },
+            },
+          ],
+        },
       },
       select: {
         workshop: {
@@ -142,35 +165,36 @@ export class SeasonFieldResolver {
       },
     });
 
-    const eventToUid2 =
-      groupBy(
-        (x) => x[0],
-        info
-          ?.flatMap(
-            (company) =>
-              piped(
-                company,
-                toPairs,
-                map(([ key, value ]) => [ key, value as { uid: string, id: number, } ] as const),
-              )
-            ,
-          ) || [],
-      )
-    ;
-    const eventToUid: Record<string, Record<number, string>> = {};
-    for (const item of toPairs(eventToUid2)) {
-      const [ event, entries ] = item;
+    const infoFlat =
+      info
+        .flatMap((company) => [
+          [ "workshop", company.workshop! ],
+          [ "panel", company.panel! ],
+          [ "talk", company.talk! ],
+        ] as const)
+        .filter((x) => x[1])
+      ;
 
-      if (!(event in eventToUid)) {
-        eventToUid[event] = {};
+    type InfoEntry = (typeof infoFlat)[number];
+    type InfoEntryType = InfoEntry[0];
+    type InfoEntryValue = InfoEntry[1];
+
+    const eventToUid2 = groupBy((x) => x[0], infoFlat);
+
+    const eventToUid = {} as Record<InfoEntryType, Record<InfoEntryValue["id"], string>>;
+    for (const item of toPairs(eventToUid2)) {
+      const [ eventType, entries ] = item;
+
+      if (!(eventType in eventToUid)) {
+        eventToUid[eventType as InfoEntryType] = {};
       }
 
-      for (const [ , entry ] of entries) {
+      for (const [ eventType, entry ] of entries) {
         if (!entry?.id) {
           continue;
         }
 
-        eventToUid[event][entry.id] = entry.uid;
+        eventToUid[eventType][entry.id] = entry.uid;
       }
     }
 
@@ -180,7 +204,7 @@ export class SeasonFieldResolver {
       map((x) => x?.id as number),
     )).filter((x) => x) || [];
 
-    type Row = { eventId: number, eventType: string, status: number, count: number, };
+    type Row = { eventId: InfoEntryValue["id"], eventType: InfoEntryType, status: number, count: bigint | number, };
     const items = await ctx.prisma.$queryRaw<Row[]>`
       select
         "eventId", "eventType", "status", count("status")

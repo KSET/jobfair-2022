@@ -9,21 +9,6 @@
           alt="Job Fair"
           src="~/assets/images/logo/jobfair.png"
         >
-        <div :class="$style.logoRow">
-          <div
-            v-for="logo in logos"
-            :key="logo.src"
-            :class="$style.logoCol"
-          >
-            <app-img
-              :alt="logo.name"
-              :class="[$style.logo, ...logo.class ?? []]"
-              :src="logo.src"
-              aspect-ratio="1"
-              contain
-            />
-          </div>
-        </div>
         <h3 :class="$style.heroContentSupertitle">
           <translated-text trans-key="index.hero.date" />
         </h3>
@@ -205,9 +190,6 @@
     computed,
     defineComponent,
   } from "vue";
-  import {
-    useCssModule,
-  } from "#imports";
   import NewsCard from "~/components/news/news-card.vue";
   import {
     useNewsStore,
@@ -242,22 +224,6 @@
     useQuery,
   } from "~/composables/useQuery";
 
-  const globResult = import.meta.glob([
-    "../assets/images/component/AppFooter/logo/*.png",
-  ], { eager: true }) as unknown as Record<string, { default: string, }>;
-
-  const logos =
-    Object.fromEntries(
-      Object
-        .entries(globResult)
-        .map(([ key, value ]) => [
-          key.replace(/.*\/(.*)\..*?$/, "$1"),
-          value.default,
-        ])
-      ,
-    )
-  ;
-
   export default defineComponent({
     name: "PageIndex",
 
@@ -275,7 +241,6 @@
       const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
       const seasonsStore = useSeasonsStore();
-      const style = useCssModule();
 
       const initialData = await useQuery<IPageIndexDataQuery, IPageIndexDataQueryVariables>({
         query: PageIndexData,
@@ -302,21 +267,6 @@
         mediaPartners: initialData?.partners ?? [],
         joinNowRoute,
         dotGet,
-        logos: [
-          {
-            name: "FER",
-            src: logos.fer,
-          },
-          {
-            name: "KSET",
-            src: logos.kset,
-          },
-          {
-            name: "SSFER",
-            src: logos.ssfer,
-            class: [ style.ssferLogo ],
-          },
-        ],
       };
     },
   });
@@ -428,47 +378,6 @@
           margin-bottom: 0;
           text-transform: capitalize;
           color: $fer-yellow;
-        }
-
-        .logoRow {
-          display: flex;
-          flex-flow: wrap;
-          line-height: 0;
-          align-items: center;
-          margin-left: auto;
-          justify-content: flex-end;
-          row-gap: 1rem;
-          column-gap: 2rem;
-
-          .logoCol {
-            $width: 10rem;
-
-            flex: 1 0 auto;
-            max-width: min($width, 10vw);
-            min-width: 3rem;
-
-            @include media($breakpoint) {
-              max-width: 15vw;
-              min-width: 3rem;
-            }
-          }
-
-          .logo {
-            height: 3rem;
-            transition-property: opacity;
-
-            &:hover {
-              opacity: .8;
-            }
-
-            &.ssferLogo {
-              height: 9rem;
-
-              @include media($breakpoint) {
-                height: 5rem;
-              }
-            }
-          }
         }
       }
     }

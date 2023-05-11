@@ -14,6 +14,7 @@
       >
         <nuxt-link
           :class="$style.logoContainer"
+          class="mr-4"
           :to="{ name: 'index' }"
         >
           <img
@@ -22,12 +23,23 @@
             src="~/assets/images/logo/jobfair.png"
           >
         </nuxt-link>
+        <div
+          v-for="logo in logos"
+          :key="logo.src"
+          :class="$style.logoContainer"
+        >
+          <img
+            :src="logo.src"
+            :alt="logo.name"
+            :class="$style.logoOther"
+          >
+        </div>
       </div>
 
       <div
         :class="$style.layoutTopbarRight"
       >
-        <ul class="hidden md:flex">
+        <ul class="hidden lg:flex">
           <li
             v-for="page in pages"
             :key="`top-${page.name}`"
@@ -65,7 +77,7 @@
         </ul>
         <p-button
           :class="$style.sidebarBtn"
-          class="md:hidden p-button-text"
+          class="lg:hidden p-button-text"
           type="button"
           @click="sidebarOpen = true"
         >
@@ -149,6 +161,22 @@
     unref,
   } from "#imports";
 
+  const globResult = import.meta.glob([
+    "../../assets/images/component/AppFooter/logo/*.png",
+  ], { eager: true }) as unknown as Record<string, { default: string, }>;
+
+  const logos =
+    Object.fromEntries(
+      Object
+        .entries(globResult)
+        .map(([ key, value ]) => [
+          key.replace(/.*\/(.*)\..*?$/, "$1"),
+          value.default,
+        ])
+      ,
+    )
+  ;
+
   export default defineComponent({
     components: {
       NavUserModule,
@@ -201,6 +229,16 @@
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           set: (value) => translationsStore.setCurrentLanguage(value),
         }),
+        logos: [
+          {
+            name: "FER",
+            src: logos.fer,
+          },
+          {
+            name: "KSET",
+            src: logos.kset,
+          },
+        ],
       };
     },
   });
@@ -336,6 +374,7 @@
       display: flex;
       align-items: center;
       height: 100%;
+      gap: 1rem;
 
       .logoContainer {
         display: flex;
@@ -344,6 +383,15 @@
 
         .logoImage {
           height: 62.5%;
+        }
+
+        .logoOther {
+          height: #{$nav-height / 2.5};
+          object-fit: contain;
+
+          @include media(xs) {
+            display: none;
+          }
         }
       }
     }

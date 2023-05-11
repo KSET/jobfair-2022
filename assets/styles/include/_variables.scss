@@ -34,6 +34,7 @@ $input-colors: (
 $transition-timing-function: cubic-bezier(.4, 0, .2, 1);
 $transition-bounce-function: cubic-bezier(.35, 1.55, .65, 1);
 $breakpoints: (
+  "xs": 420px,
   "sm": 576px,
   "md": 768px,
   "lg": 992px,

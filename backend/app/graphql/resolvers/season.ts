@@ -220,7 +220,7 @@ export class SeasonFieldResolver {
       type: row.eventType,
       uid: eventToUid[row.eventType][row.eventId],
       count: Number(row.count),
-    }));
+    })).filter((x) => x.uid);
   }
 
   @FieldResolver(() => Int)

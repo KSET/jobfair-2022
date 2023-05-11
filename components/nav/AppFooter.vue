@@ -171,13 +171,13 @@
       PDialog: Dialog,
     },
 
-    props: {
-      showLogos: {
-        required: false,
-        type: Boolean,
-        default: () => false,
-      },
-    },
+    // props: {
+    //   showLogos: {
+    //     required: false,
+    //     type: Boolean,
+    //     default: () => false,
+    //   },
+    // },
 
     setup() {
       const cookieConsentStore = useCookieConsentStore();
@@ -222,6 +222,7 @@
       ;
 
       return {
+        showLogos: false,
         clearConsent: () => cookieConsentStore.clearConsent(),
         showConsent: computed(() => cookieConsentStore.showConsent),
         privacyPolicyOpen,

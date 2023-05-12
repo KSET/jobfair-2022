@@ -15,10 +15,10 @@ export default defineNuxtPlugin((nuxt) => {
     app: [
       vueApp,
     ],
-    dsn: config.SENTRY_DSN,
+    dsn: config.public.SENTRY_DSN,
     logErrors: false,
-    debug: "development" === config.NODE_ENV,
-    environment: config.NODE_ENV,
+    debug: "development" === config.public.NODE_ENV,
+    environment: config.public.NODE_ENV,
   });
 
   Sentry.attachErrorHandler(vueApp, {

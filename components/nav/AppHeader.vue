@@ -247,6 +247,7 @@
 <style lang="scss" module>
   @use "sass:map";
   @use "sass:color";
+  @use "sass:math";
   @import "assets/styles/include/all";
 
   $item-spacing: 1.5rem;
@@ -386,7 +387,7 @@
         }
 
         .logoOther {
-          height: #{$nav-height / 2.5};
+          height: #{math.div($nav-height, 2.5)};
           object-fit: contain;
 
           @include media(xs) {

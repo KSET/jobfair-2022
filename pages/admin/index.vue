@@ -87,6 +87,13 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-pr-analytics' }">
+              Analytics
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 

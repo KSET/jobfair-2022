@@ -16,6 +16,8 @@
         ".output",
     ],
     "types": [
+        "@nuxt/types",
+        "@nuxt/typescript-build",
         "node",
         "@pinia/nuxt"
     ],

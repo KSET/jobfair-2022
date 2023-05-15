@@ -13,6 +13,7 @@
         "graphql:schema:gen": "graphql-codegen --config codegen.yml"
     },
     "dependencies": {
+        "@nuxt/typescript-runtime": "^3.0.1",
         "@nuxtjs/plausible": "^0.2.1",
         "@pinia/nuxt": "^0.4.8",
         "@tiptap/core": "^2.0.3",
@@ -59,6 +60,8 @@
         "@graphql-codegen/typescript-operations": "^3.0.3",
         "@graphql-codegen/typescript-resolvers": "^3.2.0",
         "@iconify/json": "^2.2.52",
+        "@nuxt/types": "^2.16.3",
+        "@nuxt/typescript-build": "^3.0.1",
         "@nuxt/vite-builder": "^3.4.1",
         "@nuxtjs/eslint-config-typescript": "^12.0.0",
         "@nuxtjs/eslint-module": "^4.0.2",

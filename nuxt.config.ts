@@ -29,6 +29,10 @@ export default defineNuxtConfig({
     strict: true,
   },
 
+  buildModules: [
+    "@nuxt/typescript-build",
+  ],
+
   modules: [
     "@vueuse/nuxt",
     "@pinia/nuxt",

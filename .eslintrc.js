@@ -23,8 +23,7 @@ module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "@nuxtjs",
-    "plugin:nuxt/recommended",
+    "@nuxtjs/eslint-config-typescript",
   ],
   // add your custom rules here
   rules: {
@@ -65,7 +64,7 @@ module.exports = {
     "@typescript-eslint/no-redeclare": [ "error" ],
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "off",
       {
         args: "after-used",
         argsIgnorePattern: "^_",

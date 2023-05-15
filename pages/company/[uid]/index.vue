@@ -90,6 +90,13 @@
                 <translated-text v-if="programItems.talk.reservation" trans-key="company.event.user.sign-off" />
                 <translated-text v-else trans-key="company.event.user.sign-up" />
               </p-button>
+              <nuxt-link v-else :to="joinNowRoute">
+                <p-button
+                  :class="$style.signupButton"
+                >
+                  <translated-text trans-key="company.event.user.sign-up" />
+                </p-button>
+              </nuxt-link>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.talk, 'title')" />
@@ -135,6 +142,13 @@
                 <translated-text v-if="programItems.workshop.reservation" trans-key="company.event.user.sign-off" />
                 <translated-text v-else trans-key="company.event.user.sign-up" />
               </p-button>
+              <nuxt-link v-else :to="joinNowRoute">
+                <p-button
+                  :class="$style.signupButton"
+                >
+                  <translated-text trans-key="company.event.user.sign-up" />
+                </p-button>
+              </nuxt-link>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="translateFor(programItems.workshop, 'title')" />
@@ -191,6 +205,13 @@
                 <translated-text v-if="programItems.panel.reservation" trans-key="company.event.user.sign-off" />
                 <translated-text v-else trans-key="company.event.user.sign-up" />
               </p-button>
+              <nuxt-link v-else :to="joinNowRoute">
+                <p-button
+                  :class="$style.signupButton"
+                >
+                  <translated-text trans-key="company.event.user.sign-up" />
+                </p-button>
+              </nuxt-link>
             </div>
 
             <h3 :class="$style.itemTitle" v-text="programItems.panel.name" />
@@ -278,6 +299,7 @@
     watch,
     useRouter,
   } from "#imports";
+  import useJoinNow from "~/composables/useJoinNowRoute";
   import AppImg from "~/components/util/app-img.vue";
   import EventInfoDisplay from "~/components/page/schedule/event-info-display.vue";
   import {
@@ -416,6 +438,7 @@
         programItems,
         EventType,
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
+        joinNowRoute: useJoinNow(),
         formatWebsite(website: string) {
           try {
             const url = new URL(website);

@@ -16,6 +16,9 @@ import {
   toPairs,
 } from "rambdax";
 import {
+  useCookie,
+} from "#app";
+import {
   capitalize,
 } from "~/helpers/string";
 import {
@@ -30,9 +33,6 @@ import {
   useMutation,
   useQuery,
 } from "~/composables/useQuery";
-import {
-  useCookie,
-} from "#app";
 
 export enum Language {
   EN = "en_US",
@@ -88,7 +88,6 @@ export const useTranslationsStore = defineStore(
 
       translateFor() {
         return (
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           <TKey extends string, TItem extends Record<`${ TKey }En` | `${ TKey }Hr`, any>>(
             item: TItem,
             key: TKey,

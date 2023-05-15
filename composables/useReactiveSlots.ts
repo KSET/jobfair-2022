@@ -19,7 +19,6 @@ export default function <T extends string>(...slots: T[]) {
 
   onBeforeUpdate(() => {
     for (const slot of slots) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: Really weird type issue (TS2322: Type 'boolean' is not assignable to type 'UnwrapNestedRefs>[T]'.)
       slotExists[slot] = $slots[slot] !== undefined;
     }

@@ -400,7 +400,6 @@
       const resetErrors = () => {
         for (const item of Object.values(items)) {
           const { fields } = item;
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const f = form(fields);
           item.errors = f.errors;
@@ -426,7 +425,6 @@
           type Items = typeof items;
           type FieldObj = Items[Key]["fields"];
           type Fields = FieldObj extends readonly unknown[] ? ArrayElement<FieldObj> : FieldObj;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           type Returns = Record<keyof Fields, any>;
 
           const fields = items[key].fields as FieldObj;

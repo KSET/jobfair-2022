@@ -8,11 +8,11 @@ import {
   TypedDocumentNode,
 } from "@urql/core";
 import {
-  MaybeRef,
-} from "~/helpers/type";
-import {
   useNuxtApp,
 } from "#app";
+import {
+  MaybeRef,
+} from "~/helpers/type";
 import {
   reactive,
 } from "#imports";

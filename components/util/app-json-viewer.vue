@@ -83,7 +83,7 @@
 
     props: {
       json: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         type: [ Object, Array, Number, String, Boolean, null, undefined ] as PropType<any>,
         required: true,
       },

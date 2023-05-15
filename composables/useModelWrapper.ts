@@ -5,7 +5,7 @@ import type {
   WritableComputedRef as ComputedRef,
 } from "vue";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 type WritableComputedRef<Name, T> = ComputedRef<T>;
 
 export default <Props extends Record<string, unknown>, Event extends string, Param>(props: Props, emit: (event: Event, ...params: Param[]) => void) =>

@@ -313,7 +313,6 @@
               x.forms
                 ? map(
                   toErrors,
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
                   x.forms,
                 )
@@ -393,7 +392,7 @@
           for (const item of Object.values(items)) {
             if (item.errors) {
               for (const errors of Object.values(item.errors)) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 resetErrorsFor(errors as any);
               }
             }
@@ -405,7 +404,7 @@
             talk:
               selectedObj.talk
                 ? {
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
                   // @ts-ignore
                   ...toData<Talk>(selectedObj.talk.forms!.info),
                   presenter: toData<Presenter>(selectedObj.talk.forms!.presenter),
@@ -414,7 +413,7 @@
             workshop:
               selectedObj.workshop
                 ? {
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
                   // @ts-ignore
                   ...toData<Workshop>(selectedObj.workshop.forms!.info),
                   presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),

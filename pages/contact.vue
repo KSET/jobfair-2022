@@ -180,7 +180,6 @@
 
       const Icons =
         pipe(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore: Some advanced spooky stuff went wrong here type-wise
           mapKeys(replace(/^(\.\.\/)*/, "@/")),
           map(path("default")),

@@ -46,7 +46,6 @@
   // noinspection TypeScriptCheckImport
   export default defineComponent({
     components: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: No type definitions available
       VueCal: defineAsyncComponent(() => import("vue-cal/dist/vue-cal.es.js")),
     },

@@ -65,6 +65,9 @@
     useThrottle,
   } from "@vueuse/core";
   import {
+    useNuxtApp,
+  } from "#app";
+  import {
     useRuntimeConfig,
     useHead,
   } from "#imports";
@@ -82,9 +85,6 @@
   import {
     useTranslationsStore,
   } from "~/store/translations";
-  import {
-    useNuxtApp,
-  } from "#app";
   import {
     useQuery,
   } from "~/composables/useQuery";

@@ -104,7 +104,7 @@
       type CompanyPanel = Pick<ICompanyPanel, "uid" | "name" | "description"> & { companies: Pick<ICompany, "uid">[], };
 
       const itemInfo: WritableComputedRef<CompanyPanel | null> = useModelWrapper(props, emit)("item");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const formModel = reactive(companyPanelListCreate(unref(itemInfo))(props.panelists as any[]));
 
       const isLoading = ref(false);

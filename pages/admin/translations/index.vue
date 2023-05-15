@@ -49,11 +49,9 @@
             <div
               :class="$style.text"
               :contenteditable="!isLoading"
-              :style="[
-                !translation.en_US && {
-                  borderColor: 'red',
-                }
-              ]"
+              :style="!translation.en_US ? [{
+                borderColor: 'red',
+              }] : undefined"
               @blur="saveTranslation(key, 'en_US', translation.en_US)"
               @input.capture="translation.en_US = $event.target.innerText"
               v-text="translation.en_US || ''"
@@ -128,7 +126,6 @@
 
       const transformTranslations: (t: QTranslation[]) => Record<QTranslation["key"], Record<QTranslation["language"], QTranslation["value"]>> =
         pipe(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore: Trust me bro lmao
           groupBy((t: QTranslation) => t.key),
           map(mapToObject((t: QTranslation) => ({ [t.language]: t.value }))),

@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "nuxt-icons",
+    "@nuxtjs/plausible",
   ],
 
   build: {
@@ -129,4 +130,8 @@ export default defineNuxtConfig({
   },
 
   telemetry: false,
+
+  plausible: {
+    autoOutboundTracking: true,
+  },
 });

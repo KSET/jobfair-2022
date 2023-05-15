@@ -13,6 +13,7 @@
         "graphql:schema:gen": "graphql-codegen --config codegen.yml"
     },
     "dependencies": {
+        "@nuxtjs/plausible": "^0.2.1",
         "@pinia/nuxt": "^0.4.8",
         "@tiptap/core": "^2.0.3",
         "@tiptap/extension-bold": "^2.0.3",

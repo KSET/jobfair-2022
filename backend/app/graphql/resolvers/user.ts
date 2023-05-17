@@ -370,6 +370,7 @@ export class UserProfileResolver {
           eventId: 0,
           eventType: calendarItemType,
           forSeasonId: currentSeason.id,
+          forUserId: dbUser.id,
         },
         select: {
           id: true,
@@ -466,6 +467,7 @@ export class UserProfileResolver {
         eventId: calendarItemId,
         eventType: calendarItemType,
         forSeasonId: calendarItem.forSeasonId,
+        forUserId: dbUser.id,
       },
       select: {
         id: true,

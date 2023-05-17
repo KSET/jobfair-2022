@@ -617,6 +617,7 @@ type CompanyCount {
   favouriteResumes: Int!
   members: Int!
   scannedResumes: Int!
+  scannedUsers: Int!
 }
 
 enum CompanyOrderByRelevanceFieldEnum {
@@ -733,6 +734,45 @@ enum CompanyScalarFieldEnum {
   vat
   vectorLogoId
   website
+}
+
+input CompanyScanUserQrRefineData {
+  isStarred: Boolean
+  note: String
+}
+
+type CompanyScanUserQrResponse {
+  alreadyScanned: Boolean!
+  error: String
+  isStarred: Boolean
+  note: String
+  user: User
+}
+
+type CompanyScannedUser {
+  isStarred: Boolean!
+  note: String
+  scannedAt: DateTime!
+  user: User
+}
+
+input CompanyScannedUserListRelationFilter {
+  every: CompanyScannedUserWhereInput
+  none: CompanyScannedUserWhereInput
+  some: CompanyScannedUserWhereInput
+}
+
+input CompanyScannedUserOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input CompanyScannedUserWhereInput {
+  AND: [CompanyScannedUserWhereInput!]
+  NOT: [CompanyScannedUserWhereInput!]
+  OR: [CompanyScannedUserWhereInput!]
+  isStarred: BoolFilter
+  note: StringNullableFilter
+  scannedAt: DateTimeFilter
 }
 
 input CompanyWhereInput {
@@ -1176,6 +1216,8 @@ type Mutation {
   resumeEntryScan(userUid: String!): Resume
   resumeScan(userUid: String!): String
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
+  scanUserQr(userUid: String!): CompanyScanUserQrResponse
+  scanUserQrRefine(refineData: CompanyScanUserQrRefineData!, userUid: String!): CompanyScanUserQrResponse
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
@@ -1450,6 +1492,7 @@ type Query {
   resumesFavourites(filter: ResumeFindManyInput): ResumeList!
   resumesScanned(filter: ResumeFindManyInput): ResumeList!
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
+  scannedUsers(companyUid: String, seasonUid: String): [CompanyScannedUser!]!
   season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
   sessions: [Session!]!
@@ -1875,6 +1918,7 @@ type SeasonCount {
   partners: Int!
   pressReleases: Int!
   scannedResumes: Int!
+  scannedUsers: Int!
   sponsors: Int!
   talkCategories: Int!
 }
@@ -1928,6 +1972,7 @@ input SeasonOrderByWithRelationAndSearchRelevanceInput {
   gateGuardianLog: GateGuardianLogOrderByRelationAggregateInput
   name: SortOrder
   partners: PartnerOrderByRelationAggregateInput
+  scannedUsers: CompanyScannedUserOrderByRelationAggregateInput
   scheduleFrom: SortOrder
   scheduleUntil: SortOrder
   showParticipantsFrom: SortOrder
@@ -2011,6 +2056,7 @@ input SeasonWhereInput {
   gateGuardianLog: GateGuardianLogListRelationFilter
   name: StringFilter
   partners: PartnerListRelationFilter
+  scannedUsers: CompanyScannedUserListRelationFilter
   scheduleFrom: DateTimeFilter
   scheduleUntil: DateTimeFilter
   showParticipantsFrom: DateTimeFilter
@@ -2230,6 +2276,7 @@ type UserCount {
   reservations: Int!
   roles: Int!
   scannedEntries: Int!
+  scannedUsers: Int!
 }
 
 input UserCreateInput {

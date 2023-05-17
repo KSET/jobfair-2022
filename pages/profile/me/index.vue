@@ -430,7 +430,7 @@
         </div>
 
         <div
-          v-if="isEventOngoing"
+          v-if="isEventOngoing && false"
           :class="[$style.item, $style.itemApproval]"
         >
           <h2 :class="$style.itemHeader">
@@ -452,6 +452,39 @@
 
             <nuxt-link
               :to="{ name: 'profile-me-company-scan-qr' }"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.scanUsers.scan"
+                />
+              </p-button>
+            </nuxt-link>
+          </div>
+        </div>
+        <div v-if="isEventOngoing" :class="[$style.item, $style.itemApproval]">
+          <h2 :class="$style.itemHeader">
+            <translated-text trans-key="profile.company.scanUsers.header" />
+          </h2>
+          <div :class="$style.itemActions">
+            <nuxt-link
+              :to="{ name: 'profile-me-company-scans-list' }"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text
+                  trans-key="profile.company.scanUsers.scanned"
+                />
+              </p-button>
+            </nuxt-link>
+
+            <nuxt-link
+              :to="{ name: 'profile-me-company-scan-user-qr' }"
               class="ml-auto"
             >
               <p-button

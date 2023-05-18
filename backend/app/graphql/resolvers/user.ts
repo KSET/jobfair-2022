@@ -176,6 +176,9 @@ class GateGuardianScanResponse {
 
   @Field()
     alreadyScanned: boolean = false;
+
+  @Field(() => String, { nullable: true })
+    error: string | null = "";
 }
 
 @Resolver((_of) => User)
@@ -314,7 +317,9 @@ export class UserProfileResolver {
     ;
 
     if (!canView) {
-      return null;
+      return {
+        error: "Access denied. Cannot use this endpoint.",
+      };
     }
 
     const selectItems = toSelect(gqlInfo, (x) => x) as {
@@ -323,7 +328,9 @@ export class UserProfileResolver {
     } | undefined;
 
     if (!selectItems) {
-      return null;
+      return {
+        error: "Something went wrong. Invalid query.",
+      };
     }
 
     const select = transformSelect(selectItems.user);
@@ -340,6 +347,7 @@ export class UserProfileResolver {
       return {
         user: null,
         hasReservation: false,
+        error: "User not found.",
       };
     }
 
@@ -362,6 +370,7 @@ export class UserProfileResolver {
         return {
           user: dbUser,
           hasReservation: false,
+          error: "No active season.",
         };
       }
 
@@ -423,6 +432,7 @@ export class UserProfileResolver {
       return {
         user: dbUser,
         hasReservation: false,
+        error: "Calendar event not found. Please check if the right event is selected.",
       };
     }
 

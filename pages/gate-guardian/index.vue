@@ -141,14 +141,15 @@
       });
 
       const scanResumeMutation = useMutation(graphql(/* GraphQL */`
-          mutation PageGateGuardian_Scan($userUid: String!, $eventUid: String!, $eventTyle: String!) {
-              gateGuardianScan(userUid: $userUid, eventUid: $eventUid, eventType: $eventTyle) {
+          mutation PageGateGuardian_Scan($userUid: String!, $eventUid: String!, $eventType: String!) {
+              gateGuardianScan(userUid: $userUid, eventUid: $eventUid, eventType: $eventType) {
                   user {
                       name
                       phone
                   }
                   hasReservation
                   alreadyScanned
+                  error
               }
           }
       `));
@@ -201,6 +202,10 @@
 
         if (!respResume) {
           throw new ScanError("Something went wrong. Please try again.");
+        }
+
+        if (respResume.error) {
+          throw new ScanError(respResume.error);
         }
 
         if (!respResume.user) {

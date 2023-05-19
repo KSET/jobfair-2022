@@ -1065,6 +1065,7 @@ input GateGuardianLogWhereInput {
 
 type GateGuardianScanResponse {
   alreadyScanned: Boolean!
+  error: String
   hasReservation: Boolean!
   user: User
 }

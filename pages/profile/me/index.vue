@@ -465,7 +465,7 @@
             </nuxt-link>
           </div>
         </div>
-        <div v-if="isEventOngoing" :class="[$style.item, $style.itemApproval]">
+        <div v-if="isEventOngoingOrLater" :class="[$style.item, $style.itemApproval]">
           <h2 :class="$style.itemHeader">
             <translated-text trans-key="profile.company.scanUsers.header" />
           </h2>
@@ -484,6 +484,7 @@
             </nuxt-link>
 
             <nuxt-link
+              v-if="isEventOngoing"
               :to="{ name: 'profile-me-company-scan-user-qr' }"
               class="ml-auto"
             >
@@ -790,6 +791,19 @@
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),
+        isEventOngoingOrLater: computed(() => {
+          if (seasonsStore.isEventOngoing) {
+            return true;
+          }
+
+          const now = new Date();
+          const endsAt = seasonsStore.currentSeason?.endsAt as string | Date | undefined;
+          if (!endsAt) {
+            return false;
+          }
+
+          return new Date(endsAt) >= now;
+        }),
         isSignUpPossible: computed(() => seasonsStore.isSignUpPossible),
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
         isScanner: computed(() => userStore.isScanner),

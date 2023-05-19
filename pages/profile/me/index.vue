@@ -514,6 +514,7 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
+              v-if="false"
               :to="{ name: 'profile-me-company-resumes' }"
             >
               <p-button

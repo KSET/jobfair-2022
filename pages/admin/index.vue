@@ -222,6 +222,13 @@
           </li>
           <li>
             <nuxt-link
+              :to="{ name: 'admin-season-season-reservations-scanned', params: { season: season.uid } }"
+            >
+              Skenirani
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
               :to="{ name: 'admin-season-season-applications-feedback', params: { season: season.uid } }"
             >
               Feedback

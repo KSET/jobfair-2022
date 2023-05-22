@@ -1,5 +1,7 @@
 import {
   User,
+  CalendarItem,
+  GateGuardianLog,
 } from "@generated/type-graphql";
 import {
   Prisma,
@@ -12,20 +14,26 @@ import {
   Authorized,
   Ctx,
   Field,
+  FieldResolver,
   Info,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
+  Root,
 } from "type-graphql";
 import {
   Role,
   hasAtLeastRole,
 } from "../../helpers/auth";
 import {
+  Dict,
+  GQLField,
   GQLResponse,
 } from "../../types/helpers";
 import {
   toSelect,
+  transformSelectFor,
 } from "../helpers/resolver";
 import {
   Context,
@@ -33,6 +41,51 @@ import {
 import {
   transformSelect as transformSelectUser,
 } from "./user";
+import {
+  transformSelect as transformSelectCalendarItem,
+} from "./calendarItem";
+
+@Resolver((_of) => GateGuardianLog)
+export class GateGuardianLogFieldResolver {
+  @FieldResolver(() => User, { nullable: true })
+  forUser(@Root() log: GateGuardianLog): GQLField<User, "nullable"> {
+    return Promise.resolve(log.forUser);
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  scannedBy(@Root() log: GateGuardianLog): GQLField<User, "nullable"> {
+    return Promise.resolve(log.scannedBy);
+  }
+
+  @FieldResolver(() => CalendarItem, { nullable: true })
+  forCalendarItem(
+    @Root() log: GateGuardianLog & { calendarItem?: CalendarItem, },
+  ): GQLField<CalendarItem, "nullable"> {
+    return Promise.resolve(log.calendarItem);
+  }
+}
+
+export const transformSelect = transformSelectFor<GateGuardianLogFieldResolver>(
+  {
+    forUser(select) {
+      select.forUser = {
+        select: transformSelectUser(select.forUser as Dict),
+      };
+      return select;
+    },
+    scannedBy(select) {
+      select.scannedBy = {
+        select: transformSelectUser(select.scannedBy as Dict),
+      };
+      return select;
+    },
+    forCalendarItem(select) {
+      const item = (transformSelectCalendarItem(select.forCalendarItem as Dict));
+      select.forCalendarItem = item;
+      return select;
+    },
+  },
+);
 
 @ObjectType()
 class GateGuardianScanResponse {
@@ -48,6 +101,7 @@ class GateGuardianScanResponse {
   @Field(() => String, { nullable: true })
     error: string | null = "";
 }
+
 @Resolver()
 export class GateGuardianResolver {
   @Authorized()
@@ -261,5 +315,89 @@ export class GateGuardianResolver {
       hasReservation: true,
       alreadyScanned: Boolean(previousScan),
     };
+  }
+
+  @Authorized(Role.Admin)
+  @Query(() => [ GateGuardianLog ], { nullable: true })
+  async gateGuardianScanList(
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+      @Arg("season") seasonUid: string,
+  ): GQLResponse<GateGuardianLog[]> {
+    const select = toSelect(info, transformSelect);
+
+    const forCalendarItemSelect = select.forCalendarItem;
+    delete select.forCalendarItem;
+
+    const log = await ctx.prisma.gateGuardianLog.findMany({
+      where: {
+        forSeason: {
+          uid: seasonUid,
+        },
+      },
+      select: {
+        ...select,
+        eventId: true,
+        eventType: true,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    const forCalendarItem = await (async () => {
+      if (!forCalendarItemSelect) {
+        return null;
+      }
+
+      const calendarItemsRaw = await ctx.prisma.calendarItem.findMany({
+        where: {
+          forSeason: {
+            uid: seasonUid,
+          },
+        },
+        select: {
+          ...forCalendarItemSelect,
+          forTalkId: true,
+          forWorkshopId: true,
+          forPanelId: true,
+        },
+      });
+
+      const calendarItems = calendarItemsRaw.map((x) => {
+        const eventId = x.forTalkId ?? x.forWorkshopId ?? x.forPanelId ?? 0;
+        const eventType = (() => {
+          if (x.forTalkId) {
+            return "talk";
+          }
+          if (x.forWorkshopId) {
+            return "workshop";
+          }
+          if (x.forPanelId) {
+            return "panel";
+          }
+          return null;
+        })();
+
+        return ({
+          ...x,
+          eventId,
+          eventType,
+        });
+      });
+
+      const eventMap = new Map<`${ string }.${ number }`, unknown>();
+      for (const item of calendarItems) {
+        const key = `${ item.eventType ?? "" }.${ item.eventId }` as const;
+        eventMap.set(key, item);
+      }
+
+      return eventMap;
+    })();
+
+    return log.map((x) => ({
+      ...x,
+      calendarItem: forCalendarItem?.get(`${ x.eventType }.${ x.eventId }`) ?? null,
+    }));
   }
 }

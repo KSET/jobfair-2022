@@ -101,7 +101,6 @@ export class Router {
       handlers
         .map((handler) => {
           if (handler instanceof Router) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             handler = handler.expose();
           }

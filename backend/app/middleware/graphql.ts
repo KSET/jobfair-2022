@@ -15,6 +15,9 @@ import {
 } from "graphql-upload";
 import bodyParser from "body-parser";
 import {
+  OperationTypeNode,
+} from "graphql";
+import {
   Context,
 } from "../types/apollo-context";
 import {
@@ -62,7 +65,7 @@ const MyGqlPlugin = (): ApolloServerPlugin<ApolloContext> => ({
   requestDidStart({ request, contextValue }) {
     return Promise.resolve({
       async willSendResponse(ctx) {
-        if ("mutation" !== ctx.operation?.operation) {
+        if (OperationTypeNode.MUTATION !== ctx.operation?.operation) {
           return;
         }
 

@@ -229,7 +229,7 @@
       };
       const resumesQuery = useQuery<QData, QArgs>({
         query: gql`
-          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationAndSearchRelevanceInput!], $whereUser: String) {
+          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationInput!], $whereUser: String) {
             resumes(filter: { take: $take, skip: $skip, orderBy: $orderBy, whereUser: $whereUser }) {
               total
               items {
@@ -255,7 +255,7 @@
       });
       const favouritesQuery = useQuery<QData, QArgs>({
         query: gql`
-          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationAndSearchRelevanceInput!], $whereUser: String) {
+          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationInput!], $whereUser: String) {
             resumesFavourites(filter: { take: $take, skip: $skip, orderBy: $orderBy, whereUser: $whereUser }) {
               total
               items {
@@ -281,7 +281,7 @@
       });
       const scannedQuery = useQuery<QData, QArgs>({
         query: gql`
-          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationAndSearchRelevanceInput!], $whereUser: String) {
+          query Data($take: Int, $skip: Int, $orderBy: [ResumeOrderByWithRelationInput!], $whereUser: String) {
             resumesScanned(filter: { take: $take, skip: $skip, orderBy: $orderBy, whereUser: $whereUser }) {
               total
               items {

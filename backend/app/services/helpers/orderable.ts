@@ -44,7 +44,7 @@ export const swap =
     const prismaModel = prisma[model];
 
     const actions = [
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       prismaModel.updateMany({
         data: {
@@ -55,7 +55,7 @@ export const swap =
           ...where as Dict,
         },
       }),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       prismaModel.updateMany({
         data: {
@@ -66,7 +66,7 @@ export const swap =
           ...where as Dict,
         },
       }),
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       prismaModel.updateMany({
         data: {

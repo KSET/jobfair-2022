@@ -105,18 +105,6 @@ class PressReleaseWithFilesCreateInput {
     season: string = "";
 }
 
-@InputType()
-class PressReleaseWhereUniqueInput {
-  @Field()
-    uid: string = "";
-}
-
-@ArgsType()
-class PressReleaseFindManyArgs extends FindManyPressReleaseArgs {
-  @Field(() => PressReleaseWhereUniqueInput, { nullable: true })
-    cursor?: PressReleaseWhereUniqueInput = undefined;
-}
-
 const canViewRelease =
   (user?: SessionUser | null) =>
     (release: PressRelease) =>
@@ -129,10 +117,11 @@ export class PressReleaseFindResolver {
   async pressReleases(
     @Ctx() ctx: Context,
       @Info() info: GraphQLResolveInfo,
-      @Args() args: PressReleaseFindManyArgs,
+      @Args() args: FindManyPressReleaseArgs,
   ): Promise<PressRelease[]> {
     const releases = await ctx.prisma.pressRelease.findMany({
       ...args,
+      cursor: undefined,
       select: toSelect(info, transformSelect),
     }) as unknown as PressRelease[];
 

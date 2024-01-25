@@ -1,7 +1,7 @@
 import {
   EventLog,
   User,
-  EventLogOrderByWithRelationAndSearchRelevanceInput as EventLogOrderByWithRelationAndSearchRelevanceInput_,
+  EventLogOrderByWithRelationInput as EventLogOrderByWithRelationInput_,
 } from "@generated/type-graphql";
 import {
   Args,
@@ -78,7 +78,7 @@ class EventLogPaginationResult extends PaginationResultFor(EventLog) {
 }
 
 @InputType()
-class EventLogOrderByWithRelationAndSearchRelevanceInput extends EventLogOrderByWithRelationAndSearchRelevanceInput_ {
+class EventLogOrderByWithRelationInput extends EventLogOrderByWithRelationInput_ {
   @Field({ nullable: true })
     id?: "asc" | "desc";
 
@@ -91,8 +91,8 @@ class EventLogPaginationArgs extends PaginationArgs {
   @Field({ nullable: true })
     where?: string;
 
-  @Field(() => [ EventLogOrderByWithRelationAndSearchRelevanceInput ], { nullable: true })
-    orderBy?: EventLogOrderByWithRelationAndSearchRelevanceInput[];
+  @Field(() => [ EventLogOrderByWithRelationInput ], { nullable: true })
+    orderBy?: EventLogOrderByWithRelationInput[];
 }
 
 @Resolver(() => EventLog)
@@ -149,7 +149,7 @@ export class EventLogInfoResolver {
     };
     const skip = (page - 1) * perPage;
 
-    const orderBy: EventLogOrderByWithRelationAndSearchRelevanceInput[] | undefined =
+    const orderBy: EventLogOrderByWithRelationInput[] | undefined =
       0 < (paginationArgs.orderBy?.length ?? 0)
         ? paginationArgs.orderBy
         : [
@@ -165,7 +165,7 @@ export class EventLogInfoResolver {
         orderBy,
         skip,
         take: perPage,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         select: transformSelect(toSelect(gqlInfo, (x) => x).records as Dict || { id: true }) as any,
         where,
       }) as unknown as Promise<EventLog[]>,

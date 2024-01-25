@@ -7,7 +7,6 @@ import {
 } from "./app/types/apollo-context";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface Request {

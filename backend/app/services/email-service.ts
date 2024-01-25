@@ -165,7 +165,7 @@ export class EmailService {
     const rendered = Templates[name]({
       ...parameters,
       PUBLIC_URL: (process.env.PUBLIC_URL || "").replace(/\/$/, ""),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     } as any);
     const inlinedCss = await inlineCss(
       rendered,

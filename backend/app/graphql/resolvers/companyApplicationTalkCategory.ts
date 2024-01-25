@@ -71,6 +71,7 @@ export class CompanyApplicationTalkFindResolver {
 
     return ctx.prisma.applicationTalkCategory.findMany({
       ...args,
+      cursor: undefined,
       where: {
         ...(
           args.where

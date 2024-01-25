@@ -15,7 +15,7 @@ export class CalendarEventService {
     uid: string,
   ) {
     switch (type) {
-      case "workshop": {
+      case EventType.workshop: {
         return await prisma.applicationWorkshop.findFirst({
           where: {
             uid,
@@ -25,7 +25,7 @@ export class CalendarEventService {
           },
         });
       }
-      case "talk": {
+      case EventType.talk: {
         return await prisma.applicationTalk.findFirst({
           where: {
             uid,
@@ -35,7 +35,7 @@ export class CalendarEventService {
           },
         });
       }
-      case "panel": {
+      case EventType.panel: {
         return await prisma.companyPanel.findFirst({
           where: {
             uid,

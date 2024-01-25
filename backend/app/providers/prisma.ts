@@ -12,9 +12,8 @@ const envOptions: Prisma.PrismaClientOptions =
     }
 ;
 
-const options: Prisma.PrismaClientOptions = {
-  rejectOnNotFound: false,
+const options = {
   ...envOptions,
-};
+} satisfies Prisma.PrismaClientOptions;
 
 export const prisma = new PrismaClient(options);

@@ -185,6 +185,7 @@ export class UserInfoResolver {
 
     return ctx.prisma.user.findMany({
       ...args,
+      cursor: undefined,
       select: toSelect(info, transformSelect),
     });
   }
@@ -266,7 +267,7 @@ export class UserInfoResolver {
       }).then((x) => x.roles);
     }).catch(() => null);
 
-    return roles?.some((x) => x.name === Role.Scanner) ?? false;
+    return roles?.some((x) => x.name === String(Role.Scanner)) ?? false;
   }
 }
 
@@ -345,6 +346,7 @@ export class UserProfileResolver {
         ...omit([
           "password",
           "passwordRepeat",
+          "reservations",
         ], data),
       },
       select: transformSelect(toSelect(info, (x) => x).entity as Record<string, unknown> || { uid: true }),

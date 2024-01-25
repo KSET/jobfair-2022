@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 generator typegraphql {
@@ -53,6 +52,7 @@ model User {
   /// @TypeGraphQL.omit(output: true, input: true)
   resumeId Int?    @unique
 
+  /// @TypeGraphQL.omit(input: true)
   reservations EventReservation[]
 
   /// @TypeGraphQL.omit(output: true, input: true)

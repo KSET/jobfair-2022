@@ -44,6 +44,16 @@ export type IApplicationCocktailCount = {
   forApplication: Scalars['Int']['output'];
 };
 
+
+export type IApplicationCocktailCountForApplicationArgs = {
+  where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+export type IApplicationCocktailNullableRelationFilter = {
+  is?: InputMaybe<IApplicationCocktailWhereInput>;
+  isNot?: InputMaybe<IApplicationCocktailWhereInput>;
+};
+
 export enum IApplicationCocktailOrderByRelevanceFieldEnum {
   Colour = 'colour',
   Name = 'name'
@@ -59,11 +69,6 @@ export type IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<IApplicationCocktailOrderByRelevanceInput>;
   colour?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
-};
-
-export type IApplicationCocktailRelationFilter = {
-  is?: InputMaybe<IApplicationCocktailWhereInput>;
-  isNot?: InputMaybe<IApplicationCocktailWhereInput>;
 };
 
 export type IApplicationCocktailWhereInput = {
@@ -91,6 +96,21 @@ export type IApplicationPresenterCount = {
   forWorkshops: Scalars['Int']['output'];
 };
 
+
+export type IApplicationPresenterCountForPanelsArgs = {
+  where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+
+export type IApplicationPresenterCountForTalksArgs = {
+  where?: InputMaybe<IApplicationTalkWhereInput>;
+};
+
+
+export type IApplicationPresenterCountForWorkshopsArgs = {
+  where?: InputMaybe<IApplicationWorkshopWhereInput>;
+};
+
 export type IApplicationPresenterListRelationFilter = {
   every?: InputMaybe<IApplicationPresenterWhereInput>;
   none?: InputMaybe<IApplicationPresenterWhereInput>;
@@ -109,7 +129,7 @@ export type IApplicationPresenterWhereInput = {
   bioHr?: InputMaybe<IStringFilter>;
   firstName?: InputMaybe<IStringFilter>;
   lastName?: InputMaybe<IStringFilter>;
-  photo?: InputMaybe<IImageRelationFilter>;
+  photo?: InputMaybe<IImageNullableRelationFilter>;
 };
 
 export type IApplicationTalk = {
@@ -136,6 +156,11 @@ export type IApplicationTalkCategory = {
 
 export type IApplicationTalkCategoryCount = {
   talks: Scalars['Int']['output'];
+};
+
+
+export type IApplicationTalkCategoryCountTalksArgs = {
+  where?: InputMaybe<IApplicationTalkWhereInput>;
 };
 
 export type IApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput = {
@@ -174,16 +199,31 @@ export type IApplicationTalkCategoryWhereInput = {
   AND?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
   OR?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
-  forSeason?: InputMaybe<ISeasonRelationFilter>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
   name?: InputMaybe<IStringFilter>;
 };
 
 export type IApplicationTalkCategoryWhereUniqueInput = {
+  AND?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
+  NOT?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
+  OR?: InputMaybe<Array<IApplicationTalkCategoryWhereInput>>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
   forSeasonId_name?: InputMaybe<IApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput>;
+  name?: InputMaybe<IStringFilter>;
 };
 
 export type IApplicationTalkCount = {
   presenters: Scalars['Int']['output'];
+};
+
+
+export type IApplicationTalkCountPresentersArgs = {
+  where?: InputMaybe<IApplicationPresenterWhereInput>;
+};
+
+export type IApplicationTalkNullableRelationFilter = {
+  is?: InputMaybe<IApplicationTalkWhereInput>;
+  isNot?: InputMaybe<IApplicationTalkWhereInput>;
 };
 
 export enum IApplicationTalkOrderByRelevanceFieldEnum {
@@ -212,11 +252,6 @@ export type IApplicationTalkOrderByWithRelationAndSearchRelevanceInput = {
   titleHr?: InputMaybe<ISortOrder>;
 };
 
-export type IApplicationTalkRelationFilter = {
-  is?: InputMaybe<IApplicationTalkWhereInput>;
-  isNot?: InputMaybe<IApplicationTalkWhereInput>;
-};
-
 export type IApplicationTalkWhereInput = {
   AND?: InputMaybe<Array<IApplicationTalkWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationTalkWhereInput>>;
@@ -224,7 +259,7 @@ export type IApplicationTalkWhereInput = {
   category?: InputMaybe<IApplicationTalkCategoryRelationFilter>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
-  event?: InputMaybe<ICalendarItemRelationFilter>;
+  event?: InputMaybe<ICalendarItemNullableRelationFilter>;
   language?: InputMaybe<IStringFilter>;
   titleEn?: InputMaybe<IStringFilter>;
   titleHr?: InputMaybe<IStringFilter>;
@@ -250,6 +285,16 @@ export type IApplicationWorkshop = {
 
 export type IApplicationWorkshopCount = {
   presenters: Scalars['Int']['output'];
+};
+
+
+export type IApplicationWorkshopCountPresentersArgs = {
+  where?: InputMaybe<IApplicationPresenterWhereInput>;
+};
+
+export type IApplicationWorkshopNullableRelationFilter = {
+  is?: InputMaybe<IApplicationWorkshopWhereInput>;
+  isNot?: InputMaybe<IApplicationWorkshopWhereInput>;
 };
 
 export enum IApplicationWorkshopOrderByRelevanceFieldEnum {
@@ -283,18 +328,13 @@ export type IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput = {
   titleHr?: InputMaybe<ISortOrder>;
 };
 
-export type IApplicationWorkshopRelationFilter = {
-  is?: InputMaybe<IApplicationWorkshopWhereInput>;
-  isNot?: InputMaybe<IApplicationWorkshopWhereInput>;
-};
-
 export type IApplicationWorkshopWhereInput = {
   AND?: InputMaybe<Array<IApplicationWorkshopWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationWorkshopWhereInput>>;
   OR?: InputMaybe<Array<IApplicationWorkshopWhereInput>>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
-  event?: InputMaybe<ICalendarItemRelationFilter>;
+  event?: InputMaybe<ICalendarItemNullableRelationFilter>;
   goal?: InputMaybe<IStringFilter>;
   language?: InputMaybe<IStringFilter>;
   notesEn?: InputMaybe<IStringFilter>;
@@ -369,6 +409,11 @@ export type ICalendarItemListRelationFilter = {
   some?: InputMaybe<ICalendarItemWhereInput>;
 };
 
+export type ICalendarItemNullableRelationFilter = {
+  is?: InputMaybe<ICalendarItemWhereInput>;
+  isNot?: InputMaybe<ICalendarItemWhereInput>;
+};
+
 export type ICalendarItemOrderByRelationAggregateInput = {
   _count?: InputMaybe<ISortOrder>;
 };
@@ -392,16 +437,11 @@ export type ICalendarItemOrderByWithRelationAndSearchRelevanceInput = {
   end?: InputMaybe<ISortOrder>;
   forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
   grouped?: InputMaybe<ISortOrder>;
-  location?: InputMaybe<ISortOrder>;
+  location?: InputMaybe<ISortOrderInput>;
   start?: InputMaybe<ISortOrder>;
-  text?: InputMaybe<ISortOrder>;
-  title?: InputMaybe<ISortOrder>;
-  type?: InputMaybe<ISortOrder>;
-};
-
-export type ICalendarItemRelationFilter = {
-  is?: InputMaybe<ICalendarItemWhereInput>;
-  isNot?: InputMaybe<ICalendarItemWhereInput>;
+  text?: InputMaybe<ISortOrderInput>;
+  title?: InputMaybe<ISortOrderInput>;
+  type?: InputMaybe<ISortOrderInput>;
 };
 
 export type ICalendarItemWhereInput = {
@@ -484,6 +524,11 @@ export type ICompanyApplicationApproval = {
   workshopParticipants: Scalars['Int']['output'];
 };
 
+export type ICompanyApplicationApprovalNullableRelationFilter = {
+  is?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
+  isNot?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
+};
+
 export type ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput = {
   booth?: InputMaybe<ISortOrder>;
   cocktail?: InputMaybe<ISortOrder>;
@@ -491,11 +536,6 @@ export type ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInpu
   panel?: InputMaybe<ISortOrder>;
   talkParticipants?: InputMaybe<ISortOrder>;
   workshopParticipants?: InputMaybe<ISortOrder>;
-};
-
-export type ICompanyApplicationApprovalRelationFilter = {
-  is?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
-  isNot?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
 };
 
 export type ICompanyApplicationApprovalWhereInput = {
@@ -520,6 +560,11 @@ export type ICompanyApplicationApprovedEditInput = {
 
 export type ICompanyApplicationCount = {
   panelParticipants: Scalars['Int']['output'];
+};
+
+
+export type ICompanyApplicationCountPanelParticipantsArgs = {
+  where?: InputMaybe<IApplicationPresenterWhereInput>;
 };
 
 export type ICompanyApplicationCreateInput = {
@@ -595,7 +640,7 @@ export type ICompanyApplicationOrderByRelevanceInput = {
 export type ICompanyApplicationOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<ICompanyApplicationOrderByRelevanceInput>;
   approval?: InputMaybe<ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput>;
-  booth?: InputMaybe<ISortOrder>;
+  booth?: InputMaybe<ISortOrderInput>;
   cocktail?: InputMaybe<IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput>;
   forCompany?: InputMaybe<ICompanyOrderByWithRelationAndSearchRelevanceInput>;
   forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
@@ -625,21 +670,35 @@ export type ICompanyApplicationWhereInput = {
   AND?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   NOT?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   OR?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
-  approval?: InputMaybe<ICompanyApplicationApprovalRelationFilter>;
+  approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<IStringNullableFilter>;
-  cocktail?: InputMaybe<IApplicationCocktailRelationFilter>;
+  cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
   forCompany?: InputMaybe<ICompanyRelationFilter>;
   forSeason?: InputMaybe<ISeasonRelationFilter>;
-  panel?: InputMaybe<ICompanyPanelRelationFilter>;
+  panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
-  talk?: InputMaybe<IApplicationTalkRelationFilter>;
+  talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<IBoolFilter>;
   wantsPanel?: InputMaybe<IBoolFilter>;
-  workshop?: InputMaybe<IApplicationWorkshopRelationFilter>;
+  workshop?: InputMaybe<IApplicationWorkshopNullableRelationFilter>;
 };
 
 export type ICompanyApplicationWhereUniqueInput = {
+  AND?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
+  NOT?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
+  OR?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
+  approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
+  booth?: InputMaybe<IStringNullableFilter>;
+  cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
+  forCompany?: InputMaybe<ICompanyRelationFilter>;
   forCompanyId_forSeasonId?: InputMaybe<ICompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput>;
+  forSeason?: InputMaybe<ISeasonRelationFilter>;
+  panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
+  panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
+  talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
+  wantsCocktail?: InputMaybe<IBoolFilter>;
+  wantsPanel?: InputMaybe<IBoolFilter>;
+  workshop?: InputMaybe<IApplicationWorkshopNullableRelationFilter>;
 };
 
 export type ICompanyCount = {
@@ -648,6 +707,31 @@ export type ICompanyCount = {
   members: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+};
+
+
+export type ICompanyCountApplicationsArgs = {
+  where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+
+export type ICompanyCountFavouriteResumesArgs = {
+  where?: InputMaybe<IFavouriteResumeWhereInput>;
+};
+
+
+export type ICompanyCountMembersArgs = {
+  where?: InputMaybe<IUserWhereInput>;
+};
+
+
+export type ICompanyCountScannedResumesArgs = {
+  where?: InputMaybe<IScannedResumeWhereInput>;
+};
+
+
+export type ICompanyCountScannedUsersArgs = {
+  where?: InputMaybe<ICompanyScannedUserWhereInput>;
 };
 
 export enum ICompanyOrderByRelevanceFieldEnum {
@@ -692,6 +776,16 @@ export type ICompanyPanelCount = {
   companies: Scalars['Int']['output'];
 };
 
+
+export type ICompanyPanelCountCompaniesArgs = {
+  where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+export type ICompanyPanelNullableRelationFilter = {
+  is?: InputMaybe<ICompanyPanelWhereInput>;
+  isNot?: InputMaybe<ICompanyPanelWhereInput>;
+};
+
 export enum ICompanyPanelOrderByRelevanceFieldEnum {
   Description = 'description',
   Name = 'name',
@@ -712,11 +806,6 @@ export type ICompanyPanelOrderByWithRelationAndSearchRelevanceInput = {
   name?: InputMaybe<ISortOrder>;
 };
 
-export type ICompanyPanelRelationFilter = {
-  is?: InputMaybe<ICompanyPanelWhereInput>;
-  isNot?: InputMaybe<ICompanyPanelWhereInput>;
-};
-
 export type ICompanyPanelUpdateInput = {
   companies: Array<Scalars['String']['input']>;
   description: Scalars['String']['input'];
@@ -731,7 +820,7 @@ export type ICompanyPanelWhereInput = {
   OR?: InputMaybe<Array<ICompanyPanelWhereInput>>;
   companies?: InputMaybe<ICompanyApplicationListRelationFilter>;
   description?: InputMaybe<IStringFilter>;
-  event?: InputMaybe<ICalendarItemRelationFilter>;
+  event?: InputMaybe<ICalendarItemNullableRelationFilter>;
   name?: InputMaybe<IStringFilter>;
 };
 
@@ -819,7 +908,16 @@ export type ICompanyWhereInput = {
 };
 
 export type ICompanyWhereUniqueInput = {
+  AND?: InputMaybe<Array<ICompanyWhereInput>>;
+  NOT?: InputMaybe<Array<ICompanyWhereInput>>;
+  OR?: InputMaybe<Array<ICompanyWhereInput>>;
+  address?: InputMaybe<IStringFilter>;
+  brandName?: InputMaybe<IStringFilter>;
+  descriptionEn?: InputMaybe<IStringFilter>;
+  descriptionHr?: InputMaybe<IStringFilter>;
+  legalName?: InputMaybe<IStringFilter>;
   vat?: InputMaybe<Scalars['String']['input']>;
+  website?: InputMaybe<IStringFilter>;
 };
 
 export type ICreateCompanyApplicationResponse = {
@@ -887,6 +985,14 @@ export type IEditApprovedCompanyApplicationResponse = {
   errors?: Maybe<Array<IFieldError>>;
 };
 
+export type IEntryResumeLogWhereInput = {
+  AND?: InputMaybe<Array<IEntryResumeLogWhereInput>>;
+  NOT?: InputMaybe<Array<IEntryResumeLogWhereInput>>;
+  OR?: InputMaybe<Array<IEntryResumeLogWhereInput>>;
+  event?: InputMaybe<IStringNullableFilter>;
+  eventId?: InputMaybe<IIntNullableFilter>;
+};
+
 export type IEventLog = {
   data?: Maybe<Scalars['String']['output']>;
   date: Scalars['DateTimeISO']['output'];
@@ -908,7 +1014,7 @@ export type IEventLogOrderByRelevanceInput = {
 
 export type IEventLogOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<IEventLogOrderByRelevanceInput>;
-  data?: InputMaybe<ISortOrder>;
+  data?: InputMaybe<ISortOrderInput>;
   date?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<ISortOrder>;
@@ -922,49 +1028,13 @@ export type IEventLogPaginationResult = {
   totalRecords: Scalars['Int']['output'];
 };
 
-export type IEventReservationCreateManyUserInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  status: Scalars['Int']['input'];
-};
-
-export type IEventReservationCreateManyUserInputEnvelope = {
-  data: Array<IEventReservationCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type IEventReservationCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<IEventReservationWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<IEventReservationCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<IEventReservationCreateWithoutUserInput>>;
-  createMany?: InputMaybe<IEventReservationCreateManyUserInputEnvelope>;
-};
-
-export type IEventReservationCreateOrConnectWithoutUserInput = {
-  create: IEventReservationCreateWithoutUserInput;
-  where: IEventReservationWhereUniqueInput;
-};
-
-export type IEventReservationCreateWithoutUserInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  status: Scalars['Int']['input'];
-};
-
-export type IEventReservationEventIdEventTypeUserIdCompoundUniqueInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  userId: Scalars['Int']['input'];
-};
-
-export type IEventReservationListRelationFilter = {
-  every?: InputMaybe<IEventReservationWhereInput>;
-  none?: InputMaybe<IEventReservationWhereInput>;
-  some?: InputMaybe<IEventReservationWhereInput>;
-};
-
-export type IEventReservationOrderByRelationAggregateInput = {
-  _count?: InputMaybe<ISortOrder>;
+export type IEventLogWhereInput = {
+  AND?: InputMaybe<Array<IEventLogWhereInput>>;
+  NOT?: InputMaybe<Array<IEventLogWhereInput>>;
+  OR?: InputMaybe<Array<IEventLogWhereInput>>;
+  data?: InputMaybe<IStringNullableFilter>;
+  name?: InputMaybe<IStringFilter>;
+  user?: InputMaybe<IUserNullableRelationFilter>;
 };
 
 export type IEventReservationResponse = {
@@ -992,10 +1062,6 @@ export type IEventReservationWhereInput = {
   user?: InputMaybe<IUserRelationFilter>;
 };
 
-export type IEventReservationWhereUniqueInput = {
-  eventId_eventType_userId?: InputMaybe<IEventReservationEventIdEventTypeUserIdCompoundUniqueInput>;
-};
-
 export enum IEventType {
   HotTalk = 'hotTalk',
   Panel = 'panel',
@@ -1006,6 +1072,12 @@ export enum IEventType {
 export type IEventUserApplications = {
   talk: Scalars['Int']['output'];
   workshop: Scalars['Int']['output'];
+};
+
+export type IFavouriteResumeWhereInput = {
+  AND?: InputMaybe<Array<IFavouriteResumeWhereInput>>;
+  NOT?: InputMaybe<Array<IFavouriteResumeWhereInput>>;
+  OR?: InputMaybe<Array<IFavouriteResumeWhereInput>>;
 };
 
 export type IFieldError = {
@@ -1029,6 +1101,21 @@ export type IFileCount = {
   forCompany: Scalars['Int']['output'];
   forPressRelease: Scalars['Int']['output'];
   forResume: Scalars['Int']['output'];
+};
+
+
+export type IFileCountForCompanyArgs = {
+  where?: InputMaybe<ICompanyWhereInput>;
+};
+
+
+export type IFileCountForPressReleaseArgs = {
+  where?: InputMaybe<IPressReleaseWhereInput>;
+};
+
+
+export type IFileCountForResumeArgs = {
+  where?: InputMaybe<IResumeWhereInput>;
 };
 
 export enum IFileOrderByRelevanceFieldEnum {
@@ -1124,6 +1211,36 @@ export type IImageCount = {
   Sponsor: Scalars['Int']['output'];
 };
 
+
+export type IImageCountApplicationPresenterArgs = {
+  where?: InputMaybe<IApplicationPresenterWhereInput>;
+};
+
+
+export type IImageCountCompanyArgs = {
+  where?: InputMaybe<ICompanyWhereInput>;
+};
+
+
+export type IImageCountNewsArgs = {
+  where?: InputMaybe<INewsWhereInput>;
+};
+
+
+export type IImageCountPartnerArgs = {
+  where?: InputMaybe<IPartnerWhereInput>;
+};
+
+
+export type IImageCountSponsorArgs = {
+  where?: InputMaybe<ISponsorWhereInput>;
+};
+
+export type IImageNullableRelationFilter = {
+  is?: InputMaybe<IImageWhereInput>;
+  isNot?: InputMaybe<IImageWhereInput>;
+};
+
 export type IImageRelationFilter = {
   is?: InputMaybe<IImageWhereInput>;
   isNot?: InputMaybe<IImageWhereInput>;
@@ -1139,6 +1256,21 @@ export type IImageVariationCount = {
   forFull: Scalars['Int']['output'];
   forOriginal: Scalars['Int']['output'];
   forThumb: Scalars['Int']['output'];
+};
+
+
+export type IImageVariationCountForFullArgs = {
+  where?: InputMaybe<IImageWhereInput>;
+};
+
+
+export type IImageVariationCountForOriginalArgs = {
+  where?: InputMaybe<IImageWhereInput>;
+};
+
+
+export type IImageVariationCountForThumbArgs = {
+  where?: InputMaybe<IImageWhereInput>;
 };
 
 export type IImageVariationRelationFilter = {
@@ -1174,6 +1306,11 @@ export type IIndustryCount = {
   company: Scalars['Int']['output'];
 };
 
+
+export type IIndustryCountCompanyArgs = {
+  where?: InputMaybe<ICompanyWhereInput>;
+};
+
 export enum IIndustryOrderByRelevanceFieldEnum {
   Name = 'name'
 }
@@ -1202,6 +1339,9 @@ export type IIndustryWhereInput = {
 };
 
 export type IIndustryWhereUniqueInput = {
+  AND?: InputMaybe<Array<IIndustryWhereInput>>;
+  NOT?: InputMaybe<Array<IIndustryWhereInput>>;
+  OR?: InputMaybe<Array<IIndustryWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1213,6 +1353,17 @@ export type IIntFilter = {
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
   not?: InputMaybe<INestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type IIntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<INestedIntNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
@@ -1596,6 +1747,17 @@ export type INestedIntFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type INestedIntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<INestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
 export type INestedStringFilter = {
   contains?: InputMaybe<Scalars['String']['input']>;
   endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -1658,6 +1820,22 @@ export type INewsFilter = {
   take?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type INewsWhereInput = {
+  AND?: InputMaybe<Array<INewsWhereInput>>;
+  NOT?: InputMaybe<Array<INewsWhereInput>>;
+  OR?: InputMaybe<Array<INewsWhereInput>>;
+  content?: InputMaybe<IStringFilter>;
+  date?: InputMaybe<IDateTimeFilter>;
+  description?: InputMaybe<IStringFilter>;
+  lang?: InputMaybe<IStringFilter>;
+  title?: InputMaybe<IStringFilter>;
+};
+
+export enum INullsOrder {
+  First = 'first',
+  Last = 'last'
+}
+
 export type IPartner = {
   name: Scalars['String']['output'];
   order: Scalars['Int']['output'];
@@ -1702,6 +1880,12 @@ export type IPasswordResetUseInput = {
 export type IPasswordResetUseResponse = {
   entity?: Maybe<Scalars['Boolean']['output']>;
   errors?: Maybe<Array<IFieldError>>;
+};
+
+export type IPasswordResetWhereInput = {
+  AND?: InputMaybe<Array<IPasswordResetWhereInput>>;
+  NOT?: InputMaybe<Array<IPasswordResetWhereInput>>;
+  OR?: InputMaybe<Array<IPasswordResetWhereInput>>;
 };
 
 export type IPresenterCreateInput = {
@@ -1760,13 +1944,20 @@ export type IPressReleaseWhereInput = {
   OR?: InputMaybe<Array<IPressReleaseWhereInput>>;
   creator?: InputMaybe<IUserRelationFilter>;
   file?: InputMaybe<IFileRelationFilter>;
-  forSeason?: InputMaybe<ISeasonRelationFilter>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
   published?: InputMaybe<IDateTimeFilter>;
   title?: InputMaybe<IStringFilter>;
 };
 
 export type IPressReleaseWhereUniqueInput = {
-  uid: Scalars['String']['input'];
+  AND?: InputMaybe<Array<IPressReleaseWhereInput>>;
+  NOT?: InputMaybe<Array<IPressReleaseWhereInput>>;
+  OR?: InputMaybe<Array<IPressReleaseWhereInput>>;
+  creator?: InputMaybe<IUserRelationFilter>;
+  file?: InputMaybe<IFileRelationFilter>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
+  published?: InputMaybe<IDateTimeFilter>;
+  title?: InputMaybe<IStringFilter>;
 };
 
 export type IPressReleaseWithFilesCreateInput = {
@@ -2128,6 +2319,51 @@ export type IResumeCount = {
   workExperiences: Scalars['Int']['output'];
 };
 
+
+export type IResumeCountEntryLogArgs = {
+  where?: InputMaybe<IEntryResumeLogWhereInput>;
+};
+
+
+export type IResumeCountFavouriteResumesArgs = {
+  where?: InputMaybe<IFavouriteResumeWhereInput>;
+};
+
+
+export type IResumeCountInterestsArgs = {
+  where?: InputMaybe<IResumeInterestWhereInput>;
+};
+
+
+export type IResumeCountProjectsArgs = {
+  where?: InputMaybe<IResumeProjectWhereInput>;
+};
+
+
+export type IResumeCountScannedResumesArgs = {
+  where?: InputMaybe<IScannedResumeWhereInput>;
+};
+
+
+export type IResumeCountStudyYearsArgs = {
+  where?: InputMaybe<IResumeStudyYearWhereInput>;
+};
+
+
+export type IResumeCountTechnologiesArgs = {
+  where?: InputMaybe<IResumeTechnologyWhereInput>;
+};
+
+
+export type IResumeCountVolunteerExperiencesArgs = {
+  where?: InputMaybe<IResumeVolunteerExperienceWhereInput>;
+};
+
+
+export type IResumeCountWorkExperiencesArgs = {
+  where?: InputMaybe<IResumeWorkExperienceWhereInput>;
+};
+
 export type IResumeCreateCvInput = {
   cv?: InputMaybe<Scalars['Upload']['input']>;
   keepOld: Scalars['Boolean']['input'];
@@ -2162,6 +2398,11 @@ export type IResumeFacultyCreateInput = {
   name: Scalars['String']['input'];
 };
 
+export type IResumeFacultyNullableRelationFilter = {
+  is?: InputMaybe<IResumeFacultyWhereInput>;
+  isNot?: InputMaybe<IResumeFacultyWhereInput>;
+};
+
 export enum IResumeFacultyOrderByRelevanceFieldEnum {
   Module = 'module',
   Name = 'name',
@@ -2179,11 +2420,6 @@ export type IResumeFacultyOrderByWithRelationAndSearchRelevanceInput = {
   module?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
   specialization?: InputMaybe<ISortOrder>;
-};
-
-export type IResumeFacultyRelationFilter = {
-  is?: InputMaybe<IResumeFacultyWhereInput>;
-  isNot?: InputMaybe<IResumeFacultyWhereInput>;
 };
 
 export type IResumeFacultyWhereInput = {
@@ -2369,7 +2605,7 @@ export type IResumeWhereInput = {
   OR?: InputMaybe<Array<IResumeWhereInput>>;
   city?: InputMaybe<IStringFilter>;
   extraField?: InputMaybe<IStringFilter>;
-  faculty?: InputMaybe<IResumeFacultyRelationFilter>;
+  faculty?: InputMaybe<IResumeFacultyNullableRelationFilter>;
   interests?: InputMaybe<IResumeInterestListRelationFilter>;
   projects?: InputMaybe<IResumeProjectListRelationFilter>;
   studyYears?: InputMaybe<IResumeStudyYearListRelationFilter>;
@@ -2423,6 +2659,11 @@ export type IRoleCount = {
   users: Scalars['Int']['output'];
 };
 
+
+export type IRoleCountUsersArgs = {
+  where?: InputMaybe<IUserWhereInput>;
+};
+
 export enum IRoleOrderByRelevanceFieldEnum {
   Name = 'name'
 }
@@ -2453,7 +2694,16 @@ export type IRoleWhereInput = {
 };
 
 export type IRoleWhereUniqueInput = {
+  AND?: InputMaybe<Array<IRoleWhereInput>>;
+  NOT?: InputMaybe<Array<IRoleWhereInput>>;
+  OR?: InputMaybe<Array<IRoleWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type IScannedResumeWhereInput = {
+  AND?: InputMaybe<Array<IScannedResumeWhereInput>>;
+  NOT?: InputMaybe<Array<IScannedResumeWhereInput>>;
+  OR?: InputMaybe<Array<IScannedResumeWhereInput>>;
 };
 
 export type ISearchResponseStringArray = {
@@ -2505,6 +2755,61 @@ export type ISeasonCount = {
   talkCategories: Scalars['Int']['output'];
 };
 
+
+export type ISeasonCountCalendarArgs = {
+  where?: InputMaybe<ICalendarItemWhereInput>;
+};
+
+
+export type ISeasonCountCompaniesArgs = {
+  where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+
+export type ISeasonCountEntryLogArgs = {
+  where?: InputMaybe<IEntryResumeLogWhereInput>;
+};
+
+
+export type ISeasonCountFavouriteResumesArgs = {
+  where?: InputMaybe<IFavouriteResumeWhereInput>;
+};
+
+
+export type ISeasonCountGateGuardianLogArgs = {
+  where?: InputMaybe<IGateGuardianLogWhereInput>;
+};
+
+
+export type ISeasonCountPartnersArgs = {
+  where?: InputMaybe<IPartnerWhereInput>;
+};
+
+
+export type ISeasonCountPressReleasesArgs = {
+  where?: InputMaybe<IPressReleaseWhereInput>;
+};
+
+
+export type ISeasonCountScannedResumesArgs = {
+  where?: InputMaybe<IScannedResumeWhereInput>;
+};
+
+
+export type ISeasonCountScannedUsersArgs = {
+  where?: InputMaybe<ICompanyScannedUserWhereInput>;
+};
+
+
+export type ISeasonCountSponsorsArgs = {
+  where?: InputMaybe<ISponsorWhereInput>;
+};
+
+
+export type ISeasonCountTalkCategoriesArgs = {
+  where?: InputMaybe<IApplicationTalkCategoryWhereInput>;
+};
+
 export type ISeasonCreateInput = {
   applicationsEditableFrom: Scalars['DateTimeISO']['input'];
   applicationsEditableUntil: Scalars['DateTimeISO']['input'];
@@ -2525,6 +2830,11 @@ export type ISeasonCreateInput = {
   showSponsorsFrom: Scalars['DateTimeISO']['input'];
   showSponsorsUntil: Scalars['DateTimeISO']['input'];
   startsAt: Scalars['DateTimeISO']['input'];
+};
+
+export type ISeasonNullableRelationFilter = {
+  is?: InputMaybe<ISeasonWhereInput>;
+  isNot?: InputMaybe<ISeasonWhereInput>;
 };
 
 export enum ISeasonOrderByRelevanceFieldEnum {
@@ -2653,6 +2963,34 @@ export type ISeasonWhereInput = {
 };
 
 export type ISeasonWhereUniqueInput = {
+  AND?: InputMaybe<Array<ISeasonWhereInput>>;
+  NOT?: InputMaybe<Array<ISeasonWhereInput>>;
+  OR?: InputMaybe<Array<ISeasonWhereInput>>;
+  applicationsEditableFrom?: InputMaybe<IDateTimeFilter>;
+  applicationsEditableUntil?: InputMaybe<IDateTimeFilter>;
+  applicationsFrom?: InputMaybe<IDateTimeFilter>;
+  applicationsUntil?: InputMaybe<IDateTimeFilter>;
+  calendar?: InputMaybe<ICalendarItemListRelationFilter>;
+  companies?: InputMaybe<ICompanyApplicationListRelationFilter>;
+  endsAt?: InputMaybe<IDateTimeFilter>;
+  eventFrom?: InputMaybe<IDateTimeFilter>;
+  eventUntil?: InputMaybe<IDateTimeFilter>;
+  feedbackFrom?: InputMaybe<IDateTimeFilter>;
+  feedbackUntil?: InputMaybe<IDateTimeFilter>;
+  gateGuardianLog?: InputMaybe<IGateGuardianLogListRelationFilter>;
+  name?: InputMaybe<IStringFilter>;
+  partners?: InputMaybe<IPartnerListRelationFilter>;
+  scannedUsers?: InputMaybe<ICompanyScannedUserListRelationFilter>;
+  scheduleFrom?: InputMaybe<IDateTimeFilter>;
+  scheduleUntil?: InputMaybe<IDateTimeFilter>;
+  showParticipantsFrom?: InputMaybe<IDateTimeFilter>;
+  showParticipantsUntil?: InputMaybe<IDateTimeFilter>;
+  showPartnersFrom?: InputMaybe<IDateTimeFilter>;
+  showPartnersUntil?: InputMaybe<IDateTimeFilter>;
+  showSponsorsFrom?: InputMaybe<IDateTimeFilter>;
+  showSponsorsUntil?: InputMaybe<IDateTimeFilter>;
+  sponsors?: InputMaybe<ISponsorListRelationFilter>;
+  startsAt?: InputMaybe<IDateTimeFilter>;
   uid?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2668,6 +3006,11 @@ export enum ISortOrder {
   Asc = 'asc',
   Desc = 'desc'
 }
+
+export type ISortOrderInput = {
+  nulls?: InputMaybe<INullsOrder>;
+  sort: ISortOrder;
+};
 
 export type ISponsor = {
   name: Scalars['String']['output'];
@@ -2812,7 +3155,13 @@ export type ITranslationWhereInput = {
 };
 
 export type ITranslationWhereUniqueInput = {
+  AND?: InputMaybe<Array<ITranslationWhereInput>>;
+  NOT?: InputMaybe<Array<ITranslationWhereInput>>;
+  OR?: InputMaybe<Array<ITranslationWhereInput>>;
+  key?: InputMaybe<IStringFilter>;
   key_language?: InputMaybe<ITranslationKeyLanguageCompoundUniqueInput>;
+  language?: InputMaybe<IStringFilter>;
+  value?: InputMaybe<IStringFilter>;
 };
 
 export type IUpdatePasswordResponse = {
@@ -2858,6 +3207,71 @@ export type IUserCount = {
   scannedUsers: Scalars['Int']['output'];
 };
 
+
+export type IUserCountNewsArgs = {
+  where?: InputMaybe<INewsWhereInput>;
+};
+
+
+export type IUserCountCompaniesArgs = {
+  where?: InputMaybe<ICompanyWhereInput>;
+};
+
+
+export type IUserCountEventsArgs = {
+  where?: InputMaybe<IEventLogWhereInput>;
+};
+
+
+export type IUserCountFilesArgs = {
+  where?: InputMaybe<IFileWhereInput>;
+};
+
+
+export type IUserCountGateGuardianEntryLogArgs = {
+  where?: InputMaybe<IGateGuardianLogWhereInput>;
+};
+
+
+export type IUserCountGateGuardianScannedLogArgs = {
+  where?: InputMaybe<IGateGuardianLogWhereInput>;
+};
+
+
+export type IUserCountImagesArgs = {
+  where?: InputMaybe<IImageWhereInput>;
+};
+
+
+export type IUserCountPasswordResetsArgs = {
+  where?: InputMaybe<IPasswordResetWhereInput>;
+};
+
+
+export type IUserCountPressReleasesArgs = {
+  where?: InputMaybe<IPressReleaseWhereInput>;
+};
+
+
+export type IUserCountReservationsArgs = {
+  where?: InputMaybe<IEventReservationWhereInput>;
+};
+
+
+export type IUserCountRolesArgs = {
+  where?: InputMaybe<IRoleWhereInput>;
+};
+
+
+export type IUserCountScannedEntriesArgs = {
+  where?: InputMaybe<IEntryResumeLogWhereInput>;
+};
+
+
+export type IUserCountScannedUsersArgs = {
+  where?: InputMaybe<ICompanyScannedUserWhereInput>;
+};
+
 export type IUserCreateInput = {
   email: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
@@ -2865,7 +3279,11 @@ export type IUserCreateInput = {
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<IEventReservationCreateNestedManyWithoutUserInput>;
+};
+
+export type IUserNullableRelationFilter = {
+  is?: InputMaybe<IUserWhereInput>;
+  isNot?: InputMaybe<IUserWhereInput>;
 };
 
 export enum IUserOrderByRelevanceFieldEnum {
@@ -2892,7 +3310,6 @@ export type IUserOrderByWithRelationAndSearchRelevanceInput = {
   lastName?: InputMaybe<ISortOrder>;
   password?: InputMaybe<ISortOrder>;
   phone?: InputMaybe<ISortOrder>;
-  reservations?: InputMaybe<IEventReservationOrderByRelationAggregateInput>;
 };
 
 export type IUserRegisterInput = {
@@ -2903,7 +3320,6 @@ export type IUserRegisterInput = {
   password: Scalars['String']['input'];
   passwordRepeat: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<IEventReservationCreateNestedManyWithoutUserInput>;
 };
 
 export type IUserRelationFilter = {
@@ -2932,7 +3348,6 @@ export type IUserUpdateInput = {
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<IEventReservationCreateNestedManyWithoutUserInput>;
   roles: Array<Scalars['String']['input']>;
 };
 
@@ -2946,11 +3361,18 @@ export type IUserWhereInput = {
   lastName?: InputMaybe<IStringFilter>;
   password?: InputMaybe<IStringFilter>;
   phone?: InputMaybe<IStringFilter>;
-  reservations?: InputMaybe<IEventReservationListRelationFilter>;
 };
 
 export type IUserWhereUniqueInput = {
+  AND?: InputMaybe<Array<IUserWhereInput>>;
+  NOT?: InputMaybe<Array<IUserWhereInput>>;
+  OR?: InputMaybe<Array<IUserWhereInput>>;
   email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<IStringFilter>;
+  language?: InputMaybe<IStringFilter>;
+  lastName?: InputMaybe<IStringFilter>;
+  password?: InputMaybe<IStringFilter>;
+  phone?: InputMaybe<IStringFilter>;
 };
 
 export type IValidateVatResponse = {
@@ -4267,10 +4689,10 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type IResolversTypes = {
   ApplicationCocktail: ResolverTypeWrapper<IApplicationCocktail>;
   ApplicationCocktailCount: ResolverTypeWrapper<IApplicationCocktailCount>;
+  ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
   ApplicationCocktailOrderByRelevanceFieldEnum: IApplicationCocktailOrderByRelevanceFieldEnum;
   ApplicationCocktailOrderByRelevanceInput: IApplicationCocktailOrderByRelevanceInput;
   ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput: IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationCocktailRelationFilter: IApplicationCocktailRelationFilter;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: ResolverTypeWrapper<IApplicationPresenter>;
   ApplicationPresenterCount: ResolverTypeWrapper<IApplicationPresenterCount>;
@@ -4289,17 +4711,17 @@ export type IResolversTypes = {
   ApplicationTalkCategoryWhereInput: IApplicationTalkCategoryWhereInput;
   ApplicationTalkCategoryWhereUniqueInput: IApplicationTalkCategoryWhereUniqueInput;
   ApplicationTalkCount: ResolverTypeWrapper<IApplicationTalkCount>;
+  ApplicationTalkNullableRelationFilter: IApplicationTalkNullableRelationFilter;
   ApplicationTalkOrderByRelevanceFieldEnum: IApplicationTalkOrderByRelevanceFieldEnum;
   ApplicationTalkOrderByRelevanceInput: IApplicationTalkOrderByRelevanceInput;
   ApplicationTalkOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationTalkRelationFilter: IApplicationTalkRelationFilter;
   ApplicationTalkWhereInput: IApplicationTalkWhereInput;
   ApplicationWorkshop: ResolverTypeWrapper<IApplicationWorkshop>;
   ApplicationWorkshopCount: ResolverTypeWrapper<IApplicationWorkshopCount>;
+  ApplicationWorkshopNullableRelationFilter: IApplicationWorkshopNullableRelationFilter;
   ApplicationWorkshopOrderByRelevanceFieldEnum: IApplicationWorkshopOrderByRelevanceFieldEnum;
   ApplicationWorkshopOrderByRelevanceInput: IApplicationWorkshopOrderByRelevanceInput;
   ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput: IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationWorkshopRelationFilter: IApplicationWorkshopRelationFilter;
   ApplicationWorkshopWhereInput: IApplicationWorkshopWhereInput;
   ApproveCompanyApplicationsInput: IApproveCompanyApplicationsInput;
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
@@ -4311,19 +4733,19 @@ export type IResolversTypes = {
   CalendarFilterInput: ICalendarFilterInput;
   CalendarItem: ResolverTypeWrapper<ICalendarItem>;
   CalendarItemListRelationFilter: ICalendarItemListRelationFilter;
+  CalendarItemNullableRelationFilter: ICalendarItemNullableRelationFilter;
   CalendarItemOrderByRelationAggregateInput: ICalendarItemOrderByRelationAggregateInput;
   CalendarItemOrderByRelevanceFieldEnum: ICalendarItemOrderByRelevanceFieldEnum;
   CalendarItemOrderByRelevanceInput: ICalendarItemOrderByRelevanceInput;
   CalendarItemOrderByWithRelationAndSearchRelevanceInput: ICalendarItemOrderByWithRelationAndSearchRelevanceInput;
-  CalendarItemRelationFilter: ICalendarItemRelationFilter;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailCreateInput: ICocktailCreateInput;
   Company: ResolverTypeWrapper<ICompany>;
   CompanyApplication: ResolverTypeWrapper<ICompanyApplication>;
   CompanyApplicationApproval: ResolverTypeWrapper<ICompanyApplicationApproval>;
+  CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
   CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput;
-  CompanyApplicationApprovalRelationFilter: ICompanyApplicationApprovalRelationFilter;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationCount: ResolverTypeWrapper<ICompanyApplicationCount>;
@@ -4345,10 +4767,10 @@ export type IResolversTypes = {
   CompanyOrderByWithRelationAndSearchRelevanceInput: ICompanyOrderByWithRelationAndSearchRelevanceInput;
   CompanyPanel: ResolverTypeWrapper<ICompanyPanel>;
   CompanyPanelCount: ResolverTypeWrapper<ICompanyPanelCount>;
+  CompanyPanelNullableRelationFilter: ICompanyPanelNullableRelationFilter;
   CompanyPanelOrderByRelevanceFieldEnum: ICompanyPanelOrderByRelevanceFieldEnum;
   CompanyPanelOrderByRelevanceInput: ICompanyPanelOrderByRelevanceInput;
   CompanyPanelOrderByWithRelationAndSearchRelevanceInput: ICompanyPanelOrderByWithRelationAndSearchRelevanceInput;
-  CompanyPanelRelationFilter: ICompanyPanelRelationFilter;
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ResolverTypeWrapper<ICompanyProgram>;
@@ -4372,26 +4794,20 @@ export type IResolversTypes = {
   DateTimeISO: ResolverTypeWrapper<Scalars['DateTimeISO']['output']>;
   DateTimeNullableFilter: IDateTimeNullableFilter;
   EditApprovedCompanyApplicationResponse: ResolverTypeWrapper<IEditApprovedCompanyApplicationResponse>;
+  EntryResumeLogWhereInput: IEntryResumeLogWhereInput;
   EventLog: ResolverTypeWrapper<IEventLog>;
   EventLogOrderByRelevanceFieldEnum: IEventLogOrderByRelevanceFieldEnum;
   EventLogOrderByRelevanceInput: IEventLogOrderByRelevanceInput;
   EventLogOrderByWithRelationAndSearchRelevanceInput: IEventLogOrderByWithRelationAndSearchRelevanceInput;
   EventLogPaginationResult: ResolverTypeWrapper<IEventLogPaginationResult>;
-  EventReservationCreateManyUserInput: IEventReservationCreateManyUserInput;
-  EventReservationCreateManyUserInputEnvelope: IEventReservationCreateManyUserInputEnvelope;
-  EventReservationCreateNestedManyWithoutUserInput: IEventReservationCreateNestedManyWithoutUserInput;
-  EventReservationCreateOrConnectWithoutUserInput: IEventReservationCreateOrConnectWithoutUserInput;
-  EventReservationCreateWithoutUserInput: IEventReservationCreateWithoutUserInput;
-  EventReservationEventIdEventTypeUserIdCompoundUniqueInput: IEventReservationEventIdEventTypeUserIdCompoundUniqueInput;
-  EventReservationListRelationFilter: IEventReservationListRelationFilter;
-  EventReservationOrderByRelationAggregateInput: IEventReservationOrderByRelationAggregateInput;
+  EventLogWhereInput: IEventLogWhereInput;
   EventReservationResponse: ResolverTypeWrapper<IEventReservationResponse>;
   EventReservationStatus: ResolverTypeWrapper<IEventReservationStatus>;
   EventReservationUpdateInput: IEventReservationUpdateInput;
   EventReservationWhereInput: IEventReservationWhereInput;
-  EventReservationWhereUniqueInput: IEventReservationWhereUniqueInput;
   EventType: IEventType;
   EventUserApplications: ResolverTypeWrapper<IEventUserApplications>;
+  FavouriteResumeWhereInput: IFavouriteResumeWhereInput;
   FieldError: ResolverTypeWrapper<IFieldError>;
   File: ResolverTypeWrapper<IFile>;
   FileCount: ResolverTypeWrapper<IFileCount>;
@@ -4408,6 +4824,7 @@ export type IResolversTypes = {
   GateGuardianScanResponse: ResolverTypeWrapper<IGateGuardianScanResponse>;
   Image: ResolverTypeWrapper<IImage>;
   ImageCount: ResolverTypeWrapper<IImageCount>;
+  ImageNullableRelationFilter: IImageNullableRelationFilter;
   ImageRelationFilter: IImageRelationFilter;
   ImageVariation: ResolverTypeWrapper<IImageVariation>;
   ImageVariationCount: ResolverTypeWrapper<IImageVariationCount>;
@@ -4424,17 +4841,21 @@ export type IResolversTypes = {
   IndustryWhereUniqueInput: IIndustryWhereUniqueInput;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilter: IIntFilter;
+  IntNullableFilter: IIntNullableFilter;
   Mutation: ResolverTypeWrapper<{}>;
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
   NestedIntFilter: INestedIntFilter;
+  NestedIntNullableFilter: INestedIntNullableFilter;
   NestedStringFilter: INestedStringFilter;
   NestedStringNullableFilter: INestedStringNullableFilter;
   News: ResolverTypeWrapper<INews>;
   NewsCreateInput: INewsCreateInput;
   NewsCreateResponse: ResolverTypeWrapper<INewsCreateResponse>;
   NewsFilter: INewsFilter;
+  NewsWhereInput: INewsWhereInput;
+  NullsOrder: INullsOrder;
   Partner: ResolverTypeWrapper<IPartner>;
   PartnerCreateInput: IPartnerCreateInput;
   PartnerListRelationFilter: IPartnerListRelationFilter;
@@ -4442,6 +4863,7 @@ export type IResolversTypes = {
   PartnerWhereInput: IPartnerWhereInput;
   PasswordResetUseInput: IPasswordResetUseInput;
   PasswordResetUseResponse: ResolverTypeWrapper<IPasswordResetUseResponse>;
+  PasswordResetWhereInput: IPasswordResetWhereInput;
   PresenterCreateInput: IPresenterCreateInput;
   PressRelease: ResolverTypeWrapper<IPressRelease>;
   PressReleaseOrderByRelevanceFieldEnum: IPressReleaseOrderByRelevanceFieldEnum;
@@ -4461,10 +4883,10 @@ export type IResolversTypes = {
   ResumeCreateResponse: ResolverTypeWrapper<IResumeCreateResponse>;
   ResumeFaculty: ResolverTypeWrapper<IResumeFaculty>;
   ResumeFacultyCreateInput: IResumeFacultyCreateInput;
+  ResumeFacultyNullableRelationFilter: IResumeFacultyNullableRelationFilter;
   ResumeFacultyOrderByRelevanceFieldEnum: IResumeFacultyOrderByRelevanceFieldEnum;
   ResumeFacultyOrderByRelevanceInput: IResumeFacultyOrderByRelevanceInput;
   ResumeFacultyOrderByWithRelationAndSearchRelevanceInput: IResumeFacultyOrderByWithRelationAndSearchRelevanceInput;
-  ResumeFacultyRelationFilter: IResumeFacultyRelationFilter;
   ResumeFacultyWhereInput: IResumeFacultyWhereInput;
   ResumeFindManyInput: IResumeFindManyInput;
   ResumeInterestListRelationFilter: IResumeInterestListRelationFilter;
@@ -4506,10 +4928,12 @@ export type IResolversTypes = {
   RoleScalarFieldEnum: IRoleScalarFieldEnum;
   RoleWhereInput: IRoleWhereInput;
   RoleWhereUniqueInput: IRoleWhereUniqueInput;
+  ScannedResumeWhereInput: IScannedResumeWhereInput;
   SearchResponseStringArray: ResolverTypeWrapper<ISearchResponseStringArray>;
   Season: ResolverTypeWrapper<ISeason>;
   SeasonCount: ResolverTypeWrapper<ISeasonCount>;
   SeasonCreateInput: ISeasonCreateInput;
+  SeasonNullableRelationFilter: ISeasonNullableRelationFilter;
   SeasonOrderByRelevanceFieldEnum: ISeasonOrderByRelevanceFieldEnum;
   SeasonOrderByRelevanceInput: ISeasonOrderByRelevanceInput;
   SeasonOrderByWithRelationAndSearchRelevanceInput: ISeasonOrderByWithRelationAndSearchRelevanceInput;
@@ -4520,6 +4944,7 @@ export type IResolversTypes = {
   SeasonWhereUniqueInput: ISeasonWhereUniqueInput;
   Session: ResolverTypeWrapper<ISession>;
   SortOrder: ISortOrder;
+  SortOrderInput: ISortOrderInput;
   Sponsor: ResolverTypeWrapper<ISponsor>;
   SponsorCreateInput: ISponsorCreateInput;
   SponsorListRelationFilter: ISponsorListRelationFilter;
@@ -4545,6 +4970,7 @@ export type IResolversTypes = {
   User: ResolverTypeWrapper<IUser>;
   UserCount: ResolverTypeWrapper<IUserCount>;
   UserCreateInput: IUserCreateInput;
+  UserNullableRelationFilter: IUserNullableRelationFilter;
   UserOrderByRelevanceFieldEnum: IUserOrderByRelevanceFieldEnum;
   UserOrderByRelevanceInput: IUserOrderByRelevanceInput;
   UserOrderByWithRelationAndSearchRelevanceInput: IUserOrderByWithRelationAndSearchRelevanceInput;
@@ -4564,9 +4990,9 @@ export type IResolversTypes = {
 export type IResolversParentTypes = {
   ApplicationCocktail: IApplicationCocktail;
   ApplicationCocktailCount: IApplicationCocktailCount;
+  ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
   ApplicationCocktailOrderByRelevanceInput: IApplicationCocktailOrderByRelevanceInput;
   ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput: IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationCocktailRelationFilter: IApplicationCocktailRelationFilter;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: IApplicationPresenter;
   ApplicationPresenterCount: IApplicationPresenterCount;
@@ -4583,15 +5009,15 @@ export type IResolversParentTypes = {
   ApplicationTalkCategoryWhereInput: IApplicationTalkCategoryWhereInput;
   ApplicationTalkCategoryWhereUniqueInput: IApplicationTalkCategoryWhereUniqueInput;
   ApplicationTalkCount: IApplicationTalkCount;
+  ApplicationTalkNullableRelationFilter: IApplicationTalkNullableRelationFilter;
   ApplicationTalkOrderByRelevanceInput: IApplicationTalkOrderByRelevanceInput;
   ApplicationTalkOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationTalkRelationFilter: IApplicationTalkRelationFilter;
   ApplicationTalkWhereInput: IApplicationTalkWhereInput;
   ApplicationWorkshop: IApplicationWorkshop;
   ApplicationWorkshopCount: IApplicationWorkshopCount;
+  ApplicationWorkshopNullableRelationFilter: IApplicationWorkshopNullableRelationFilter;
   ApplicationWorkshopOrderByRelevanceInput: IApplicationWorkshopOrderByRelevanceInput;
   ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput: IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput;
-  ApplicationWorkshopRelationFilter: IApplicationWorkshopRelationFilter;
   ApplicationWorkshopWhereInput: IApplicationWorkshopWhereInput;
   ApproveCompanyApplicationsInput: IApproveCompanyApplicationsInput;
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
@@ -4603,18 +5029,18 @@ export type IResolversParentTypes = {
   CalendarFilterInput: ICalendarFilterInput;
   CalendarItem: ICalendarItem;
   CalendarItemListRelationFilter: ICalendarItemListRelationFilter;
+  CalendarItemNullableRelationFilter: ICalendarItemNullableRelationFilter;
   CalendarItemOrderByRelationAggregateInput: ICalendarItemOrderByRelationAggregateInput;
   CalendarItemOrderByRelevanceInput: ICalendarItemOrderByRelevanceInput;
   CalendarItemOrderByWithRelationAndSearchRelevanceInput: ICalendarItemOrderByWithRelationAndSearchRelevanceInput;
-  CalendarItemRelationFilter: ICalendarItemRelationFilter;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailCreateInput: ICocktailCreateInput;
   Company: ICompany;
   CompanyApplication: ICompanyApplication;
   CompanyApplicationApproval: ICompanyApplicationApproval;
+  CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
   CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput;
-  CompanyApplicationApprovalRelationFilter: ICompanyApplicationApprovalRelationFilter;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationCount: ICompanyApplicationCount;
@@ -4633,9 +5059,9 @@ export type IResolversParentTypes = {
   CompanyOrderByWithRelationAndSearchRelevanceInput: ICompanyOrderByWithRelationAndSearchRelevanceInput;
   CompanyPanel: ICompanyPanel;
   CompanyPanelCount: ICompanyPanelCount;
+  CompanyPanelNullableRelationFilter: ICompanyPanelNullableRelationFilter;
   CompanyPanelOrderByRelevanceInput: ICompanyPanelOrderByRelevanceInput;
   CompanyPanelOrderByWithRelationAndSearchRelevanceInput: ICompanyPanelOrderByWithRelationAndSearchRelevanceInput;
-  CompanyPanelRelationFilter: ICompanyPanelRelationFilter;
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ICompanyProgram;
@@ -4658,24 +5084,18 @@ export type IResolversParentTypes = {
   DateTimeISO: Scalars['DateTimeISO']['output'];
   DateTimeNullableFilter: IDateTimeNullableFilter;
   EditApprovedCompanyApplicationResponse: IEditApprovedCompanyApplicationResponse;
+  EntryResumeLogWhereInput: IEntryResumeLogWhereInput;
   EventLog: IEventLog;
   EventLogOrderByRelevanceInput: IEventLogOrderByRelevanceInput;
   EventLogOrderByWithRelationAndSearchRelevanceInput: IEventLogOrderByWithRelationAndSearchRelevanceInput;
   EventLogPaginationResult: IEventLogPaginationResult;
-  EventReservationCreateManyUserInput: IEventReservationCreateManyUserInput;
-  EventReservationCreateManyUserInputEnvelope: IEventReservationCreateManyUserInputEnvelope;
-  EventReservationCreateNestedManyWithoutUserInput: IEventReservationCreateNestedManyWithoutUserInput;
-  EventReservationCreateOrConnectWithoutUserInput: IEventReservationCreateOrConnectWithoutUserInput;
-  EventReservationCreateWithoutUserInput: IEventReservationCreateWithoutUserInput;
-  EventReservationEventIdEventTypeUserIdCompoundUniqueInput: IEventReservationEventIdEventTypeUserIdCompoundUniqueInput;
-  EventReservationListRelationFilter: IEventReservationListRelationFilter;
-  EventReservationOrderByRelationAggregateInput: IEventReservationOrderByRelationAggregateInput;
+  EventLogWhereInput: IEventLogWhereInput;
   EventReservationResponse: IEventReservationResponse;
   EventReservationStatus: IEventReservationStatus;
   EventReservationUpdateInput: IEventReservationUpdateInput;
   EventReservationWhereInput: IEventReservationWhereInput;
-  EventReservationWhereUniqueInput: IEventReservationWhereUniqueInput;
   EventUserApplications: IEventUserApplications;
+  FavouriteResumeWhereInput: IFavouriteResumeWhereInput;
   FieldError: IFieldError;
   File: IFile;
   FileCount: IFileCount;
@@ -4691,6 +5111,7 @@ export type IResolversParentTypes = {
   GateGuardianScanResponse: IGateGuardianScanResponse;
   Image: IImage;
   ImageCount: IImageCount;
+  ImageNullableRelationFilter: IImageNullableRelationFilter;
   ImageRelationFilter: IImageRelationFilter;
   ImageVariation: IImageVariation;
   ImageVariationCount: IImageVariationCount;
@@ -4705,17 +5126,20 @@ export type IResolversParentTypes = {
   IndustryWhereUniqueInput: IIndustryWhereUniqueInput;
   Int: Scalars['Int']['output'];
   IntFilter: IIntFilter;
+  IntNullableFilter: IIntNullableFilter;
   Mutation: {};
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
   NestedIntFilter: INestedIntFilter;
+  NestedIntNullableFilter: INestedIntNullableFilter;
   NestedStringFilter: INestedStringFilter;
   NestedStringNullableFilter: INestedStringNullableFilter;
   News: INews;
   NewsCreateInput: INewsCreateInput;
   NewsCreateResponse: INewsCreateResponse;
   NewsFilter: INewsFilter;
+  NewsWhereInput: INewsWhereInput;
   Partner: IPartner;
   PartnerCreateInput: IPartnerCreateInput;
   PartnerListRelationFilter: IPartnerListRelationFilter;
@@ -4723,6 +5147,7 @@ export type IResolversParentTypes = {
   PartnerWhereInput: IPartnerWhereInput;
   PasswordResetUseInput: IPasswordResetUseInput;
   PasswordResetUseResponse: IPasswordResetUseResponse;
+  PasswordResetWhereInput: IPasswordResetWhereInput;
   PresenterCreateInput: IPresenterCreateInput;
   PressRelease: IPressRelease;
   PressReleaseOrderByRelevanceInput: IPressReleaseOrderByRelevanceInput;
@@ -4739,9 +5164,9 @@ export type IResolversParentTypes = {
   ResumeCreateResponse: IResumeCreateResponse;
   ResumeFaculty: IResumeFaculty;
   ResumeFacultyCreateInput: IResumeFacultyCreateInput;
+  ResumeFacultyNullableRelationFilter: IResumeFacultyNullableRelationFilter;
   ResumeFacultyOrderByRelevanceInput: IResumeFacultyOrderByRelevanceInput;
   ResumeFacultyOrderByWithRelationAndSearchRelevanceInput: IResumeFacultyOrderByWithRelationAndSearchRelevanceInput;
-  ResumeFacultyRelationFilter: IResumeFacultyRelationFilter;
   ResumeFacultyWhereInput: IResumeFacultyWhereInput;
   ResumeFindManyInput: IResumeFindManyInput;
   ResumeInterestListRelationFilter: IResumeInterestListRelationFilter;
@@ -4780,10 +5205,12 @@ export type IResolversParentTypes = {
   RoleOrderByWithRelationAndSearchRelevanceInput: IRoleOrderByWithRelationAndSearchRelevanceInput;
   RoleWhereInput: IRoleWhereInput;
   RoleWhereUniqueInput: IRoleWhereUniqueInput;
+  ScannedResumeWhereInput: IScannedResumeWhereInput;
   SearchResponseStringArray: ISearchResponseStringArray;
   Season: ISeason;
   SeasonCount: ISeasonCount;
   SeasonCreateInput: ISeasonCreateInput;
+  SeasonNullableRelationFilter: ISeasonNullableRelationFilter;
   SeasonOrderByRelevanceInput: ISeasonOrderByRelevanceInput;
   SeasonOrderByWithRelationAndSearchRelevanceInput: ISeasonOrderByWithRelationAndSearchRelevanceInput;
   SeasonRelationFilter: ISeasonRelationFilter;
@@ -4791,6 +5218,7 @@ export type IResolversParentTypes = {
   SeasonWhereInput: ISeasonWhereInput;
   SeasonWhereUniqueInput: ISeasonWhereUniqueInput;
   Session: ISession;
+  SortOrderInput: ISortOrderInput;
   Sponsor: ISponsor;
   SponsorCreateInput: ISponsorCreateInput;
   SponsorListRelationFilter: ISponsorListRelationFilter;
@@ -4814,6 +5242,7 @@ export type IResolversParentTypes = {
   User: IUser;
   UserCount: IUserCount;
   UserCreateInput: IUserCreateInput;
+  UserNullableRelationFilter: IUserNullableRelationFilter;
   UserOrderByRelevanceInput: IUserOrderByRelevanceInput;
   UserOrderByWithRelationAndSearchRelevanceInput: IUserOrderByWithRelationAndSearchRelevanceInput;
   UserRegisterInput: IUserRegisterInput;
@@ -4836,7 +5265,7 @@ export type IApplicationCocktailResolvers<ContextType = any, ParentType extends 
 };
 
 export type IApplicationCocktailCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationCocktailCount'] = IResolversParentTypes['ApplicationCocktailCount']> = {
-  forApplication?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  forApplication?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationCocktailCountForApplicationArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4853,9 +5282,9 @@ export type IApplicationPresenterResolvers<ContextType = any, ParentType extends
 };
 
 export type IApplicationPresenterCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationPresenterCount'] = IResolversParentTypes['ApplicationPresenterCount']> = {
-  forPanels?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forTalks?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forWorkshops?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  forPanels?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationPresenterCountForPanelsArgs>>;
+  forTalks?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationPresenterCountForTalksArgs>>;
+  forWorkshops?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationPresenterCountForWorkshopsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4884,12 +5313,12 @@ export type IApplicationTalkCategoryResolvers<ContextType = any, ParentType exte
 };
 
 export type IApplicationTalkCategoryCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationTalkCategoryCount'] = IResolversParentTypes['ApplicationTalkCategoryCount']> = {
-  talks?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  talks?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationTalkCategoryCountTalksArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type IApplicationTalkCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationTalkCount'] = IResolversParentTypes['ApplicationTalkCount']> = {
-  presenters?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  presenters?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationTalkCountPresentersArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4913,7 +5342,7 @@ export type IApplicationWorkshopResolvers<ContextType = any, ParentType extends 
 };
 
 export type IApplicationWorkshopCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationWorkshopCount'] = IResolversParentTypes['ApplicationWorkshopCount']> = {
-  presenters?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  presenters?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationWorkshopCountPresentersArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5010,7 +5439,7 @@ export type ICompanyApplicationApprovalResolvers<ContextType = any, ParentType e
 };
 
 export type ICompanyApplicationCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyApplicationCount'] = IResolversParentTypes['CompanyApplicationCount']> = {
-  panelParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  panelParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyApplicationCountPanelParticipantsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5035,11 +5464,11 @@ export type ICompanyApplicationFeedbackResolvers<ContextType = any, ParentType e
 };
 
 export type ICompanyCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyCount'] = IResolversParentTypes['CompanyCount']> = {
-  applications?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  members?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  applications?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountApplicationsArgs>>;
+  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountFavouriteResumesArgs>>;
+  members?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountMembersArgs>>;
+  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountScannedResumesArgs>>;
+  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountScannedUsersArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5055,7 +5484,7 @@ export type ICompanyPanelResolvers<ContextType = any, ParentType extends IResolv
 };
 
 export type ICompanyPanelCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyPanelCount'] = IResolversParentTypes['CompanyPanelCount']> = {
-  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyPanelCountCompaniesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5180,9 +5609,9 @@ export type IFileResolvers<ContextType = any, ParentType extends IResolversParen
 };
 
 export type IFileCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['FileCount'] = IResolversParentTypes['FileCount']> = {
-  forCompany?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forPressRelease?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forResume?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  forCompany?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IFileCountForCompanyArgs>>;
+  forPressRelease?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IFileCountForPressReleaseArgs>>;
+  forResume?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IFileCountForResumeArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5218,11 +5647,11 @@ export type IImageResolvers<ContextType = any, ParentType extends IResolversPare
 };
 
 export type IImageCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ImageCount'] = IResolversParentTypes['ImageCount']> = {
-  ApplicationPresenter?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  Company?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  News?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  Partner?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  Sponsor?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  ApplicationPresenter?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountApplicationPresenterArgs>>;
+  Company?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountCompanyArgs>>;
+  News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountNewsArgs>>;
+  Partner?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountPartnerArgs>>;
+  Sponsor?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountSponsorArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5234,9 +5663,9 @@ export type IImageVariationResolvers<ContextType = any, ParentType extends IReso
 };
 
 export type IImageVariationCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ImageVariationCount'] = IResolversParentTypes['ImageVariationCount']> = {
-  forFull?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forOriginal?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  forThumb?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  forFull?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageVariationCountForFullArgs>>;
+  forOriginal?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageVariationCountForOriginalArgs>>;
+  forThumb?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageVariationCountForThumbArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5247,7 +5676,7 @@ export type IIndustryResolvers<ContextType = any, ParentType extends IResolversP
 };
 
 export type IIndustryCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['IndustryCount'] = IResolversParentTypes['IndustryCount']> = {
-  company?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  company?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IIndustryCountCompanyArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5432,15 +5861,15 @@ export type IResumeResolvers<ContextType = any, ParentType extends IResolversPar
 };
 
 export type IResumeCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ResumeCount'] = IResolversParentTypes['ResumeCount']> = {
-  entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  interests?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  projects?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  studyYears?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  technologies?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  volunteerExperiences?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  workExperiences?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountEntryLogArgs>>;
+  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountFavouriteResumesArgs>>;
+  interests?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountInterestsArgs>>;
+  projects?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountProjectsArgs>>;
+  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountScannedResumesArgs>>;
+  studyYears?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountStudyYearsArgs>>;
+  technologies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountTechnologiesArgs>>;
+  volunteerExperiences?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountVolunteerExperiencesArgs>>;
+  workExperiences?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IResumeCountWorkExperiencesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5502,7 +5931,7 @@ export type IRoleResolvers<ContextType = any, ParentType extends IResolversParen
 };
 
 export type IRoleCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['RoleCount'] = IResolversParentTypes['RoleCount']> = {
-  users?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  users?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IRoleCountUsersArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5544,17 +5973,17 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
 };
 
 export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['SeasonCount'] = IResolversParentTypes['SeasonCount']> = {
-  calendar?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  gateGuardianLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  partners?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  sponsors?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  talkCategories?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  calendar?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCalendarArgs>>;
+  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCompaniesArgs>>;
+  entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountEntryLogArgs>>;
+  favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountFavouriteResumesArgs>>;
+  gateGuardianLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountGateGuardianLogArgs>>;
+  partners?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPartnersArgs>>;
+  pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPressReleasesArgs>>;
+  scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountScannedResumesArgs>>;
+  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountScannedUsersArgs>>;
+  sponsors?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountSponsorsArgs>>;
+  talkCategories?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountTalkCategoriesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5620,19 +6049,19 @@ export type IUserResolvers<ContextType = any, ParentType extends IResolversParen
 };
 
 export type IUserCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCount'] = IResolversParentTypes['UserCount']> = {
-  News?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  events?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  files?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  gateGuardianEntryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  gateGuardianScannedLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  images?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  passwordResets?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  reservations?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  roles?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedEntries?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountNewsArgs>>;
+  companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountCompaniesArgs>>;
+  events?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountEventsArgs>>;
+  files?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountFilesArgs>>;
+  gateGuardianEntryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountGateGuardianEntryLogArgs>>;
+  gateGuardianScannedLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountGateGuardianScannedLogArgs>>;
+  images?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountImagesArgs>>;
+  passwordResets?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountPasswordResetsArgs>>;
+  pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountPressReleasesArgs>>;
+  reservations?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountReservationsArgs>>;
+  roles?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountRolesArgs>>;
+  scannedEntries?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountScannedEntriesArgs>>;
+  scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountScannedUsersArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

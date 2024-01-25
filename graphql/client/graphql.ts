@@ -42,6 +42,16 @@ export type ApplicationCocktailCount = {
   forApplication: Scalars['Int']['output'];
 };
 
+
+export type ApplicationCocktailCountForApplicationArgs = {
+  where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+export type ApplicationCocktailNullableRelationFilter = {
+  is?: InputMaybe<ApplicationCocktailWhereInput>;
+  isNot?: InputMaybe<ApplicationCocktailWhereInput>;
+};
+
 export enum ApplicationCocktailOrderByRelevanceFieldEnum {
   Colour = 'colour',
   Name = 'name'
@@ -57,11 +67,6 @@ export type ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<ApplicationCocktailOrderByRelevanceInput>;
   colour?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
-};
-
-export type ApplicationCocktailRelationFilter = {
-  is?: InputMaybe<ApplicationCocktailWhereInput>;
-  isNot?: InputMaybe<ApplicationCocktailWhereInput>;
 };
 
 export type ApplicationCocktailWhereInput = {
@@ -89,6 +94,21 @@ export type ApplicationPresenterCount = {
   forWorkshops: Scalars['Int']['output'];
 };
 
+
+export type ApplicationPresenterCountForPanelsArgs = {
+  where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+
+export type ApplicationPresenterCountForTalksArgs = {
+  where?: InputMaybe<ApplicationTalkWhereInput>;
+};
+
+
+export type ApplicationPresenterCountForWorkshopsArgs = {
+  where?: InputMaybe<ApplicationWorkshopWhereInput>;
+};
+
 export type ApplicationPresenterListRelationFilter = {
   every?: InputMaybe<ApplicationPresenterWhereInput>;
   none?: InputMaybe<ApplicationPresenterWhereInput>;
@@ -107,7 +127,7 @@ export type ApplicationPresenterWhereInput = {
   bioHr?: InputMaybe<StringFilter>;
   firstName?: InputMaybe<StringFilter>;
   lastName?: InputMaybe<StringFilter>;
-  photo?: InputMaybe<ImageRelationFilter>;
+  photo?: InputMaybe<ImageNullableRelationFilter>;
 };
 
 export type ApplicationTalk = {
@@ -134,6 +154,11 @@ export type ApplicationTalkCategory = {
 
 export type ApplicationTalkCategoryCount = {
   talks: Scalars['Int']['output'];
+};
+
+
+export type ApplicationTalkCategoryCountTalksArgs = {
+  where?: InputMaybe<ApplicationTalkWhereInput>;
 };
 
 export type ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput = {
@@ -172,16 +197,31 @@ export type ApplicationTalkCategoryWhereInput = {
   AND?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
   NOT?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
   OR?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
-  forSeason?: InputMaybe<SeasonRelationFilter>;
+  forSeason?: InputMaybe<SeasonNullableRelationFilter>;
   name?: InputMaybe<StringFilter>;
 };
 
 export type ApplicationTalkCategoryWhereUniqueInput = {
+  AND?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
+  NOT?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
+  OR?: InputMaybe<Array<ApplicationTalkCategoryWhereInput>>;
+  forSeason?: InputMaybe<SeasonNullableRelationFilter>;
   forSeasonId_name?: InputMaybe<ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput>;
+  name?: InputMaybe<StringFilter>;
 };
 
 export type ApplicationTalkCount = {
   presenters: Scalars['Int']['output'];
+};
+
+
+export type ApplicationTalkCountPresentersArgs = {
+  where?: InputMaybe<ApplicationPresenterWhereInput>;
+};
+
+export type ApplicationTalkNullableRelationFilter = {
+  is?: InputMaybe<ApplicationTalkWhereInput>;
+  isNot?: InputMaybe<ApplicationTalkWhereInput>;
 };
 
 export enum ApplicationTalkOrderByRelevanceFieldEnum {
@@ -210,11 +250,6 @@ export type ApplicationTalkOrderByWithRelationAndSearchRelevanceInput = {
   titleHr?: InputMaybe<SortOrder>;
 };
 
-export type ApplicationTalkRelationFilter = {
-  is?: InputMaybe<ApplicationTalkWhereInput>;
-  isNot?: InputMaybe<ApplicationTalkWhereInput>;
-};
-
 export type ApplicationTalkWhereInput = {
   AND?: InputMaybe<Array<ApplicationTalkWhereInput>>;
   NOT?: InputMaybe<Array<ApplicationTalkWhereInput>>;
@@ -222,7 +257,7 @@ export type ApplicationTalkWhereInput = {
   category?: InputMaybe<ApplicationTalkCategoryRelationFilter>;
   descriptionEn?: InputMaybe<StringFilter>;
   descriptionHr?: InputMaybe<StringFilter>;
-  event?: InputMaybe<CalendarItemRelationFilter>;
+  event?: InputMaybe<CalendarItemNullableRelationFilter>;
   language?: InputMaybe<StringFilter>;
   titleEn?: InputMaybe<StringFilter>;
   titleHr?: InputMaybe<StringFilter>;
@@ -248,6 +283,16 @@ export type ApplicationWorkshop = {
 
 export type ApplicationWorkshopCount = {
   presenters: Scalars['Int']['output'];
+};
+
+
+export type ApplicationWorkshopCountPresentersArgs = {
+  where?: InputMaybe<ApplicationPresenterWhereInput>;
+};
+
+export type ApplicationWorkshopNullableRelationFilter = {
+  is?: InputMaybe<ApplicationWorkshopWhereInput>;
+  isNot?: InputMaybe<ApplicationWorkshopWhereInput>;
 };
 
 export enum ApplicationWorkshopOrderByRelevanceFieldEnum {
@@ -281,18 +326,13 @@ export type ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput = {
   titleHr?: InputMaybe<SortOrder>;
 };
 
-export type ApplicationWorkshopRelationFilter = {
-  is?: InputMaybe<ApplicationWorkshopWhereInput>;
-  isNot?: InputMaybe<ApplicationWorkshopWhereInput>;
-};
-
 export type ApplicationWorkshopWhereInput = {
   AND?: InputMaybe<Array<ApplicationWorkshopWhereInput>>;
   NOT?: InputMaybe<Array<ApplicationWorkshopWhereInput>>;
   OR?: InputMaybe<Array<ApplicationWorkshopWhereInput>>;
   descriptionEn?: InputMaybe<StringFilter>;
   descriptionHr?: InputMaybe<StringFilter>;
-  event?: InputMaybe<CalendarItemRelationFilter>;
+  event?: InputMaybe<CalendarItemNullableRelationFilter>;
   goal?: InputMaybe<StringFilter>;
   language?: InputMaybe<StringFilter>;
   notesEn?: InputMaybe<StringFilter>;
@@ -367,6 +407,11 @@ export type CalendarItemListRelationFilter = {
   some?: InputMaybe<CalendarItemWhereInput>;
 };
 
+export type CalendarItemNullableRelationFilter = {
+  is?: InputMaybe<CalendarItemWhereInput>;
+  isNot?: InputMaybe<CalendarItemWhereInput>;
+};
+
 export type CalendarItemOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
@@ -390,16 +435,11 @@ export type CalendarItemOrderByWithRelationAndSearchRelevanceInput = {
   end?: InputMaybe<SortOrder>;
   forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
   grouped?: InputMaybe<SortOrder>;
-  location?: InputMaybe<SortOrder>;
+  location?: InputMaybe<SortOrderInput>;
   start?: InputMaybe<SortOrder>;
-  text?: InputMaybe<SortOrder>;
-  title?: InputMaybe<SortOrder>;
-  type?: InputMaybe<SortOrder>;
-};
-
-export type CalendarItemRelationFilter = {
-  is?: InputMaybe<CalendarItemWhereInput>;
-  isNot?: InputMaybe<CalendarItemWhereInput>;
+  text?: InputMaybe<SortOrderInput>;
+  title?: InputMaybe<SortOrderInput>;
+  type?: InputMaybe<SortOrderInput>;
 };
 
 export type CalendarItemWhereInput = {
@@ -482,6 +522,11 @@ export type CompanyApplicationApproval = {
   workshopParticipants: Scalars['Int']['output'];
 };
 
+export type CompanyApplicationApprovalNullableRelationFilter = {
+  is?: InputMaybe<CompanyApplicationApprovalWhereInput>;
+  isNot?: InputMaybe<CompanyApplicationApprovalWhereInput>;
+};
+
 export type CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput = {
   booth?: InputMaybe<SortOrder>;
   cocktail?: InputMaybe<SortOrder>;
@@ -489,11 +534,6 @@ export type CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput
   panel?: InputMaybe<SortOrder>;
   talkParticipants?: InputMaybe<SortOrder>;
   workshopParticipants?: InputMaybe<SortOrder>;
-};
-
-export type CompanyApplicationApprovalRelationFilter = {
-  is?: InputMaybe<CompanyApplicationApprovalWhereInput>;
-  isNot?: InputMaybe<CompanyApplicationApprovalWhereInput>;
 };
 
 export type CompanyApplicationApprovalWhereInput = {
@@ -518,6 +558,11 @@ export type CompanyApplicationApprovedEditInput = {
 
 export type CompanyApplicationCount = {
   panelParticipants: Scalars['Int']['output'];
+};
+
+
+export type CompanyApplicationCountPanelParticipantsArgs = {
+  where?: InputMaybe<ApplicationPresenterWhereInput>;
 };
 
 export type CompanyApplicationCreateInput = {
@@ -593,7 +638,7 @@ export type CompanyApplicationOrderByRelevanceInput = {
 export type CompanyApplicationOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<CompanyApplicationOrderByRelevanceInput>;
   approval?: InputMaybe<CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput>;
-  booth?: InputMaybe<SortOrder>;
+  booth?: InputMaybe<SortOrderInput>;
   cocktail?: InputMaybe<ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput>;
   forCompany?: InputMaybe<CompanyOrderByWithRelationAndSearchRelevanceInput>;
   forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
@@ -623,21 +668,35 @@ export type CompanyApplicationWhereInput = {
   AND?: InputMaybe<Array<CompanyApplicationWhereInput>>;
   NOT?: InputMaybe<Array<CompanyApplicationWhereInput>>;
   OR?: InputMaybe<Array<CompanyApplicationWhereInput>>;
-  approval?: InputMaybe<CompanyApplicationApprovalRelationFilter>;
+  approval?: InputMaybe<CompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<StringNullableFilter>;
-  cocktail?: InputMaybe<ApplicationCocktailRelationFilter>;
+  cocktail?: InputMaybe<ApplicationCocktailNullableRelationFilter>;
   forCompany?: InputMaybe<CompanyRelationFilter>;
   forSeason?: InputMaybe<SeasonRelationFilter>;
-  panel?: InputMaybe<CompanyPanelRelationFilter>;
+  panel?: InputMaybe<CompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<ApplicationPresenterListRelationFilter>;
-  talk?: InputMaybe<ApplicationTalkRelationFilter>;
+  talk?: InputMaybe<ApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<BoolFilter>;
   wantsPanel?: InputMaybe<BoolFilter>;
-  workshop?: InputMaybe<ApplicationWorkshopRelationFilter>;
+  workshop?: InputMaybe<ApplicationWorkshopNullableRelationFilter>;
 };
 
 export type CompanyApplicationWhereUniqueInput = {
+  AND?: InputMaybe<Array<CompanyApplicationWhereInput>>;
+  NOT?: InputMaybe<Array<CompanyApplicationWhereInput>>;
+  OR?: InputMaybe<Array<CompanyApplicationWhereInput>>;
+  approval?: InputMaybe<CompanyApplicationApprovalNullableRelationFilter>;
+  booth?: InputMaybe<StringNullableFilter>;
+  cocktail?: InputMaybe<ApplicationCocktailNullableRelationFilter>;
+  forCompany?: InputMaybe<CompanyRelationFilter>;
   forCompanyId_forSeasonId?: InputMaybe<CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput>;
+  forSeason?: InputMaybe<SeasonRelationFilter>;
+  panel?: InputMaybe<CompanyPanelNullableRelationFilter>;
+  panelParticipants?: InputMaybe<ApplicationPresenterListRelationFilter>;
+  talk?: InputMaybe<ApplicationTalkNullableRelationFilter>;
+  wantsCocktail?: InputMaybe<BoolFilter>;
+  wantsPanel?: InputMaybe<BoolFilter>;
+  workshop?: InputMaybe<ApplicationWorkshopNullableRelationFilter>;
 };
 
 export type CompanyCount = {
@@ -646,6 +705,31 @@ export type CompanyCount = {
   members: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+};
+
+
+export type CompanyCountApplicationsArgs = {
+  where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+
+export type CompanyCountFavouriteResumesArgs = {
+  where?: InputMaybe<FavouriteResumeWhereInput>;
+};
+
+
+export type CompanyCountMembersArgs = {
+  where?: InputMaybe<UserWhereInput>;
+};
+
+
+export type CompanyCountScannedResumesArgs = {
+  where?: InputMaybe<ScannedResumeWhereInput>;
+};
+
+
+export type CompanyCountScannedUsersArgs = {
+  where?: InputMaybe<CompanyScannedUserWhereInput>;
 };
 
 export enum CompanyOrderByRelevanceFieldEnum {
@@ -690,6 +774,16 @@ export type CompanyPanelCount = {
   companies: Scalars['Int']['output'];
 };
 
+
+export type CompanyPanelCountCompaniesArgs = {
+  where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+export type CompanyPanelNullableRelationFilter = {
+  is?: InputMaybe<CompanyPanelWhereInput>;
+  isNot?: InputMaybe<CompanyPanelWhereInput>;
+};
+
 export enum CompanyPanelOrderByRelevanceFieldEnum {
   Description = 'description',
   Name = 'name',
@@ -710,11 +804,6 @@ export type CompanyPanelOrderByWithRelationAndSearchRelevanceInput = {
   name?: InputMaybe<SortOrder>;
 };
 
-export type CompanyPanelRelationFilter = {
-  is?: InputMaybe<CompanyPanelWhereInput>;
-  isNot?: InputMaybe<CompanyPanelWhereInput>;
-};
-
 export type CompanyPanelUpdateInput = {
   companies: Array<Scalars['String']['input']>;
   description: Scalars['String']['input'];
@@ -729,7 +818,7 @@ export type CompanyPanelWhereInput = {
   OR?: InputMaybe<Array<CompanyPanelWhereInput>>;
   companies?: InputMaybe<CompanyApplicationListRelationFilter>;
   description?: InputMaybe<StringFilter>;
-  event?: InputMaybe<CalendarItemRelationFilter>;
+  event?: InputMaybe<CalendarItemNullableRelationFilter>;
   name?: InputMaybe<StringFilter>;
 };
 
@@ -817,7 +906,16 @@ export type CompanyWhereInput = {
 };
 
 export type CompanyWhereUniqueInput = {
+  AND?: InputMaybe<Array<CompanyWhereInput>>;
+  NOT?: InputMaybe<Array<CompanyWhereInput>>;
+  OR?: InputMaybe<Array<CompanyWhereInput>>;
+  address?: InputMaybe<StringFilter>;
+  brandName?: InputMaybe<StringFilter>;
+  descriptionEn?: InputMaybe<StringFilter>;
+  descriptionHr?: InputMaybe<StringFilter>;
+  legalName?: InputMaybe<StringFilter>;
   vat?: InputMaybe<Scalars['String']['input']>;
+  website?: InputMaybe<StringFilter>;
 };
 
 export type CreateCompanyApplicationResponse = {
@@ -885,6 +983,14 @@ export type EditApprovedCompanyApplicationResponse = {
   errors?: Maybe<Array<FieldError>>;
 };
 
+export type EntryResumeLogWhereInput = {
+  AND?: InputMaybe<Array<EntryResumeLogWhereInput>>;
+  NOT?: InputMaybe<Array<EntryResumeLogWhereInput>>;
+  OR?: InputMaybe<Array<EntryResumeLogWhereInput>>;
+  event?: InputMaybe<StringNullableFilter>;
+  eventId?: InputMaybe<IntNullableFilter>;
+};
+
 export type EventLog = {
   data?: Maybe<Scalars['String']['output']>;
   date: Scalars['DateTimeISO']['output'];
@@ -906,7 +1012,7 @@ export type EventLogOrderByRelevanceInput = {
 
 export type EventLogOrderByWithRelationAndSearchRelevanceInput = {
   _relevance?: InputMaybe<EventLogOrderByRelevanceInput>;
-  data?: InputMaybe<SortOrder>;
+  data?: InputMaybe<SortOrderInput>;
   date?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<SortOrder>;
@@ -920,49 +1026,13 @@ export type EventLogPaginationResult = {
   totalRecords: Scalars['Int']['output'];
 };
 
-export type EventReservationCreateManyUserInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  status: Scalars['Int']['input'];
-};
-
-export type EventReservationCreateManyUserInputEnvelope = {
-  data: Array<EventReservationCreateManyUserInput>;
-  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type EventReservationCreateNestedManyWithoutUserInput = {
-  connect?: InputMaybe<Array<EventReservationWhereUniqueInput>>;
-  connectOrCreate?: InputMaybe<Array<EventReservationCreateOrConnectWithoutUserInput>>;
-  create?: InputMaybe<Array<EventReservationCreateWithoutUserInput>>;
-  createMany?: InputMaybe<EventReservationCreateManyUserInputEnvelope>;
-};
-
-export type EventReservationCreateOrConnectWithoutUserInput = {
-  create: EventReservationCreateWithoutUserInput;
-  where: EventReservationWhereUniqueInput;
-};
-
-export type EventReservationCreateWithoutUserInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  status: Scalars['Int']['input'];
-};
-
-export type EventReservationEventIdEventTypeUserIdCompoundUniqueInput = {
-  eventId: Scalars['Int']['input'];
-  eventType: Scalars['String']['input'];
-  userId: Scalars['Int']['input'];
-};
-
-export type EventReservationListRelationFilter = {
-  every?: InputMaybe<EventReservationWhereInput>;
-  none?: InputMaybe<EventReservationWhereInput>;
-  some?: InputMaybe<EventReservationWhereInput>;
-};
-
-export type EventReservationOrderByRelationAggregateInput = {
-  _count?: InputMaybe<SortOrder>;
+export type EventLogWhereInput = {
+  AND?: InputMaybe<Array<EventLogWhereInput>>;
+  NOT?: InputMaybe<Array<EventLogWhereInput>>;
+  OR?: InputMaybe<Array<EventLogWhereInput>>;
+  data?: InputMaybe<StringNullableFilter>;
+  name?: InputMaybe<StringFilter>;
+  user?: InputMaybe<UserNullableRelationFilter>;
 };
 
 export type EventReservationResponse = {
@@ -990,10 +1060,6 @@ export type EventReservationWhereInput = {
   user?: InputMaybe<UserRelationFilter>;
 };
 
-export type EventReservationWhereUniqueInput = {
-  eventId_eventType_userId?: InputMaybe<EventReservationEventIdEventTypeUserIdCompoundUniqueInput>;
-};
-
 export enum EventType {
   HotTalk = 'hotTalk',
   Panel = 'panel',
@@ -1004,6 +1070,12 @@ export enum EventType {
 export type EventUserApplications = {
   talk: Scalars['Int']['output'];
   workshop: Scalars['Int']['output'];
+};
+
+export type FavouriteResumeWhereInput = {
+  AND?: InputMaybe<Array<FavouriteResumeWhereInput>>;
+  NOT?: InputMaybe<Array<FavouriteResumeWhereInput>>;
+  OR?: InputMaybe<Array<FavouriteResumeWhereInput>>;
 };
 
 export type FieldError = {
@@ -1027,6 +1099,21 @@ export type FileCount = {
   forCompany: Scalars['Int']['output'];
   forPressRelease: Scalars['Int']['output'];
   forResume: Scalars['Int']['output'];
+};
+
+
+export type FileCountForCompanyArgs = {
+  where?: InputMaybe<CompanyWhereInput>;
+};
+
+
+export type FileCountForPressReleaseArgs = {
+  where?: InputMaybe<PressReleaseWhereInput>;
+};
+
+
+export type FileCountForResumeArgs = {
+  where?: InputMaybe<ResumeWhereInput>;
 };
 
 export enum FileOrderByRelevanceFieldEnum {
@@ -1122,6 +1209,36 @@ export type ImageCount = {
   Sponsor: Scalars['Int']['output'];
 };
 
+
+export type ImageCountApplicationPresenterArgs = {
+  where?: InputMaybe<ApplicationPresenterWhereInput>;
+};
+
+
+export type ImageCountCompanyArgs = {
+  where?: InputMaybe<CompanyWhereInput>;
+};
+
+
+export type ImageCountNewsArgs = {
+  where?: InputMaybe<NewsWhereInput>;
+};
+
+
+export type ImageCountPartnerArgs = {
+  where?: InputMaybe<PartnerWhereInput>;
+};
+
+
+export type ImageCountSponsorArgs = {
+  where?: InputMaybe<SponsorWhereInput>;
+};
+
+export type ImageNullableRelationFilter = {
+  is?: InputMaybe<ImageWhereInput>;
+  isNot?: InputMaybe<ImageWhereInput>;
+};
+
 export type ImageRelationFilter = {
   is?: InputMaybe<ImageWhereInput>;
   isNot?: InputMaybe<ImageWhereInput>;
@@ -1137,6 +1254,21 @@ export type ImageVariationCount = {
   forFull: Scalars['Int']['output'];
   forOriginal: Scalars['Int']['output'];
   forThumb: Scalars['Int']['output'];
+};
+
+
+export type ImageVariationCountForFullArgs = {
+  where?: InputMaybe<ImageWhereInput>;
+};
+
+
+export type ImageVariationCountForOriginalArgs = {
+  where?: InputMaybe<ImageWhereInput>;
+};
+
+
+export type ImageVariationCountForThumbArgs = {
+  where?: InputMaybe<ImageWhereInput>;
 };
 
 export type ImageVariationRelationFilter = {
@@ -1172,6 +1304,11 @@ export type IndustryCount = {
   company: Scalars['Int']['output'];
 };
 
+
+export type IndustryCountCompanyArgs = {
+  where?: InputMaybe<CompanyWhereInput>;
+};
+
 export enum IndustryOrderByRelevanceFieldEnum {
   Name = 'name'
 }
@@ -1200,6 +1337,9 @@ export type IndustryWhereInput = {
 };
 
 export type IndustryWhereUniqueInput = {
+  AND?: InputMaybe<Array<IndustryWhereInput>>;
+  NOT?: InputMaybe<Array<IndustryWhereInput>>;
+  OR?: InputMaybe<Array<IndustryWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1211,6 +1351,17 @@ export type IntFilter = {
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
   not?: InputMaybe<NestedIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type IntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
@@ -1594,6 +1745,17 @@ export type NestedIntFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type NestedIntNullableFilter = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  not?: InputMaybe<NestedIntNullableFilter>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
 export type NestedStringFilter = {
   contains?: InputMaybe<Scalars['String']['input']>;
   endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -1656,6 +1818,22 @@ export type NewsFilter = {
   take?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type NewsWhereInput = {
+  AND?: InputMaybe<Array<NewsWhereInput>>;
+  NOT?: InputMaybe<Array<NewsWhereInput>>;
+  OR?: InputMaybe<Array<NewsWhereInput>>;
+  content?: InputMaybe<StringFilter>;
+  date?: InputMaybe<DateTimeFilter>;
+  description?: InputMaybe<StringFilter>;
+  lang?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
+};
+
+export enum NullsOrder {
+  First = 'first',
+  Last = 'last'
+}
+
 export type Partner = {
   name: Scalars['String']['output'];
   order: Scalars['Int']['output'];
@@ -1700,6 +1878,12 @@ export type PasswordResetUseInput = {
 export type PasswordResetUseResponse = {
   entity?: Maybe<Scalars['Boolean']['output']>;
   errors?: Maybe<Array<FieldError>>;
+};
+
+export type PasswordResetWhereInput = {
+  AND?: InputMaybe<Array<PasswordResetWhereInput>>;
+  NOT?: InputMaybe<Array<PasswordResetWhereInput>>;
+  OR?: InputMaybe<Array<PasswordResetWhereInput>>;
 };
 
 export type PresenterCreateInput = {
@@ -1758,13 +1942,20 @@ export type PressReleaseWhereInput = {
   OR?: InputMaybe<Array<PressReleaseWhereInput>>;
   creator?: InputMaybe<UserRelationFilter>;
   file?: InputMaybe<FileRelationFilter>;
-  forSeason?: InputMaybe<SeasonRelationFilter>;
+  forSeason?: InputMaybe<SeasonNullableRelationFilter>;
   published?: InputMaybe<DateTimeFilter>;
   title?: InputMaybe<StringFilter>;
 };
 
 export type PressReleaseWhereUniqueInput = {
-  uid: Scalars['String']['input'];
+  AND?: InputMaybe<Array<PressReleaseWhereInput>>;
+  NOT?: InputMaybe<Array<PressReleaseWhereInput>>;
+  OR?: InputMaybe<Array<PressReleaseWhereInput>>;
+  creator?: InputMaybe<UserRelationFilter>;
+  file?: InputMaybe<FileRelationFilter>;
+  forSeason?: InputMaybe<SeasonNullableRelationFilter>;
+  published?: InputMaybe<DateTimeFilter>;
+  title?: InputMaybe<StringFilter>;
 };
 
 export type PressReleaseWithFilesCreateInput = {
@@ -2126,6 +2317,51 @@ export type ResumeCount = {
   workExperiences: Scalars['Int']['output'];
 };
 
+
+export type ResumeCountEntryLogArgs = {
+  where?: InputMaybe<EntryResumeLogWhereInput>;
+};
+
+
+export type ResumeCountFavouriteResumesArgs = {
+  where?: InputMaybe<FavouriteResumeWhereInput>;
+};
+
+
+export type ResumeCountInterestsArgs = {
+  where?: InputMaybe<ResumeInterestWhereInput>;
+};
+
+
+export type ResumeCountProjectsArgs = {
+  where?: InputMaybe<ResumeProjectWhereInput>;
+};
+
+
+export type ResumeCountScannedResumesArgs = {
+  where?: InputMaybe<ScannedResumeWhereInput>;
+};
+
+
+export type ResumeCountStudyYearsArgs = {
+  where?: InputMaybe<ResumeStudyYearWhereInput>;
+};
+
+
+export type ResumeCountTechnologiesArgs = {
+  where?: InputMaybe<ResumeTechnologyWhereInput>;
+};
+
+
+export type ResumeCountVolunteerExperiencesArgs = {
+  where?: InputMaybe<ResumeVolunteerExperienceWhereInput>;
+};
+
+
+export type ResumeCountWorkExperiencesArgs = {
+  where?: InputMaybe<ResumeWorkExperienceWhereInput>;
+};
+
 export type ResumeCreateCvInput = {
   cv?: InputMaybe<Scalars['Upload']['input']>;
   keepOld: Scalars['Boolean']['input'];
@@ -2160,6 +2396,11 @@ export type ResumeFacultyCreateInput = {
   name: Scalars['String']['input'];
 };
 
+export type ResumeFacultyNullableRelationFilter = {
+  is?: InputMaybe<ResumeFacultyWhereInput>;
+  isNot?: InputMaybe<ResumeFacultyWhereInput>;
+};
+
 export enum ResumeFacultyOrderByRelevanceFieldEnum {
   Module = 'module',
   Name = 'name',
@@ -2177,11 +2418,6 @@ export type ResumeFacultyOrderByWithRelationAndSearchRelevanceInput = {
   module?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   specialization?: InputMaybe<SortOrder>;
-};
-
-export type ResumeFacultyRelationFilter = {
-  is?: InputMaybe<ResumeFacultyWhereInput>;
-  isNot?: InputMaybe<ResumeFacultyWhereInput>;
 };
 
 export type ResumeFacultyWhereInput = {
@@ -2367,7 +2603,7 @@ export type ResumeWhereInput = {
   OR?: InputMaybe<Array<ResumeWhereInput>>;
   city?: InputMaybe<StringFilter>;
   extraField?: InputMaybe<StringFilter>;
-  faculty?: InputMaybe<ResumeFacultyRelationFilter>;
+  faculty?: InputMaybe<ResumeFacultyNullableRelationFilter>;
   interests?: InputMaybe<ResumeInterestListRelationFilter>;
   projects?: InputMaybe<ResumeProjectListRelationFilter>;
   studyYears?: InputMaybe<ResumeStudyYearListRelationFilter>;
@@ -2421,6 +2657,11 @@ export type RoleCount = {
   users: Scalars['Int']['output'];
 };
 
+
+export type RoleCountUsersArgs = {
+  where?: InputMaybe<UserWhereInput>;
+};
+
 export enum RoleOrderByRelevanceFieldEnum {
   Name = 'name'
 }
@@ -2451,7 +2692,16 @@ export type RoleWhereInput = {
 };
 
 export type RoleWhereUniqueInput = {
+  AND?: InputMaybe<Array<RoleWhereInput>>;
+  NOT?: InputMaybe<Array<RoleWhereInput>>;
+  OR?: InputMaybe<Array<RoleWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ScannedResumeWhereInput = {
+  AND?: InputMaybe<Array<ScannedResumeWhereInput>>;
+  NOT?: InputMaybe<Array<ScannedResumeWhereInput>>;
+  OR?: InputMaybe<Array<ScannedResumeWhereInput>>;
 };
 
 export type SearchResponseStringArray = {
@@ -2503,6 +2753,61 @@ export type SeasonCount = {
   talkCategories: Scalars['Int']['output'];
 };
 
+
+export type SeasonCountCalendarArgs = {
+  where?: InputMaybe<CalendarItemWhereInput>;
+};
+
+
+export type SeasonCountCompaniesArgs = {
+  where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+
+export type SeasonCountEntryLogArgs = {
+  where?: InputMaybe<EntryResumeLogWhereInput>;
+};
+
+
+export type SeasonCountFavouriteResumesArgs = {
+  where?: InputMaybe<FavouriteResumeWhereInput>;
+};
+
+
+export type SeasonCountGateGuardianLogArgs = {
+  where?: InputMaybe<GateGuardianLogWhereInput>;
+};
+
+
+export type SeasonCountPartnersArgs = {
+  where?: InputMaybe<PartnerWhereInput>;
+};
+
+
+export type SeasonCountPressReleasesArgs = {
+  where?: InputMaybe<PressReleaseWhereInput>;
+};
+
+
+export type SeasonCountScannedResumesArgs = {
+  where?: InputMaybe<ScannedResumeWhereInput>;
+};
+
+
+export type SeasonCountScannedUsersArgs = {
+  where?: InputMaybe<CompanyScannedUserWhereInput>;
+};
+
+
+export type SeasonCountSponsorsArgs = {
+  where?: InputMaybe<SponsorWhereInput>;
+};
+
+
+export type SeasonCountTalkCategoriesArgs = {
+  where?: InputMaybe<ApplicationTalkCategoryWhereInput>;
+};
+
 export type SeasonCreateInput = {
   applicationsEditableFrom: Scalars['DateTimeISO']['input'];
   applicationsEditableUntil: Scalars['DateTimeISO']['input'];
@@ -2523,6 +2828,11 @@ export type SeasonCreateInput = {
   showSponsorsFrom: Scalars['DateTimeISO']['input'];
   showSponsorsUntil: Scalars['DateTimeISO']['input'];
   startsAt: Scalars['DateTimeISO']['input'];
+};
+
+export type SeasonNullableRelationFilter = {
+  is?: InputMaybe<SeasonWhereInput>;
+  isNot?: InputMaybe<SeasonWhereInput>;
 };
 
 export enum SeasonOrderByRelevanceFieldEnum {
@@ -2651,6 +2961,34 @@ export type SeasonWhereInput = {
 };
 
 export type SeasonWhereUniqueInput = {
+  AND?: InputMaybe<Array<SeasonWhereInput>>;
+  NOT?: InputMaybe<Array<SeasonWhereInput>>;
+  OR?: InputMaybe<Array<SeasonWhereInput>>;
+  applicationsEditableFrom?: InputMaybe<DateTimeFilter>;
+  applicationsEditableUntil?: InputMaybe<DateTimeFilter>;
+  applicationsFrom?: InputMaybe<DateTimeFilter>;
+  applicationsUntil?: InputMaybe<DateTimeFilter>;
+  calendar?: InputMaybe<CalendarItemListRelationFilter>;
+  companies?: InputMaybe<CompanyApplicationListRelationFilter>;
+  endsAt?: InputMaybe<DateTimeFilter>;
+  eventFrom?: InputMaybe<DateTimeFilter>;
+  eventUntil?: InputMaybe<DateTimeFilter>;
+  feedbackFrom?: InputMaybe<DateTimeFilter>;
+  feedbackUntil?: InputMaybe<DateTimeFilter>;
+  gateGuardianLog?: InputMaybe<GateGuardianLogListRelationFilter>;
+  name?: InputMaybe<StringFilter>;
+  partners?: InputMaybe<PartnerListRelationFilter>;
+  scannedUsers?: InputMaybe<CompanyScannedUserListRelationFilter>;
+  scheduleFrom?: InputMaybe<DateTimeFilter>;
+  scheduleUntil?: InputMaybe<DateTimeFilter>;
+  showParticipantsFrom?: InputMaybe<DateTimeFilter>;
+  showParticipantsUntil?: InputMaybe<DateTimeFilter>;
+  showPartnersFrom?: InputMaybe<DateTimeFilter>;
+  showPartnersUntil?: InputMaybe<DateTimeFilter>;
+  showSponsorsFrom?: InputMaybe<DateTimeFilter>;
+  showSponsorsUntil?: InputMaybe<DateTimeFilter>;
+  sponsors?: InputMaybe<SponsorListRelationFilter>;
+  startsAt?: InputMaybe<DateTimeFilter>;
   uid?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2666,6 +3004,11 @@ export enum SortOrder {
   Asc = 'asc',
   Desc = 'desc'
 }
+
+export type SortOrderInput = {
+  nulls?: InputMaybe<NullsOrder>;
+  sort: SortOrder;
+};
 
 export type Sponsor = {
   name: Scalars['String']['output'];
@@ -2810,7 +3153,13 @@ export type TranslationWhereInput = {
 };
 
 export type TranslationWhereUniqueInput = {
+  AND?: InputMaybe<Array<TranslationWhereInput>>;
+  NOT?: InputMaybe<Array<TranslationWhereInput>>;
+  OR?: InputMaybe<Array<TranslationWhereInput>>;
+  key?: InputMaybe<StringFilter>;
   key_language?: InputMaybe<TranslationKeyLanguageCompoundUniqueInput>;
+  language?: InputMaybe<StringFilter>;
+  value?: InputMaybe<StringFilter>;
 };
 
 export type UpdatePasswordResponse = {
@@ -2856,6 +3205,71 @@ export type UserCount = {
   scannedUsers: Scalars['Int']['output'];
 };
 
+
+export type UserCountNewsArgs = {
+  where?: InputMaybe<NewsWhereInput>;
+};
+
+
+export type UserCountCompaniesArgs = {
+  where?: InputMaybe<CompanyWhereInput>;
+};
+
+
+export type UserCountEventsArgs = {
+  where?: InputMaybe<EventLogWhereInput>;
+};
+
+
+export type UserCountFilesArgs = {
+  where?: InputMaybe<FileWhereInput>;
+};
+
+
+export type UserCountGateGuardianEntryLogArgs = {
+  where?: InputMaybe<GateGuardianLogWhereInput>;
+};
+
+
+export type UserCountGateGuardianScannedLogArgs = {
+  where?: InputMaybe<GateGuardianLogWhereInput>;
+};
+
+
+export type UserCountImagesArgs = {
+  where?: InputMaybe<ImageWhereInput>;
+};
+
+
+export type UserCountPasswordResetsArgs = {
+  where?: InputMaybe<PasswordResetWhereInput>;
+};
+
+
+export type UserCountPressReleasesArgs = {
+  where?: InputMaybe<PressReleaseWhereInput>;
+};
+
+
+export type UserCountReservationsArgs = {
+  where?: InputMaybe<EventReservationWhereInput>;
+};
+
+
+export type UserCountRolesArgs = {
+  where?: InputMaybe<RoleWhereInput>;
+};
+
+
+export type UserCountScannedEntriesArgs = {
+  where?: InputMaybe<EntryResumeLogWhereInput>;
+};
+
+
+export type UserCountScannedUsersArgs = {
+  where?: InputMaybe<CompanyScannedUserWhereInput>;
+};
+
 export type UserCreateInput = {
   email: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
@@ -2863,7 +3277,11 @@ export type UserCreateInput = {
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<EventReservationCreateNestedManyWithoutUserInput>;
+};
+
+export type UserNullableRelationFilter = {
+  is?: InputMaybe<UserWhereInput>;
+  isNot?: InputMaybe<UserWhereInput>;
 };
 
 export enum UserOrderByRelevanceFieldEnum {
@@ -2890,7 +3308,6 @@ export type UserOrderByWithRelationAndSearchRelevanceInput = {
   lastName?: InputMaybe<SortOrder>;
   password?: InputMaybe<SortOrder>;
   phone?: InputMaybe<SortOrder>;
-  reservations?: InputMaybe<EventReservationOrderByRelationAggregateInput>;
 };
 
 export type UserRegisterInput = {
@@ -2901,7 +3318,6 @@ export type UserRegisterInput = {
   password: Scalars['String']['input'];
   passwordRepeat: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<EventReservationCreateNestedManyWithoutUserInput>;
 };
 
 export type UserRelationFilter = {
@@ -2930,7 +3346,6 @@ export type UserUpdateInput = {
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  reservations?: InputMaybe<EventReservationCreateNestedManyWithoutUserInput>;
   roles: Array<Scalars['String']['input']>;
 };
 
@@ -2944,11 +3359,18 @@ export type UserWhereInput = {
   lastName?: InputMaybe<StringFilter>;
   password?: InputMaybe<StringFilter>;
   phone?: InputMaybe<StringFilter>;
-  reservations?: InputMaybe<EventReservationListRelationFilter>;
 };
 
 export type UserWhereUniqueInput = {
+  AND?: InputMaybe<Array<UserWhereInput>>;
+  NOT?: InputMaybe<Array<UserWhereInput>>;
+  OR?: InputMaybe<Array<UserWhereInput>>;
   email?: InputMaybe<Scalars['String']['input']>;
+  firstName?: InputMaybe<StringFilter>;
+  language?: InputMaybe<StringFilter>;
+  lastName?: InputMaybe<StringFilter>;
+  password?: InputMaybe<StringFilter>;
+  phone?: InputMaybe<StringFilter>;
 };
 
 export type ValidateVatResponse = {

@@ -745,6 +745,7 @@ export class CompanyListResolver {
 
     return ctx.prisma.company.findMany({
       ...args,
+      cursor: undefined,
       select: toSelect(info, transformSelect),
     });
   }
@@ -819,7 +820,7 @@ export class CompanyListResolver {
     }
 
     return ctx.prisma.company.findMany({
-      ...omit([ "season" ], args),
+      ...omit([ "season", "cursor" ], args),
       where,
       select,
       orderBy: {

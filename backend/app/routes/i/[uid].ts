@@ -39,7 +39,7 @@ const serveImage =
         return res.sendStatus(StatusCodes.NOT_FOUND);
       }
 
-      /* eslint-disable @typescript-eslint/ban-ts-comment */
+
       const file = {
         // @ts-ignore
         name: fileObj.name as string,
@@ -50,7 +50,7 @@ const serveImage =
         // @ts-ignore
         etag: fileObj[size].etag as string,
       };
-      /* eslint-enable @typescript-eslint/ban-ts-comment */
+
 
       const providedEtag = req.header("if-none-match");
 

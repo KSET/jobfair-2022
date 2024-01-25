@@ -27,7 +27,7 @@ import {
   User,
   File,
   ResumeWhereInput,
-  ResumeOrderByWithRelationAndSearchRelevanceInput,
+  ResumeOrderByWithRelationInput,
 } from "@generated/type-graphql";
 import {
   GraphQLResolveInfo,
@@ -255,8 +255,8 @@ class ResumeFindManyInput {
   @Field(() => String, { nullable: true })
     whereUser?: string | undefined;
 
-  @Field(() => [ ResumeOrderByWithRelationAndSearchRelevanceInput ], { nullable: true })
-    orderBy?: ResumeOrderByWithRelationAndSearchRelevanceInput[] | undefined;
+  @Field(() => [ ResumeOrderByWithRelationInput ], { nullable: true })
+    orderBy?: ResumeOrderByWithRelationInput[] | undefined;
 
   @Field(() => Int, { nullable: true })
     take?: number | undefined;
@@ -452,7 +452,7 @@ export class ResumeInfoResolver {
         where,
       }),
       ctx.prisma.resume.findMany({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         select: transformSelect(toSelect(gqlInfo, (x) => x).items as Dict || { id: true }) as any,
         take,
         skip,

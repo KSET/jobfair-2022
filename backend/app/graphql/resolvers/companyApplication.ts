@@ -425,6 +425,7 @@ export class CompanyApplicationAdminResolver {
 
     return ctx.prisma.companyApplication.findMany({
       ...args,
+      cursor: undefined,
       where: {
         forSeason:
           seasonUid
@@ -999,7 +1000,7 @@ export class CompanyApplicationAdminResolver {
     }
 
     return {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       entity,
     };
@@ -1615,7 +1616,7 @@ export class CompanyApplicationCreateResolver {
     }
 
     return {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
       // @ts-ignore
       entity,
     };
@@ -2061,7 +2062,7 @@ export class CompanyApplicationCreateResolver {
       const id = "panel" as const;
       const minPresenters = 1;
 
-      const entry = info[id]!;
+      const entry = info[id];
 
       if (!entry) {
         return {

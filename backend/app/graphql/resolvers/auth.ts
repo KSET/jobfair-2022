@@ -12,6 +12,7 @@ import {
   Resolver,
 } from "type-graphql";
 import {
+  EventReservationCreateNestedManyWithoutUserInput,
   User,
   UserCreateInput,
 } from "@generated/type-graphql";

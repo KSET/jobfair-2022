@@ -22,7 +22,7 @@ export function get<T>(url: string, config: AxiosRequestConfig = {}) {
   });
 }
 
-export function post<T, TData extends unknown | undefined>(url: string, data = undefined as TData, config: AxiosRequestConfig<TData> = {}) {
+export function post<T, TData>(url: string, data = undefined as TData, config: AxiosRequestConfig<TData> = {}) {
   return request<T>({
     headers: {
       "Content-Type": "application/json",

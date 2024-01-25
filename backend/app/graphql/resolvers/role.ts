@@ -42,6 +42,7 @@ export class RoleResolver {
 
     return ctx.prisma.role.findMany({
       ...args,
+      cursor: undefined,
       select: toSelect(info, transformSelect),
     });
   }

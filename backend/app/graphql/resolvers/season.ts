@@ -463,6 +463,7 @@ export class SeasonFindResolver {
   ) {
     return ctx.prisma.season.findMany({
       ...args,
+      cursor: undefined,
       select: toSelect(info, transformSelect),
     });
   }

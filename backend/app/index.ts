@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "@total-typescript/ts-reset";
 
 import express from "express";
 import serverTiming from "server-timing";
@@ -23,7 +24,6 @@ import {
 } from "./helpers/request";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     interface Request {

@@ -106,7 +106,7 @@
   import useTitle from "~/composables/useTitle";
   import {
     type IEventLog,
-    type IEventLogOrderByWithRelationAndSearchRelevanceInput,
+    type IEventLogOrderByWithRelationInput,
     ISortOrder,
     type IUser,
   } from "~/graphql/schema";
@@ -127,7 +127,7 @@
       useTitle("Admin | Users - Event Log", false);
       const perPage = ref(20);
       const curPage = ref(1);
-      const orderBy = ref<IEventLogOrderByWithRelationAndSearchRelevanceInput[]>([]);
+      const orderBy = ref<IEventLogOrderByWithRelationInput[]>([]);
 
       const filters = ref({
         global: { value: "", matchMode: "$global" },
@@ -164,7 +164,7 @@
       type QArgs = {
         page: MaybeRef<number>,
         perPage: MaybeRef<number>,
-        orderBy?: MaybeRef<IEventLogOrderByWithRelationAndSearchRelevanceInput[]>,
+        orderBy?: MaybeRef<IEventLogOrderByWithRelationInput[]>,
         where?: MaybeRef<string>,
       };
 
@@ -174,7 +174,7 @@
             $page: Int!,
             $perPage: Int!,
             $where: String,
-            $orderBy: [EventLogOrderByWithRelationAndSearchRelevanceInput!]
+            $orderBy: [EventLogOrderByWithRelationInput!]
           ) {
              eventLog(
                 page: $page,

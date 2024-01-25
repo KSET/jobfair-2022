@@ -162,7 +162,7 @@
       </p>
     </div>
 
-    <div :class="$style.section">
+    <div v-if="false" :class="$style.section">
       <app-img
         :class="$style.eventIcon"
         :src="img.eventIcons.hotTalk"

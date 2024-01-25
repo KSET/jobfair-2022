@@ -1,4 +1,4 @@
-FROM node:18-slim as builder
+FROM node:20-slim as builder
 WORKDIR /app
 ENV YARN_CACHE_FOLDER=/usr/local/yarn-cache
 VOLUME /usr/local/yarn-cache

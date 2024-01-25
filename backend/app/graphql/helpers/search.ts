@@ -4,10 +4,10 @@ import {
   ObjectType,
 } from "type-graphql";
 
-export const SearchResponseFor = <Entity>(entity: ClassType<Entity>) => {
+export const SearchResponseFor = <Entity extends object>(entity: ClassType<Entity>) => {
   @ObjectType({
     simpleResolvers: true,
-    isAbstract: true,
+    // isAbstract: true,
   })
   abstract class ValidationResponse {
     @Field(() => Number)

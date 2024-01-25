@@ -48,11 +48,11 @@ type ApplicationPresenter {
   _count: ApplicationPresenterCount
   bioEn: String!
   bioHr: String!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   firstName: String!
   lastName: String!
   photo: Image
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type ApplicationPresenterCount {
@@ -85,7 +85,7 @@ input ApplicationPresenterWhereInput {
 type ApplicationTalk {
   _count: ApplicationTalkCount
   category: ApplicationTalkCategory!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   descriptionEn: String!
   descriptionHr: String!
   event: CalendarItem
@@ -95,7 +95,7 @@ type ApplicationTalk {
   titleEn: String!
   titleHr: String!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type ApplicationTalkCategory {
@@ -202,7 +202,7 @@ input ApplicationTalkWhereInput {
 
 type ApplicationWorkshop {
   _count: ApplicationWorkshopCount
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   descriptionEn: String!
   descriptionHr: String!
   event: CalendarItem
@@ -215,7 +215,7 @@ type ApplicationWorkshop {
   titleEn: String!
   titleHr: String!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type ApplicationWorkshopCount {
@@ -275,16 +275,16 @@ input ApplicationWorkshopWhereInput {
 
 input ApproveCompanyApplicationsInput {
   parts: ApproveCompanyApplicationsInputParts!
-  uid: String! = ""
+  uid: String!
 }
 
 input ApproveCompanyApplicationsInputParts {
-  booth: Boolean! = false
-  cocktail: Boolean! = false
-  logoHidden: Boolean! = false
-  panel: Boolean! = false
-  talkParticipants: Float! = 0
-  workshopParticipants: Float! = 0
+  booth: Boolean!
+  cocktail: Boolean!
+  logoHidden: Boolean!
+  panel: Boolean!
+  talkParticipants: Float!
+  workshopParticipants: Float!
 }
 
 type AuthResponse {
@@ -304,10 +304,10 @@ type Booth {
 
 type CalendarEvent {
   class: String!
-  end: DateTime!
+  end: DateTimeISO!
   location: String!
   noGroup: Boolean!
-  start: DateTime!
+  start: DateTimeISO!
   text: String!
   title: String!
 }
@@ -319,14 +319,14 @@ input CalendarFilterInput {
 type CalendarItem {
   capacity: Int!
   companies: [Company!]
-  end: DateTime!
+  end: DateTimeISO!
   forPanel: CompanyPanel
   forTalk: ApplicationTalk
   forWorkshop: ApplicationWorkshop
   grouped: Boolean!
   hasEvent: Boolean!
   location: String
-  start: DateTime!
+  start: DateTimeISO!
   text: String
   title: String
   type: String
@@ -389,12 +389,12 @@ input CalendarItemWhereInput {
 }
 
 input CalendarUpdateInput {
-  end: DateTime! = "2022-05-08T17:34:59.963Z"
+  end: DateTimeISO!
   forUid: String
   grouped: Boolean
   location: String
-  season: String! = ""
-  start: DateTime! = "2022-05-08T17:34:59.963Z"
+  season: String!
+  start: DateTimeISO!
   text: String
   title: String
   type: String
@@ -402,15 +402,15 @@ input CalendarUpdateInput {
 }
 
 input CocktailCreateInput {
-  colour: String! = ""
-  name: String! = ""
+  colour: String!
+  name: String!
 }
 
 type Company {
   _count: CompanyCount
   address: String!
   brandName: String!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   descriptionEn: String!
   descriptionHr: String!
   industry: Industry
@@ -420,7 +420,7 @@ type Company {
   program: CompanyProgram
   rasterLogo: Image
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   vat: String!
   vectorLogo: File
   website: String!
@@ -431,13 +431,13 @@ type CompanyApplication {
   approval: CompanyApplicationApproval
   booth: String
   cocktail: ApplicationCocktail
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   feedback: CompanyApplicationFeedback
   forCompany: Company
   forSeason: Season
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   userApplications: EventUserApplications!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
@@ -481,11 +481,11 @@ input CompanyApplicationApprovalWhereInput {
 }
 
 input CompanyApplicationApprovedEditInput {
-  cocktail: CocktailCreateInput = null
-  panel: [PresenterCreateInput!]! = []
-  talk: TalksCreateInput = null
-  vat: String! = ""
-  workshop: WorkshopsCreateInput = null
+  cocktail: CocktailCreateInput
+  panel: [PresenterCreateInput!]!
+  talk: TalksCreateInput
+  vat: String!
+  workshop: WorkshopsCreateInput
 }
 
 type CompanyApplicationCount {
@@ -493,19 +493,19 @@ type CompanyApplicationCount {
 }
 
 input CompanyApplicationCreateInput {
-  booth: String = null
-  talk: TalkCreateInput = null
-  vat: String! = ""
-  wantsCocktail: Boolean! = false
-  wantsPanel: Boolean! = false
-  workshop: WorkshopCreateInput = null
+  booth: String
+  talk: TalkCreateInput
+  vat: String!
+  wantsCocktail: Boolean!
+  wantsPanel: Boolean!
+  workshop: WorkshopCreateInput
 }
 
 type CompanyApplicationFeedback {
   applicationComments: String!
   applicationRating: Int!
   attendanceRating: Int!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   dateComments: String!
   dateRating: Int!
   experienceComments: String!
@@ -517,7 +517,7 @@ type CompanyApplicationFeedback {
   recommended: Int!
   testimonial: String!
   timeRating: Int!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 input CompanyApplicationFeedbackCreateInput {
@@ -688,11 +688,11 @@ input CompanyPanelRelationFilter {
 }
 
 input CompanyPanelUpdateInput {
-  companies: [String!]! = []
-  description: String! = ""
-  name: String! = ""
-  season: String! = ""
-  uid: String = null
+  companies: [String!]!
+  description: String!
+  name: String!
+  season: String!
+  uid: String
 }
 
 input CompanyPanelWhereInput {
@@ -752,7 +752,7 @@ type CompanyScanUserQrResponse {
 type CompanyScannedUser {
   isStarred: Boolean!
   note: String
-  scannedAt: DateTime!
+  scannedAt: DateTimeISO!
   user: User
 }
 
@@ -802,11 +802,11 @@ input CreateCompanyInput {
   brandName: String!
   descriptionEn: String!
   descriptionHr: String!
-  industry: String! = ""
+  industry: String!
   legalName: String!
-  rasterLogo: Upload = null
+  rasterLogo: Upload
   vat: String!
-  vectorLogo: Upload = null
+  vectorLogo: Upload
   website: String!
 }
 
@@ -830,31 +830,31 @@ type CreateSponsorResponse {
   errors: [FieldError!]
 }
 
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
-
 input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
+"""
+scalar DateTimeISO
+
 input DateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 type EditApprovedCompanyApplicationResponse {
@@ -864,7 +864,7 @@ type EditApprovedCompanyApplicationResponse {
 
 type EventLog {
   data: String
-  date: DateTime!
+  date: DateTimeISO!
   id: Int!
   name: String!
   user: User
@@ -952,9 +952,9 @@ type EventReservationStatus {
 }
 
 input EventReservationUpdateInput {
-  id: String! = ""
-  status: Int! = 0
-  type: EventType! = workshop
+  id: String!
+  status: Int!
+  type: EventType!
 }
 
 input EventReservationWhereInput {
@@ -990,13 +990,13 @@ type FieldError {
 
 type File {
   _count: FileCount
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   etag: String!
   mimeType: String!
   name: String!
   size: Int!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   url: String!
 }
 
@@ -1045,6 +1045,15 @@ input FileWhereInput {
   uploader: UserRelationFilter
 }
 
+type GateGuardianLog {
+  eventId: Int!
+  eventType: String!
+  forCalendarItem: CalendarItem
+  forUser: User
+  scannedAt: DateTimeISO!
+  scannedBy: User
+}
+
 input GateGuardianLogListRelationFilter {
   every: GateGuardianLogWhereInput
   none: GateGuardianLogWhereInput
@@ -1072,14 +1081,14 @@ type GateGuardianScanResponse {
 
 type Image {
   _count: ImageCount
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   full: ImageVariation!
   fullUrl: String!
   name: String!
   thumb: ImageVariation!
   thumbUrl: String!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type ImageCount {
@@ -1245,25 +1254,25 @@ input NestedBoolFilter {
 }
 
 input NestedDateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 input NestedDateTimeNullableFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
+  equals: DateTimeISO
+  gt: DateTimeISO
+  gte: DateTimeISO
+  in: [DateTimeISO!]
+  lt: DateTimeISO
+  lte: DateTimeISO
   not: NestedDateTimeNullableFilter
-  notIn: [DateTime!]
+  notIn: [DateTimeISO!]
 }
 
 input NestedIntFilter {
@@ -1310,23 +1319,23 @@ input NestedStringNullableFilter {
 type News {
   author: User
   content: String!
-  createdAt: DateTime!
-  date: DateTime!
+  createdAt: DateTimeISO!
+  date: DateTimeISO!
   description: String!
   lang: String!
   photo: Image
   slug: String!
   title: String!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 input NewsCreateInput {
   content: String!
-  date: DateTime!
+  date: DateTimeISO!
   description: String!
   lang: String!
-  photo: Upload = null
+  photo: Upload
   title: String!
 }
 
@@ -1336,7 +1345,7 @@ type NewsCreateResponse {
 }
 
 input NewsFilter {
-  take: Int = 0
+  take: Int
 }
 
 type Partner {
@@ -1348,9 +1357,9 @@ type Partner {
 }
 
 input PartnerCreateInput {
-  name: String! = ""
+  name: String!
   photo: Upload!
-  url: String! = ""
+  url: String!
 }
 
 input PartnerListRelationFilter {
@@ -1375,9 +1384,9 @@ input PartnerWhereInput {
 }
 
 input PasswordResetUseInput {
-  newPassword: String! = ""
-  newPasswordRepeat: String! = ""
-  token: String! = ""
+  newPassword: String!
+  newPasswordRepeat: String!
+  token: String!
 }
 
 type PasswordResetUseResponse {
@@ -1386,21 +1395,21 @@ type PasswordResetUseResponse {
 }
 
 input PresenterCreateInput {
-  bioEn: String! = ""
-  bioHr: String! = ""
-  firstName: String! = ""
-  lastName: String! = ""
+  bioEn: String!
+  bioHr: String!
+  firstName: String!
+  lastName: String!
   photo: Upload!
 }
 
 type PressRelease {
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   file: File
   forSeason: Season
-  published: DateTime!
+  published: DateTimeISO!
   title: String!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 enum PressReleaseOrderByRelevanceFieldEnum {
@@ -1447,14 +1456,14 @@ input PressReleaseWhereInput {
 }
 
 input PressReleaseWhereUniqueInput {
-  uid: String! = ""
+  uid: String!
 }
 
 input PressReleaseWithFilesCreateInput {
-  file: Upload = null
-  published: DateTime!
-  season: String! = ""
-  title: String! = ""
+  file: Upload
+  published: DateTimeISO!
+  season: String!
+  title: String!
 }
 
 type Query {
@@ -1473,8 +1482,9 @@ type Query {
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationAndSearchRelevanceInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   companyInfo(uid: String!): Company
   currentSeason: Season
-  eventLog(orderBy: [EventLogOrderByWithRelationAndSearchRelevanceInput!], page: Int! = 1, perPage: Int! = 20, where: String): EventLogPaginationResult!
+  eventLog(orderBy: [EventLogOrderByWithRelationAndSearchRelevanceInput!], page: Int!, perPage: Int!, where: String): EventLogPaginationResult!
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
+  gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationAndSearchRelevanceInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
@@ -1520,7 +1530,7 @@ type ReservationItem {
 type Resume {
   _count: ResumeCount
   city: String!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   cv: File
   extraField: String!
   faculty: ResumeFaculty
@@ -1529,7 +1539,7 @@ type Resume {
   studyYears: [ResumeStudyYear!]!
   technologies: [String!]!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   user: User!
   volunteerExperiences: [ResumeVolunteerExperience!]!
   workExperiences: [ResumeWorkExperience!]!
@@ -1549,20 +1559,20 @@ type ResumeCount {
 
 input ResumeCreateCvInput {
   cv: Upload
-  keepOld: Boolean! = true
+  keepOld: Boolean!
 }
 
 input ResumeCreateInput {
-  city: String! = ""
-  extraField: String = ""
+  city: String!
+  extraField: String
   faculty: ResumeFacultyCreateInput!
-  interests: [String!]! = []
+  interests: [String!]!
   pdf: ResumeCreateCvInput
-  projects: [ResumeProjectCreateInput!]! = []
-  studyYears: [ResumeStudyYearCreateInput!]! = []
-  technologies: [String!]! = []
-  volunteerExperiences: [ResumeVolunteerExperienceCreateInput!]! = []
-  workExperiences: [ResumeWorkExperienceCreateInput!]! = []
+  projects: [ResumeProjectCreateInput!]!
+  studyYears: [ResumeStudyYearCreateInput!]!
+  technologies: [String!]!
+  volunteerExperiences: [ResumeVolunteerExperienceCreateInput!]!
+  workExperiences: [ResumeWorkExperienceCreateInput!]!
 }
 
 type ResumeCreateResponse {
@@ -1577,8 +1587,8 @@ type ResumeFaculty {
 }
 
 input ResumeFacultyCreateInput {
-  module: String! = ""
-  name: String! = ""
+  module: String!
+  name: String!
 }
 
 enum ResumeFacultyOrderByRelevanceFieldEnum {
@@ -1672,15 +1682,15 @@ input ResumeOrderByWithRelationAndSearchRelevanceInput {
 type ResumeProject {
   position: String!
   project: String!
-  start: DateTime!
-  until: DateTime
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeProjectCreateInput {
-  position: String! = ""
-  project: String! = ""
-  start: DateTime! = "2022-05-03T17:26:50.810Z"
-  until: DateTime = null
+  position: String!
+  project: String!
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeProjectListRelationFilter {
@@ -1709,8 +1719,8 @@ type ResumeStudyYear {
 }
 
 input ResumeStudyYearCreateInput {
-  studyType: String! = ""
-  studyYear: Float! = 0
+  studyType: String!
+  studyYear: Float!
 }
 
 input ResumeStudyYearListRelationFilter {
@@ -1751,15 +1761,15 @@ input ResumeTechnologyWhereInput {
 type ResumeVolunteerExperience {
   organisation: String!
   position: String!
-  start: DateTime!
-  until: DateTime
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeVolunteerExperienceCreateInput {
-  organisation: String! = ""
-  position: String! = ""
-  start: DateTime! = "2022-05-03T17:26:50.810Z"
-  until: DateTime = null
+  organisation: String!
+  position: String!
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeVolunteerExperienceListRelationFilter {
@@ -1800,15 +1810,15 @@ input ResumeWhereInput {
 type ResumeWorkExperience {
   company: String!
   position: String!
-  start: DateTime!
-  until: DateTime
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeWorkExperienceCreateInput {
-  company: String! = ""
-  position: String! = ""
-  start: DateTime! = "2022-05-03T17:26:50.810Z"
-  until: DateTime = null
+  company: String!
+  position: String!
+  start: DateTimeISO!
+  until: DateTimeISO
 }
 
 input ResumeWorkExperienceListRelationFilter {
@@ -1833,9 +1843,9 @@ input ResumeWorkExperienceWhereInput {
 
 type Role {
   _count: RoleCount
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   name: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type RoleCount {
@@ -1883,30 +1893,30 @@ type SearchResponseStringArray {
 type Season {
   _count: SeasonCount
   applications: [CompanyApplication!]!
-  applicationsEditableFrom: DateTime!
-  applicationsEditableUntil: DateTime!
-  applicationsFrom: DateTime!
-  applicationsUntil: DateTime!
+  applicationsEditableFrom: DateTimeISO!
+  applicationsEditableUntil: DateTimeISO!
+  applicationsFrom: DateTimeISO!
+  applicationsUntil: DateTimeISO!
   calendar: [CalendarItem!]!
   companyScannedCvs: Int!
-  endsAt: DateTime!
+  endsAt: DateTimeISO!
   entryCount: Int!
-  eventFrom: DateTime!
-  eventUntil: DateTime!
-  feedbackFrom: DateTime!
-  feedbackUntil: DateTime!
+  eventFrom: DateTimeISO!
+  eventUntil: DateTimeISO!
+  feedbackFrom: DateTimeISO!
+  feedbackUntil: DateTimeISO!
   name: String!
   panel: CompanyPanel
   reservations: [ReservationItem!]!
-  scheduleFrom: DateTime!
-  scheduleUntil: DateTime!
-  showParticipantsFrom: DateTime!
-  showParticipantsUntil: DateTime!
-  showPartnersFrom: DateTime!
-  showPartnersUntil: DateTime!
-  showSponsorsFrom: DateTime!
-  showSponsorsUntil: DateTime!
-  startsAt: DateTime!
+  scheduleFrom: DateTimeISO!
+  scheduleUntil: DateTimeISO!
+  showParticipantsFrom: DateTimeISO!
+  showParticipantsUntil: DateTimeISO!
+  showPartnersFrom: DateTimeISO!
+  showPartnersUntil: DateTimeISO!
+  showSponsorsFrom: DateTimeISO!
+  showSponsorsUntil: DateTimeISO!
+  startsAt: DateTimeISO!
   uid: String!
 }
 
@@ -1925,25 +1935,25 @@ type SeasonCount {
 }
 
 input SeasonCreateInput {
-  applicationsEditableFrom: DateTime!
-  applicationsEditableUntil: DateTime!
-  applicationsFrom: DateTime!
-  applicationsUntil: DateTime!
-  endsAt: DateTime!
-  eventFrom: DateTime!
-  eventUntil: DateTime!
-  feedbackFrom: DateTime!
-  feedbackUntil: DateTime!
-  name: String! = ""
-  scheduleFrom: DateTime!
-  scheduleUntil: DateTime!
-  showParticipantsFrom: DateTime!
-  showParticipantsUntil: DateTime!
-  showPartnersFrom: DateTime!
-  showPartnersUntil: DateTime!
-  showSponsorsFrom: DateTime!
-  showSponsorsUntil: DateTime!
-  startsAt: DateTime!
+  applicationsEditableFrom: DateTimeISO!
+  applicationsEditableUntil: DateTimeISO!
+  applicationsFrom: DateTimeISO!
+  applicationsUntil: DateTimeISO!
+  endsAt: DateTimeISO!
+  eventFrom: DateTimeISO!
+  eventUntil: DateTimeISO!
+  feedbackFrom: DateTimeISO!
+  feedbackUntil: DateTimeISO!
+  name: String!
+  scheduleFrom: DateTimeISO!
+  scheduleUntil: DateTimeISO!
+  showParticipantsFrom: DateTimeISO!
+  showParticipantsUntil: DateTimeISO!
+  showPartnersFrom: DateTimeISO!
+  showPartnersUntil: DateTimeISO!
+  showSponsorsFrom: DateTimeISO!
+  showSponsorsUntil: DateTimeISO!
+  startsAt: DateTimeISO!
 }
 
 enum SeasonOrderByRelevanceFieldEnum {
@@ -2017,26 +2027,26 @@ enum SeasonScalarFieldEnum {
 }
 
 input SeasonUpdateInput {
-  applicationsEditableFrom: DateTime!
-  applicationsEditableUntil: DateTime!
-  applicationsFrom: DateTime!
-  applicationsUntil: DateTime!
-  endsAt: DateTime!
-  eventFrom: DateTime!
-  eventUntil: DateTime!
-  feedbackFrom: DateTime!
-  feedbackUntil: DateTime!
-  name: String! = ""
-  scheduleFrom: DateTime!
-  scheduleUntil: DateTime!
-  showParticipantsFrom: DateTime!
-  showParticipantsUntil: DateTime!
-  showPartnersFrom: DateTime!
-  showPartnersUntil: DateTime!
-  showSponsorsFrom: DateTime!
-  showSponsorsUntil: DateTime!
-  startsAt: DateTime!
-  uid: String! = ""
+  applicationsEditableFrom: DateTimeISO!
+  applicationsEditableUntil: DateTimeISO!
+  applicationsFrom: DateTimeISO!
+  applicationsUntil: DateTimeISO!
+  endsAt: DateTimeISO!
+  eventFrom: DateTimeISO!
+  eventUntil: DateTimeISO!
+  feedbackFrom: DateTimeISO!
+  feedbackUntil: DateTimeISO!
+  name: String!
+  scheduleFrom: DateTimeISO!
+  scheduleUntil: DateTimeISO!
+  showParticipantsFrom: DateTimeISO!
+  showParticipantsUntil: DateTimeISO!
+  showPartnersFrom: DateTimeISO!
+  showPartnersUntil: DateTimeISO!
+  showSponsorsFrom: DateTimeISO!
+  showSponsorsUntil: DateTimeISO!
+  startsAt: DateTimeISO!
+  uid: String!
 }
 
 input SeasonWhereInput {
@@ -2097,9 +2107,9 @@ type Sponsor {
 }
 
 input SponsorCreateInput {
-  name: String! = ""
+  name: String!
   photo: Upload!
-  url: String! = ""
+  url: String!
 }
 
 input SponsorListRelationFilter {
@@ -2156,30 +2166,30 @@ input StringNullableFilter {
 }
 
 input TalkCreateInput {
-  category: String! = ""
-  descriptionEn: String! = ""
-  descriptionHr: String! = ""
-  language: String! = ""
+  category: String!
+  descriptionEn: String!
+  descriptionHr: String!
+  language: String!
   presenter: PresenterCreateInput!
-  titleEn: String! = ""
-  titleHr: String! = ""
+  titleEn: String!
+  titleHr: String!
 }
 
 input TalksCreateInput {
-  category: String! = ""
-  descriptionEn: String! = ""
-  descriptionHr: String! = ""
-  language: String! = ""
-  presenter: [PresenterCreateInput!]! = []
-  titleEn: String! = ""
-  titleHr: String! = ""
+  category: String!
+  descriptionEn: String!
+  descriptionHr: String!
+  language: String!
+  presenter: [PresenterCreateInput!]!
+  titleEn: String!
+  titleHr: String!
 }
 
 type Translation {
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   key: String!
   language: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   value: String!
 }
 
@@ -2250,7 +2260,7 @@ scalar Upload
 type User {
   _count: UserCount
   companies: [Company!]!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   email: String!
   eventLog: [EventLog!]!
   firstName: String!
@@ -2261,7 +2271,7 @@ type User {
   resume: Resume
   roles: [Role!]!
   uid: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type UserCount {
@@ -2323,7 +2333,7 @@ input UserRegisterInput {
   language: String
   lastName: String!
   password: String!
-  passwordRepeat: String! = ""
+  passwordRepeat: String!
   phone: String!
   reservations: EventReservationCreateNestedManyWithoutUserInput
 }
@@ -2355,7 +2365,7 @@ input UserUpdateInput {
   password: String!
   phone: String!
   reservations: EventReservationCreateNestedManyWithoutUserInput
-  roles: [String!]! = []
+  roles: [String!]!
 }
 
 input UserWhereInput {
@@ -2387,25 +2397,25 @@ type VatData {
 }
 
 input WorkshopCreateInput {
-  descriptionEn: String! = ""
-  descriptionHr: String! = ""
-  goal: String! = ""
-  language: String! = ""
-  notesEn: String! = ""
-  notesHr: String! = ""
+  descriptionEn: String!
+  descriptionHr: String!
+  goal: String!
+  language: String!
+  notesEn: String!
+  notesHr: String!
   presenter: PresenterCreateInput!
-  titleEn: String! = ""
-  titleHr: String! = ""
+  titleEn: String!
+  titleHr: String!
 }
 
 input WorkshopsCreateInput {
-  descriptionEn: String! = ""
-  descriptionHr: String! = ""
-  goal: String! = ""
-  language: String! = ""
-  notesEn: String! = ""
-  notesHr: String! = ""
-  presenter: [PresenterCreateInput!]! = []
-  titleEn: String! = ""
-  titleHr: String! = ""
+  descriptionEn: String!
+  descriptionHr: String!
+  goal: String!
+  language: String!
+  notesEn: String!
+  notesHr: String!
+  presenter: [PresenterCreateInput!]!
+  titleEn: String!
+  titleHr: String!
 }

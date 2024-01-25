@@ -15,10 +15,10 @@ export class FieldError {
     message: string = "";
 }
 
-export const ValidationResponseFor = <Entity>(entity: ClassType<Entity>) => {
+export const ValidationResponseFor = <Entity extends object>(entity: ClassType<Entity>) => {
   @ObjectType({
     simpleResolvers: true,
-    isAbstract: true,
+    // isAbstract: true,
   })
   abstract class ValidationResponse {
     @Field(() => [ FieldError ], { nullable: true })

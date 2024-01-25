@@ -7,9 +7,6 @@ import {
 } from "@apollo/server/express4";
 import cors from "cors";
 import {
-  buildSchema,
-} from "type-graphql";
-import {
   Router,
 } from "express";
 import {
@@ -23,12 +20,8 @@ import {
 import {
   prisma,
 } from "../providers/prisma";
-import resolvers from "../graphql/resolvers";
 import {
-  authChecker,
-} from "../graphql/auth-checker";
-import {
-  schemaFileConfig,
+  doBuild as buildGraphqlSchema,
 } from "../graphql/schema/helpers";
 import {
   CORS_ALLOWED_HEADERS,
@@ -112,17 +105,7 @@ export default async (app: Router) => {
     resolvers: {
       Upload: GraphQLUpload,
     } as unknown as undefined,
-    schema: await buildSchema({
-      resolvers,
-      validate: false,
-      authChecker,
-      emitSchemaFile: schemaFileConfig(),
-      authMode:
-        "production" === process.env.NODE_ENV
-          ? "null"
-          : undefined
-      ,
-    }),
+    schema: await buildGraphqlSchema(),
     introspection: "production" !== process.env.NODE_ENV,
     csrfPrevention: false,
     plugins: [

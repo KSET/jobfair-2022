@@ -4,7 +4,7 @@ import {
 import path from "path";
 import type {
   BuildSchemaOptions,
-} from "type-graphql/dist/utils/buildSchema";
+} from "type-graphql";
 
 const dirname =
   __filename

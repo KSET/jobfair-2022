@@ -1,9 +1,11 @@
+import "@total-typescript/ts-reset";
 import "reflect-metadata";
 
 import {
   resolve,
 } from "path";
 import {
+  BuildSchemaOptions,
   buildSchema,
 } from "type-graphql";
 import resolvers from "../resolvers";
@@ -24,25 +26,29 @@ export const schemaPath =
     )
 ;
 
-export const schemaFileConfig =
+export const getSchemaFileConfig =
   () =>
     ({
       path: schemaPath(),
       sortedSchema: true,
-      commentDescriptions: true,
-    })
+    }) satisfies BuildSchemaOptions["emitSchemaFile"]
 ;
+
+export const doBuild = (schemaFileConfig?: BuildSchemaOptions["emitSchemaFile"]) => {
+  return buildSchema({
+    resolvers,
+    validate: false,
+    authChecker,
+    emitSchemaFile: schemaFileConfig ?? getSchemaFileConfig(),
+    disableInferringDefaultValues: true,
+  });
+};
 
 export const build =
   async () => {
-    const config = schemaFileConfig();
+    const config = getSchemaFileConfig();
 
-    await buildSchema({
-      resolvers,
-      validate: false,
-      authChecker,
-      emitSchemaFile: config,
-    });
+    await doBuild(config);
 
     return config.path;
   }

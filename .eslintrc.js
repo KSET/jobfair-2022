@@ -1,4 +1,7 @@
-module.exports = {
+/**
+ * @type {import("eslint").Linter.Config}
+ */
+const conf = {
   root: true,
   env: {
     browser: true,
@@ -18,7 +21,7 @@ module.exports = {
   },
   ignorePatterns: [
     ".eslintrc.js",
-    "./graphql/client/**/*",
+    "graphql/**/*.ts",
   ],
   extends: [
     "plugin:@typescript-eslint/recommended",
@@ -198,3 +201,5 @@ module.exports = {
     yoda: [ "error", "always", { exceptRange: true } ],
   },
 };
+
+module.exports = conf;

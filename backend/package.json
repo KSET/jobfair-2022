@@ -32,9 +32,9 @@
         "express": "^4.18.2",
         "express-session": "^1.17.3",
         "fast-glob": "^3.2.12",
-        "graphql": "^16.6.0",
+        "graphql": "^16.8.1",
         "graphql-fields": "^2.0.3",
-        "graphql-scalars": "^1.21.3",
+        "graphql-scalars": "^1.22.4",
         "graphql-upload": "^13.0.0",
         "handlebars": "^4.7.7",
         "html-minifier": "^4.0.0",
@@ -56,8 +56,8 @@
         "superjson": "^1.12.2",
         "ts-node": "^10.9.1",
         "tslib": "^2.5.0",
-        "type-graphql": "2.0.0-beta.1",
-        "typescript": "^5.0.4",
+        "type-graphql": "next",
+        "typescript": "^5.3.3",
         "zod": "^3.21.4"
     },
     "devDependencies": {
@@ -84,5 +84,9 @@
         "ts-node-dev": "^2.0.0",
         "type-fest": "^3.8.0",
         "typegraphql-prisma": "^0.24.6"
+    },
+    "engineStrict": true,
+    "engines": {
+        "node": ">=20.0.0"
     }
 }

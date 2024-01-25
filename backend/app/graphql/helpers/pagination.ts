@@ -6,10 +6,10 @@ import {
   ObjectType,
 } from "type-graphql";
 
-export const PaginationResultFor = <TEntity>(TEntityClass: ClassType<TEntity>) => {
+export const PaginationResultFor = <TEntity extends object>(TEntityClass: ClassType<TEntity>) => {
   @ObjectType({
     simpleResolvers: true,
-    isAbstract: true,
+    // isAbstract: true,
   })
   abstract class PaginationResult {
     @Field(() => Int)

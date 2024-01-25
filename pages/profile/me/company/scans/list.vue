@@ -121,7 +121,7 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
-    PageProfileMeCompanyScansListDataQuery,
+    type PageProfileMeCompanyScansListDataQuery,
   } from "~/graphql/client/graphql";
   import {
     useUserStore,

@@ -1,5 +1,5 @@
 import {
- Dict,
+ type Dict,
 } from "~/helpers/type";
 
 export const generateTitle =

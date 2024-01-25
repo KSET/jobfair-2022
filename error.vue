@@ -24,8 +24,8 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IInitialDataQuery,
-    IInitialDataQueryVariables,
+    type IInitialDataQuery,
+    type IInitialDataQueryVariables,
     InitialData,
   } from "~/graphql/schema";
   import {

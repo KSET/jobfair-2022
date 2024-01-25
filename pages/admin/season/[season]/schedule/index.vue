@@ -102,9 +102,9 @@
     ref,
   } from "#imports";
   import {
-    IPageAdminSeasonScheduleBaseQuery,
-    IPageAdminSeasonScheduleBaseQueryVariables,
-    ISeason,
+    type IPageAdminSeasonScheduleBaseQuery,
+    type IPageAdminSeasonScheduleBaseQueryVariables,
+    type ISeason,
     PageAdminSeasonScheduleBase,
   } from "~/graphql/schema";
   import {
@@ -189,8 +189,8 @@
         panel: toRef(resp.season!, "panel"),
         calendar: resp.season!.calendar,
         panelists: computed(() => unref(participants).filter((p) => 0 < (p?.program?.panelParticipants?.length ?? 0)).map((p): Panelist => ({
-          firstName: p.program!.panelParticipants[0]!.firstName,
-          lastName: p.program!.panelParticipants[0]!.lastName,
+          firstName: p.program!.panelParticipants[0].firstName,
+          lastName: p.program!.panelParticipants[0].lastName,
           company: {
             uid: p.uid,
             brandName: p.brandName,

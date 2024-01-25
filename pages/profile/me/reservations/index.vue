@@ -246,7 +246,7 @@
       case "all":
         return events;
       default:
-        return events.filter((event) => event.type === type.label);
+        return events.filter((event) => String(event.type) === type.label);
     }
   });
   const filteredEvents = computed(() => {

@@ -144,8 +144,8 @@
   import useTitle from "~/composables/useTitle";
   import {
     AdminCompanyApplications,
-    IAdminCompanyApplicationsQuery,
-    IAdminCompanyApplicationsQueryVariables,
+    type IAdminCompanyApplicationsQuery,
+    type IAdminCompanyApplicationsQueryVariables,
   } from "~/graphql/schema";
 
   export default defineComponent({

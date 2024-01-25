@@ -623,9 +623,9 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ICalendarItem,
-    IProfileBaseDataQuery,
-    IProfileBaseDataQueryVariables,
+    type ICalendarItem,
+    type IProfileBaseDataQuery,
+    type IProfileBaseDataQueryVariables,
     ProfileBaseData,
   } from "~/graphql/schema";
   import {
@@ -652,8 +652,8 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
-    Dict,
-    MaybeComputedRef,
+    type Dict,
+    type MaybeComputedRef,
   } from "~/helpers/type";
   import {
     useCalendarStore,

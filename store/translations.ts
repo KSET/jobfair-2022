@@ -22,10 +22,10 @@ import {
   capitalize,
 } from "~/helpers/string";
 import {
-  ITranslationsForQuery,
-  ITranslationsForQueryVariables,
-  IUpdateTranslationMutation,
-  IUpdateTranslationMutationVariables,
+  type ITranslationsForQuery,
+  type ITranslationsForQueryVariables,
+  type IUpdateTranslationMutation,
+  type IUpdateTranslationMutationVariables,
   TranslationsFor,
   UpdateTranslation,
 } from "~/graphql/schema";

@@ -5,28 +5,28 @@ import {
   values,
 } from "rambdax";
 import {
- ToastServiceMethods,
+ type ToastServiceMethods,
 } from "primevue/toastservice";
 import {
   EventType,
   statusFromEventList,
 } from "~/helpers/event-status";
 import {
-  Assign,
+  type Assign,
 } from "~/helpers/type";
 import {
   useMutation,
   useQuery,
 } from "~/composables/useQuery";
 import {
-  ICalendarItem,
-  IStoreCalendarEventsAllQuery,
+  type ICalendarItem,
+  type IStoreCalendarEventsAllQuery,
 } from "~/graphql/schema";
 import {
   useTranslationsStore,
 } from "~/store/translations";
 import {
-  FragmentType,
+  type FragmentType,
   graphql,
 } from "~/graphql/client";
 import type {

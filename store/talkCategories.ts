@@ -10,14 +10,14 @@ import {
 } from "~/composables/useQuery";
 import {
   CreateTalkCategory,
-  IApplicationTalkCategory,
-  ICreateTalkCategoryMutation,
-  ICreateTalkCategoryMutationVariables,
-  IRenameTalkCategoryMutation,
-  IRenameTalkCategoryMutationVariables,
-  ISeason,
-  ITalkCategoriesQuery,
-  ITalkCategoriesQueryVariables,
+  type IApplicationTalkCategory,
+  type ICreateTalkCategoryMutation,
+  type ICreateTalkCategoryMutationVariables,
+  type IRenameTalkCategoryMutation,
+  type IRenameTalkCategoryMutationVariables,
+  type ISeason,
+  type ITalkCategoriesQuery,
+  type ITalkCategoriesQueryVariables,
   RenameTalkCategory,
   TalkCategories,
 } from "~/graphql/schema";

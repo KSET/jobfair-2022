@@ -169,8 +169,8 @@
     capitalize,
   } from "~/helpers/string";
   import {
-    IPageScheduleBaseQuery,
-    IPageScheduleBaseQueryVariables,
+    type IPageScheduleBaseQuery,
+    type IPageScheduleBaseQueryVariables,
     PageScheduleBase,
   } from "~/graphql/schema";
   import {

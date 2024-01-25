@@ -40,8 +40,8 @@
     useQuery,
   } from "#imports";
   import {
-    IPressReleasesQuery,
-    IPressReleasesQueryVariables,
+    type IPressReleasesQuery,
+    type IPressReleasesQueryVariables,
     PressReleases,
   } from "~/graphql/schema";
   import {

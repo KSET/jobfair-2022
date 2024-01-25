@@ -70,9 +70,9 @@
   } from "~/helpers/forms/news";
   import {
     EditNews,
-    IEditNewsMutation,
-    IEditNewsMutationVariables,
-    INewsItemByUidQuery,
+    type IEditNewsMutation,
+    type IEditNewsMutationVariables,
+    type INewsItemByUidQuery,
   } from "~/graphql/schema";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
 
@@ -96,7 +96,7 @@
 
       const info_ = newsEdit({
         ...newsItem,
-        date: new Date(newsItem.date as string).toISOString().split("T")[0]!,
+        date: new Date(newsItem.date as string).toISOString().split("T")[0],
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       info_.date.classes = "span-1";

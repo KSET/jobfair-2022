@@ -2,11 +2,11 @@ import {
   asDate,
 } from "../date";
 import {
-  IFile,
-  IPressRelease,
+  type IFile,
+  type IPressRelease,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
 type PressRelease = Omit<IPressRelease,
@@ -32,7 +32,7 @@ export const pressReleaseCreate =
       published: {
         value:
           pressRelease?.published
-            ? asDate(pressRelease?.published as (Date | string))
+            ? asDate(pressRelease?.published)
             : "",
         type: "date" as const,
       },

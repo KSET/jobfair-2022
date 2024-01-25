@@ -56,7 +56,7 @@
   } from "vue";
   import AppImg from "~/components/util/app-img.vue";
   import {
-    INews,
+    type INews,
   } from "~/graphql/schema";
   import {
     computed,

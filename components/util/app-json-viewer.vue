@@ -53,7 +53,7 @@
 
 <script lang="ts">
   import {
-    PropType,
+    type PropType,
   } from "vue";
   import {
     ref,

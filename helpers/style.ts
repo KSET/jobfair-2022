@@ -1,6 +1,6 @@
 import {
-  ClassDefinition,
-  ClassList,
+  type ClassDefinition,
+  type ClassList,
 } from "~/helpers/type";
 
 export const toClass =

@@ -4,10 +4,10 @@ import {
   defineStore,
 } from "pinia";
 import {
-  ISeason,
+  type ISeason,
 } from "~/graphql/schema";
 import {
-  WithoutSuffix,
+  type WithoutSuffix,
 } from "~/helpers/type";
 
 const inRange = (from: Date | string, until: Date | string) => {

@@ -1,12 +1,12 @@
 import {
-  Simplify,
+  type Simplify,
 } from "type-fest";
 import {
-  ISponsor,
-  IImage,
+  type ISponsor,
+  type IImage,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
 export type Sponsor = Pick<ISponsor,

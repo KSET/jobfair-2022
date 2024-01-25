@@ -3,9 +3,9 @@ import {
   isFunction,
 } from "lodash-es";
 import {
-  Path,
-  PathValue,
-  RecursiveNonPartial,
+  type Path,
+  type PathValue,
+  type RecursiveNonPartial,
 } from "~/helpers/type";
 
 export const ensureArray =

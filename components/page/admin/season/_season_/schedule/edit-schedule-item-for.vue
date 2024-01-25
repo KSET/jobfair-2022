@@ -64,7 +64,7 @@
     IMutationUpdateCalendarItemArgs,
   } from "~/graphql/schema";
   import {
-    Dict,
+    type Dict,
   } from "~/helpers/type";
 
   export default defineComponent({

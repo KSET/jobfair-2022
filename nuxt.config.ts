@@ -3,7 +3,7 @@ import "dotenv/config";
 import Icons from "unplugin-icons/vite";
 import ShortUniqueId from "short-unique-id";
 import cssesc from "cssesc";
-import StylelintPlugin from "@frsource/vite-plugin-stylelint";
+import VitePluginChecker from "vite-plugin-checker";
 import SvgLoader from "vite-svg-loader";
 import {
   defineNuxtConfig,
@@ -27,11 +27,12 @@ const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
 export default defineNuxtConfig({
   typescript: {
     strict: true,
+    shim: false,
   },
 
-  buildModules: [
-    "@nuxt/typescript-build",
-  ],
+//   buildModules: [
+//     "@nuxt/typescript-build",
+//   ],
 
   modules: [
     "@vueuse/nuxt",
@@ -46,6 +47,7 @@ export default defineNuxtConfig({
       "rambdax",
       "primevue",
       "graphql",
+      "tslib",
     ],
   },
 
@@ -108,8 +110,16 @@ export default defineNuxtConfig({
         defaultClass: "",
       }),
       SvgLoader(),
-      StylelintPlugin({
-        fix: true,
+      VitePluginChecker({
+        typescript: true,
+        stylelint: {
+          lintCommand: 'stylelint "**/*.{scss,css,vue}" --ignore-path .gitignore',
+        },
+        eslint: {
+          lintCommand: 'eslint --ext ".ts,.js,.vue" --ignore-path .gitignore --ignore-pattern backend/',
+        },
+
+        enableBuild: false,
       }),
     ],
 

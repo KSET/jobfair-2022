@@ -310,7 +310,7 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
-    Dict,
+    type Dict,
   } from "~/helpers/type";
   import {
     useUserStore,

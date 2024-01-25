@@ -1,7 +1,7 @@
 // Job Fair
 
 import {
-  MaybeRef,
+  type MaybeRef,
 } from "~/helpers/type";
 import {
   unref,

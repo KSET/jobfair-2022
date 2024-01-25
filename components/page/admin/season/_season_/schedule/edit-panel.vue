@@ -67,10 +67,10 @@
     useMutation,
   } from "#imports";
   import {
-    ICompany,
-    ICompanyPanel,
-    ICompanyPanelUpdateInput,
-    IMutationUpdateCompanyPanelArgs,
+    type ICompany,
+    type ICompanyPanel,
+    type ICompanyPanelUpdateInput,
+    type IMutationUpdateCompanyPanelArgs,
   } from "~/graphql/schema";
   import {
     companyPanelListCreate,

@@ -147,10 +147,10 @@
   import {
     AdminCompanyApplication,
     AdminCreateCompanyApplication,
-    IAdminCompanyApplicationQuery,
-    IAdminCompanyApplicationQueryVariables,
-    IAdminCreateCompanyApplicationMutation,
-    IAdminCreateCompanyApplicationMutationVariables,
+    type IAdminCompanyApplicationQuery,
+    type IAdminCompanyApplicationQueryVariables,
+    type IAdminCreateCompanyApplicationMutation,
+    type IAdminCreateCompanyApplicationMutationVariables,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,
@@ -159,12 +159,12 @@
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
-    Presenter,
-    Talk,
-    Workshop,
+    type Presenter,
+    type Talk,
+    type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
-    InputEntry,
+    type InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
 

@@ -114,13 +114,13 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ICompany,
-    IFile,
-    IImage,
-    IImageVariation,
-    IIndustry,
-    IUpdateCompanyInfoMutationVariables,
-    IUser,
+    type ICompany,
+    type IFile,
+    type IImage,
+    type IImageVariation,
+    type IIndustry,
+    type IUpdateCompanyInfoMutationVariables,
+    type IUser,
   } from "~/graphql/schema";
   import {
     computed,

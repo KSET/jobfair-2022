@@ -115,8 +115,8 @@
   import AppDropdown from "~/components/util/form/app-dropdown.vue";
   import {
     AdminFeedbackInfo,
-    IAdminFeedbackInfoQuery,
-    IAdminFeedbackInfoQueryVariables,
+    type IAdminFeedbackInfoQuery,
+    type IAdminFeedbackInfoQueryVariables,
   } from "~/graphql/schema";
   import TranslatedText from "~/components/TranslatedText.vue";
 

@@ -1,17 +1,17 @@
 import {
-  DocumentNode,
+  type DocumentNode,
 } from "graphql";
 import {
   unref,
 } from "vue";
 import {
-  TypedDocumentNode,
+  type TypedDocumentNode,
 } from "@urql/core";
 import {
   useNuxtApp,
 } from "#app";
 import {
-  MaybeRef,
+  type MaybeRef,
 } from "~/helpers/type";
 import {
   reactive,

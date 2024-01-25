@@ -107,10 +107,10 @@
   import AppInput from "~/components/util/form/app-input.vue";
   import {
     CheckPasswordReset,
-    ICheckPasswordResetMutation,
-    ICheckPasswordResetMutationVariables,
-    IUsePasswordResetMutation,
-    IUsePasswordResetMutationVariables,
+    type ICheckPasswordResetMutation,
+    type ICheckPasswordResetMutationVariables,
+    type IUsePasswordResetMutation,
+    type IUsePasswordResetMutationVariables,
     UsePasswordReset,
   } from "~/graphql/schema";
 

@@ -5,11 +5,11 @@ import {
   asDate,
 } from "../date";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
-  IImage,
-  INews,
+  type IImage,
+  type INews,
 } from "~/graphql/schema";
 import {
   Language,

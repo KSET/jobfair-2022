@@ -132,15 +132,15 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ICompany,
-    IFile,
-    IImage,
-    IImageVariation,
-    IIndustry,
-    IUpdateCompanyInfoMutationVariables,
-    IUser,
-    ICreateCompanyResponse,
-    IMutationUpdateCompanyMembersForArgs,
+    type ICompany,
+    type IFile,
+    type IImage,
+    type IImageVariation,
+    type IIndustry,
+    type IUpdateCompanyInfoMutationVariables,
+    type IUser,
+    type ICreateCompanyResponse,
+    type IMutationUpdateCompanyMembersForArgs,
   } from "~/graphql/schema";
 
   export default defineComponent({

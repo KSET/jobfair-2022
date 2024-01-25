@@ -90,8 +90,8 @@
   import Dropdown from "primevue/dropdown";
   import z from "zod";
   import {
-    RecursiveNonNullable,
-    RecursiveNonPartial,
+    type RecursiveNonNullable,
+    type RecursiveNonPartial,
   } from "~/helpers/type";
   import {
     computed,
@@ -109,7 +109,7 @@
   } from "~/graphql/client";
   import {
     // eslint-disable-next-line camelcase
-    IPageGateGuardian_ScanMutation,
+    type IPageGateGuardian_ScanMutation,
   } from "~/graphql/schema";
   import {
     useQuery,

@@ -84,7 +84,7 @@
     gql,
   } from "@urql/core";
   import {
-    MaybeRef,
+    type MaybeRef,
   } from "~/helpers/type";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
@@ -95,10 +95,10 @@
     useMutation,
   } from "~/composables/useQuery";
   import {
-    IMutationSwapPartnerOrderArgs,
-    IMutationSwapSponsorOrderArgs,
-    IPartner,
-    ISponsor,
+    type IMutationSwapPartnerOrderArgs,
+    type IMutationSwapSponsorOrderArgs,
+    type IPartner,
+    type ISponsor,
   } from "~/graphql/schema";
   import EditSponsor from "~/components/page/admin/season/_season_/edit-sponsor.vue";
   import EditPartner from "~/components/page/admin/season/_season_/edit-partner.vue";

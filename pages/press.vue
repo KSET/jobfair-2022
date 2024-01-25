@@ -152,8 +152,8 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IPressReleasesQuery,
-    IPressReleasesQueryVariables,
+    type IPressReleasesQuery,
+    type IPressReleasesQueryVariables,
     PressReleases,
   } from "~/graphql/schema";
   import {

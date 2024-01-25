@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/vue";
 import {
-  Primitive,
+  type Primitive,
 } from "type-fest";
 import {
   defineNuxtPlugin,

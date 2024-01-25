@@ -1,8 +1,8 @@
 import {
-  ICalendarItem,
+  type ICalendarItem,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
   toDatetimeString,
@@ -34,7 +34,7 @@ type CalendarItem = Omit<ICalendarItem,
   | "forTalk"
   | "forPanel"
   | "hasEvent"
-  | never>;
+>;
 export const calendarItemCreate =
   <T extends CalendarItem>(item?: Item<T>): Record<keyof CalendarItem, InputEntry> =>
     ({

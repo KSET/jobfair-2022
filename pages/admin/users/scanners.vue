@@ -92,7 +92,7 @@
     reactive,
   } from "#imports";
   import {
-    PageAdminUsersScannersQuery,
+    type PageAdminUsersScannersQuery,
   } from "~/graphql/client/graphql";
 
   useTitle("Admin | Skeneri");

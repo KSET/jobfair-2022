@@ -66,8 +66,8 @@
   } from "~/helpers/forms/news";
   import {
     CreateNews,
-    ICreateNewsMutation,
-    ICreateNewsMutationVariables,
+    type ICreateNewsMutation,
+    type ICreateNewsMutationVariables,
   } from "~/graphql/schema";
 
   export default defineComponent({

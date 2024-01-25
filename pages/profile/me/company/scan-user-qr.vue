@@ -92,13 +92,13 @@
   import PDialog from "primevue/dialog";
   import z from "zod";
   import {
-    Maybe,
+    type Maybe,
   } from "~/helpers/type";
   import {
     graphql,
   } from "~/graphql/client";
   import {
-    PageProfileMeCompanyScanUserQrScanMutation,
+    type PageProfileMeCompanyScanUserQrScanMutation,
   } from "~/graphql/client/graphql";
 
   useTitle("Scan user QR");

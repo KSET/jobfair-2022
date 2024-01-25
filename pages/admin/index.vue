@@ -280,8 +280,8 @@
   } from "~/composables/useQuery";
   import {
     AdminInitialData,
-    IAdminInitialDataQueryVariables,
-    IAdminInitialDataQuery,
+    type IAdminInitialDataQueryVariables,
+    type IAdminInitialDataQuery,
   } from "~/graphql/schema";
   import EditableField from "~/components/admin/util/editable-field.vue";
   import EditSeason from "~/components/page/admin/edit-season.vue";

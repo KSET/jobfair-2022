@@ -89,8 +89,8 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IInitialDataQuery,
-    IInitialDataQueryVariables,
+    type IInitialDataQuery,
+    type IInitialDataQueryVariables,
     InitialData,
   } from "~/graphql/schema";
   // import IconSpinner from "~icons/fluent/spinner-ios-20-filled";

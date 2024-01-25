@@ -75,10 +75,10 @@
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppImg from "~/components/util/app-img.vue";
   import {
-    INews,
+    type INews,
   } from "~/graphql/schema";
   import {
-    NewsWithFormattedDate,
+    type NewsWithFormattedDate,
   } from "~/helpers/news";
 
   export default defineComponent({

@@ -20,7 +20,7 @@
       responsive-layout="scroll"
       row-hover
       striped-rows
-      :value="data?.gateGuardianScanList ?? []"
+      :value="pageData?.gateGuardianScanList ?? []"
       :rows="20"
       :rows-per-page-options="[2, 5, 10, 20, 50, 100]"
       sort-mode="multiple"
@@ -83,7 +83,7 @@
     useSeasonsStore,
   } from "~/store/seasons";
   import {
-    PageAdminSeasonReservationsScannedDataQuery,
+    type PageAdminSeasonReservationsScannedDataQuery,
   } from "~/graphql/client/graphql";
 
   useTitle("Skenirani | Admin");
@@ -130,7 +130,7 @@
 
   const season = seasonsStore.season!.uid!;
 
-  const data = await useQuery({
+  const pageData = await useQuery({
     query: graphql(/* GraphQL */ `
     query PageAdminSeasonReservationsScannedData($season: String!) {
       gateGuardianScanList(season: $season) {

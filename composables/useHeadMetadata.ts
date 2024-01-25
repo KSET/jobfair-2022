@@ -3,8 +3,8 @@ import {
   generateTitle,
 } from "~/helpers/head";
 import {
-  Assign,
-  MaybeComputedRef,
+  type Assign,
+  type MaybeComputedRef,
 } from "~/helpers/type";
 import {
   computed,
@@ -36,7 +36,7 @@ type HeadMetadataArticle = Assign<HeadMetadataBase, {
 
 export type HeadMetadata = HeadMetadataBase | HeadMetadataArticle;
 
-const unrefComputed = <T>(ref: MaybeComputedRef<T>) => unref(ref) as T;
+const unrefComputed = <T>(ref: MaybeComputedRef<T>) => unref(ref);
 
 export const useHeadMetadata = <T extends Partial<HeadMetadata>>(metaRef: MaybeComputedRef<T>, translateTitle = true) => {
   const translationStore = useTranslationsStore();

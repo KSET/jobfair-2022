@@ -71,8 +71,8 @@
   } from "~/helpers/forms/company-application";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import {
-    ICompanyApplicationFeedback,
-    ICompanyApplicationFeedbackCreateInput,
+    type ICompanyApplicationFeedback,
+    type ICompanyApplicationFeedbackCreateInput,
   } from "~/graphql/schema";
   import {
     useCompanyStore,

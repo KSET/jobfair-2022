@@ -84,10 +84,10 @@
   } from "~/helpers/forms/user";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import {
-    IUserRegisterInput,
+    type IUserRegisterInput,
   } from "~/graphql/schema";
   import {
-    Dict,
+    type Dict,
   } from "~/helpers/type";
 
   export default defineComponent({

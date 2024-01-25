@@ -83,14 +83,14 @@
     mapToObject,
   } from "rambdax";
   import {
-    MaybeRef,
+    type MaybeRef,
   } from "~/helpers/type";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     useQuery,
   } from "~/composables/useQuery";
   import {
-    ITranslation,
+    type ITranslation,
   } from "~/graphql/schema";
   import {
     Language,

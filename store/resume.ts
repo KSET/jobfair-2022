@@ -5,8 +5,8 @@ import {
   gql,
 } from "@urql/core";
 import {
-  IResumeQuery,
-  IResumeQueryVariables,
+  type IResumeQuery,
+  type IResumeQueryVariables,
   Resume,
 } from "~/graphql/schema";
 import {

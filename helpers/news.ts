@@ -2,10 +2,10 @@ import {
   formatDate,
 } from "@/helpers/date";
 import {
-  INews,
+  type INews,
 } from "~/graphql/schema";
 import {
- RecursivePartial,
+ type RecursivePartial,
 } from "~/helpers/type";
 
 export type NewsWithDate = RecursivePartial<INews> & { date: unknown, };

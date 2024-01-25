@@ -67,11 +67,11 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IPressReleaseQuery,
-    IPressReleaseQueryVariables,
-    IPressReleaseWithFilesCreateInput,
-    IUpdatePressReleaseMutation,
-    IUpdatePressReleaseMutationVariables,
+    type IPressReleaseQuery,
+    type IPressReleaseQueryVariables,
+    type IPressReleaseWithFilesCreateInput,
+    type IUpdatePressReleaseMutation,
+    type IUpdatePressReleaseMutationVariables,
     PressRelease,
     UpdatePressRelease,
   } from "~/graphql/schema";

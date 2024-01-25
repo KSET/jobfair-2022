@@ -74,17 +74,17 @@
   import {
     AllNews,
     DeleteNews,
-    IAllNewsQuery,
-    IAllNewsQueryVariables,
-    IDeleteNewsMutation,
-    IDeleteNewsMutationVariables,
+    type IAllNewsQuery,
+    type IAllNewsQueryVariables,
+    type IDeleteNewsMutation,
+    type IDeleteNewsMutationVariables,
   } from "~/graphql/schema";
   import {
     useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
-    Language,
+    type Language,
     LanguageToName,
   } from "~/store/translations";
   import {

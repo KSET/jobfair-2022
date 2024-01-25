@@ -143,12 +143,12 @@
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IPageAdminUserEditBaseQuery,
-    IPageAdminUserEditBaseQueryVariables,
-    IRequestPasswordResetForMutation,
-    IRequestPasswordResetForMutationVariables,
-    IUpdateUserMutation,
-    IUpdateUserMutationVariables,
+    type IPageAdminUserEditBaseQuery,
+    type IPageAdminUserEditBaseQueryVariables,
+    type IRequestPasswordResetForMutation,
+    type IRequestPasswordResetForMutationVariables,
+    type IUpdateUserMutation,
+    type IUpdateUserMutationVariables,
     PageAdminUserEditBase,
     RequestPasswordResetFor,
     UpdateUser,

@@ -174,8 +174,8 @@
     useToast,
   } from "primevue/usetoast";
   import {
-    MaybeRef,
-    Dict,
+    type MaybeRef,
+    type Dict,
   } from "~/helpers/type";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppUserProfileContainer from "~/components/AppUserProfileContainer.vue";
@@ -192,18 +192,18 @@
     resumeWorkExperienceCreate,
   } from "~/helpers/forms/resume";
   import AppFormgroup, {
-    InputEntry,
+    type InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
   import {
     useMutation,
     useQuery,
   } from "~/composables/useQuery";
   import {
-    IMutationUpdateResumeArgs,
-    IMyResumeQuery,
-    IMyResumeQueryVariables,
-    ISearchResponseStringArray,
-    IUpdateResumeMutation,
+    type IMutationUpdateResumeArgs,
+    type IMyResumeQuery,
+    type IMyResumeQueryVariables,
+    type ISearchResponseStringArray,
+    type IUpdateResumeMutation,
     MyResume,
     UpdateResume,
   } from "~/graphql/schema";
@@ -497,8 +497,8 @@
           };
 
           if ("string" === typeof data[FormFor.Pdf]?.cv) {
-            data[FormFor.Pdf]!.keepOld = "" !== data[FormFor.Pdf]?.cv;
-            data[FormFor.Pdf]!.cv = null;
+            data[FormFor.Pdf].keepOld = "" !== data[FormFor.Pdf]?.cv;
+            data[FormFor.Pdf].cv = null;
           }
 
           for (const item of [

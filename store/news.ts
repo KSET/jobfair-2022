@@ -2,23 +2,23 @@ import {
   defineStore,
 } from "pinia";
 import {
-  NewsWithDate,
-  NewsWithFormattedDate,
+  type NewsWithDate,
+  type NewsWithFormattedDate,
   processNewsItem,
 } from "~/helpers/news";
 import {
   useQuery,
 } from "~/composables/useQuery";
 import {
-  INewsQuery,
-  INewsQueryVariables,
+  type INewsQuery,
+  type INewsQueryVariables,
   News,
-  INewsItemQuery,
-  INewsItemQueryVariables,
+  type INewsItemQuery,
+  type INewsItemQueryVariables,
   NewsItem,
-  INewsFilter,
-  INewsItemByUidQuery,
-  INewsItemByUidQueryVariables,
+  type INewsFilter,
+  type INewsItemByUidQuery,
+  type INewsItemByUidQueryVariables,
   NewsItemByUid,
 } from "~/graphql/schema";
 import {

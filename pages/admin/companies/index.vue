@@ -89,9 +89,9 @@
   } from "#imports";
   import useTitle from "~/composables/useTitle";
   import {
-    ICompany,
-    IIndustry,
-    IUser,
+    type ICompany,
+    type IIndustry,
+    type IUser,
   } from "~/graphql/schema";
 
   export default defineComponent({

@@ -1,12 +1,12 @@
 import {
-  Simplify,
+  type Simplify,
 } from "type-fest";
 import {
-  IPartner,
-  IImage,
+  type IPartner,
+  type IImage,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
 export type Partner = Pick<IPartner,

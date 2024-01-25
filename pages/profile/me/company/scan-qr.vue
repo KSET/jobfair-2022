@@ -59,7 +59,7 @@
     useMutation,
   } from "#imports";
   import {
-    Dict,
+    type Dict,
   } from "~/helpers/type";
 
   class ScanError extends Error {

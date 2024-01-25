@@ -57,7 +57,7 @@
   } from "~/graphql/client";
   import {
     // eslint-disable-next-line camelcase
-    IPageParticipants_BaseQuery,
+    type IPageParticipants_BaseQuery,
   } from "~/graphql/schema";
 
   // eslint-disable-next-line camelcase

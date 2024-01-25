@@ -5,10 +5,10 @@ import {
   toPairs,
 } from "rambdax";
 import {
-  IUser,
+  type IUser,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
   Language,

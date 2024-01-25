@@ -94,10 +94,10 @@
     useMutation,
   } from "~/composables/useQuery";
   import {
-    ICreateSponsorResponse,
-    IMutationCreateSponsorArgs,
-    IMutationDeleteSponsorArgs,
-    ISponsor,
+    type ICreateSponsorResponse,
+    type IMutationCreateSponsorArgs,
+    type IMutationDeleteSponsorArgs,
+    type ISponsor,
   } from "~/graphql/schema";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -172,7 +172,7 @@
             })
       ;
 
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions */
+      /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       if (!info.photo?.classes) {
         info.photo.classes = [];
       }
@@ -192,7 +192,7 @@
           item.disabled = true;
         }
       }
-      /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions */
+      /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 
       type AuthError = {
         message: string,

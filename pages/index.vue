@@ -213,8 +213,8 @@
     useSeasonsStore,
   } from "~/store/seasons";
   import {
-    IPageIndexDataQuery,
-    IPageIndexDataQueryVariables,
+    type IPageIndexDataQuery,
+    type IPageIndexDataQueryVariables,
     PageIndexData,
   } from "~/graphql/schema";
   import {

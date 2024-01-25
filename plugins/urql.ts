@@ -15,7 +15,7 @@ import {
   useRuntimeConfig,
 } from "#app";
 import {
-  Dict,
+  type Dict,
 } from "~/helpers/type";
 
 const SSR_KEY = "__APP__URQL_DATA__";

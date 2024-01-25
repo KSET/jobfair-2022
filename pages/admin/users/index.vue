@@ -107,10 +107,10 @@
   } from "#imports";
   import useTitle from "~/composables/useTitle";
   import {
-    ICompany,
-    IResume,
-    IRole,
-    IUser,
+    type ICompany,
+    type IResume,
+    type IRole,
+    type IUser,
   } from "~/graphql/schema";
   import AppTime from "~/components/util/app-time.vue";
 

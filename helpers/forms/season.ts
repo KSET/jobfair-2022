@@ -1,8 +1,8 @@
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
-  ISeason,
+  type ISeason,
 } from "~/graphql/schema";
 import {
   today,

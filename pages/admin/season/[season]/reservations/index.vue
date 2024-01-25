@@ -61,8 +61,8 @@
   } from "~/store/seasons";
   import {
     AdminReservationsData,
-    IAdminReservationsDataQuery,
-    IAdminReservationsDataQueryVariables,
+    type IAdminReservationsDataQuery,
+    type IAdminReservationsDataQueryVariables,
   } from "~/graphql/schema";
 
   export default defineComponent({

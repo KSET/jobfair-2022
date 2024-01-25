@@ -62,9 +62,9 @@
   } from "~/helpers/forms/season";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
-    ISeason,
-    ISeasonCreateInput,
-    ISeasonUpdateInput,
+    type ISeason,
+    type ISeasonCreateInput,
+    type ISeasonUpdateInput,
   } from "~/graphql/schema";
   import {
     useMutation,
@@ -149,7 +149,7 @@
       const errors = reactive(mapObject(() => [] as AuthError[], {
         ...info,
         entity: "",
-      }) as Record<keyof typeof info | "entity", AuthError[]>);
+      }) as Record<keyof typeof info, AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
 

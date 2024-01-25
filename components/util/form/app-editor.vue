@@ -1,6 +1,6 @@
 <template>
   <div
-    :aria-disabled="orNull(disabled)"
+    :aria-disabled="disabled || undefined"
     :class="[$style.container, $attrs.class]"
   >
     <label
@@ -45,7 +45,7 @@
         <div :class="$style.editorActions">
           <div :class="$style.editorActionGroup">
             <button
-              :data-active="editor.isActive('heading', { level: 1 })"
+              :data-active="editor?.isActive('heading', { level: 1 })"
               title="Heading (Ctrl + Alt + 1)"
               type="button"
               @click="handleEditorAction('heading', 1)"
@@ -53,7 +53,7 @@
               <IconHeading1 />
             </button>
             <button
-              :data-active="editor.isActive('heading', { level: 2 })"
+              :data-active="editor?.isActive('heading', { level: 2 })"
               title="Heading (Ctrl + Alt + 2)"
               type="button"
               @click="handleEditorAction('heading', 2)"
@@ -61,7 +61,7 @@
               <IconHeading2 />
             </button>
             <button
-              :data-active="editor.isActive('heading', { level: 3 })"
+              :data-active="editor?.isActive('heading', { level: 3 })"
               title="Heading (Ctrl + Alt + 2)"
               type="button"
               @click="handleEditorAction('heading', 3)"
@@ -71,7 +71,7 @@
           </div>
           <div :class="$style.editorActionGroup">
             <button
-              :data-active="editor.isActive('bold')"
+              :data-active="editor?.isActive('bold')"
               title="Bold (Ctrl + B)"
               type="button"
               @click="handleEditorAction('bold')"
@@ -79,7 +79,7 @@
               <IconBold />
             </button>
             <button
-              :data-active="editor.isActive('italic')"
+              :data-active="editor?.isActive('italic')"
               title="Italic (Ctrl + I)"
               type="button"
               @click="handleEditorAction('italic')"
@@ -87,7 +87,7 @@
               <IconItalic />
             </button>
             <button
-              :data-active="editor.isActive('underline')"
+              :data-active="editor?.isActive('underline')"
               title="Underline (Ctrl + U)"
               type="button"
               @click="handleEditorAction('underline')"
@@ -97,7 +97,7 @@
           </div>
           <div :class="$style.editorActionGroup">
             <button
-              :data-active="editor.isActive('link')"
+              :data-active="editor?.isActive('link')"
               title="Insert link"
               type="button"
               @click="handleEditorAction('insertLink')"
@@ -105,7 +105,7 @@
               <IconLink />
             </button>
             <button
-              :disabled="!editor.isActive('link')"
+              :disabled="!editor?.isActive('link')"
               title="Remove link"
               type="button"
               @click="handleEditorAction('removeLink')"
@@ -131,7 +131,7 @@
           </div>
           <div :class="$style.editorActionGroup">
             <button
-              :disabled="!editor.can().undo()"
+              :disabled="!editor?.can().undo()"
               title="Undo"
               type="button"
               @click="handleEditorAction('undo')"
@@ -139,7 +139,7 @@
               <IconUndo />
             </button>
             <button
-              :disabled="!editor.can().redo()"
+              :disabled="!editor?.can().redo()"
               title="Redo"
               type="button"
               @click="handleEditorAction('redo')"
@@ -354,15 +354,7 @@
     message: computed(() => slotExists.message.value),
   });
 
-  function elseNull<T, C>(check: C, value: T) {
-    return check ? value : null;
-  }
-
-  function orNull<T>(value: T) {
-    return elseNull(value, value);
-  }
-
-  type EditorAction = never
+  type EditorAction =
     | { name: "heading", args: [ Level | 0 ], }
     | { name: "bold", }
     | { name: "italic", }

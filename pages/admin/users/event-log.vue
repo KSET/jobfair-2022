@@ -17,8 +17,8 @@
       :class="$style.table"
       :loading="eventLogLoading"
       :rows-per-page-options="[2,5,10,20,50,100]"
-      :total-records="eventLog.totalRecords"
-      :value="eventLog.records"
+      :total-records="eventLog?.totalRecords"
+      :value="eventLog?.records"
       data-key="id"
       lazy
       paginator
@@ -32,7 +32,7 @@
     >
       <template #header>
         <div :class="$style.tableHeader">
-          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV()" />
 
           <span class="p-input-icon-left">
             <i class="pi pi-search" />
@@ -78,8 +78,8 @@
     gql,
   } from "@urql/core";
   import DataTable, {
-    DataTablePageEvent,
-    DataTableSortEvent,
+    type DataTablePageEvent,
+    type DataTableSortEvent,
   } from "primevue/datatable";
   import Column from "primevue/column";
   import {
@@ -88,10 +88,10 @@
   } from "primevue/api";
   import InputText from "primevue/inputtext";
   import {
-    MaybeRef,
+    type MaybeRef,
   } from "@vueuse/shared";
   import {
-    UnwrapRef,
+    type UnwrapRef,
   } from "vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
@@ -105,10 +105,10 @@
   } from "#imports";
   import useTitle from "~/composables/useTitle";
   import {
-    IEventLog,
-    IEventLogOrderByWithRelationAndSearchRelevanceInput,
+    type IEventLog,
+    type IEventLogOrderByWithRelationAndSearchRelevanceInput,
     ISortOrder,
-    IUser,
+    type IUser,
   } from "~/graphql/schema";
   import AppJsonViewer from "~/components/util/app-json-viewer.vue";
 
@@ -220,7 +220,7 @@
                 ...eventLog,
                 records: eventLog.records.map((event) => ({
                   ...event,
-                  date: new Date(event.date as string | Date),
+                  date: new Date(event.date),
                   userInfo: event.user ? `${ event.user.name } <${ event.user.email }>` : null,
                 })),
               };

@@ -1,16 +1,16 @@
 import {
-  MaybeRef,
+  type MaybeRef,
 } from "~/helpers/type";
 import {
-  IApplicationCocktail,
-  IApplicationPresenter,
-  IApplicationTalk,
-  IApplicationWorkshop,
-  ICompanyApplicationFeedback,
-  IImage,
+  type IApplicationCocktail,
+  type IApplicationPresenter,
+  type IApplicationTalk,
+  type IApplicationWorkshop,
+  type ICompanyApplicationFeedback,
+  type IImage,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
   Language,

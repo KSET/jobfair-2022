@@ -13,7 +13,7 @@
     useState,
   } from "#imports";
   import {
-    ICalendarItem,
+    type ICalendarItem,
   } from "~/graphql/schema";
   import {
     graphql,

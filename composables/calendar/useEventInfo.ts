@@ -1,5 +1,5 @@
 import {
- UnwrapRef,
+ type UnwrapRef,
 } from "vue";
 import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?url";
 import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?url";
@@ -16,11 +16,13 @@ import type {
 import {
   useTranslationsStore,
 } from "~/store/translations";
+import {
+ IEventType,
+} from "~/graphql/schema";
 
 export type TCalendarEvent =
   Pick<
     CalendarEvent,
-    never
     | "start"
     | "location"
     | "type"
@@ -74,22 +76,22 @@ export const useEventInfo = (event: TCalendarEvent) => {
     };
 
     switch (base.type) {
-      case "workshop": {
+      case IEventType.Workshop: {
         base.icon = EventIconWorkshop;
         break;
       }
 
-      case "talk": {
+      case IEventType.Talk: {
         base.icon = EventIconTalk;
         break;
       }
 
-      case "panel": {
+      case IEventType.Panel: {
         base.icon = EventIconPanel;
         break;
       }
 
-      case "hotTalk": {
+      case IEventType.HotTalk: {
         base.icon = EventIconHotTalk;
         break;
       }

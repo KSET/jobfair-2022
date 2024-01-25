@@ -157,10 +157,10 @@
     userProfileEdit,
   } from "~/helpers/forms/user";
   import {
-    IUserCreateInput,
+    type IUserCreateInput,
   } from "~/graphql/schema";
   import {
-    Dict,
+    type Dict,
   } from "~/helpers/type";
 
   export default defineComponent({

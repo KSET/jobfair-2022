@@ -65,9 +65,9 @@
   } from "~/composables/useQuery";
   import {
     CreatePressRelease,
-    ICreatePressReleaseMutation,
-    ICreatePressReleaseMutationVariables,
-    IPressReleaseWithFilesCreateInput,
+    type ICreatePressReleaseMutation,
+    type ICreatePressReleaseMutationVariables,
+    type IPressReleaseWithFilesCreateInput,
   } from "~/graphql/schema";
   import useTitle from "~/composables/useTitle";
 

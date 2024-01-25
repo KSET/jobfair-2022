@@ -3,8 +3,8 @@ import {
 } from "vue";
 import {
   type LocationQuery,
-  RouteParams,
-  RouteRecordName,
+  type RouteParams,
+  type RouteRecordName,
   useRoute,
 } from "vue-router";
 import {

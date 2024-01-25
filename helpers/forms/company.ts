@@ -2,18 +2,18 @@ import {
   unref,
 } from "vue";
 import {
-  MaybeRef,
+  type MaybeRef,
 } from "~/helpers/type";
 import {
-  ICompany,
-  IUser,
-  IFile,
-  IImage,
-  ICompanyPanel,
-  IApplicationPresenter,
+  type ICompany,
+  type IUser,
+  type IFile,
+  type IImage,
+  type ICompanyPanel,
+  type IApplicationPresenter,
 } from "~/graphql/schema";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 
 type Company = Omit<ICompany,

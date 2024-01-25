@@ -1,6 +1,6 @@
 import {
-  ICompanyApplication,
-  ICompanyApplicationApproval,
+  type ICompanyApplication,
+  type ICompanyApplicationApproval,
 } from "~/graphql/schema";
 
 export const nameAliases: Record<keyof Omit<ICompanyApplicationApproval, "forApplication">, keyof ICompanyApplication> = {

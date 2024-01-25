@@ -161,22 +161,22 @@
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
-    Presenter,
-    Talk,
-    Workshop,
+    type Presenter,
+    type Talk,
+    type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
-    InputEntry,
+    type InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   // import AppCheckbox from "~/components/util/form/app-checkbox.vue";
   import {
     CreateCompanyApplication,
-    IApplicationTalkCategory,
-    IBooth,
-    ICompanyApplication,
-    ICreateCompanyApplicationMutation,
-    ICreateCompanyApplicationMutationVariables,
+    type IApplicationTalkCategory,
+    type IBooth,
+    type ICompanyApplication,
+    type ICreateCompanyApplicationMutation,
+    type ICreateCompanyApplicationMutationVariables,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,

@@ -127,20 +127,20 @@
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
-    Presenter,
-    Talk,
-    Workshop,
+    type Presenter,
+    type Talk,
+    type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
-    InputEntry,
+    type InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     EditApprovedCompanyApplication,
-    ICompanyApplicationApproval,
-    ICurrentCompanyApplicationQuery,
-    IEditApprovedCompanyApplicationMutation,
-    IEditApprovedCompanyApplicationMutationVariables,
+    type ICompanyApplicationApproval,
+    type ICurrentCompanyApplicationQuery,
+    type IEditApprovedCompanyApplicationMutation,
+    type IEditApprovedCompanyApplicationMutationVariables,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,

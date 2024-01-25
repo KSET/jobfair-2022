@@ -111,7 +111,7 @@
     clamp,
   } from "rambdax";
   import {
-    MaybeRef,
+    type MaybeRef,
   } from "~/helpers/type";
   import {
     computed,
@@ -129,9 +129,9 @@
     watch,
   } from "#imports";
   import {
-    IResume,
-    IResumeFaculty,
-    IUser,
+    type IResume,
+    type IResumeFaculty,
+    type IUser,
   } from "~/graphql/schema";
   import TranslatedText from "~/components/TranslatedText.vue";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";

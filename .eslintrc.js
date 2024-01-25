@@ -45,6 +45,13 @@ const conf = {
     "import/no-deprecated": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        prefer: "type-imports",
+        fixStyle: "inline-type-imports",
+      },
+    ],
     "@typescript-eslint/await-thenable": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/prefer-return-this-type": [ "warn" ],

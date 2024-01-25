@@ -1,17 +1,17 @@
 import {
-  ConditionalPick,
-  Primitive,
+  type ConditionalPick,
+  type Primitive,
 } from "type-fest";
 import {
-  InputEntry,
+  type InputEntry,
 } from "~/components/util/form/app-formgroup.vue";
 import {
-  IResume,
-  IResumeFaculty,
-  IResumeProject,
-  IResumeStudyYear,
-  IResumeVolunteerExperience,
-  IResumeWorkExperience,
+  type IResume,
+  type IResumeFaculty,
+  type IResumeProject,
+  type IResumeStudyYear,
+  type IResumeVolunteerExperience,
+  type IResumeWorkExperience,
 } from "~/graphql/schema";
 import {
   asDate,

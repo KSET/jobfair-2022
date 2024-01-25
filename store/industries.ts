@@ -7,14 +7,14 @@ import {
 } from "~/composables/useQuery";
 import {
   CreateIndustry,
-  ICreateIndustryMutation,
-  ICreateIndustryMutationVariables,
-  IIndustriesQuery,
-  IIndustriesQueryVariables,
-  IIndustry,
+  type ICreateIndustryMutation,
+  type ICreateIndustryMutationVariables,
+  type IIndustriesQuery,
+  type IIndustriesQueryVariables,
+  type IIndustry,
   Industries,
-  IRenameIndustryMutation,
-  IRenameIndustryMutationVariables,
+  type IRenameIndustryMutation,
+  type IRenameIndustryMutationVariables,
   RenameIndustry,
 } from "~/graphql/schema";
 

@@ -27,7 +27,7 @@
     watch,
   } from "vue";
   import {
-    MaybeRef,
+    type MaybeRef,
   } from "~/helpers/type";
   import {
     useTranslationsStore,
@@ -128,7 +128,7 @@
           event.stopImmediatePropagation();
           return false;
         },
-        handleInput(event: InputEvent) {
+        handleInput(event: Event) {
           text.value = (event.target as (HTMLElement | null))?.innerText ?? "";
         },
       };

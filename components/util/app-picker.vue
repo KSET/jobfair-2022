@@ -56,7 +56,7 @@
     ref,
   } from "#imports";
   import {
-    ClassList,
+    type ClassList,
   } from "~/helpers/type";
   import {
     toClass,

@@ -202,7 +202,9 @@
   // noinspection TypeScriptCheckImport
   import IconChevronRight from "~icons/ep/arrow-right";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import useJoinNowRoute from "~/composables/useJoinNowRoute";
+  import {
+    useJoinNowRoute,
+  } from "~/composables/useJoinNowRoute";
   import {
     useUserStore,
   } from "~/store/user";

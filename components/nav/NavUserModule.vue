@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="isLoggedIn"
+    v-if="user"
     :class="$style.container"
   >
     <p-button
@@ -115,7 +115,9 @@
   import OverlayPanel from "primevue/overlaypanel";
   import InputSwitch from "primevue/inputswitch";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import useJoinNowRoute from "~/composables/useJoinNowRoute";
+  import {
+    useJoinNowRoute,
+  } from "~/composables/useJoinNowRoute";
   import {
     useUserStore,
   } from "~/store/user";

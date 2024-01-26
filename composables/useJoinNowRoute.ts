@@ -34,10 +34,8 @@ export const joinNowRoute = ($route: Route) => {
   };
 };
 
-export default function() {
-  return computed(() => {
-    const $route = useRoute();
+export const useJoinNowRoute = () => {
+  const $route = useRoute();
 
-    return joinNowRoute($route);
-  });
-}
+  return computed(() => joinNowRoute($route));
+};

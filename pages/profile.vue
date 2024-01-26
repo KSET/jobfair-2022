@@ -11,7 +11,9 @@
   import {
     useUserStore,
   } from "~/store/user";
-  import useJoinNowRoute from "~/composables/useJoinNowRoute";
+  import {
+    useJoinNowRoute,
+  } from "~/composables/useJoinNowRoute";
 
   export default defineComponent({
     name: "PageProfileHandler",

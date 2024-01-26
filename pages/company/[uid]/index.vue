@@ -299,7 +299,9 @@
     watch,
     useRouter,
   } from "#imports";
-  import useJoinNow from "~/composables/useJoinNowRoute";
+  import {
+    useJoinNowRoute as useJoinNow,
+  } from "~/composables/useJoinNowRoute";
   import AppImg from "~/components/util/app-img.vue";
   import EventInfoDisplay from "~/components/page/schedule/event-info-display.vue";
   import {

@@ -148,4 +148,8 @@ export default defineNuxtConfig({
   plausible: {
     autoOutboundTracking: true,
   },
+
+  devtools: {
+    enabled: !isProd,
+  },
 });

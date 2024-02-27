@@ -1,11 +1,8 @@
 import {
   createClient,
-  dedupExchange,
   ssrExchange,
+  fetchExchange,
 } from "@urql/core";
-import {
-  multipartFetchExchange,
-} from "@urql/exchange-multipart-fetch";
 import {
   unref,
 } from "vue";
@@ -44,9 +41,8 @@ export default defineNuxtPlugin((nuxt) => {
   const client = createClient({
     url: `${ config.public.API_BASE }/graphql`,
     exchanges: [
-      dedupExchange,
       ssr,
-      multipartFetchExchange as never,
+      fetchExchange,
     ],
     fetchOptions: () => {
       const config: RequestInit = {
@@ -58,7 +54,7 @@ export default defineNuxtPlugin((nuxt) => {
 
       // Session ID header for server
       {
-        const sessionId = unref(useCookie("jobfair-session"));
+        const sessionId = useCookie("jobfair-session").value;
 
         if (sessionId) {
           (config.headers as Dict<string>)["X-Session-Id"] = sessionId;

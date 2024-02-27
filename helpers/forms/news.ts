@@ -6,7 +6,7 @@ import {
 } from "../date";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 import {
   type IImage,
   type INews,

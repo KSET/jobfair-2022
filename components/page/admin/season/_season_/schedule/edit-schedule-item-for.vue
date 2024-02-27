@@ -125,7 +125,7 @@
       }) as Record<keyof typeof formModel | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
-      const updateQuery = useMutation<{ updateCalendarItem: Pick<ICalendarItem, "uid" | "title" | "start" | "end" | "location" | "text" | "grouped">, }, IMutationUpdateCalendarItemArgs>(gql`
+      const updateQuery = useMutation<{ updateCalendarItem: Pick<ICalendarItem, "uid" | "title" | "start" | "end" | "location" | "text" | "grouped" | "capacity" | "hasEvent">, }, IMutationUpdateCalendarItemArgs>(gql`
         mutation UpdateCalendarItem($input: CalendarUpdateInput!) {
           updateCalendarItem(input: $input) {
             uid
@@ -136,6 +136,8 @@
             location
             text
             grouped
+            capacity
+            hasEvent
           }
         }
       `);

@@ -11,7 +11,7 @@
     >
       <app-textarea
         v-if="input.type === 'textarea'"
-        :key="`${input.type}-${inputName}`"
+        :key="`textarea---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -36,7 +36,7 @@
       </app-textarea>
       <app-dropdown
         v-else-if="input.type === 'dropdown'"
-        :key="`${input.type}-${inputName}`"
+        :key="`dropdown---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -62,7 +62,7 @@
       </app-dropdown>
       <app-file-input
         v-else-if="input.type === 'file'"
-        :key="`${input.type}-${inputName}`"
+        :key="`file---${inputName}`"
         v-model="input.value"
         :accept="input.accept"
         :class="[
@@ -91,7 +91,7 @@
       </app-file-input>
       <app-slider
         v-else-if="input.type === 'slider'"
-        :key="`${input.type}-${inputName}`"
+        :key="`slider---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -118,7 +118,7 @@
       </app-slider>
       <app-number-range-input
         v-else-if="input.type === 'number-range'"
-        :key="`${input.type}-${inputName}`"
+        :key="`number-range---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -144,7 +144,7 @@
       </app-number-range-input>
       <app-multi-pick
         v-else-if="input.type === 'multi-pick'"
-        :key="`${input.type}-${inputName}`"
+        :key="`multi-pick---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -170,7 +170,7 @@
       </app-multi-pick>
       <app-single-pick
         v-else-if="input.type === 'single-pick'"
-        :key="`${input.type}-${inputName}`"
+        :key="`single-pick-----${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -196,7 +196,7 @@
       </app-single-pick>
       <AppEditor
         v-else-if="input.type === 'editor'"
-        :key="`${input.type}-${inputName}`"
+        :key="`editor---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -221,7 +221,7 @@
       </AppEditor>
       <app-input
         v-else
-        :key="`${input.type}-${inputName}`"
+        :key="`${input.type}---${inputName}`"
         v-model="input.value"
         :class="[
           $style.formElement,
@@ -257,10 +257,6 @@
     defineAsyncComponent,
     defineComponent,
   } from "vue";
-  import {
-    type ClassList,
-    type MaybeRef,
-  } from "~/helpers/type";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useModelWrapper from "~/composables/useModelWrapper";
   import {
@@ -269,121 +265,6 @@
   import {
     toClass,
   } from "~/helpers/style";
-
-  type InputBase = {
-    placeholder?: string,
-    loading?: boolean,
-    required?: boolean,
-    disabled?: boolean,
-    attrs?: Record<string, unknown>,
-    classes?: ClassList,
-  };
-
-  type InputText = InputBase & (
-    {
-      value: string,
-      type:
-        "text"
-        | "datetime-local"
-        | "email"
-        | "month"
-        | "password"
-        | "search"
-        | "tel"
-        | "time"
-        | "url"
-        | "week",
-    }
-    |
-    {
-      type:
-        "number",
-      value: number,
-    }
-    | {
-      type:
-        "date",
-      value: string | Date,
-    }
-    | {
-      type:
-        "checkbox",
-      value: boolean,
-    }
-  );
-
-  type InputDropdown = InputBase & {
-    value: string | string[],
-    type: "dropdown",
-    options: MaybeRef<{
-      label: string,
-      value: string,
-    }[]>,
-  };
-
-  type InputTextarea = InputBase & {
-    value: string,
-    type: "textarea",
-  };
-
-  type InputEditor = InputBase & {
-    value: string,
-    type: "editor",
-  };
-
-  type InputFile = InputBase & {
-    value: string,
-    type: "file",
-    accept?: MaybeRef<string | string[]>,
-    fileName?: MaybeRef<string>,
-    fileType?: MaybeRef<string>,
-    multiple?: MaybeRef<boolean>,
-  };
-
-  type InputSlider = InputBase & {
-    value: number | null,
-    type: "slider",
-    step?: MaybeRef<number>,
-    min?: MaybeRef<number>,
-    max?: MaybeRef<number>,
-  };
-
-  type InputNumberRange = InputBase & {
-    value: number | null,
-    type: "number-range",
-    min: MaybeRef<number>,
-    max: MaybeRef<number>,
-  };
-
-  type InputMultiPick = InputBase & {
-    value: string[],
-    type: "multi-pick",
-    options: MaybeRef<{
-      label: string,
-      value: string,
-    }[]>,
-  };
-
-  type InputSinglePick = InputBase & {
-    value: string,
-    type: "single-pick",
-    options: MaybeRef<{
-      label: string,
-      value: string,
-    }[]>,
-  };
-
-  export type InputEntry =
-    InputText
-    | InputDropdown
-    | InputTextarea
-    | InputFile
-    | InputSlider
-    | InputNumberRange
-    | InputMultiPick
-    | InputSinglePick
-    | InputEditor
-  ;
 
   export default defineComponent({
     components: {

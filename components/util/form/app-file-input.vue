@@ -1,6 +1,6 @@
 <template>
   <div
-    :aria-disabled="orNull(disabled)"
+    :aria-disabled="orNone(disabled)"
     :class="$style.container"
   >
     <label
@@ -99,12 +99,12 @@
     <input
       :id="id.input"
       :accept="Array.isArray(accept) ? accept.join(',') : accept"
-      :aria-describedby="elseNull(visible.message, id.message)"
-      :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-      :aria-invalid="orNull(invalid)"
-      :aria-label="orNull(label || labelTranslated)"
-      :aria-labelledby="elseNull(visible.label, id.label)"
-      :aria-required="orNull(required)"
+      :aria-describedby="elseNone(visible.message, id.message)"
+      :aria-errormessage="elseNone(visible.label && invalid, id.label)"
+      :aria-invalid="orNone(invalid)"
+      :aria-label="orNone(label || labelTranslated)"
+      :aria-labelledby="elseNone(visible.label, id.label)"
+      :aria-required="orNone(required)"
       :class="{
         [$style.input]: true,
         ['invalid']: invalid,
@@ -112,8 +112,8 @@
       :disabled="disabled"
       :multiple="multiple"
       :name="name"
-      :placeholder="orNull(placeholder)"
-      :required="orNull(required && !previewSrc)"
+      :placeholder="orNone(placeholder)"
+      :required="orNone(required && !previewSrc)"
       type="file"
       @change="handleChange"
     >
@@ -140,6 +140,9 @@
     unref,
     watch,
   } from "vue";
+  import {
+    elseNone, orNone,
+  } from "./helpers";
   import TranslatedText from "~/components/TranslatedText.vue";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   // noinspection TypeScriptCheckImport
@@ -254,7 +257,7 @@
     emits: [ "update:modelValue" ],
 
     setup(props, { emit }) {
-      const uniqueId = Math.random().toString(36).substring(2);
+      const uniqueId = useId().replace(":", "_");
       const slotExists = useReactiveSlots("message", "label");
       const previewImg$ = ref(null as (HTMLInputElement | null));
 
@@ -269,14 +272,6 @@
         watchProp<"modelValue", string | FileList | File | null | undefined>("modelValue"),
       ] as const;
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
-
-      function elseNull<T, C>(check: C, value: T) {
-        return check ? value : null;
-      }
-
-      function orNull<T>(value: T) {
-        return elseNull(value, value);
-      }
 
       const isDragOver = ref(false);
 
@@ -385,8 +380,8 @@
           clearButton: computed(() => props.clearable && (Array.isArray(unref(modelValue)) ? 0 < (unref(modelValue) as unknown as unknown[]).length : Boolean(unref(modelValue)))),
         }),
         labelTranslated: ref(""),
-        elseNull,
-        orNull,
+        elseNone,
+        orNone,
         isDragOver,
         previewSrc,
         previewName: computed(() => unref(previewName) || props.fileName),

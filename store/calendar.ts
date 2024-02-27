@@ -230,8 +230,8 @@ export const useCalendarStore = defineStore("calendar", {
     async fetchEvents() {
       const data = await calendarEventsQuery().then((x) => x?.data);
 
-      this.events_ = (data?.calendar as undefined | FragmentType<typeof CalendarFragment>) ?? [];
-      this.reservations_ = data?.currentSeason?.reservations.reduce(
+      this.events_ = (data?.calendar as undefined | RawEvent[]) ?? [];
+      this.reservations_ = data?.currentSeason?.reservations?.reduce(
         (acc, x) => {
           acc[x.uid] = x.count;
 

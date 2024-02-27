@@ -3,7 +3,7 @@ import {
   type ICompanyApplicationApproval,
 } from "~/graphql/schema";
 
-export const nameAliases: Record<keyof Omit<ICompanyApplicationApproval, "forApplication">, keyof ICompanyApplication> = {
+export const nameAliases: Record<keyof Omit<ICompanyApplicationApproval, "forApplication" | "logoHidden">, keyof ICompanyApplication> = {
   talkParticipants: "talk",
   workshopParticipants: "workshop",
   panel: "wantsPanel",

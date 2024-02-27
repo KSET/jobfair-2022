@@ -14,7 +14,7 @@ import {
 } from "~/graphql/schema";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 
 type Company = Omit<ICompany,
   "_count"
@@ -23,6 +23,7 @@ type Company = Omit<ICompany,
   | "program"
   | "createdAt"
   | "updatedAt"
+  | "logoHidden"
   | "uid"> & {
   vectorLogo: Pick<IFile,
     "uid"

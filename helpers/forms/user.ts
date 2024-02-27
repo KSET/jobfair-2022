@@ -9,7 +9,7 @@ import {
 } from "~/graphql/schema";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 import {
   Language,
   LanguageISO,
@@ -37,6 +37,7 @@ type Profile = Omit<IUser,
   | "name"
   | "roles"
   | "resume"
+  | "eventLog"
   | "_count">;
 export const userProfileEdit =
   <T extends Profile>(user?: T | null): Record<keyof Profile, InputEntry> =>
@@ -118,7 +119,7 @@ export const userEdit =
           required: false,
         },
         roles: {
-          value: user?.roles.map((role) => role.name) || [],
+          value: user?.roles?.map((role) => role.name) || [],
           type: "dropdown",
           options: roles.map((role) => ({ label: capitalize(role.name), value: role.name })),
         },

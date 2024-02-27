@@ -1,6 +1,6 @@
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 import {
   type ISeason,
 } from "~/graphql/schema";
@@ -27,75 +27,75 @@ export const seasonCreate =
       },
       startsAt: {
         type: "datetime-local",
-        value: season?.startsAt || today(),
+        value: new Date(season?.startsAt || today()).toISOString(),
       },
       endsAt: {
         type: "datetime-local",
-        value: season?.endsAt || tomorrow(),
+        value: new Date(season?.endsAt || tomorrow()).toISOString(),
       },
       applicationsFrom: {
         type: "datetime-local",
-        value: season?.applicationsFrom || today(),
+        value: new Date(season?.applicationsFrom || today()).toISOString(),
       },
       applicationsUntil: {
         type: "datetime-local",
-        value: season?.applicationsUntil || tomorrow(),
+        value: new Date(season?.applicationsUntil || tomorrow()).toISOString(),
       },
       applicationsEditableFrom: {
         type: "datetime-local",
-        value: season?.applicationsEditableFrom || today(),
+        value: new Date(season?.applicationsEditableFrom || today()).toISOString(),
       },
       applicationsEditableUntil: {
         type: "datetime-local",
-        value: season?.applicationsEditableUntil || tomorrow(),
+        value: new Date(season?.applicationsEditableUntil || tomorrow()).toISOString(),
       },
       showParticipantsFrom: {
         type: "datetime-local",
-        value: season?.showParticipantsFrom || today(),
+        value: new Date(season?.showParticipantsFrom || today()).toISOString(),
       },
       showParticipantsUntil: {
         type: "datetime-local",
-        value: season?.showParticipantsUntil || tomorrow(),
+        value: new Date(season?.showParticipantsUntil || tomorrow()).toISOString(),
       },
       showPartnersFrom: {
         type: "datetime-local",
-        value: season?.showPartnersFrom || today(),
+        value: new Date(season?.showPartnersFrom || today()).toISOString(),
       },
       showPartnersUntil: {
         type: "datetime-local",
-        value: season?.showPartnersUntil || tomorrow(),
+        value: new Date(season?.showPartnersUntil || tomorrow()).toISOString(),
       },
       showSponsorsFrom: {
         type: "datetime-local",
-        value: season?.showSponsorsFrom || today(),
+        value: new Date(season?.showSponsorsFrom || today()).toISOString(),
       },
       showSponsorsUntil: {
         type: "datetime-local",
-        value: season?.showSponsorsUntil || tomorrow(),
+        value: new Date(season?.showSponsorsUntil || tomorrow()).toISOString(),
       },
       eventFrom: {
         type: "datetime-local",
-        value: season?.eventFrom || today(),
+        value: new Date(season?.eventFrom || today()).toISOString(),
       },
       eventUntil: {
         type: "datetime-local",
-        value: season?.eventUntil || tomorrow(),
+        value: new Date(season?.eventUntil || tomorrow()).toISOString(),
       },
       feedbackFrom: {
         type: "datetime-local",
-        value: season?.feedbackFrom || today(),
+        value: new Date(season?.feedbackFrom || today()).toISOString(),
       },
       feedbackUntil: {
         type: "datetime-local",
-        value: season?.feedbackUntil || tomorrow(),
+        value: new Date(season?.feedbackUntil || tomorrow()).toISOString(),
       },
       scheduleFrom: {
         type: "datetime-local",
-        value: season?.scheduleFrom || today(),
+        value: new Date(season?.scheduleFrom || today()).toISOString(),
       },
       scheduleUntil: {
         type: "datetime-local",
-        value: season?.scheduleUntil || tomorrow(),
+        value: new Date(season?.scheduleUntil || tomorrow()).toISOString(),
       },
     })
 ;

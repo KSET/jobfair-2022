@@ -52,19 +52,7 @@ export type ApplicationCocktailNullableRelationFilter = {
   isNot?: InputMaybe<ApplicationCocktailWhereInput>;
 };
 
-export enum ApplicationCocktailOrderByRelevanceFieldEnum {
-  Colour = 'colour',
-  Name = 'name'
-}
-
-export type ApplicationCocktailOrderByRelevanceInput = {
-  fields: Array<ApplicationCocktailOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ApplicationCocktailOrderByRelevanceInput>;
+export type ApplicationCocktailOrderByWithRelationInput = {
   colour?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
 };
@@ -166,19 +154,8 @@ export type ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput = {
   name: Scalars['String']['input'];
 };
 
-export enum ApplicationTalkCategoryOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type ApplicationTalkCategoryOrderByRelevanceInput = {
-  fields: Array<ApplicationTalkCategoryOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ApplicationTalkCategoryOrderByRelevanceInput>;
-  forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
+export type ApplicationTalkCategoryOrderByWithRelationInput = {
+  forSeason?: InputMaybe<SeasonOrderByWithRelationInput>;
   name?: InputMaybe<SortOrder>;
 };
 
@@ -224,27 +201,11 @@ export type ApplicationTalkNullableRelationFilter = {
   isNot?: InputMaybe<ApplicationTalkWhereInput>;
 };
 
-export enum ApplicationTalkOrderByRelevanceFieldEnum {
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  Language = 'language',
-  TitleEn = 'titleEn',
-  TitleHr = 'titleHr',
-  Uid = 'uid'
-}
-
-export type ApplicationTalkOrderByRelevanceInput = {
-  fields: Array<ApplicationTalkOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ApplicationTalkOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ApplicationTalkOrderByRelevanceInput>;
-  category?: InputMaybe<ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput>;
+export type ApplicationTalkOrderByWithRelationInput = {
+  category?: InputMaybe<ApplicationTalkCategoryOrderByWithRelationInput>;
   descriptionEn?: InputMaybe<SortOrder>;
   descriptionHr?: InputMaybe<SortOrder>;
-  event?: InputMaybe<CalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<CalendarItemOrderByWithRelationInput>;
   language?: InputMaybe<SortOrder>;
   titleEn?: InputMaybe<SortOrder>;
   titleHr?: InputMaybe<SortOrder>;
@@ -295,29 +256,10 @@ export type ApplicationWorkshopNullableRelationFilter = {
   isNot?: InputMaybe<ApplicationWorkshopWhereInput>;
 };
 
-export enum ApplicationWorkshopOrderByRelevanceFieldEnum {
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  Goal = 'goal',
-  Language = 'language',
-  NotesEn = 'notesEn',
-  NotesHr = 'notesHr',
-  TitleEn = 'titleEn',
-  TitleHr = 'titleHr',
-  Uid = 'uid'
-}
-
-export type ApplicationWorkshopOrderByRelevanceInput = {
-  fields: Array<ApplicationWorkshopOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ApplicationWorkshopOrderByRelevanceInput>;
+export type ApplicationWorkshopOrderByWithRelationInput = {
   descriptionEn?: InputMaybe<SortOrder>;
   descriptionHr?: InputMaybe<SortOrder>;
-  event?: InputMaybe<CalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<CalendarItemOrderByWithRelationInput>;
   goal?: InputMaybe<SortOrder>;
   language?: InputMaybe<SortOrder>;
   notesEn?: InputMaybe<SortOrder>;
@@ -416,24 +358,9 @@ export type CalendarItemOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
-export enum CalendarItemOrderByRelevanceFieldEnum {
-  Location = 'location',
-  Text = 'text',
-  Title = 'title',
-  Type = 'type',
-  Uid = 'uid'
-}
-
-export type CalendarItemOrderByRelevanceInput = {
-  fields: Array<CalendarItemOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type CalendarItemOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<CalendarItemOrderByRelevanceInput>;
+export type CalendarItemOrderByWithRelationInput = {
   end?: InputMaybe<SortOrder>;
-  forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
+  forSeason?: InputMaybe<SeasonOrderByWithRelationInput>;
   grouped?: InputMaybe<SortOrder>;
   location?: InputMaybe<SortOrderInput>;
   start?: InputMaybe<SortOrder>;
@@ -527,7 +454,7 @@ export type CompanyApplicationApprovalNullableRelationFilter = {
   isNot?: InputMaybe<CompanyApplicationApprovalWhereInput>;
 };
 
-export type CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput = {
+export type CompanyApplicationApprovalOrderByWithRelationInput = {
   booth?: InputMaybe<SortOrder>;
   cocktail?: InputMaybe<SortOrder>;
   logoHidden?: InputMaybe<SortOrder>;
@@ -625,29 +552,18 @@ export type CompanyApplicationOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
-export enum CompanyApplicationOrderByRelevanceFieldEnum {
-  Booth = 'booth'
-}
-
-export type CompanyApplicationOrderByRelevanceInput = {
-  fields: Array<CompanyApplicationOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type CompanyApplicationOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<CompanyApplicationOrderByRelevanceInput>;
-  approval?: InputMaybe<CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput>;
+export type CompanyApplicationOrderByWithRelationInput = {
+  approval?: InputMaybe<CompanyApplicationApprovalOrderByWithRelationInput>;
   booth?: InputMaybe<SortOrderInput>;
-  cocktail?: InputMaybe<ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput>;
-  forCompany?: InputMaybe<CompanyOrderByWithRelationAndSearchRelevanceInput>;
-  forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
-  panel?: InputMaybe<CompanyPanelOrderByWithRelationAndSearchRelevanceInput>;
+  cocktail?: InputMaybe<ApplicationCocktailOrderByWithRelationInput>;
+  forCompany?: InputMaybe<CompanyOrderByWithRelationInput>;
+  forSeason?: InputMaybe<SeasonOrderByWithRelationInput>;
+  panel?: InputMaybe<CompanyPanelOrderByWithRelationInput>;
   panelParticipants?: InputMaybe<ApplicationPresenterOrderByRelationAggregateInput>;
-  talk?: InputMaybe<ApplicationTalkOrderByWithRelationAndSearchRelevanceInput>;
+  talk?: InputMaybe<ApplicationTalkOrderByWithRelationInput>;
   wantsCocktail?: InputMaybe<SortOrder>;
   wantsPanel?: InputMaybe<SortOrder>;
-  workshop?: InputMaybe<ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput>;
+  workshop?: InputMaybe<ApplicationWorkshopOrderByWithRelationInput>;
 };
 
 export enum CompanyApplicationScalarFieldEnum {
@@ -732,25 +648,7 @@ export type CompanyCountScannedUsersArgs = {
   where?: InputMaybe<CompanyScannedUserWhereInput>;
 };
 
-export enum CompanyOrderByRelevanceFieldEnum {
-  Address = 'address',
-  BrandName = 'brandName',
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  LegalName = 'legalName',
-  Uid = 'uid',
-  Vat = 'vat',
-  Website = 'website'
-}
-
-export type CompanyOrderByRelevanceInput = {
-  fields: Array<CompanyOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type CompanyOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<CompanyOrderByRelevanceInput>;
+export type CompanyOrderByWithRelationInput = {
   address?: InputMaybe<SortOrder>;
   brandName?: InputMaybe<SortOrder>;
   descriptionEn?: InputMaybe<SortOrder>;
@@ -784,23 +682,10 @@ export type CompanyPanelNullableRelationFilter = {
   isNot?: InputMaybe<CompanyPanelWhereInput>;
 };
 
-export enum CompanyPanelOrderByRelevanceFieldEnum {
-  Description = 'description',
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type CompanyPanelOrderByRelevanceInput = {
-  fields: Array<CompanyPanelOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type CompanyPanelOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<CompanyPanelOrderByRelevanceInput>;
+export type CompanyPanelOrderByWithRelationInput = {
   companies?: InputMaybe<CompanyApplicationOrderByRelationAggregateInput>;
   description?: InputMaybe<SortOrder>;
-  event?: InputMaybe<CalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<CalendarItemOrderByWithRelationInput>;
   name?: InputMaybe<SortOrder>;
 };
 
@@ -999,24 +884,12 @@ export type EventLog = {
   user?: Maybe<User>;
 };
 
-export enum EventLogOrderByRelevanceFieldEnum {
-  Data = 'data',
-  Name = 'name'
-}
-
-export type EventLogOrderByRelevanceInput = {
-  fields: Array<EventLogOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type EventLogOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<EventLogOrderByRelevanceInput>;
+export type EventLogOrderByWithRelationInput = {
   data?: InputMaybe<SortOrderInput>;
   date?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<SortOrder>;
-  user?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  user?: InputMaybe<UserOrderByWithRelationInput>;
 };
 
 export type EventLogPaginationResult = {
@@ -1116,27 +989,12 @@ export type FileCountForResumeArgs = {
   where?: InputMaybe<ResumeWhereInput>;
 };
 
-export enum FileOrderByRelevanceFieldEnum {
-  Etag = 'etag',
-  MimeType = 'mimeType',
-  MinioKey = 'minioKey',
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type FileOrderByRelevanceInput = {
-  fields: Array<FileOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type FileOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<FileOrderByRelevanceInput>;
+export type FileOrderByWithRelationInput = {
   etag?: InputMaybe<SortOrder>;
   mimeType?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   size?: InputMaybe<SortOrder>;
-  uploader?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
+  uploader?: InputMaybe<UserOrderByWithRelationInput>;
 };
 
 export type FileRelationFilter = {
@@ -1309,18 +1167,7 @@ export type IndustryCountCompanyArgs = {
   where?: InputMaybe<CompanyWhereInput>;
 };
 
-export enum IndustryOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type IndustryOrderByRelevanceInput = {
-  fields: Array<IndustryOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type IndustryOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IndustryOrderByRelevanceInput>;
+export type IndustryOrderByWithRelationInput = {
   name?: InputMaybe<SortOrder>;
 };
 
@@ -1767,7 +1614,6 @@ export type NestedStringFilter = {
   lte?: InputMaybe<Scalars['String']['input']>;
   not?: InputMaybe<NestedStringFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1782,7 +1628,6 @@ export type NestedStringNullableFilter = {
   lte?: InputMaybe<Scalars['String']['input']>;
   not?: InputMaybe<NestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1904,22 +1749,10 @@ export type PressRelease = {
   updatedAt: Scalars['DateTimeISO']['output'];
 };
 
-export enum PressReleaseOrderByRelevanceFieldEnum {
-  Title = 'title',
-  Uid = 'uid'
-}
-
-export type PressReleaseOrderByRelevanceInput = {
-  fields: Array<PressReleaseOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type PressReleaseOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<PressReleaseOrderByRelevanceInput>;
-  creator?: InputMaybe<UserOrderByWithRelationAndSearchRelevanceInput>;
-  file?: InputMaybe<FileOrderByWithRelationAndSearchRelevanceInput>;
-  forSeason?: InputMaybe<SeasonOrderByWithRelationAndSearchRelevanceInput>;
+export type PressReleaseOrderByWithRelationInput = {
+  creator?: InputMaybe<UserOrderByWithRelationInput>;
+  file?: InputMaybe<FileOrderByWithRelationInput>;
+  forSeason?: InputMaybe<SeasonOrderByWithRelationInput>;
   published?: InputMaybe<SortOrder>;
   title?: InputMaybe<SortOrder>;
 };
@@ -2045,7 +1878,7 @@ export type QueryCalendarItemCompanyUidArgs = {
 export type QueryCompaniesArgs = {
   cursor?: InputMaybe<CompanyWhereUniqueInput>;
   distinct?: InputMaybe<Array<CompanyScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<CompanyOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<CompanyOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<CompanyWhereInput>;
@@ -2066,7 +1899,7 @@ export type QueryCompanyApplicationForArgs = {
 export type QueryCompanyApplicationsArgs = {
   cursor?: InputMaybe<CompanyApplicationWhereUniqueInput>;
   distinct?: InputMaybe<Array<CompanyApplicationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<CompanyApplicationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<CompanyApplicationOrderByWithRelationInput>>;
   season?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -2080,7 +1913,7 @@ export type QueryCompanyInfoArgs = {
 
 
 export type QueryEventLogArgs = {
-  orderBy?: InputMaybe<Array<EventLogOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<EventLogOrderByWithRelationInput>>;
   page: Scalars['Int']['input'];
   perPage: Scalars['Int']['input'];
   where?: InputMaybe<Scalars['String']['input']>;
@@ -2090,7 +1923,7 @@ export type QueryEventLogArgs = {
 export type QueryFindFirstTranslationArgs = {
   cursor?: InputMaybe<TranslationWhereUniqueInput>;
   distinct?: InputMaybe<Array<TranslationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<TranslationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<TranslationOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<TranslationWhereInput>;
@@ -2105,7 +1938,7 @@ export type QueryGateGuardianScanListArgs = {
 export type QueryIndustriesArgs = {
   cursor?: InputMaybe<IndustryWhereUniqueInput>;
   distinct?: InputMaybe<Array<IndustryScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IndustryOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IndustryOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IndustryWhereInput>;
@@ -2131,7 +1964,7 @@ export type QueryNewsItemByUidArgs = {
 export type QueryParticipantsArgs = {
   cursor?: InputMaybe<CompanyWhereUniqueInput>;
   distinct?: InputMaybe<Array<CompanyScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<CompanyOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<CompanyOrderByWithRelationInput>>;
   season?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -2152,7 +1985,7 @@ export type QueryPressReleaseArgs = {
 export type QueryPressReleasesArgs = {
   cursor?: InputMaybe<PressReleaseWhereUniqueInput>;
   distinct?: InputMaybe<Array<PressReleaseScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<PressReleaseOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<PressReleaseOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<PressReleaseWhereInput>;
@@ -2199,7 +2032,7 @@ export type QueryResumesScannedArgs = {
 export type QueryRolesArgs = {
   cursor?: InputMaybe<RoleWhereUniqueInput>;
   distinct?: InputMaybe<Array<RoleScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<RoleOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<RoleOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<RoleWhereInput>;
@@ -2220,7 +2053,7 @@ export type QuerySeasonArgs = {
 export type QuerySeasonsArgs = {
   cursor?: InputMaybe<SeasonWhereUniqueInput>;
   distinct?: InputMaybe<Array<SeasonScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<SeasonOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<SeasonOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<SeasonWhereInput>;
@@ -2240,7 +2073,7 @@ export type QuerySponsorsArgs = {
 export type QueryTalkCategoriesArgs = {
   cursor?: InputMaybe<ApplicationTalkCategoryWhereUniqueInput>;
   distinct?: InputMaybe<Array<ApplicationTalkCategoryScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ApplicationTalkCategoryOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ApplicationTalkCategoryWhereInput>;
@@ -2255,7 +2088,7 @@ export type QueryTranslationArgs = {
 export type QueryTranslationsArgs = {
   cursor?: InputMaybe<TranslationWhereUniqueInput>;
   distinct?: InputMaybe<Array<TranslationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<TranslationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<TranslationOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<TranslationWhereInput>;
@@ -2270,7 +2103,7 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   cursor?: InputMaybe<UserWhereUniqueInput>;
   distinct?: InputMaybe<Array<UserScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<UserOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<UserWhereInput>;
@@ -2401,20 +2234,7 @@ export type ResumeFacultyNullableRelationFilter = {
   isNot?: InputMaybe<ResumeFacultyWhereInput>;
 };
 
-export enum ResumeFacultyOrderByRelevanceFieldEnum {
-  Module = 'module',
-  Name = 'name',
-  Specialization = 'specialization'
-}
-
-export type ResumeFacultyOrderByRelevanceInput = {
-  fields: Array<ResumeFacultyOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ResumeFacultyOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ResumeFacultyOrderByRelevanceInput>;
+export type ResumeFacultyOrderByWithRelationInput = {
   module?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   specialization?: InputMaybe<SortOrder>;
@@ -2430,7 +2250,7 @@ export type ResumeFacultyWhereInput = {
 };
 
 export type ResumeFindManyInput = {
-  orderBy?: InputMaybe<Array<ResumeOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ResumeOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ResumeWhereInput>;
@@ -2459,23 +2279,10 @@ export type ResumeList = {
   total: Scalars['Int']['output'];
 };
 
-export enum ResumeOrderByRelevanceFieldEnum {
-  City = 'city',
-  ExtraField = 'extraField',
-  Uid = 'uid'
-}
-
-export type ResumeOrderByRelevanceInput = {
-  fields: Array<ResumeOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type ResumeOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ResumeOrderByRelevanceInput>;
+export type ResumeOrderByWithRelationInput = {
   city?: InputMaybe<SortOrder>;
   extraField?: InputMaybe<SortOrder>;
-  faculty?: InputMaybe<ResumeFacultyOrderByWithRelationAndSearchRelevanceInput>;
+  faculty?: InputMaybe<ResumeFacultyOrderByWithRelationInput>;
   interests?: InputMaybe<ResumeInterestOrderByRelationAggregateInput>;
   projects?: InputMaybe<ResumeProjectOrderByRelationAggregateInput>;
   studyYears?: InputMaybe<ResumeStudyYearOrderByRelationAggregateInput>;
@@ -2662,18 +2469,7 @@ export type RoleCountUsersArgs = {
   where?: InputMaybe<UserWhereInput>;
 };
 
-export enum RoleOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type RoleOrderByRelevanceInput = {
-  fields: Array<RoleOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type RoleOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<RoleOrderByRelevanceInput>;
+export type RoleOrderByWithRelationInput = {
   name?: InputMaybe<SortOrder>;
 };
 
@@ -2835,19 +2631,7 @@ export type SeasonNullableRelationFilter = {
   isNot?: InputMaybe<SeasonWhereInput>;
 };
 
-export enum SeasonOrderByRelevanceFieldEnum {
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type SeasonOrderByRelevanceInput = {
-  fields: Array<SeasonOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type SeasonOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<SeasonOrderByRelevanceInput>;
+export type SeasonOrderByWithRelationInput = {
   applicationsEditableFrom?: InputMaybe<SortOrder>;
   applicationsEditableUntil?: InputMaybe<SortOrder>;
   applicationsFrom?: InputMaybe<SortOrder>;
@@ -3057,7 +2841,6 @@ export type StringFilter = {
   mode?: InputMaybe<QueryMode>;
   not?: InputMaybe<NestedStringFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3073,7 +2856,6 @@ export type StringNullableFilter = {
   mode?: InputMaybe<QueryMode>;
   not?: InputMaybe<NestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3116,20 +2898,7 @@ export type TranslationKeyLanguageCompoundUniqueInput = {
   language: Scalars['String']['input'];
 };
 
-export enum TranslationOrderByRelevanceFieldEnum {
-  Key = 'key',
-  Language = 'language',
-  Value = 'value'
-}
-
-export type TranslationOrderByRelevanceInput = {
-  fields: Array<TranslationOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type TranslationOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<TranslationOrderByRelevanceInput>;
+export type TranslationOrderByWithRelationInput = {
   key?: InputMaybe<SortOrder>;
   language?: InputMaybe<SortOrder>;
   value?: InputMaybe<SortOrder>;
@@ -3284,24 +3053,7 @@ export type UserNullableRelationFilter = {
   isNot?: InputMaybe<UserWhereInput>;
 };
 
-export enum UserOrderByRelevanceFieldEnum {
-  Email = 'email',
-  FirstName = 'firstName',
-  Language = 'language',
-  LastName = 'lastName',
-  Password = 'password',
-  Phone = 'phone',
-  Uid = 'uid'
-}
-
-export type UserOrderByRelevanceInput = {
-  fields: Array<UserOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: SortOrder;
-};
-
-export type UserOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<UserOrderByRelevanceInput>;
+export type UserOrderByWithRelationInput = {
   email?: InputMaybe<SortOrder>;
   firstName?: InputMaybe<SortOrder>;
   language?: InputMaybe<SortOrder>;

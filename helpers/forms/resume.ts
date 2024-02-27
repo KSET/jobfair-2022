@@ -4,7 +4,7 @@ import {
 } from "type-fest";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 import {
   type IResume,
   type IResumeFaculty,
@@ -98,7 +98,7 @@ export const resumeFacultyCreate =
     })
 ;
 
-type ResumeWorkExperience = ConditionalPick<IResumeWorkExperience, Primitive>;
+type ResumeWorkExperience = IResumeWorkExperience;
 export const resumeWorkExperienceCreate =
   <T extends ResumeWorkExperience>(resume: Maybe<T>): Record<keyof ResumeWorkExperience, InputEntry> =>
     ({
@@ -126,7 +126,7 @@ export const resumeWorkExperienceCreate =
     })
 ;
 
-type ResumeProject = ConditionalPick<IResumeProject, Primitive>;
+type ResumeProject = IResumeProject;
 export const resumeProjectCreate =
   <T extends ResumeProject>(resume: Maybe<T>): Record<keyof ResumeProject, InputEntry> =>
     ({
@@ -154,7 +154,7 @@ export const resumeProjectCreate =
     })
 ;
 
-type ResumeVolunteerExperience = ConditionalPick<IResumeVolunteerExperience, Primitive>;
+type ResumeVolunteerExperience = IResumeVolunteerExperience;
 export const resumeVolunteerExperienceCreate =
   <T extends ResumeVolunteerExperience>(resume: Maybe<T>): Record<keyof ResumeVolunteerExperience, InputEntry> =>
     ({

@@ -33,42 +33,12 @@ export default defineNuxtPlugin((nuxt) => {
     ],
   });
 
-  type User = {
-    [key: string]: unknown,
-    id?: string,
-    ip_address?: string,
-    email?: string,
-    username?: string,
-  };
-
-  enum Severity {
-    Fatal = "fatal",
-    Error = "error",
-    Warning = "warning",
-    Log = "log",
-    Info = "info",
-    Debug = "debug",
-    Critical = "critical"
-  }
-
-  type Breadcrumb = {
-    type?: string,
-    level?: Severity,
-    event_id?: string,
-    category?: string,
-    message?: string,
-    data?: {
-      [key: string]: unknown,
-    },
-    timestamp?: number,
-  };
-
   return {
     provide: {
       sentrySetContext: (name: string, context: Record<string, unknown>) => Sentry.setContext(name, context),
-      sentrySetUser: (user: User) => Sentry.setUser(user),
+      sentrySetUser: (user: Sentry.User) => Sentry.setUser(user),
       sentrySetTag: (tagName: string, value: Primitive) => Sentry.setTag(tagName, value),
-      sentryAddBreadcrumb: (breadcrumb: Breadcrumb) => Sentry.addBreadcrumb(breadcrumb),
+      sentryAddBreadcrumb: (breadcrumb: Sentry.Breadcrumb) => Sentry.addBreadcrumb(breadcrumb),
     },
   };
 });

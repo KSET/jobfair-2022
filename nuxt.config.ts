@@ -22,7 +22,7 @@ const cssClassNameBlacklist = new Set([
   "fc",
 ]);
 
-const CssNameValid = /[_a-zA-Z]+[_a-zA-Z\d-]*/g;
+const CssNameValid = /^[_a-zA-Z]+[_a-zA-Z\d-]*$/g;
 
 export default defineNuxtConfig({
   typescript: {
@@ -39,24 +39,20 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "nuxt-icons",
     "@nuxtjs/plausible",
+    "nuxt-primevue",
   ],
 
   build: {
     transpile: [
       "rambda",
       "rambdax",
-      "primevue",
       "graphql",
       "tslib",
     ],
   },
 
   css: [
-    "@/node_modules/primeicons/primeicons.css",
-    "@/node_modules/normalize.css/normalize.css",
-    "@/node_modules/primeflex/primeflex.css",
-    "@/node_modules/primevue/resources/primevue.css",
-    "@/assets/styles/theme/primevue/theme.scss",
+    "@/assets/styles/theme/theme.scss",
   ],
 
   app: {
@@ -79,8 +75,8 @@ export default defineNuxtConfig({
           if (!identNameMap.has(idScope)) {
             let id;
             do {
-              id = uid.sequentialUUID();
-            } while (cssClassNameBlacklist.has(id) || id.startsWith("p-") || !CssNameValid.test(id));
+              id = `jf_${ uid.sequentialUUID() }`;
+            } while (cssClassNameBlacklist.has(id) || !CssNameValid.test(id));
 
             identNameMap.set(
               idScope,
@@ -116,7 +112,7 @@ export default defineNuxtConfig({
           lintCommand: 'stylelint "**/*.{scss,css,vue}" --ignore-path .gitignore',
         },
         eslint: {
-          lintCommand: 'eslint --ext ".ts,.js,.vue" --ignore-path .gitignore --ignore-pattern backend/',
+          lintCommand: 'eslint --ext ".ts,.js,.vue" --ignore-path .gitignore --ignore-pattern "/backend/**/*"',
         },
 
         enableBuild: false,
@@ -126,9 +122,9 @@ export default defineNuxtConfig({
     build: {
       rollupOptions: {
         output: {
-          assetFileNames: `${ ASSETS_PATH }/[hash][extname]`,
-          chunkFileNames: `${ ASSETS_PATH }/[hash].js`,
-          entryFileNames: `${ ASSETS_PATH }/[hash].js`,
+          assetFileNames: `${ ASSETS_PATH }/[name]-[hash][extname]`,
+          chunkFileNames: `${ ASSETS_PATH }/[name]-[hash].js`,
+          entryFileNames: `${ ASSETS_PATH }/[name]-[hash].js`,
         },
       },
     },
@@ -147,6 +143,17 @@ export default defineNuxtConfig({
 
   plausible: {
     autoOutboundTracking: true,
+  },
+
+  primevue: {
+    options: {
+      ripple: true,
+      inputStyle: "outlined",
+    },
+    components: {
+      prefix: "P",
+      include: [ "Button" ],
+    },
   },
 
   devtools: {

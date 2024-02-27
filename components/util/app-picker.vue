@@ -88,7 +88,8 @@
     emits: [ "select" ],
 
     setup() {
-      const optionsId = `${ Date.now().toString(36) }-${ Math.random().toString(36).substring(2) }`;
+      const uniqueId = useId().replace(":", "_");
+      const optionsId = `${ Date.now().toString(36) }-${ uniqueId }`;
       const isOpen = ref(false);
       const element$ = ref<HTMLDivElement | null>(null);
 

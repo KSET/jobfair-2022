@@ -1,6 +1,6 @@
 <template>
   <div
-    :aria-disabled="orNull(disabled)"
+    :aria-disabled="orNone(disabled)"
     :class="$style.container"
   >
     <label
@@ -29,12 +29,12 @@
       <p-multi-select
         v-if="isMultiple"
         v-model="input"
-        :aria-describedby="elseNull(visible.message, id.message)"
-        :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-        :aria-invalid="orNull(invalid)"
-        :aria-label="orNull(label || labelTranslated)"
-        :aria-labelledby="elseNull(visible.label, id.label)"
-        :aria-required="orNull(required)"
+        :aria-describedby="elseNone(visible.message, id.message)"
+        :aria-errormessage="elseNone(visible.label && invalid, id.label)"
+        :aria-invalid="orNone(invalid)"
+        :aria-label="orNone(label || labelTranslated)"
+        :aria-labelledby="elseNone(visible.label, id.label)"
+        :aria-required="orNone(required)"
         :class="{
           [$style.input]: true,
           ['invalid']: invalid,
@@ -44,7 +44,7 @@
         :input-id="id.input"
         :name="name"
         :options="options"
-        :placeholder="orNull(placeholder)"
+        :placeholder="orNone(placeholder)"
         :required="required"
         option-label="label"
         option-value="value"
@@ -52,12 +52,12 @@
       <p-dropdown
         v-else
         v-model="input"
-        :aria-describedby="elseNull(visible.message, id.message)"
-        :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-        :aria-invalid="orNull(invalid)"
-        :aria-label="orNull(label || labelTranslated)"
-        :aria-labelledby="elseNull(visible.label, id.label)"
-        :aria-required="orNull(required)"
+        :aria-describedby="elseNone(visible.message, id.message)"
+        :aria-errormessage="elseNone(visible.label && invalid, id.label)"
+        :aria-invalid="orNone(invalid)"
+        :aria-label="orNone(label || labelTranslated)"
+        :aria-labelledby="elseNone(visible.label, id.label)"
+        :aria-required="orNone(required)"
         :class="{
           [$style.input]: true,
           ['invalid']: invalid,
@@ -67,7 +67,7 @@
         :input-id="id.input"
         :name="name"
         :options="options"
-        :placeholder="orNull(placeholder)"
+        :placeholder="orNone(placeholder)"
         :required="required"
         option-label="label"
         option-value="value"
@@ -75,12 +75,12 @@
       <template #placeholder>
         <select
           v-model="input"
-          :aria-describedby="elseNull(visible.message, id.message)"
-          :aria-errormessage="elseNull(visible.label && invalid, id.label)"
-          :aria-invalid="orNull(invalid)"
-          :aria-label="orNull(label || labelTranslated)"
-          :aria-labelledby="elseNull(visible.label, id.label)"
-          :aria-required="orNull(required)"
+          :aria-describedby="elseNone(visible.message, id.message)"
+          :aria-errormessage="elseNone(visible.label && invalid, id.label)"
+          :aria-invalid="orNone(invalid)"
+          :aria-label="orNone(label || labelTranslated)"
+          :aria-labelledby="elseNone(visible.label, id.label)"
+          :aria-required="orNone(required)"
           :class="$style.fallbackSelect"
           :disabled="disabled"
           :multiple="isMultiple"
@@ -90,7 +90,7 @@
           <option
             v-for="option in options"
             :key="`${option.value}$${option.label}`"
-            :selected="orNull(option.value === input)"
+            :selected="orNone(option.value === input)"
             :value="option.value"
             v-text="option.label"
           />
@@ -120,6 +120,9 @@
     ref,
     unref,
   } from "vue";
+  import {
+    elseNone, orNone, type AppOptionsProp,
+  } from "./helpers";
   import useModelWrapper from "~/composables/useModelWrapper";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -199,27 +202,19 @@
 
       options: {
         required: true,
-        type: Array,
+        type: Array as AppOptionsProp,
       },
     },
 
     emits: [ "update:modelValue" ],
 
     setup(props, { emit }) {
-      const uniqueId = Math.random().toString(36).substring(2);
+      const uniqueId = useId().replace(":", "_");
       const slotExists = useReactiveSlots("message", "label");
 
       const input = useModelWrapper(props, emit)("modelValue");
 
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
-
-      function elseNull<T, C>(check: C, value: T) {
-        return check ? value : null;
-      }
-
-      function orNull<T>(value: T) {
-        return elseNull(value, value);
-      }
 
       return {
         input,
@@ -233,8 +228,8 @@
           message: computed(() => slotExists.message.value),
         }),
         labelTranslated: ref(""),
-        elseNull,
-        orNull,
+        elseNone,
+        orNone,
         isMultiple: computed(() => props.multiple || Array.isArray(props.modelValue)),
       };
     },

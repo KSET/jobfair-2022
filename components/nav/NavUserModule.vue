@@ -20,7 +20,7 @@
       />
     </p-button>
     <LazyClientOnly>
-      <p-overlay-panel
+      <OverlayPanel
         :id="panelId"
         ref="op$"
         :append-to="mountTo"
@@ -91,7 +91,7 @@
             </li>
           </ul>
         </div>
-      </p-overlay-panel>
+      </OverlayPanel>
     </LazyClientOnly>
   </div>
   <nuxt-link
@@ -131,7 +131,7 @@
     components: {
       ProfilePicture,
       TranslatedText,
-      POverlayPanel: OverlayPanel,
+      OverlayPanel,
       InputSwitch,
       IconChevronDown,
     },
@@ -150,6 +150,7 @@
     },
 
     setup() {
+      const uniqueId = useId().replace(":", "_");
       const joinNowRoute = useJoinNowRoute();
       const translationsStore = useTranslationsStore();
       const userStore = useUserStore();
@@ -175,7 +176,7 @@
           get: () => translationsStore.isEditable,
           set: (value) => translationsStore.isEditable = value,
         }),
-        panelId: `overlay-panel-${ Date.now().toString(36) }-${ Math.random().toString(36).substring(3) }`,
+        panelId: `overlay-panel-${ uniqueId }`,
         joinNowRoute,
         isLoggedIn,
         isOverlayPanelOpen,

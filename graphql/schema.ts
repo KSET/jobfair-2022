@@ -54,19 +54,7 @@ export type IApplicationCocktailNullableRelationFilter = {
   isNot?: InputMaybe<IApplicationCocktailWhereInput>;
 };
 
-export enum IApplicationCocktailOrderByRelevanceFieldEnum {
-  Colour = 'colour',
-  Name = 'name'
-}
-
-export type IApplicationCocktailOrderByRelevanceInput = {
-  fields: Array<IApplicationCocktailOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IApplicationCocktailOrderByRelevanceInput>;
+export type IApplicationCocktailOrderByWithRelationInput = {
   colour?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
 };
@@ -168,19 +156,8 @@ export type IApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput = {
   name: Scalars['String']['input'];
 };
 
-export enum IApplicationTalkCategoryOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type IApplicationTalkCategoryOrderByRelevanceInput = {
-  fields: Array<IApplicationTalkCategoryOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IApplicationTalkCategoryOrderByRelevanceInput>;
-  forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
+export type IApplicationTalkCategoryOrderByWithRelationInput = {
+  forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
   name?: InputMaybe<ISortOrder>;
 };
 
@@ -226,27 +203,11 @@ export type IApplicationTalkNullableRelationFilter = {
   isNot?: InputMaybe<IApplicationTalkWhereInput>;
 };
 
-export enum IApplicationTalkOrderByRelevanceFieldEnum {
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  Language = 'language',
-  TitleEn = 'titleEn',
-  TitleHr = 'titleHr',
-  Uid = 'uid'
-}
-
-export type IApplicationTalkOrderByRelevanceInput = {
-  fields: Array<IApplicationTalkOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IApplicationTalkOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IApplicationTalkOrderByRelevanceInput>;
-  category?: InputMaybe<IApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput>;
+export type IApplicationTalkOrderByWithRelationInput = {
+  category?: InputMaybe<IApplicationTalkCategoryOrderByWithRelationInput>;
   descriptionEn?: InputMaybe<ISortOrder>;
   descriptionHr?: InputMaybe<ISortOrder>;
-  event?: InputMaybe<ICalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<ICalendarItemOrderByWithRelationInput>;
   language?: InputMaybe<ISortOrder>;
   titleEn?: InputMaybe<ISortOrder>;
   titleHr?: InputMaybe<ISortOrder>;
@@ -297,29 +258,10 @@ export type IApplicationWorkshopNullableRelationFilter = {
   isNot?: InputMaybe<IApplicationWorkshopWhereInput>;
 };
 
-export enum IApplicationWorkshopOrderByRelevanceFieldEnum {
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  Goal = 'goal',
-  Language = 'language',
-  NotesEn = 'notesEn',
-  NotesHr = 'notesHr',
-  TitleEn = 'titleEn',
-  TitleHr = 'titleHr',
-  Uid = 'uid'
-}
-
-export type IApplicationWorkshopOrderByRelevanceInput = {
-  fields: Array<IApplicationWorkshopOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IApplicationWorkshopOrderByRelevanceInput>;
+export type IApplicationWorkshopOrderByWithRelationInput = {
   descriptionEn?: InputMaybe<ISortOrder>;
   descriptionHr?: InputMaybe<ISortOrder>;
-  event?: InputMaybe<ICalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<ICalendarItemOrderByWithRelationInput>;
   goal?: InputMaybe<ISortOrder>;
   language?: InputMaybe<ISortOrder>;
   notesEn?: InputMaybe<ISortOrder>;
@@ -418,24 +360,9 @@ export type ICalendarItemOrderByRelationAggregateInput = {
   _count?: InputMaybe<ISortOrder>;
 };
 
-export enum ICalendarItemOrderByRelevanceFieldEnum {
-  Location = 'location',
-  Text = 'text',
-  Title = 'title',
-  Type = 'type',
-  Uid = 'uid'
-}
-
-export type ICalendarItemOrderByRelevanceInput = {
-  fields: Array<ICalendarItemOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ICalendarItemOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ICalendarItemOrderByRelevanceInput>;
+export type ICalendarItemOrderByWithRelationInput = {
   end?: InputMaybe<ISortOrder>;
-  forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
+  forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
   grouped?: InputMaybe<ISortOrder>;
   location?: InputMaybe<ISortOrderInput>;
   start?: InputMaybe<ISortOrder>;
@@ -529,7 +456,7 @@ export type ICompanyApplicationApprovalNullableRelationFilter = {
   isNot?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
 };
 
-export type ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput = {
+export type ICompanyApplicationApprovalOrderByWithRelationInput = {
   booth?: InputMaybe<ISortOrder>;
   cocktail?: InputMaybe<ISortOrder>;
   logoHidden?: InputMaybe<ISortOrder>;
@@ -627,29 +554,18 @@ export type ICompanyApplicationOrderByRelationAggregateInput = {
   _count?: InputMaybe<ISortOrder>;
 };
 
-export enum ICompanyApplicationOrderByRelevanceFieldEnum {
-  Booth = 'booth'
-}
-
-export type ICompanyApplicationOrderByRelevanceInput = {
-  fields: Array<ICompanyApplicationOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ICompanyApplicationOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ICompanyApplicationOrderByRelevanceInput>;
-  approval?: InputMaybe<ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput>;
+export type ICompanyApplicationOrderByWithRelationInput = {
+  approval?: InputMaybe<ICompanyApplicationApprovalOrderByWithRelationInput>;
   booth?: InputMaybe<ISortOrderInput>;
-  cocktail?: InputMaybe<IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput>;
-  forCompany?: InputMaybe<ICompanyOrderByWithRelationAndSearchRelevanceInput>;
-  forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
-  panel?: InputMaybe<ICompanyPanelOrderByWithRelationAndSearchRelevanceInput>;
+  cocktail?: InputMaybe<IApplicationCocktailOrderByWithRelationInput>;
+  forCompany?: InputMaybe<ICompanyOrderByWithRelationInput>;
+  forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
+  panel?: InputMaybe<ICompanyPanelOrderByWithRelationInput>;
   panelParticipants?: InputMaybe<IApplicationPresenterOrderByRelationAggregateInput>;
-  talk?: InputMaybe<IApplicationTalkOrderByWithRelationAndSearchRelevanceInput>;
+  talk?: InputMaybe<IApplicationTalkOrderByWithRelationInput>;
   wantsCocktail?: InputMaybe<ISortOrder>;
   wantsPanel?: InputMaybe<ISortOrder>;
-  workshop?: InputMaybe<IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput>;
+  workshop?: InputMaybe<IApplicationWorkshopOrderByWithRelationInput>;
 };
 
 export enum ICompanyApplicationScalarFieldEnum {
@@ -734,25 +650,7 @@ export type ICompanyCountScannedUsersArgs = {
   where?: InputMaybe<ICompanyScannedUserWhereInput>;
 };
 
-export enum ICompanyOrderByRelevanceFieldEnum {
-  Address = 'address',
-  BrandName = 'brandName',
-  DescriptionEn = 'descriptionEn',
-  DescriptionHr = 'descriptionHr',
-  LegalName = 'legalName',
-  Uid = 'uid',
-  Vat = 'vat',
-  Website = 'website'
-}
-
-export type ICompanyOrderByRelevanceInput = {
-  fields: Array<ICompanyOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ICompanyOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ICompanyOrderByRelevanceInput>;
+export type ICompanyOrderByWithRelationInput = {
   address?: InputMaybe<ISortOrder>;
   brandName?: InputMaybe<ISortOrder>;
   descriptionEn?: InputMaybe<ISortOrder>;
@@ -786,23 +684,10 @@ export type ICompanyPanelNullableRelationFilter = {
   isNot?: InputMaybe<ICompanyPanelWhereInput>;
 };
 
-export enum ICompanyPanelOrderByRelevanceFieldEnum {
-  Description = 'description',
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type ICompanyPanelOrderByRelevanceInput = {
-  fields: Array<ICompanyPanelOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ICompanyPanelOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ICompanyPanelOrderByRelevanceInput>;
+export type ICompanyPanelOrderByWithRelationInput = {
   companies?: InputMaybe<ICompanyApplicationOrderByRelationAggregateInput>;
   description?: InputMaybe<ISortOrder>;
-  event?: InputMaybe<ICalendarItemOrderByWithRelationAndSearchRelevanceInput>;
+  event?: InputMaybe<ICalendarItemOrderByWithRelationInput>;
   name?: InputMaybe<ISortOrder>;
 };
 
@@ -1001,24 +886,12 @@ export type IEventLog = {
   user?: Maybe<IUser>;
 };
 
-export enum IEventLogOrderByRelevanceFieldEnum {
-  Data = 'data',
-  Name = 'name'
-}
-
-export type IEventLogOrderByRelevanceInput = {
-  fields: Array<IEventLogOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IEventLogOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IEventLogOrderByRelevanceInput>;
+export type IEventLogOrderByWithRelationInput = {
   data?: InputMaybe<ISortOrderInput>;
   date?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<ISortOrder>;
-  user?: InputMaybe<IUserOrderByWithRelationAndSearchRelevanceInput>;
+  user?: InputMaybe<IUserOrderByWithRelationInput>;
 };
 
 export type IEventLogPaginationResult = {
@@ -1118,27 +991,12 @@ export type IFileCountForResumeArgs = {
   where?: InputMaybe<IResumeWhereInput>;
 };
 
-export enum IFileOrderByRelevanceFieldEnum {
-  Etag = 'etag',
-  MimeType = 'mimeType',
-  MinioKey = 'minioKey',
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type IFileOrderByRelevanceInput = {
-  fields: Array<IFileOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IFileOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IFileOrderByRelevanceInput>;
+export type IFileOrderByWithRelationInput = {
   etag?: InputMaybe<ISortOrder>;
   mimeType?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
   size?: InputMaybe<ISortOrder>;
-  uploader?: InputMaybe<IUserOrderByWithRelationAndSearchRelevanceInput>;
+  uploader?: InputMaybe<IUserOrderByWithRelationInput>;
 };
 
 export type IFileRelationFilter = {
@@ -1311,18 +1169,7 @@ export type IIndustryCountCompanyArgs = {
   where?: InputMaybe<ICompanyWhereInput>;
 };
 
-export enum IIndustryOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type IIndustryOrderByRelevanceInput = {
-  fields: Array<IIndustryOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IIndustryOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IIndustryOrderByRelevanceInput>;
+export type IIndustryOrderByWithRelationInput = {
   name?: InputMaybe<ISortOrder>;
 };
 
@@ -1769,7 +1616,6 @@ export type INestedStringFilter = {
   lte?: InputMaybe<Scalars['String']['input']>;
   not?: InputMaybe<INestedStringFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1784,7 +1630,6 @@ export type INestedStringNullableFilter = {
   lte?: InputMaybe<Scalars['String']['input']>;
   not?: InputMaybe<INestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1906,22 +1751,10 @@ export type IPressRelease = {
   updatedAt: Scalars['DateTimeISO']['output'];
 };
 
-export enum IPressReleaseOrderByRelevanceFieldEnum {
-  Title = 'title',
-  Uid = 'uid'
-}
-
-export type IPressReleaseOrderByRelevanceInput = {
-  fields: Array<IPressReleaseOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IPressReleaseOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IPressReleaseOrderByRelevanceInput>;
-  creator?: InputMaybe<IUserOrderByWithRelationAndSearchRelevanceInput>;
-  file?: InputMaybe<IFileOrderByWithRelationAndSearchRelevanceInput>;
-  forSeason?: InputMaybe<ISeasonOrderByWithRelationAndSearchRelevanceInput>;
+export type IPressReleaseOrderByWithRelationInput = {
+  creator?: InputMaybe<IUserOrderByWithRelationInput>;
+  file?: InputMaybe<IFileOrderByWithRelationInput>;
+  forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
   published?: InputMaybe<ISortOrder>;
   title?: InputMaybe<ISortOrder>;
 };
@@ -2047,7 +1880,7 @@ export type IQueryCalendarItemCompanyUidArgs = {
 export type IQueryCompaniesArgs = {
   cursor?: InputMaybe<ICompanyWhereUniqueInput>;
   distinct?: InputMaybe<Array<ICompanyScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ICompanyOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ICompanyOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ICompanyWhereInput>;
@@ -2068,7 +1901,7 @@ export type IQueryCompanyApplicationForArgs = {
 export type IQueryCompanyApplicationsArgs = {
   cursor?: InputMaybe<ICompanyApplicationWhereUniqueInput>;
   distinct?: InputMaybe<Array<ICompanyApplicationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ICompanyApplicationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ICompanyApplicationOrderByWithRelationInput>>;
   season?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -2082,7 +1915,7 @@ export type IQueryCompanyInfoArgs = {
 
 
 export type IQueryEventLogArgs = {
-  orderBy?: InputMaybe<Array<IEventLogOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IEventLogOrderByWithRelationInput>>;
   page: Scalars['Int']['input'];
   perPage: Scalars['Int']['input'];
   where?: InputMaybe<Scalars['String']['input']>;
@@ -2092,7 +1925,7 @@ export type IQueryEventLogArgs = {
 export type IQueryFindFirstTranslationArgs = {
   cursor?: InputMaybe<ITranslationWhereUniqueInput>;
   distinct?: InputMaybe<Array<ITranslationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ITranslationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ITranslationOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ITranslationWhereInput>;
@@ -2107,7 +1940,7 @@ export type IQueryGateGuardianScanListArgs = {
 export type IQueryIndustriesArgs = {
   cursor?: InputMaybe<IIndustryWhereUniqueInput>;
   distinct?: InputMaybe<Array<IIndustryScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IIndustryOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IIndustryOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IIndustryWhereInput>;
@@ -2133,7 +1966,7 @@ export type IQueryNewsItemByUidArgs = {
 export type IQueryParticipantsArgs = {
   cursor?: InputMaybe<ICompanyWhereUniqueInput>;
   distinct?: InputMaybe<Array<ICompanyScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ICompanyOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ICompanyOrderByWithRelationInput>>;
   season?: InputMaybe<Scalars['String']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
@@ -2154,7 +1987,7 @@ export type IQueryPressReleaseArgs = {
 export type IQueryPressReleasesArgs = {
   cursor?: InputMaybe<IPressReleaseWhereUniqueInput>;
   distinct?: InputMaybe<Array<IPressReleaseScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IPressReleaseOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IPressReleaseOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IPressReleaseWhereInput>;
@@ -2201,7 +2034,7 @@ export type IQueryResumesScannedArgs = {
 export type IQueryRolesArgs = {
   cursor?: InputMaybe<IRoleWhereUniqueInput>;
   distinct?: InputMaybe<Array<IRoleScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IRoleOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IRoleOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IRoleWhereInput>;
@@ -2222,7 +2055,7 @@ export type IQuerySeasonArgs = {
 export type IQuerySeasonsArgs = {
   cursor?: InputMaybe<ISeasonWhereUniqueInput>;
   distinct?: InputMaybe<Array<ISeasonScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ISeasonOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ISeasonOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ISeasonWhereInput>;
@@ -2242,7 +2075,7 @@ export type IQuerySponsorsArgs = {
 export type IQueryTalkCategoriesArgs = {
   cursor?: InputMaybe<IApplicationTalkCategoryWhereUniqueInput>;
   distinct?: InputMaybe<Array<IApplicationTalkCategoryScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IApplicationTalkCategoryOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IApplicationTalkCategoryWhereInput>;
@@ -2257,7 +2090,7 @@ export type IQueryTranslationArgs = {
 export type IQueryTranslationsArgs = {
   cursor?: InputMaybe<ITranslationWhereUniqueInput>;
   distinct?: InputMaybe<Array<ITranslationScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<ITranslationOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<ITranslationOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ITranslationWhereInput>;
@@ -2272,7 +2105,7 @@ export type IQueryUserArgs = {
 export type IQueryUsersArgs = {
   cursor?: InputMaybe<IUserWhereUniqueInput>;
   distinct?: InputMaybe<Array<IUserScalarFieldEnum>>;
-  orderBy?: InputMaybe<Array<IUserOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IUserOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IUserWhereInput>;
@@ -2403,20 +2236,7 @@ export type IResumeFacultyNullableRelationFilter = {
   isNot?: InputMaybe<IResumeFacultyWhereInput>;
 };
 
-export enum IResumeFacultyOrderByRelevanceFieldEnum {
-  Module = 'module',
-  Name = 'name',
-  Specialization = 'specialization'
-}
-
-export type IResumeFacultyOrderByRelevanceInput = {
-  fields: Array<IResumeFacultyOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IResumeFacultyOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IResumeFacultyOrderByRelevanceInput>;
+export type IResumeFacultyOrderByWithRelationInput = {
   module?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
   specialization?: InputMaybe<ISortOrder>;
@@ -2432,7 +2252,7 @@ export type IResumeFacultyWhereInput = {
 };
 
 export type IResumeFindManyInput = {
-  orderBy?: InputMaybe<Array<IResumeOrderByWithRelationAndSearchRelevanceInput>>;
+  orderBy?: InputMaybe<Array<IResumeOrderByWithRelationInput>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IResumeWhereInput>;
@@ -2461,23 +2281,10 @@ export type IResumeList = {
   total: Scalars['Int']['output'];
 };
 
-export enum IResumeOrderByRelevanceFieldEnum {
-  City = 'city',
-  ExtraField = 'extraField',
-  Uid = 'uid'
-}
-
-export type IResumeOrderByRelevanceInput = {
-  fields: Array<IResumeOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IResumeOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IResumeOrderByRelevanceInput>;
+export type IResumeOrderByWithRelationInput = {
   city?: InputMaybe<ISortOrder>;
   extraField?: InputMaybe<ISortOrder>;
-  faculty?: InputMaybe<IResumeFacultyOrderByWithRelationAndSearchRelevanceInput>;
+  faculty?: InputMaybe<IResumeFacultyOrderByWithRelationInput>;
   interests?: InputMaybe<IResumeInterestOrderByRelationAggregateInput>;
   projects?: InputMaybe<IResumeProjectOrderByRelationAggregateInput>;
   studyYears?: InputMaybe<IResumeStudyYearOrderByRelationAggregateInput>;
@@ -2664,18 +2471,7 @@ export type IRoleCountUsersArgs = {
   where?: InputMaybe<IUserWhereInput>;
 };
 
-export enum IRoleOrderByRelevanceFieldEnum {
-  Name = 'name'
-}
-
-export type IRoleOrderByRelevanceInput = {
-  fields: Array<IRoleOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IRoleOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IRoleOrderByRelevanceInput>;
+export type IRoleOrderByWithRelationInput = {
   name?: InputMaybe<ISortOrder>;
 };
 
@@ -2837,19 +2633,7 @@ export type ISeasonNullableRelationFilter = {
   isNot?: InputMaybe<ISeasonWhereInput>;
 };
 
-export enum ISeasonOrderByRelevanceFieldEnum {
-  Name = 'name',
-  Uid = 'uid'
-}
-
-export type ISeasonOrderByRelevanceInput = {
-  fields: Array<ISeasonOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ISeasonOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ISeasonOrderByRelevanceInput>;
+export type ISeasonOrderByWithRelationInput = {
   applicationsEditableFrom?: InputMaybe<ISortOrder>;
   applicationsEditableUntil?: InputMaybe<ISortOrder>;
   applicationsFrom?: InputMaybe<ISortOrder>;
@@ -3059,7 +2843,6 @@ export type IStringFilter = {
   mode?: InputMaybe<IQueryMode>;
   not?: InputMaybe<INestedStringFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3075,7 +2858,6 @@ export type IStringNullableFilter = {
   mode?: InputMaybe<IQueryMode>;
   not?: InputMaybe<INestedStringNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
-  search?: InputMaybe<Scalars['String']['input']>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3118,20 +2900,7 @@ export type ITranslationKeyLanguageCompoundUniqueInput = {
   language: Scalars['String']['input'];
 };
 
-export enum ITranslationOrderByRelevanceFieldEnum {
-  Key = 'key',
-  Language = 'language',
-  Value = 'value'
-}
-
-export type ITranslationOrderByRelevanceInput = {
-  fields: Array<ITranslationOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type ITranslationOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<ITranslationOrderByRelevanceInput>;
+export type ITranslationOrderByWithRelationInput = {
   key?: InputMaybe<ISortOrder>;
   language?: InputMaybe<ISortOrder>;
   value?: InputMaybe<ISortOrder>;
@@ -3286,24 +3055,7 @@ export type IUserNullableRelationFilter = {
   isNot?: InputMaybe<IUserWhereInput>;
 };
 
-export enum IUserOrderByRelevanceFieldEnum {
-  Email = 'email',
-  FirstName = 'firstName',
-  Language = 'language',
-  LastName = 'lastName',
-  Password = 'password',
-  Phone = 'phone',
-  Uid = 'uid'
-}
-
-export type IUserOrderByRelevanceInput = {
-  fields: Array<IUserOrderByRelevanceFieldEnum>;
-  search: Scalars['String']['input'];
-  sort: ISortOrder;
-};
-
-export type IUserOrderByWithRelationAndSearchRelevanceInput = {
-  _relevance?: InputMaybe<IUserOrderByRelevanceInput>;
+export type IUserOrderByWithRelationInput = {
   email?: InputMaybe<ISortOrder>;
   firstName?: InputMaybe<ISortOrder>;
   language?: InputMaybe<ISortOrder>;
@@ -4690,9 +4442,7 @@ export type IResolversTypes = {
   ApplicationCocktail: ResolverTypeWrapper<IApplicationCocktail>;
   ApplicationCocktailCount: ResolverTypeWrapper<IApplicationCocktailCount>;
   ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
-  ApplicationCocktailOrderByRelevanceFieldEnum: IApplicationCocktailOrderByRelevanceFieldEnum;
-  ApplicationCocktailOrderByRelevanceInput: IApplicationCocktailOrderByRelevanceInput;
-  ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput: IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationCocktailOrderByWithRelationInput: IApplicationCocktailOrderByWithRelationInput;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: ResolverTypeWrapper<IApplicationPresenter>;
   ApplicationPresenterCount: ResolverTypeWrapper<IApplicationPresenterCount>;
@@ -4703,25 +4453,19 @@ export type IResolversTypes = {
   ApplicationTalkCategory: ResolverTypeWrapper<IApplicationTalkCategory>;
   ApplicationTalkCategoryCount: ResolverTypeWrapper<IApplicationTalkCategoryCount>;
   ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput: IApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput;
-  ApplicationTalkCategoryOrderByRelevanceFieldEnum: IApplicationTalkCategoryOrderByRelevanceFieldEnum;
-  ApplicationTalkCategoryOrderByRelevanceInput: IApplicationTalkCategoryOrderByRelevanceInput;
-  ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationTalkCategoryOrderByWithRelationInput: IApplicationTalkCategoryOrderByWithRelationInput;
   ApplicationTalkCategoryRelationFilter: IApplicationTalkCategoryRelationFilter;
   ApplicationTalkCategoryScalarFieldEnum: IApplicationTalkCategoryScalarFieldEnum;
   ApplicationTalkCategoryWhereInput: IApplicationTalkCategoryWhereInput;
   ApplicationTalkCategoryWhereUniqueInput: IApplicationTalkCategoryWhereUniqueInput;
   ApplicationTalkCount: ResolverTypeWrapper<IApplicationTalkCount>;
   ApplicationTalkNullableRelationFilter: IApplicationTalkNullableRelationFilter;
-  ApplicationTalkOrderByRelevanceFieldEnum: IApplicationTalkOrderByRelevanceFieldEnum;
-  ApplicationTalkOrderByRelevanceInput: IApplicationTalkOrderByRelevanceInput;
-  ApplicationTalkOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationTalkOrderByWithRelationInput: IApplicationTalkOrderByWithRelationInput;
   ApplicationTalkWhereInput: IApplicationTalkWhereInput;
   ApplicationWorkshop: ResolverTypeWrapper<IApplicationWorkshop>;
   ApplicationWorkshopCount: ResolverTypeWrapper<IApplicationWorkshopCount>;
   ApplicationWorkshopNullableRelationFilter: IApplicationWorkshopNullableRelationFilter;
-  ApplicationWorkshopOrderByRelevanceFieldEnum: IApplicationWorkshopOrderByRelevanceFieldEnum;
-  ApplicationWorkshopOrderByRelevanceInput: IApplicationWorkshopOrderByRelevanceInput;
-  ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput: IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationWorkshopOrderByWithRelationInput: IApplicationWorkshopOrderByWithRelationInput;
   ApplicationWorkshopWhereInput: IApplicationWorkshopWhereInput;
   ApproveCompanyApplicationsInput: IApproveCompanyApplicationsInput;
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
@@ -4735,9 +4479,7 @@ export type IResolversTypes = {
   CalendarItemListRelationFilter: ICalendarItemListRelationFilter;
   CalendarItemNullableRelationFilter: ICalendarItemNullableRelationFilter;
   CalendarItemOrderByRelationAggregateInput: ICalendarItemOrderByRelationAggregateInput;
-  CalendarItemOrderByRelevanceFieldEnum: ICalendarItemOrderByRelevanceFieldEnum;
-  CalendarItemOrderByRelevanceInput: ICalendarItemOrderByRelevanceInput;
-  CalendarItemOrderByWithRelationAndSearchRelevanceInput: ICalendarItemOrderByWithRelationAndSearchRelevanceInput;
+  CalendarItemOrderByWithRelationInput: ICalendarItemOrderByWithRelationInput;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailCreateInput: ICocktailCreateInput;
@@ -4745,7 +4487,7 @@ export type IResolversTypes = {
   CompanyApplication: ResolverTypeWrapper<ICompanyApplication>;
   CompanyApplicationApproval: ResolverTypeWrapper<ICompanyApplicationApproval>;
   CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
-  CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput;
+  CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationCount: ResolverTypeWrapper<ICompanyApplicationCount>;
@@ -4755,22 +4497,16 @@ export type IResolversTypes = {
   CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput: ICompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput;
   CompanyApplicationListRelationFilter: ICompanyApplicationListRelationFilter;
   CompanyApplicationOrderByRelationAggregateInput: ICompanyApplicationOrderByRelationAggregateInput;
-  CompanyApplicationOrderByRelevanceFieldEnum: ICompanyApplicationOrderByRelevanceFieldEnum;
-  CompanyApplicationOrderByRelevanceInput: ICompanyApplicationOrderByRelevanceInput;
-  CompanyApplicationOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationOrderByWithRelationAndSearchRelevanceInput;
+  CompanyApplicationOrderByWithRelationInput: ICompanyApplicationOrderByWithRelationInput;
   CompanyApplicationScalarFieldEnum: ICompanyApplicationScalarFieldEnum;
   CompanyApplicationWhereInput: ICompanyApplicationWhereInput;
   CompanyApplicationWhereUniqueInput: ICompanyApplicationWhereUniqueInput;
   CompanyCount: ResolverTypeWrapper<ICompanyCount>;
-  CompanyOrderByRelevanceFieldEnum: ICompanyOrderByRelevanceFieldEnum;
-  CompanyOrderByRelevanceInput: ICompanyOrderByRelevanceInput;
-  CompanyOrderByWithRelationAndSearchRelevanceInput: ICompanyOrderByWithRelationAndSearchRelevanceInput;
+  CompanyOrderByWithRelationInput: ICompanyOrderByWithRelationInput;
   CompanyPanel: ResolverTypeWrapper<ICompanyPanel>;
   CompanyPanelCount: ResolverTypeWrapper<ICompanyPanelCount>;
   CompanyPanelNullableRelationFilter: ICompanyPanelNullableRelationFilter;
-  CompanyPanelOrderByRelevanceFieldEnum: ICompanyPanelOrderByRelevanceFieldEnum;
-  CompanyPanelOrderByRelevanceInput: ICompanyPanelOrderByRelevanceInput;
-  CompanyPanelOrderByWithRelationAndSearchRelevanceInput: ICompanyPanelOrderByWithRelationAndSearchRelevanceInput;
+  CompanyPanelOrderByWithRelationInput: ICompanyPanelOrderByWithRelationInput;
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ResolverTypeWrapper<ICompanyProgram>;
@@ -4796,9 +4532,7 @@ export type IResolversTypes = {
   EditApprovedCompanyApplicationResponse: ResolverTypeWrapper<IEditApprovedCompanyApplicationResponse>;
   EntryResumeLogWhereInput: IEntryResumeLogWhereInput;
   EventLog: ResolverTypeWrapper<IEventLog>;
-  EventLogOrderByRelevanceFieldEnum: IEventLogOrderByRelevanceFieldEnum;
-  EventLogOrderByRelevanceInput: IEventLogOrderByRelevanceInput;
-  EventLogOrderByWithRelationAndSearchRelevanceInput: IEventLogOrderByWithRelationAndSearchRelevanceInput;
+  EventLogOrderByWithRelationInput: IEventLogOrderByWithRelationInput;
   EventLogPaginationResult: ResolverTypeWrapper<IEventLogPaginationResult>;
   EventLogWhereInput: IEventLogWhereInput;
   EventReservationResponse: ResolverTypeWrapper<IEventReservationResponse>;
@@ -4811,9 +4545,7 @@ export type IResolversTypes = {
   FieldError: ResolverTypeWrapper<IFieldError>;
   File: ResolverTypeWrapper<IFile>;
   FileCount: ResolverTypeWrapper<IFileCount>;
-  FileOrderByRelevanceFieldEnum: IFileOrderByRelevanceFieldEnum;
-  FileOrderByRelevanceInput: IFileOrderByRelevanceInput;
-  FileOrderByWithRelationAndSearchRelevanceInput: IFileOrderByWithRelationAndSearchRelevanceInput;
+  FileOrderByWithRelationInput: IFileOrderByWithRelationInput;
   FileRelationFilter: IFileRelationFilter;
   FileWhereInput: IFileWhereInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -4833,9 +4565,7 @@ export type IResolversTypes = {
   ImageWhereInput: IImageWhereInput;
   Industry: ResolverTypeWrapper<IIndustry>;
   IndustryCount: ResolverTypeWrapper<IIndustryCount>;
-  IndustryOrderByRelevanceFieldEnum: IIndustryOrderByRelevanceFieldEnum;
-  IndustryOrderByRelevanceInput: IIndustryOrderByRelevanceInput;
-  IndustryOrderByWithRelationAndSearchRelevanceInput: IIndustryOrderByWithRelationAndSearchRelevanceInput;
+  IndustryOrderByWithRelationInput: IIndustryOrderByWithRelationInput;
   IndustryScalarFieldEnum: IIndustryScalarFieldEnum;
   IndustryWhereInput: IIndustryWhereInput;
   IndustryWhereUniqueInput: IIndustryWhereUniqueInput;
@@ -4866,9 +4596,7 @@ export type IResolversTypes = {
   PasswordResetWhereInput: IPasswordResetWhereInput;
   PresenterCreateInput: IPresenterCreateInput;
   PressRelease: ResolverTypeWrapper<IPressRelease>;
-  PressReleaseOrderByRelevanceFieldEnum: IPressReleaseOrderByRelevanceFieldEnum;
-  PressReleaseOrderByRelevanceInput: IPressReleaseOrderByRelevanceInput;
-  PressReleaseOrderByWithRelationAndSearchRelevanceInput: IPressReleaseOrderByWithRelationAndSearchRelevanceInput;
+  PressReleaseOrderByWithRelationInput: IPressReleaseOrderByWithRelationInput;
   PressReleaseScalarFieldEnum: IPressReleaseScalarFieldEnum;
   PressReleaseWhereInput: IPressReleaseWhereInput;
   PressReleaseWhereUniqueInput: IPressReleaseWhereUniqueInput;
@@ -4884,18 +4612,14 @@ export type IResolversTypes = {
   ResumeFaculty: ResolverTypeWrapper<IResumeFaculty>;
   ResumeFacultyCreateInput: IResumeFacultyCreateInput;
   ResumeFacultyNullableRelationFilter: IResumeFacultyNullableRelationFilter;
-  ResumeFacultyOrderByRelevanceFieldEnum: IResumeFacultyOrderByRelevanceFieldEnum;
-  ResumeFacultyOrderByRelevanceInput: IResumeFacultyOrderByRelevanceInput;
-  ResumeFacultyOrderByWithRelationAndSearchRelevanceInput: IResumeFacultyOrderByWithRelationAndSearchRelevanceInput;
+  ResumeFacultyOrderByWithRelationInput: IResumeFacultyOrderByWithRelationInput;
   ResumeFacultyWhereInput: IResumeFacultyWhereInput;
   ResumeFindManyInput: IResumeFindManyInput;
   ResumeInterestListRelationFilter: IResumeInterestListRelationFilter;
   ResumeInterestOrderByRelationAggregateInput: IResumeInterestOrderByRelationAggregateInput;
   ResumeInterestWhereInput: IResumeInterestWhereInput;
   ResumeList: ResolverTypeWrapper<IResumeList>;
-  ResumeOrderByRelevanceFieldEnum: IResumeOrderByRelevanceFieldEnum;
-  ResumeOrderByRelevanceInput: IResumeOrderByRelevanceInput;
-  ResumeOrderByWithRelationAndSearchRelevanceInput: IResumeOrderByWithRelationAndSearchRelevanceInput;
+  ResumeOrderByWithRelationInput: IResumeOrderByWithRelationInput;
   ResumeProject: ResolverTypeWrapper<IResumeProject>;
   ResumeProjectCreateInput: IResumeProjectCreateInput;
   ResumeProjectListRelationFilter: IResumeProjectListRelationFilter;
@@ -4922,9 +4646,7 @@ export type IResolversTypes = {
   ResumeWorkExperienceWhereInput: IResumeWorkExperienceWhereInput;
   Role: ResolverTypeWrapper<IRole>;
   RoleCount: ResolverTypeWrapper<IRoleCount>;
-  RoleOrderByRelevanceFieldEnum: IRoleOrderByRelevanceFieldEnum;
-  RoleOrderByRelevanceInput: IRoleOrderByRelevanceInput;
-  RoleOrderByWithRelationAndSearchRelevanceInput: IRoleOrderByWithRelationAndSearchRelevanceInput;
+  RoleOrderByWithRelationInput: IRoleOrderByWithRelationInput;
   RoleScalarFieldEnum: IRoleScalarFieldEnum;
   RoleWhereInput: IRoleWhereInput;
   RoleWhereUniqueInput: IRoleWhereUniqueInput;
@@ -4934,9 +4656,7 @@ export type IResolversTypes = {
   SeasonCount: ResolverTypeWrapper<ISeasonCount>;
   SeasonCreateInput: ISeasonCreateInput;
   SeasonNullableRelationFilter: ISeasonNullableRelationFilter;
-  SeasonOrderByRelevanceFieldEnum: ISeasonOrderByRelevanceFieldEnum;
-  SeasonOrderByRelevanceInput: ISeasonOrderByRelevanceInput;
-  SeasonOrderByWithRelationAndSearchRelevanceInput: ISeasonOrderByWithRelationAndSearchRelevanceInput;
+  SeasonOrderByWithRelationInput: ISeasonOrderByWithRelationInput;
   SeasonRelationFilter: ISeasonRelationFilter;
   SeasonScalarFieldEnum: ISeasonScalarFieldEnum;
   SeasonUpdateInput: ISeasonUpdateInput;
@@ -4958,9 +4678,7 @@ export type IResolversTypes = {
   Translation: ResolverTypeWrapper<ITranslation>;
   TranslationCreateInput: ITranslationCreateInput;
   TranslationKeyLanguageCompoundUniqueInput: ITranslationKeyLanguageCompoundUniqueInput;
-  TranslationOrderByRelevanceFieldEnum: ITranslationOrderByRelevanceFieldEnum;
-  TranslationOrderByRelevanceInput: ITranslationOrderByRelevanceInput;
-  TranslationOrderByWithRelationAndSearchRelevanceInput: ITranslationOrderByWithRelationAndSearchRelevanceInput;
+  TranslationOrderByWithRelationInput: ITranslationOrderByWithRelationInput;
   TranslationScalarFieldEnum: ITranslationScalarFieldEnum;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
@@ -4971,9 +4689,7 @@ export type IResolversTypes = {
   UserCount: ResolverTypeWrapper<IUserCount>;
   UserCreateInput: IUserCreateInput;
   UserNullableRelationFilter: IUserNullableRelationFilter;
-  UserOrderByRelevanceFieldEnum: IUserOrderByRelevanceFieldEnum;
-  UserOrderByRelevanceInput: IUserOrderByRelevanceInput;
-  UserOrderByWithRelationAndSearchRelevanceInput: IUserOrderByWithRelationAndSearchRelevanceInput;
+  UserOrderByWithRelationInput: IUserOrderByWithRelationInput;
   UserRegisterInput: IUserRegisterInput;
   UserRelationFilter: IUserRelationFilter;
   UserScalarFieldEnum: IUserScalarFieldEnum;
@@ -4991,8 +4707,7 @@ export type IResolversParentTypes = {
   ApplicationCocktail: IApplicationCocktail;
   ApplicationCocktailCount: IApplicationCocktailCount;
   ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
-  ApplicationCocktailOrderByRelevanceInput: IApplicationCocktailOrderByRelevanceInput;
-  ApplicationCocktailOrderByWithRelationAndSearchRelevanceInput: IApplicationCocktailOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationCocktailOrderByWithRelationInput: IApplicationCocktailOrderByWithRelationInput;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: IApplicationPresenter;
   ApplicationPresenterCount: IApplicationPresenterCount;
@@ -5003,21 +4718,18 @@ export type IResolversParentTypes = {
   ApplicationTalkCategory: IApplicationTalkCategory;
   ApplicationTalkCategoryCount: IApplicationTalkCategoryCount;
   ApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput: IApplicationTalkCategoryForSeasonIdNameCompoundUniqueInput;
-  ApplicationTalkCategoryOrderByRelevanceInput: IApplicationTalkCategoryOrderByRelevanceInput;
-  ApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkCategoryOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationTalkCategoryOrderByWithRelationInput: IApplicationTalkCategoryOrderByWithRelationInput;
   ApplicationTalkCategoryRelationFilter: IApplicationTalkCategoryRelationFilter;
   ApplicationTalkCategoryWhereInput: IApplicationTalkCategoryWhereInput;
   ApplicationTalkCategoryWhereUniqueInput: IApplicationTalkCategoryWhereUniqueInput;
   ApplicationTalkCount: IApplicationTalkCount;
   ApplicationTalkNullableRelationFilter: IApplicationTalkNullableRelationFilter;
-  ApplicationTalkOrderByRelevanceInput: IApplicationTalkOrderByRelevanceInput;
-  ApplicationTalkOrderByWithRelationAndSearchRelevanceInput: IApplicationTalkOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationTalkOrderByWithRelationInput: IApplicationTalkOrderByWithRelationInput;
   ApplicationTalkWhereInput: IApplicationTalkWhereInput;
   ApplicationWorkshop: IApplicationWorkshop;
   ApplicationWorkshopCount: IApplicationWorkshopCount;
   ApplicationWorkshopNullableRelationFilter: IApplicationWorkshopNullableRelationFilter;
-  ApplicationWorkshopOrderByRelevanceInput: IApplicationWorkshopOrderByRelevanceInput;
-  ApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput: IApplicationWorkshopOrderByWithRelationAndSearchRelevanceInput;
+  ApplicationWorkshopOrderByWithRelationInput: IApplicationWorkshopOrderByWithRelationInput;
   ApplicationWorkshopWhereInput: IApplicationWorkshopWhereInput;
   ApproveCompanyApplicationsInput: IApproveCompanyApplicationsInput;
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
@@ -5031,8 +4743,7 @@ export type IResolversParentTypes = {
   CalendarItemListRelationFilter: ICalendarItemListRelationFilter;
   CalendarItemNullableRelationFilter: ICalendarItemNullableRelationFilter;
   CalendarItemOrderByRelationAggregateInput: ICalendarItemOrderByRelationAggregateInput;
-  CalendarItemOrderByRelevanceInput: ICalendarItemOrderByRelevanceInput;
-  CalendarItemOrderByWithRelationAndSearchRelevanceInput: ICalendarItemOrderByWithRelationAndSearchRelevanceInput;
+  CalendarItemOrderByWithRelationInput: ICalendarItemOrderByWithRelationInput;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailCreateInput: ICocktailCreateInput;
@@ -5040,7 +4751,7 @@ export type IResolversParentTypes = {
   CompanyApplication: ICompanyApplication;
   CompanyApplicationApproval: ICompanyApplicationApproval;
   CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
-  CompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationApprovalOrderByWithRelationAndSearchRelevanceInput;
+  CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationCount: ICompanyApplicationCount;
@@ -5050,18 +4761,15 @@ export type IResolversParentTypes = {
   CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput: ICompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput;
   CompanyApplicationListRelationFilter: ICompanyApplicationListRelationFilter;
   CompanyApplicationOrderByRelationAggregateInput: ICompanyApplicationOrderByRelationAggregateInput;
-  CompanyApplicationOrderByRelevanceInput: ICompanyApplicationOrderByRelevanceInput;
-  CompanyApplicationOrderByWithRelationAndSearchRelevanceInput: ICompanyApplicationOrderByWithRelationAndSearchRelevanceInput;
+  CompanyApplicationOrderByWithRelationInput: ICompanyApplicationOrderByWithRelationInput;
   CompanyApplicationWhereInput: ICompanyApplicationWhereInput;
   CompanyApplicationWhereUniqueInput: ICompanyApplicationWhereUniqueInput;
   CompanyCount: ICompanyCount;
-  CompanyOrderByRelevanceInput: ICompanyOrderByRelevanceInput;
-  CompanyOrderByWithRelationAndSearchRelevanceInput: ICompanyOrderByWithRelationAndSearchRelevanceInput;
+  CompanyOrderByWithRelationInput: ICompanyOrderByWithRelationInput;
   CompanyPanel: ICompanyPanel;
   CompanyPanelCount: ICompanyPanelCount;
   CompanyPanelNullableRelationFilter: ICompanyPanelNullableRelationFilter;
-  CompanyPanelOrderByRelevanceInput: ICompanyPanelOrderByRelevanceInput;
-  CompanyPanelOrderByWithRelationAndSearchRelevanceInput: ICompanyPanelOrderByWithRelationAndSearchRelevanceInput;
+  CompanyPanelOrderByWithRelationInput: ICompanyPanelOrderByWithRelationInput;
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ICompanyProgram;
@@ -5086,8 +4794,7 @@ export type IResolversParentTypes = {
   EditApprovedCompanyApplicationResponse: IEditApprovedCompanyApplicationResponse;
   EntryResumeLogWhereInput: IEntryResumeLogWhereInput;
   EventLog: IEventLog;
-  EventLogOrderByRelevanceInput: IEventLogOrderByRelevanceInput;
-  EventLogOrderByWithRelationAndSearchRelevanceInput: IEventLogOrderByWithRelationAndSearchRelevanceInput;
+  EventLogOrderByWithRelationInput: IEventLogOrderByWithRelationInput;
   EventLogPaginationResult: IEventLogPaginationResult;
   EventLogWhereInput: IEventLogWhereInput;
   EventReservationResponse: IEventReservationResponse;
@@ -5099,8 +4806,7 @@ export type IResolversParentTypes = {
   FieldError: IFieldError;
   File: IFile;
   FileCount: IFileCount;
-  FileOrderByRelevanceInput: IFileOrderByRelevanceInput;
-  FileOrderByWithRelationAndSearchRelevanceInput: IFileOrderByWithRelationAndSearchRelevanceInput;
+  FileOrderByWithRelationInput: IFileOrderByWithRelationInput;
   FileRelationFilter: IFileRelationFilter;
   FileWhereInput: IFileWhereInput;
   Float: Scalars['Float']['output'];
@@ -5120,8 +4826,7 @@ export type IResolversParentTypes = {
   ImageWhereInput: IImageWhereInput;
   Industry: IIndustry;
   IndustryCount: IIndustryCount;
-  IndustryOrderByRelevanceInput: IIndustryOrderByRelevanceInput;
-  IndustryOrderByWithRelationAndSearchRelevanceInput: IIndustryOrderByWithRelationAndSearchRelevanceInput;
+  IndustryOrderByWithRelationInput: IIndustryOrderByWithRelationInput;
   IndustryWhereInput: IIndustryWhereInput;
   IndustryWhereUniqueInput: IIndustryWhereUniqueInput;
   Int: Scalars['Int']['output'];
@@ -5150,8 +4855,7 @@ export type IResolversParentTypes = {
   PasswordResetWhereInput: IPasswordResetWhereInput;
   PresenterCreateInput: IPresenterCreateInput;
   PressRelease: IPressRelease;
-  PressReleaseOrderByRelevanceInput: IPressReleaseOrderByRelevanceInput;
-  PressReleaseOrderByWithRelationAndSearchRelevanceInput: IPressReleaseOrderByWithRelationAndSearchRelevanceInput;
+  PressReleaseOrderByWithRelationInput: IPressReleaseOrderByWithRelationInput;
   PressReleaseWhereInput: IPressReleaseWhereInput;
   PressReleaseWhereUniqueInput: IPressReleaseWhereUniqueInput;
   PressReleaseWithFilesCreateInput: IPressReleaseWithFilesCreateInput;
@@ -5165,16 +4869,14 @@ export type IResolversParentTypes = {
   ResumeFaculty: IResumeFaculty;
   ResumeFacultyCreateInput: IResumeFacultyCreateInput;
   ResumeFacultyNullableRelationFilter: IResumeFacultyNullableRelationFilter;
-  ResumeFacultyOrderByRelevanceInput: IResumeFacultyOrderByRelevanceInput;
-  ResumeFacultyOrderByWithRelationAndSearchRelevanceInput: IResumeFacultyOrderByWithRelationAndSearchRelevanceInput;
+  ResumeFacultyOrderByWithRelationInput: IResumeFacultyOrderByWithRelationInput;
   ResumeFacultyWhereInput: IResumeFacultyWhereInput;
   ResumeFindManyInput: IResumeFindManyInput;
   ResumeInterestListRelationFilter: IResumeInterestListRelationFilter;
   ResumeInterestOrderByRelationAggregateInput: IResumeInterestOrderByRelationAggregateInput;
   ResumeInterestWhereInput: IResumeInterestWhereInput;
   ResumeList: IResumeList;
-  ResumeOrderByRelevanceInput: IResumeOrderByRelevanceInput;
-  ResumeOrderByWithRelationAndSearchRelevanceInput: IResumeOrderByWithRelationAndSearchRelevanceInput;
+  ResumeOrderByWithRelationInput: IResumeOrderByWithRelationInput;
   ResumeProject: IResumeProject;
   ResumeProjectCreateInput: IResumeProjectCreateInput;
   ResumeProjectListRelationFilter: IResumeProjectListRelationFilter;
@@ -5201,8 +4903,7 @@ export type IResolversParentTypes = {
   ResumeWorkExperienceWhereInput: IResumeWorkExperienceWhereInput;
   Role: IRole;
   RoleCount: IRoleCount;
-  RoleOrderByRelevanceInput: IRoleOrderByRelevanceInput;
-  RoleOrderByWithRelationAndSearchRelevanceInput: IRoleOrderByWithRelationAndSearchRelevanceInput;
+  RoleOrderByWithRelationInput: IRoleOrderByWithRelationInput;
   RoleWhereInput: IRoleWhereInput;
   RoleWhereUniqueInput: IRoleWhereUniqueInput;
   ScannedResumeWhereInput: IScannedResumeWhereInput;
@@ -5211,8 +4912,7 @@ export type IResolversParentTypes = {
   SeasonCount: ISeasonCount;
   SeasonCreateInput: ISeasonCreateInput;
   SeasonNullableRelationFilter: ISeasonNullableRelationFilter;
-  SeasonOrderByRelevanceInput: ISeasonOrderByRelevanceInput;
-  SeasonOrderByWithRelationAndSearchRelevanceInput: ISeasonOrderByWithRelationAndSearchRelevanceInput;
+  SeasonOrderByWithRelationInput: ISeasonOrderByWithRelationInput;
   SeasonRelationFilter: ISeasonRelationFilter;
   SeasonUpdateInput: ISeasonUpdateInput;
   SeasonWhereInput: ISeasonWhereInput;
@@ -5232,8 +4932,7 @@ export type IResolversParentTypes = {
   Translation: ITranslation;
   TranslationCreateInput: ITranslationCreateInput;
   TranslationKeyLanguageCompoundUniqueInput: ITranslationKeyLanguageCompoundUniqueInput;
-  TranslationOrderByRelevanceInput: ITranslationOrderByRelevanceInput;
-  TranslationOrderByWithRelationAndSearchRelevanceInput: ITranslationOrderByWithRelationAndSearchRelevanceInput;
+  TranslationOrderByWithRelationInput: ITranslationOrderByWithRelationInput;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
   UpdatePasswordResponse: IUpdatePasswordResponse;
@@ -5243,8 +4942,7 @@ export type IResolversParentTypes = {
   UserCount: IUserCount;
   UserCreateInput: IUserCreateInput;
   UserNullableRelationFilter: IUserNullableRelationFilter;
-  UserOrderByRelevanceInput: IUserOrderByRelevanceInput;
-  UserOrderByWithRelationAndSearchRelevanceInput: IUserOrderByWithRelationAndSearchRelevanceInput;
+  UserOrderByWithRelationInput: IUserOrderByWithRelationInput;
   UserRegisterInput: IUserRegisterInput;
   UserRelationFilter: IUserRelationFilter;
   UserUpdateInput: IUserUpdateInput;

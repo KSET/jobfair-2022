@@ -11,7 +11,7 @@ import {
 } from "~/graphql/schema";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 import {
   Language,
 } from "~/store/translations";
@@ -95,6 +95,7 @@ export type Talk = Omit<IApplicationTalk,
   | "createdAt"
   | "updatedAt"
   | "event"
+  | "reservation"
   | "uid">
   ;
 export const companyApplicationTalkCreate =
@@ -132,7 +133,7 @@ export const companyApplicationTalkCreate =
           options: Object.entries(Language).map(([ label, value ]) => ({ label, value })),
         },
         category: {
-          value: talk?.category.name || categories[0] || "",
+          value: talk?.category?.name || categories[0] || "",
           type: "dropdown" as const,
           options: categories.map((x) => ({ label: x, value: x })),
         },

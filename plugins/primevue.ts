@@ -6,12 +6,12 @@ import {
 } from "#app";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.use(PrimeVue, {
-    ripple: true,
-    inputStyle: "outlined",
-  });
+  // nuxtApp.vueApp.use(PrimeVue, {
+  //   ripple: true,
+  //   inputStyle: "outlined",
+  // });
 
-  nuxtApp.vueApp.use(ToastService);
+  nuxtApp.vueApp.use(ToastService as never);
 
   nuxtApp.vueApp.component("p-button", Button);
 });

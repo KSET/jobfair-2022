@@ -119,11 +119,9 @@
 
       const createObj = () => mapObject(
         (x) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
           "datetime-local" === x.type
             ? {
               ...x,
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/no-unsafe-member-access
               value: toDatetimeString(x.value),
             }
             : x
@@ -137,7 +135,6 @@
       const resetInfo =
         () =>
           toPairs(createObj())
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-return
             .forEach(([ key, { value } ]) => info[key].value = value)
       ;
 

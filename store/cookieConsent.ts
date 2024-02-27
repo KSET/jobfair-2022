@@ -5,9 +5,6 @@ import {
   useState as useGtagState,
 } from "vue-gtag-next";
 import {
-  unref,
-} from "vue";
-import {
   useCookie,
 } from "#app";
 
@@ -52,7 +49,7 @@ export const useCookieConsentStore = defineStore(
 
     actions: {
       fetchConsent() {
-        const consent = unref(consentCookie());
+        const consent = consentCookie().value;
 
         this.processConsent(consent || ConsentState.Undecided);
       },
@@ -61,10 +58,8 @@ export const useCookieConsentStore = defineStore(
         this.consent = status;
 
         const cookie = consentCookie();
-        const cookieValue = unref(cookie);
-        const cookieValueMatches = cookieValue === status;
 
-        if (!cookieValue || !cookieValueMatches) {
+        if (!cookie.value || cookie.value !== status) {
           cookie.value = status;
         }
 

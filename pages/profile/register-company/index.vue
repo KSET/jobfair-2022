@@ -78,7 +78,6 @@
 </template>
 
 <script lang="ts">
-  /* eslint-disable @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument */
   import {
     computed,
     defineComponent,
@@ -172,7 +171,7 @@
           resetErrors();
           isLoading.value = true;
           try {
-            const vat = info.vat.value;
+            const vat = String(info.vat.value);
             const resp = await companyStore.validateVat(vat);
 
             if (!resp?.valid) {

@@ -1,6 +1,6 @@
 <template>
   <div
-    :aria-disabled="orNull(disabled)"
+    :aria-disabled="orNone(disabled)"
     :class="$style.container"
   >
     <label
@@ -70,6 +70,9 @@
     fromPairs,
     toPairs,
   } from "rambdax";
+  import {
+    elseNone, orNone, type AppOptionsProp,
+  } from "./helpers";
   import useModelWrapper from "~/composables/useModelWrapper";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -150,14 +153,14 @@
 
       options: {
         required: true,
-        type: Array,
+        type: Array as AppOptionsProp,
       },
     },
 
     emits: [ "update:modelValue" ],
 
     setup(props, { emit }) {
-      const uniqueId = Math.random().toString(36).substring(2);
+      const uniqueId = useId().replace(":", "_");
       const slotExists = useReactiveSlots("message", "label");
 
       const input = useModelWrapper(props, emit)("modelValue");
@@ -183,14 +186,6 @@
 
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
 
-      function elseNull<T, C>(check: C, value: T) {
-        return check ? value : null;
-      }
-
-      function orNull<T>(value: T) {
-        return elseNull(value, value);
-      }
-
       return {
         input,
         selected,
@@ -204,8 +199,8 @@
           message: computed(() => slotExists.message.value),
         }),
         labelTranslated: ref(""),
-        elseNull,
-        orNull,
+        elseNone,
+        orNone,
         isMultiple: computed(() => props.multiple || Array.isArray(props.modelValue)),
       };
     },

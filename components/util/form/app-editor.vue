@@ -290,7 +290,7 @@
     "update:modelValue",
   ]);
 
-  const uniqueId = Math.random().toString(36).substring(2);
+  const uniqueId = useId().replace(":", "_");
   const slotExists = useReactiveSlots("message", "label");
 
   const input = useModelWrapper(props, emit)("modelValue");

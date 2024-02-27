@@ -9,9 +9,6 @@ import {
   omit,
 } from "rambda";
 import {
-  unref,
-} from "vue";
-import {
   fromPairs,
   toPairs,
 } from "rambdax";
@@ -131,7 +128,7 @@ export const useTranslationsStore = defineStore(
 
     actions: {
       setLanguageFromCookie() {
-        this.currentLanguage = unref(cookieLanguage()) || Language.HR;
+        this.currentLanguage = cookieLanguage().value || Language.HR;
       },
 
       async setCurrentLanguage(language: Language) {

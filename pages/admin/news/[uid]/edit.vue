@@ -98,9 +98,7 @@
         ...newsItem,
         date: new Date(newsItem.date as string).toISOString().split("T")[0],
       });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       info_.date.classes = "span-1";
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       info_.lang.classes = "span-1";
       const info = reactive({
         ...info_,
@@ -129,6 +127,8 @@
             map((key) => [ key, (info[key] as { value: unknown, }).value ]),
             Object.fromEntries,
           )(info);
+
+          data.date = new Date(data.date);
 
           if ("string" === typeof data.photo) {
             delete data.photo;

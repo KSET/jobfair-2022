@@ -126,7 +126,7 @@
 
       const currentLanguage = computed(() => translationsStore.currentLanguage.replace(/_/gi, "-"));
       const otherLanguages = computed(() => translationsStore.otherLanguages.map((x) => x.replace(/_/gi, "-")));
-      const isTranslationsLoading = useThrottle(computed(() => translationsStore.isLoading), 500);
+      const isTranslationsLoading = useThrottle(computed(() => translationsStore.isLoading) as never, 500) as unknown as Ref<boolean>;
 
       onMounted(() => {
         useCookieConsentStore().fetchConsent();
@@ -140,6 +140,7 @@
         window.scrollTo(0, 0);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       useHead({
         title: "Job Fair",
         meta: [
@@ -171,7 +172,7 @@
             return;
           }
 
-          (nuxt.$sentrySetUser as (user: Record<string, unknown>) => void)({
+          nuxt.$sentrySetUser({
             id: u.uid,
             email: u.email,
           });

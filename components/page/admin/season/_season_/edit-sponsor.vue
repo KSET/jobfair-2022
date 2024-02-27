@@ -167,12 +167,10 @@
         () =>
           toPairs(sponsorCreate())
             .forEach(([ key, { value } ]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               info[key].value = value;
             })
       ;
 
-      /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       if (!info.photo?.classes) {
         info.photo.classes = [];
       }
@@ -192,7 +190,6 @@
           item.disabled = true;
         }
       }
-      /* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 
       type AuthError = {
         message: string,

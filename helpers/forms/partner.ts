@@ -7,7 +7,7 @@ import {
 } from "~/graphql/schema";
 import {
   type InputEntry,
-} from "~/components/util/form/app-formgroup.vue";
+} from "~/components/util/form/app-formgroup.types";
 
 export type Partner = Pick<IPartner,
   "name"

@@ -63,6 +63,7 @@ export default defineNuxtPlugin((nuxt) => {
 
       return config;
     },
+    maskTypename: true,
   });
 
   return {

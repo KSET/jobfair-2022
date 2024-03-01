@@ -72,28 +72,26 @@
                 <translated-text :trans-key="`form.legend.${formName}`" />
               </legend>
 
-              <LazyClientOnly>
-                <app-formgroup
-                  :class="$style.formContainer"
-                  :errors="item.errors[formName]"
-                  :inputs="form"
-                  :loading="isLoading"
-                  no-form
-                >
-                  <template #after>
-                    <div
-                      v-if="item.errors[formName].entity.length > 0"
-                      :class="$style.errorContainer"
-                    >
-                      <translated-text
-                        v-for="err in item.errors[formName].entity"
-                        :key="err.message"
-                        :trans-key="err.message"
-                      />
-                    </div>
-                  </template>
-                </app-formgroup>
-              </LazyClientOnly>
+              <app-formgroup
+                :class="$style.formContainer"
+                :errors="item.errors[formName]"
+                :inputs="form"
+                :loading="isLoading"
+                no-form
+              >
+                <template #after>
+                  <div
+                    v-if="item.errors[formName].entity.length > 0"
+                    :class="$style.errorContainer"
+                  >
+                    <translated-text
+                      v-for="err in item.errors[formName].entity"
+                      :key="err.message"
+                      :trans-key="err.message"
+                    />
+                  </div>
+                </template>
+              </app-formgroup>
             </fieldset>
           </template>
           <!--          <input style="display: none;" type="submit">

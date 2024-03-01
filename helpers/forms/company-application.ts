@@ -20,19 +20,6 @@ import {
   unref,
 } from "#imports";
 
-const withRandomName =
-  <T>(
-    fn: ({
-      name,
-    }: {
-      name: string,
-    }) => T,
-  ): T =>
-    fn({
-      name: 0.5 >= Math.random() ? "Marko" : "Ana",
-    })
-;
-
 export type Presenter = Pick<IApplicationPresenter,
   "firstName"
   | "lastName"
@@ -54,11 +41,11 @@ export const companyApplicationPresenterCreate =
         requireHr = false,
       } = {},
     ): Record<keyof Presenter, InputEntry> =>
-      withRandomName(({ name }) => ({
+      ({
         firstName: {
           value: presenter?.firstName || "",
           type: "text" as const,
-          placeholder: name,
+          placeholder: "Matija",
         },
 
         lastName: {
@@ -69,12 +56,12 @@ export const companyApplicationPresenterCreate =
         bioEn: {
           value: presenter?.bioEn || "",
           type: "textarea" as const,
-          placeholder: `${ name } Horvat is a good developer in our company.`,
+          placeholder: "Matija Horvat is a good developer in our company.",
         },
         bioHr: {
           value: presenter?.bioHr || "",
           type: "textarea" as const,
-          placeholder: `${ name } Horvat je dobar developer u našoj firmi.`,
+          placeholder: "Matija Horvat ima značajna postignuća u našoj firmi.",
           required: requireHr,
         },
         photo: {
@@ -84,7 +71,7 @@ export const companyApplicationPresenterCreate =
           accept: "image/png,image/jpeg",
           type: "file",
         },
-      }))
+      })
 ;
 
 export type Talk = Omit<IApplicationTalk,

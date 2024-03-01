@@ -16,19 +16,6 @@ import {
   LanguageToName,
 } from "~/store/translations";
 
-const withRandomName =
-  <T>(
-    fn: ({
-      name,
-    }: {
-      name: string,
-    }) => T,
-  ): T =>
-    fn({
-      name: 0.5 >= Math.random() ? "Marko" : "Ana",
-    })
-;
-
 type Profile = Omit<IUser,
   "uid"
   | "companies"
@@ -41,13 +28,11 @@ type Profile = Omit<IUser,
   | "_count">;
 export const userProfileEdit =
   <T extends Profile>(user?: T | null): Record<keyof Profile, InputEntry> =>
-    withRandomName(({
-      name,
-    }) => ({
+    ({
       firstName: {
         value: user?.firstName || "",
         type: "text",
-        placeholder: name,
+        placeholder: "Matija",
       },
       lastName: {
         value: user?.lastName || "",
@@ -57,12 +42,12 @@ export const userProfileEdit =
       email: {
         value: user?.email || "",
         type: "email",
-        placeholder: `${ name }.horvat@example.com`.toLocaleLowerCase(),
+        placeholder: "matija.horvat@example.com",
       },
       phone: {
         value: user?.phone || "",
         type: "tel",
-        placeholder: "+385981234567",
+        placeholder: "+385987654321",
       },
       language: {
         value: user?.language || LanguageISO[Language.HR],
@@ -72,7 +57,7 @@ export const userProfileEdit =
           value,
         })),
       },
-    }))
+    })
 ;
 
 

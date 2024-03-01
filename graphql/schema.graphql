@@ -1298,7 +1298,7 @@ input PresenterCreateInput {
   bioHr: String!
   firstName: String!
   lastName: String!
-  photo: Upload!
+  photo: Upload
 }
 
 type PressRelease {

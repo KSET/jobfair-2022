@@ -205,26 +205,6 @@ mutation UpdatePressRelease($uid: String!, $info: PressReleaseWithFilesCreateInp
     }
 }
 
-mutation CreateCompanyApplication($info: CompanyApplicationCreateInput!) {
-    createCompanyApplication(info: $info) {
-        entity {
-            talk {
-                uid
-            }
-            workshop {
-                uid
-            }
-            wantsCocktail
-            wantsPanel
-        }
-
-        errors {
-            field
-            message
-        }
-    }
-}
-
 mutation EditApprovedCompanyApplication($info: CompanyApplicationApprovedEditInput!) {
     editApprovedCompanyApplication(info: $info) {
         entity {

@@ -1738,7 +1738,7 @@ export type IPresenterCreateInput = {
   bioHr: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
-  photo: Scalars['Upload']['input'];
+  photo?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type IPressRelease = {
@@ -3453,26 +3453,6 @@ export type IUpdatePressReleaseMutationVariables = Exact<{
 
 export type IUpdatePressReleaseMutation = IUpdatePressReleaseMutation_Mutation;
 
-export type ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk = { uid: string };
-
-export type ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
-
-export type ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
-
-export type ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
-
-export type ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse = { entity?: ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication | null, errors?: Array<ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_errors_FieldError> | null };
-
-export type ICreateCompanyApplicationMutation_Mutation = { createCompanyApplication?: ICreateCompanyApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse | null };
-
-
-export type ICreateCompanyApplicationMutationVariables = Exact<{
-  info: ICompanyApplicationCreateInput;
-}>;
-
-
-export type ICreateCompanyApplicationMutation = ICreateCompanyApplicationMutation_Mutation;
-
 export type IEditApprovedCompanyApplicationMutation_editApprovedCompanyApplication_EditApprovedCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk = { uid: string };
 
 export type IEditApprovedCompanyApplicationMutation_editApprovedCompanyApplication_EditApprovedCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
@@ -4312,6 +4292,58 @@ export type IPageProfileMeCompanyScansListRefineQrScanMutationVariables = Exact<
 
 
 export type IPageProfileMeCompanyScansListRefineQrScanMutation = IPageProfileMeCompanyScansListRefineQrScanMutation_Mutation;
+
+export type IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalkCategory = { name: string };
+
+export type IPageProfileMeCompanySignup_DataQuery_booths_Booth = { name: string, key?: string | null };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_category_ApplicationTalkCategory = { name: string };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter_photo_Image_full_ImageVariation = { mimeType: string };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter_photo_Image = { name: string, uid: string, full: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter_photo_Image_full_ImageVariation };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter_photo_Image | null };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, category: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_category_ApplicationTalkCategory, presenters: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter> };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter_photo_Image_full_ImageVariation = { mimeType: string };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter_photo_Image = { name: string, uid: string, full: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter_photo_Image_full_ImageVariation };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter_photo_Image | null };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, goal: string, notesEn: string, notesHr: string, presenters: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter> };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null };
+
+export type IPageProfileMeCompanySignup_DataQuery_Query = { talkCategories: Array<IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IPageProfileMeCompanySignup_DataQuery_booths_Booth>, companyApplication?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication | null };
+
+
+export type IPageProfileMeCompanySignup_DataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IPageProfileMeCompanySignup_DataQuery = IPageProfileMeCompanySignup_DataQuery_Query;
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk = { uid: string };
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse = { entity?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication | null, errors?: Array<IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_errors_FieldError> | null };
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_Mutation = { createCompanyApplication?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse | null };
+
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutationVariables = Exact<{
+  info: ICompanyApplicationCreateInput;
+}>;
+
+
+export type IPageProfileMeCompanySignup_CreateApplicationMutation = IPageProfileMeCompanySignup_CreateApplicationMutation_Mutation;
 
 export type IStoreCalendarEventToggleReservationMutation_updateEventReservation_EventReservationResponse_entity_EventReservationStatus = { status: number };
 
@@ -6293,26 +6325,6 @@ export const UpdatePressRelease = gql`
   }
 }
     `;
-export const CreateCompanyApplication = gql`
-    mutation CreateCompanyApplication($info: CompanyApplicationCreateInput!) {
-  createCompanyApplication(info: $info) {
-    entity {
-      talk {
-        uid
-      }
-      workshop {
-        uid
-      }
-      wantsCocktail
-      wantsPanel
-    }
-    errors {
-      field
-      message
-    }
-  }
-}
-    `;
 export const EditApprovedCompanyApplication = gql`
     mutation EditApprovedCompanyApplication($info: CompanyApplicationApprovedEditInput!) {
   editApprovedCompanyApplication(info: $info) {
@@ -7275,6 +7287,88 @@ export const PageProfileMeCompanyScansListRefineQrScan = gql`
     isStarred
     note
     error
+  }
+}
+    `;
+export const PageProfileMeCompanySignup_Data = gql`
+    query PageProfileMeCompanySignup_Data {
+  talkCategories {
+    name
+  }
+  booths {
+    name
+    key
+  }
+  companyApplication {
+    booth
+    wantsPanel
+    wantsCocktail
+    talk {
+      titleEn
+      titleHr
+      descriptionEn
+      descriptionHr
+      language
+      category {
+        name
+      }
+      presenters {
+        firstName
+        lastName
+        bioHr
+        bioEn
+        photo {
+          name
+          uid
+          full {
+            mimeType
+          }
+        }
+      }
+    }
+    workshop {
+      titleEn
+      titleHr
+      descriptionEn
+      descriptionHr
+      language
+      goal
+      notesEn
+      notesHr
+      presenters {
+        firstName
+        lastName
+        bioHr
+        bioEn
+        photo {
+          name
+          uid
+          full {
+            mimeType
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const PageProfileMeCompanySignup_CreateApplication = gql`
+    mutation PageProfileMeCompanySignup_CreateApplication($info: CompanyApplicationCreateInput!) {
+  createCompanyApplication(info: $info) {
+    entity {
+      talk {
+        uid
+      }
+      workshop {
+        uid
+      }
+      wantsCocktail
+      wantsPanel
+    }
+    errors {
+      field
+      message
+    }
   }
 }
     `;

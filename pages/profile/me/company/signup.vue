@@ -135,9 +135,6 @@
   import Panel from "primevue/panel";
   import Checkbox from "primevue/checkbox";
   import {
-    gql,
-  } from "@urql/core";
-  import {
     filter,
     keys,
     map,
@@ -165,18 +162,11 @@
     type Talk,
     type Workshop,
   } from "~/helpers/forms/company-application";
-  import AppFormgroup, {
-    type InputEntry,
-  } from "~/components/util/form/app-formgroup.vue";
+  import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
-  // import AppCheckbox from "~/components/util/form/app-checkbox.vue";
   import {
-    CreateCompanyApplication,
-    type IApplicationTalkCategory,
-    type IBooth,
-    type ICompanyApplication,
-    type ICreateCompanyApplicationMutation,
-    type ICreateCompanyApplicationMutationVariables,
+    // eslint-disable-next-line camelcase
+    type IPageProfileMeCompanySignup_CreateApplicationMutationVariables,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,
@@ -185,6 +175,12 @@
     useSeasonsStore,
   } from "~/store/seasons";
   import useTitle from "~/composables/useTitle";
+  import type {
+    InputEntry,
+  } from "~/components/util/form/app-formgroup.types";
+  import {
+    graphql,
+  } from "~/graphql/client";
 
   enum FormFor {
     Talk = "talk",
@@ -232,15 +228,9 @@
 
       const requireHr = company.vat.startsWith("HR");
 
-      type QData = {
-        talkCategories: Pick<IApplicationTalkCategory, "name">[],
-        booths: Pick<IBooth, "name" | "key">[],
-        companyApplication: ICompanyApplication,
-      };
-      type QArgs = never;
-      const resp = await useQuery<QData, QArgs>({
-        query: gql`
-          query CompanyApplication {
+      const resp = await useQuery({
+        query: graphql(/* GraphQL */ `
+          query PageProfileMeCompanySignup_Data {
               talkCategories {
                   name
               }
@@ -300,7 +290,7 @@
                   }
               }
           }
-        `,
+        `),
       })().then((resp) => resp?.data);
 
       talkCategoriesStore.setTalkCategories(resp?.talkCategories);
@@ -398,7 +388,8 @@
             }
           }
 
-          const info: ICreateCompanyApplicationMutationVariables["info"] = {
+          // eslint-disable-next-line camelcase
+          const info: IPageProfileMeCompanySignup_CreateApplicationMutationVariables["info"] = {
             vat,
             booth: unref(booth).key,
             talk:
@@ -432,9 +423,29 @@
           }
 
           isLoading.value = true;
-          const resp = await useMutation<ICreateCompanyApplicationMutation, ICreateCompanyApplicationMutationVariables>(CreateCompanyApplication)({
+          const resp = await useMutation(graphql(`
+            mutation PageProfileMeCompanySignup_CreateApplication($info: CompanyApplicationCreateInput!) {
+              createCompanyApplication(info: $info) {
+                entity {
+                  talk {
+                    uid
+                  }
+                  workshop {
+                    uid
+                  }
+                  wantsCocktail
+                  wantsPanel
+                }
+
+                errors {
+                  field
+                  message
+                }
+              }
+            }
+          `))({
             info,
-          }).then((resp) => resp?.data?.createCompanyApplication);
+            }).then((resp) => resp?.data?.createCompanyApplication);
           isLoading.value = false;
 
           if (!resp) {
@@ -574,7 +585,7 @@
       background-color: $background-color;
 
       &:first-child {
-        margin-top: .875rem;
+        margin-top: 1.75rem;
       }
 
       > legend {

@@ -879,7 +879,7 @@ export class CompanyApplicationAdminResolver {
                       deleteMany: oldApplication.talk
                         ? {
                           id: {
-                            in: oldApplication.talk?.presenters.map((x) => x.id),
+                            in: oldApplication.talk?.presenters?.map((x) => x.id),
                           },
                         }
                         : undefined,
@@ -919,7 +919,7 @@ export class CompanyApplicationAdminResolver {
                       deleteMany: oldApplication.workshop
                         ? {
                           id: {
-                            in: oldApplication.workshop?.presenters.map((x) => x.id),
+                            in: oldApplication.workshop?.presenters?.map((x) => x.id),
                           },
                         }
                         : undefined,
@@ -1492,7 +1492,7 @@ export class CompanyApplicationCreateResolver {
                       deleteMany: oldApplication.talk
                         ? {
                           id: {
-                            in: oldApplication.talk?.presenters.map((x) => x.id),
+                            in: oldApplication.talk?.presenters?.map((x) => x.id),
                           },
                         }
                         : undefined,
@@ -1532,7 +1532,7 @@ export class CompanyApplicationCreateResolver {
                       deleteMany: oldApplication.workshop
                         ? {
                           id: {
-                            in: oldApplication.workshop?.presenters.map((x) => x.id),
+                            in: oldApplication.workshop?.presenters?.map((x) => x.id),
                           },
                         }
                         : undefined,
@@ -1967,7 +1967,7 @@ export class CompanyApplicationCreateResolver {
             presenters: {
               deleteMany: {
                 id: {
-                  in: application[id]?.presenters.map((p) => p.id) || [],
+                  in: application[id]?.presenters?.map((p) => p.id) || [],
                 },
               },
               create: presentersCreate,
@@ -2035,7 +2035,7 @@ export class CompanyApplicationCreateResolver {
             presenters: {
               deleteMany: {
                 id: {
-                  in: application[id]?.presenters.map((p) => p.id) || [],
+                  in: application[id]?.presenters?.map((p) => p.id) || [],
                 },
               },
               create: presentersCreate,

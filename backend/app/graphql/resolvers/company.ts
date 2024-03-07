@@ -61,7 +61,9 @@ import {
   toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
-import SlackNotificationService from "../../services/slack-notification-service";
+import {
+  NotificationService,
+} from "../../services/notification-service";
 import {
   FileService,
   MinioBase,
@@ -458,7 +460,16 @@ export class CompanyInfoMutationsResolver {
     }
 
     void EventsService.logEvent("company:register", ctx.user.id, { vat: entity.vat });
-    void SlackNotificationService.notifyOfNewCompany({ ...entity, industry }, ctx.user);
+    void NotificationService.notify(
+      "new company",
+      {
+        company: {
+          ...entity,
+          industry,
+        },
+        creator: ctx.user,
+      },
+    );
 
     return {
       entity,

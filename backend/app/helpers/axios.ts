@@ -1,8 +1,6 @@
 import axios, {
-  AxiosError,
-} from "axios";
-import type {
-  AxiosRequestConfig,
+  type AxiosError,
+  type AxiosRequestConfig,
 } from "axios";
 
 export function request<T>(config: AxiosRequestConfig) {

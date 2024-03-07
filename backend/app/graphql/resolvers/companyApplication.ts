@@ -63,7 +63,9 @@ import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
-import SlackNotificationService from "../../services/slack-notification-service";
+import {
+  NotificationService,
+} from "../../services/notification-service";
 import {
   BoothsService,
 } from "../../services/booths-service";
@@ -1406,11 +1408,18 @@ export class CompanyApplicationCreateResolver {
         });
 
         if (entity) {
-          void SlackNotificationService.notifyOfNewApplication(
-            company,
-            currentSeason,
-            ctx.user!,
-            chosen,
+          void NotificationService.notify(
+            "new application",
+            {
+              company,
+              season: currentSeason,
+              creator: ctx.user!,
+              chosen: {
+                ...chosen,
+                talk: entity.talk,
+                workshop: entity.workshop,
+              },
+            },
           );
 
           void EventsService.logEvent(

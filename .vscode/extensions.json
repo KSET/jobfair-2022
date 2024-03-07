@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "nuxtr.nuxt-vscode-extentions",
-    "vue.vscode-typescript-vue-plugin",
     "editorconfig.editorconfig",
     "dbaeumer.vscode-eslint",
     "graphql.vscode-graphql-syntax",

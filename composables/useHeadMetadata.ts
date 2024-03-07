@@ -74,6 +74,5 @@ export const useHeadMetadata = <T extends Partial<HeadMetadata>>(metaRef: MaybeC
     };
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   useHead(head as never);
 };

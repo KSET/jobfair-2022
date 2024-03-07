@@ -140,7 +140,6 @@
         window.scrollTo(0, 0);
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       useHead({
         title: "Job Fair",
         meta: [

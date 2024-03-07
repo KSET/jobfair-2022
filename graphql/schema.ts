@@ -1228,6 +1228,7 @@ export type IMutation = {
   createSponsor: ICreateSponsorResponse;
   createTalkCategory?: Maybe<IApplicationTalkCategory>;
   deleteCalendarItem: Scalars['Boolean']['output'];
+  deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
   deleteNews?: Maybe<Scalars['Boolean']['output']>;
   deletePartner: Scalars['Boolean']['output'];
@@ -1340,6 +1341,12 @@ export type IMutationCreateTalkCategoryArgs = {
 
 export type IMutationDeleteCalendarItemArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IMutationDeleteCompanyApplicationForArgs = {
+  company: Scalars['String']['input'];
+  season: Scalars['String']['input'];
 };
 
 
@@ -4096,6 +4103,17 @@ export type IPageAdminSeasonSeasonDataQueryVariables = Exact<{
 
 export type IPageAdminSeasonSeasonDataQuery = IPageAdminSeasonSeasonDataQuery_Query;
 
+export type IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutation_Mutation = { deleteCompanyApplicationFor: boolean };
+
+
+export type IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutationVariables = Exact<{
+  company: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutation = IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutation_Mutation;
+
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_talk_ApplicationTalk = { titleEn: string, titleHr: string };
 
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string };
@@ -5424,6 +5442,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   createSponsor?: Resolver<IResolversTypes['CreateSponsorResponse'], ParentType, ContextType, RequireFields<IMutationCreateSponsorArgs, 'info' | 'season'>>;
   createTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationCreateTalkCategoryArgs, 'name' | 'season'>>;
   deleteCalendarItem?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCalendarItemArgs, 'uid'>>;
+  deleteCompanyApplicationFor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyApplicationForArgs, 'company' | 'season'>>;
   deleteCompanyPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyPanelArgs, 'uid'>>;
   deleteNews?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<IMutationDeleteNewsArgs, 'uid'>>;
   deletePartner?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeletePartnerArgs, 'partner'>>;
@@ -7073,6 +7092,11 @@ export const PageAdminSeasonSeasonData = gql`
     applicationsFrom
     applicationsUntil
   }
+}
+    `;
+export const PageAdminSeasonApplicationsCompanyEdit_DeleteApplication = gql`
+    mutation PageAdminSeasonApplicationsCompanyEdit_DeleteApplication($company: String!, $season: String!) {
+  deleteCompanyApplicationFor(company: $company, season: $season)
 }
     `;
 export const PageAdminSeasonApplicationsApproval_Base = gql`

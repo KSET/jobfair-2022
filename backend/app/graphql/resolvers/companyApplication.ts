@@ -79,6 +79,7 @@ import {
 import {
   Dict,
   GQLField,
+  GQLResponse,
 } from "../../types/helpers";
 import {
   captureError,
@@ -470,6 +471,30 @@ export class CompanyApplicationAdminResolver {
       },
       select: toSelect(info, transformSelect),
     });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteCompanyApplicationFor(
+    @Ctx() ctx: Context,
+    @Arg("season") seasonUid: string,
+    @Arg("company") companyUid: string,
+  ): GQLResponse<boolean> {
+    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+      return false;
+    }
+
+    await ctx.prisma.companyApplication.deleteMany({
+      where: {
+        forSeason: {
+          uid: seasonUid,
+        },
+        forCompany: {
+          uid: companyUid,
+        },
+      },
+    });
+
+    return true;
   }
 
   @Mutation(() => CreateCompanyApplicationResponse, { nullable: true })

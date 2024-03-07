@@ -102,10 +102,19 @@
         </Panel>
       </div>
 
-      <div class="text-right mt-3">
+      <div class="flex mt-3">
         <p-button
           :loading="isLoading"
-          class="p-button-secondary font-bold"
+          class="font-bold"
+          type="button"
+          severity="danger"
+          @click.prevent="handleDelete"
+        >
+          <translated-text trans-key="form.delete" />
+        </p-button>
+        <p-button
+          :loading="isLoading"
+          class="ml-auto p-button-secondary font-bold"
           type="submit"
         >
           <translated-text trans-key="form.save" />
@@ -163,10 +172,14 @@
     type Talk,
     type Workshop,
   } from "~/helpers/forms/company-application";
-  import AppFormgroup, {
-    type InputEntry,
-  } from "~/components/util/form/app-formgroup.vue";
+  import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import {
+    graphql,
+  } from "~/graphql/client";
+  import type {
+    InputEntry,
+  } from "~/components/util/form/app-formgroup.types";
 
   enum FormFor {
     Talk = "talk",
@@ -305,6 +318,42 @@
         booths,
         booth,
         company,
+        async handleDelete() {
+          if (!confirm("Are you sure you want to delete this application?")) {
+            return;
+          }
+
+          isLoading.value = true;
+          const resp = await useMutation(graphql(/* GraphQL */`
+          mutation PageAdminSeasonApplicationsCompanyEdit_DeleteApplication($company: String!, $season: String!) {
+            deleteCompanyApplicationFor(
+              company: $company
+              season: $season
+            )
+          }
+          `))({
+            company: companyUid,
+            season: seasonUid,
+            }).then((x) => x?.data?.deleteCompanyApplicationFor);
+          isLoading.value = false;
+
+          if (!resp) {
+            return toast.add({
+              severity: "error",
+              summary: "Something went wrong",
+              closable: true,
+              life: 3000,
+            });
+          } else {
+            toast.add({
+              severity: "success",
+              summary: "Prijava izbrisana",
+              closable: true,
+              life: 3000,
+            });
+            await navigateTo(`/admin/season/${ seasonUid }/applications`);
+          }
+        },
         async handleFormSubmit() {
           const selectedObj = filter((item) => item.selected, items);
           for (const item of Object.values(items)) {

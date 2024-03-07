@@ -1073,6 +1073,7 @@ type Mutation {
   createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
   createTalkCategory(name: String!, season: String!): ApplicationTalkCategory
   deleteCalendarItem(uid: String!): Boolean!
+  deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
   deleteNews(uid: String!): Boolean
   deletePartner(partner: String!): Boolean!

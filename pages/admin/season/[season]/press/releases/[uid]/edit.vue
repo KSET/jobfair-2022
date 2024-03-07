@@ -133,6 +133,7 @@
           if ("string" === typeof data.file) {
             delete data.file;
           }
+          data.published = new Date(data.published);
 
           const resp = await useMutation<IUpdatePressReleaseMutation, IUpdatePressReleaseMutationVariables>(UpdatePressRelease)({
             uid,

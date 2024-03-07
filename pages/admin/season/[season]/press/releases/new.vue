@@ -114,6 +114,7 @@
             map((key) => [ key, (info[key] as { value: unknown, }).value ]),
             Object.fromEntries,
           )(info);
+          data.published = new Date(data.published);
           const resp = await useMutation<ICreatePressReleaseMutation, ICreatePressReleaseMutationVariables>(CreatePressRelease)({
             info: {
               ...data,

@@ -509,6 +509,14 @@
             if ("" === item.until) {
               item.until = null;
             }
+
+            if (item.start) {
+              item.start = new Date(item.start);
+            }
+
+            if (item.until) {
+              item.until = new Date(item.until);
+            }
           }
 
           isLoading.value = true;

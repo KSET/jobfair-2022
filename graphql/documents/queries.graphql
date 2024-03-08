@@ -84,6 +84,11 @@ fragment frag_CompanyApplication on CompanyApplication {
     booth
     wantsPanel
     wantsCocktail
+    contactPerson {
+        name
+        email
+        phone
+    }
     talk {
         titleEn
         titleHr

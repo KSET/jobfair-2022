@@ -18,6 +18,41 @@
       <div :class="$style.panels">
         <Panel
           :class="[$style.panel, $style.panelBreakable]"
+          :collapsed="false"
+        >
+          <template #header>
+            <strong>
+              <translated-text trans-key="company-signup.form.contact-person" />
+            </strong>
+          </template>
+
+          <fieldset
+            :class="$style.formFieldset"
+          >
+            <app-formgroup
+              :class="$style.formContainer"
+              :errors="contactPerson.errors.info"
+              :inputs="contactPerson.forms.info"
+              :loading="isLoading"
+              no-form
+            >
+              <template #after>
+                <div
+                  v-if="contactPerson.errors.info.entity.length > 0"
+                  :class="$style.errorContainer"
+                >
+                  <translated-text
+                    v-for="err in contactPerson.errors.info.entity"
+                    :key="err.message"
+                    :trans-key="err.message"
+                  />
+                </div>
+              </template>
+            </app-formgroup>
+          </fieldset>
+        </Panel>
+        <Panel
+          :class="[$style.panel, $style.panelBreakable]"
           collapsed
         >
           <template #header>
@@ -61,7 +96,7 @@
               <translated-text :trans-key="`company-signup.form.${name}`" />
             </strong>
 
-            <Checkbox v-model="item.selected" binary disabled />
+            <Checkbox v-model="item.selected" binary />
           </template>
           <template
             v-if="item.selected"
@@ -75,28 +110,26 @@
                 <translated-text :trans-key="`form.legend.${formName}`" />
               </legend>
 
-              <LazyClientOnly>
-                <app-formgroup
-                  :class="$style.formContainer"
-                  :errors="item.errors[formName]"
-                  :inputs="form"
-                  :loading="isLoading"
-                  no-form
-                >
-                  <template #after>
-                    <div
-                      v-if="item.errors[formName].entity.length > 0"
-                      :class="$style.errorContainer"
-                    >
-                      <translated-text
-                        v-for="err in item.errors[formName].entity"
-                        :key="err.message"
-                        :trans-key="err.message"
-                      />
-                    </div>
-                  </template>
-                </app-formgroup>
-              </LazyClientOnly>
+              <app-formgroup
+                :class="$style.formContainer"
+                :errors="item.errors[formName]"
+                :inputs="form"
+                :loading="isLoading"
+                no-form
+              >
+                <template #after>
+                  <div
+                    v-if="item.errors[formName].entity.length > 0"
+                    :class="$style.errorContainer"
+                  >
+                    <translated-text
+                      v-for="err in item.errors[formName].entity"
+                      :key="err.message"
+                      :trans-key="err.message"
+                    />
+                  </div>
+                </template>
+              </app-formgroup>
             </fieldset>
           </template>
         </Panel>
@@ -155,19 +188,20 @@
   } from "~/composables/useQuery";
   import {
     AdminCompanyApplication,
-    AdminCreateCompanyApplication,
     type IAdminCompanyApplicationQuery,
     type IAdminCompanyApplicationQueryVariables,
-    type IAdminCreateCompanyApplicationMutation,
-    type IAdminCreateCompanyApplicationMutationVariables,
+    // eslint-disable-next-line camelcase
+    type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables,
   } from "~/graphql/schema";
   import {
     useTalkCategoriesStore,
   } from "~/store/talkCategories";
   import {
+    companyApplicationContactPersonCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
+    type ContactPerson,
     type Presenter,
     type Talk,
     type Workshop,
@@ -237,6 +271,16 @@
       const booths = resp?.booths || [];
 
       const requireHr = company?.vat.startsWith("HR");
+
+      const contactPersonCreateForm = companyApplicationContactPersonCreate(resp?.companyApplicationFor?.contactPerson)();
+      const contactPerson = reactive({
+        forms: {
+          info: contactPersonCreateForm,
+        },
+        errors: {
+          info: toErrors(contactPersonCreateForm),
+        },
+      });
 
       const items = reactive(
         map(
@@ -309,7 +353,7 @@
       ;
       const resetErrorsFor = <T>(errors: Record<keyof T | "entity", AuthError[]>) => keys(errors).forEach((key) => errors[key] = []);
 
-      const vat = company?.vat;
+      const { vat } = (company!);
 
       return {
         applicationFound: Boolean(application),
@@ -318,6 +362,7 @@
         booths,
         booth,
         company,
+        contactPerson,
         async handleDelete() {
           if (!confirm("Are you sure you want to delete this application?")) {
             return;
@@ -364,9 +409,12 @@
               }
             }
           }
+          resetErrorsFor(contactPerson.errors.info);
 
-          const info: IAdminCreateCompanyApplicationMutationVariables["info"] = {
+          // eslint-disable-next-line camelcase
+          const info: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables["info"] = {
             vat,
+            contactPerson: toData<ContactPerson>(contactPerson.forms.info),
             booth: unref(booth).key,
             talk:
               selectedObj.talk
@@ -397,11 +445,31 @@
           }
 
           isLoading.value = true;
-          const resp = await useMutation<IAdminCreateCompanyApplicationMutation, IAdminCreateCompanyApplicationMutationVariables>(AdminCreateCompanyApplication)({
+          const resp = await useMutation(graphql(/* GraphQL */`
+            mutation PageAdminSeasonApplicationsCompanyEdit_UpsertApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
+                createCompanyApplicationFor(company: $company, season: $season, info: $info) {
+                    entity {
+                        talk {
+                            uid
+                        }
+                        workshop {
+                            uid
+                        }
+                        wantsCocktail
+                        wantsPanel
+                    }
+
+                    errors {
+                        field
+                        message
+                    }
+                }
+            }
+            `))({
             info,
             company: companyUid,
             season: seasonUid,
-          }).then((resp) => resp?.data?.createCompanyApplicationFor);
+            }).then((resp) => resp?.data?.createCompanyApplicationFor);
           isLoading.value = false;
 
           if (!resp) {
@@ -447,6 +515,16 @@
                 closable: true,
                 life: 0,
               });
+              continue;
+            }
+
+            if (field.startsWith("contactPerson.")) {
+              const errors = path<AuthError[]>(field.substring("contactPerson.".length), contactPerson) || [];
+
+              errors.push({
+                message,
+              });
+
               continue;
             }
 

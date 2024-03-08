@@ -428,6 +428,7 @@ export type ICompanyApplication = {
   approval?: Maybe<ICompanyApplicationApproval>;
   booth?: Maybe<Scalars['String']['output']>;
   cocktail?: Maybe<IApplicationCocktail>;
+  contactPerson?: Maybe<ICompanyApplicationContactPerson>;
   createdAt: Scalars['DateTimeISO']['output'];
   feedback?: Maybe<ICompanyApplicationFeedback>;
   forCompany?: Maybe<ICompany>;
@@ -485,6 +486,38 @@ export type ICompanyApplicationApprovedEditInput = {
   workshop?: InputMaybe<IWorkshopsCreateInput>;
 };
 
+export type ICompanyApplicationContactPerson = {
+  email: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  phone: Scalars['String']['output'];
+};
+
+export type ICompanyApplicationContactPersonCreateInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+};
+
+export type ICompanyApplicationContactPersonNullableRelationFilter = {
+  is?: InputMaybe<ICompanyApplicationContactPersonWhereInput>;
+  isNot?: InputMaybe<ICompanyApplicationContactPersonWhereInput>;
+};
+
+export type ICompanyApplicationContactPersonOrderByWithRelationInput = {
+  email?: InputMaybe<ISortOrder>;
+  name?: InputMaybe<ISortOrder>;
+  phone?: InputMaybe<ISortOrder>;
+};
+
+export type ICompanyApplicationContactPersonWhereInput = {
+  AND?: InputMaybe<Array<ICompanyApplicationContactPersonWhereInput>>;
+  NOT?: InputMaybe<Array<ICompanyApplicationContactPersonWhereInput>>;
+  OR?: InputMaybe<Array<ICompanyApplicationContactPersonWhereInput>>;
+  email?: InputMaybe<IStringFilter>;
+  name?: InputMaybe<IStringFilter>;
+  phone?: InputMaybe<IStringFilter>;
+};
+
 export type ICompanyApplicationCount = {
   panelParticipants: Scalars['Int']['output'];
 };
@@ -496,6 +529,7 @@ export type ICompanyApplicationCountPanelParticipantsArgs = {
 
 export type ICompanyApplicationCreateInput = {
   booth?: InputMaybe<Scalars['String']['input']>;
+  contactPerson: ICompanyApplicationContactPersonCreateInput;
   talk?: InputMaybe<ITalkCreateInput>;
   vat: Scalars['String']['input'];
   wantsCocktail: Scalars['Boolean']['input'];
@@ -558,6 +592,7 @@ export type ICompanyApplicationOrderByWithRelationInput = {
   approval?: InputMaybe<ICompanyApplicationApprovalOrderByWithRelationInput>;
   booth?: InputMaybe<ISortOrderInput>;
   cocktail?: InputMaybe<IApplicationCocktailOrderByWithRelationInput>;
+  contactPerson?: InputMaybe<ICompanyApplicationContactPersonOrderByWithRelationInput>;
   forCompany?: InputMaybe<ICompanyOrderByWithRelationInput>;
   forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
   panel?: InputMaybe<ICompanyPanelOrderByWithRelationInput>;
@@ -571,6 +606,7 @@ export type ICompanyApplicationOrderByWithRelationInput = {
 export enum ICompanyApplicationScalarFieldEnum {
   Booth = 'booth',
   CocktailId = 'cocktailId',
+  ContactPersonId = 'contactPersonId',
   CreatedAt = 'createdAt',
   FeedbackFormId = 'feedbackFormId',
   ForCompanyId = 'forCompanyId',
@@ -589,6 +625,7 @@ export type ICompanyApplicationWhereInput = {
   approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<IStringNullableFilter>;
   cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
+  contactPerson?: InputMaybe<ICompanyApplicationContactPersonNullableRelationFilter>;
   forCompany?: InputMaybe<ICompanyRelationFilter>;
   forSeason?: InputMaybe<ISeasonRelationFilter>;
   panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
@@ -606,6 +643,7 @@ export type ICompanyApplicationWhereUniqueInput = {
   approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<IStringNullableFilter>;
   cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
+  contactPerson?: InputMaybe<ICompanyApplicationContactPersonNullableRelationFilter>;
   forCompany?: InputMaybe<ICompanyRelationFilter>;
   forCompanyId_forSeasonId?: InputMaybe<ICompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput>;
   forSeason?: InputMaybe<ISeasonRelationFilter>;
@@ -3480,28 +3518,6 @@ export type IEditApprovedCompanyApplicationMutationVariables = Exact<{
 
 export type IEditApprovedCompanyApplicationMutation = IEditApprovedCompanyApplicationMutation_Mutation;
 
-export type IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk = { uid: string };
-
-export type IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
-
-export type IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
-
-export type IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
-
-export type IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse = { entity?: IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication | null, errors?: Array<IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError> | null };
-
-export type IAdminCreateCompanyApplicationMutation_Mutation = { createCompanyApplicationFor?: IAdminCreateCompanyApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse | null };
-
-
-export type IAdminCreateCompanyApplicationMutationVariables = Exact<{
-  company: Scalars['String']['input'];
-  season: Scalars['String']['input'];
-  info: ICompanyApplicationCreateInput;
-}>;
-
-
-export type IAdminCreateCompanyApplicationMutation = IAdminCreateCompanyApplicationMutation_Mutation;
-
 export type IUpdateResumeMutation_updateResume_ResumeCreateResponse_errors_FieldError = { field: string, message: string };
 
 export type IUpdateResumeMutation_updateResume_ResumeCreateResponse_entity_Resume = { uid: string };
@@ -3575,6 +3591,8 @@ export type IFrag_ApplicationPresenterFragment = { firstName: string, lastName: 
 
 export type IFrag_AllFeedbackFragment = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
+export type IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson = { name: string, email: string, phone: string };
+
 export type IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk_category_ApplicationTalkCategory = { name: string };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
@@ -3593,7 +3611,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_Company
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
-export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
@@ -3844,7 +3862,7 @@ export type IAdminCompanyApplicationQuery_booths_Booth = { name: string, key?: s
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IAdminCompanyApplicationQuery_Query = { talkCategories: Array<IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationQuery_booths_Booth>, companyApplicationFor?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication | null };
 
@@ -3891,7 +3909,7 @@ export type ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCatego
 
 export type ICurrentCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
 
@@ -4114,6 +4132,28 @@ export type IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutationVar
 
 export type IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutation = IPageAdminSeasonApplicationsCompanyEdit_DeleteApplicationMutation_Mutation;
 
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk = { uid: string };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse = { entity?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication | null, errors?: Array<IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError> | null };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_Mutation = { createCompanyApplicationFor?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse | null };
+
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables = Exact<{
+  company: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+  info: ICompanyApplicationCreateInput;
+}>;
+
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation = IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_Mutation;
+
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_talk_ApplicationTalk = { titleEn: string, titleHr: string };
 
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string };
@@ -4315,6 +4355,8 @@ export type IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalk
 
 export type IPageProfileMeCompanySignup_DataQuery_booths_Booth = { name: string, key?: string | null };
 
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson = { name: string, email: string, phone: string };
+
 export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_category_ApplicationTalkCategory = { name: string };
 
 export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk_presenters_ApplicationPresenter_photo_Image_full_ImageVariation = { mimeType: string };
@@ -4333,7 +4375,7 @@ export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyAppl
 
 export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, goal: string, notesEn: string, notesHr: string, presenters: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter> };
 
-export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null };
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null };
 
 export type IPageProfileMeCompanySignup_DataQuery_Query = { talkCategories: Array<IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IPageProfileMeCompanySignup_DataQuery_booths_Booth>, companyApplication?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication | null };
 
@@ -4540,6 +4582,11 @@ export type IResolversTypes = {
   CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
+  CompanyApplicationContactPerson: ResolverTypeWrapper<ICompanyApplicationContactPerson>;
+  CompanyApplicationContactPersonCreateInput: ICompanyApplicationContactPersonCreateInput;
+  CompanyApplicationContactPersonNullableRelationFilter: ICompanyApplicationContactPersonNullableRelationFilter;
+  CompanyApplicationContactPersonOrderByWithRelationInput: ICompanyApplicationContactPersonOrderByWithRelationInput;
+  CompanyApplicationContactPersonWhereInput: ICompanyApplicationContactPersonWhereInput;
   CompanyApplicationCount: ResolverTypeWrapper<ICompanyApplicationCount>;
   CompanyApplicationCreateInput: ICompanyApplicationCreateInput;
   CompanyApplicationFeedback: ResolverTypeWrapper<ICompanyApplicationFeedback>;
@@ -4804,6 +4851,11 @@ export type IResolversParentTypes = {
   CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
   CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
+  CompanyApplicationContactPerson: ICompanyApplicationContactPerson;
+  CompanyApplicationContactPersonCreateInput: ICompanyApplicationContactPersonCreateInput;
+  CompanyApplicationContactPersonNullableRelationFilter: ICompanyApplicationContactPersonNullableRelationFilter;
+  CompanyApplicationContactPersonOrderByWithRelationInput: ICompanyApplicationContactPersonOrderByWithRelationInput;
+  CompanyApplicationContactPersonWhereInput: ICompanyApplicationContactPersonWhereInput;
   CompanyApplicationCount: ICompanyApplicationCount;
   CompanyApplicationCreateInput: ICompanyApplicationCreateInput;
   CompanyApplicationFeedback: ICompanyApplicationFeedback;
@@ -5161,6 +5213,7 @@ export type ICompanyApplicationResolvers<ContextType = any, ParentType extends I
   approval?: Resolver<Maybe<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType>;
   booth?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   cocktail?: Resolver<Maybe<IResolversTypes['ApplicationCocktail']>, ParentType, ContextType>;
+  contactPerson?: Resolver<Maybe<IResolversTypes['CompanyApplicationContactPerson']>, ParentType, ContextType>;
   createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   feedback?: Resolver<Maybe<IResolversTypes['CompanyApplicationFeedback']>, ParentType, ContextType>;
   forCompany?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType>;
@@ -5183,6 +5236,13 @@ export type ICompanyApplicationApprovalResolvers<ContextType = any, ParentType e
   panel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   talkParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   workshopParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ICompanyApplicationContactPersonResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyApplicationContactPerson'] = IResolversParentTypes['CompanyApplicationContactPerson']> = {
+  email?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  phone?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -5845,6 +5905,7 @@ export type IResolvers<ContextType = any> = {
   Company?: ICompanyResolvers<ContextType>;
   CompanyApplication?: ICompanyApplicationResolvers<ContextType>;
   CompanyApplicationApproval?: ICompanyApplicationApprovalResolvers<ContextType>;
+  CompanyApplicationContactPerson?: ICompanyApplicationContactPersonResolvers<ContextType>;
   CompanyApplicationCount?: ICompanyApplicationCountResolvers<ContextType>;
   CompanyApplicationFeedback?: ICompanyApplicationFeedbackResolvers<ContextType>;
   CompanyCount?: ICompanyCountResolvers<ContextType>;
@@ -6002,6 +6063,11 @@ export const Frag_CompanyApplication = gql`
   booth
   wantsPanel
   wantsCocktail
+  contactPerson {
+    name
+    email
+    phone
+  }
   talk {
     titleEn
     titleHr
@@ -6354,26 +6420,6 @@ export const EditApprovedCompanyApplication = gql`
       workshop {
         uid
       }
-    }
-    errors {
-      field
-      message
-    }
-  }
-}
-    `;
-export const AdminCreateCompanyApplication = gql`
-    mutation AdminCreateCompanyApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
-  createCompanyApplicationFor(company: $company, season: $season, info: $info) {
-    entity {
-      talk {
-        uid
-      }
-      workshop {
-        uid
-      }
-      wantsCocktail
-      wantsPanel
     }
     errors {
       field
@@ -7099,6 +7145,26 @@ export const PageAdminSeasonApplicationsCompanyEdit_DeleteApplication = gql`
   deleteCompanyApplicationFor(company: $company, season: $season)
 }
     `;
+export const PageAdminSeasonApplicationsCompanyEdit_UpsertApplication = gql`
+    mutation PageAdminSeasonApplicationsCompanyEdit_UpsertApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
+  createCompanyApplicationFor(company: $company, season: $season, info: $info) {
+    entity {
+      talk {
+        uid
+      }
+      workshop {
+        uid
+      }
+      wantsCocktail
+      wantsPanel
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
 export const PageAdminSeasonApplicationsApproval_Base = gql`
     query PageAdminSeasonApplicationsApproval_Base($season: String!) {
   season(uid: $season) {
@@ -7327,6 +7393,11 @@ export const PageProfileMeCompanySignup_Data = gql`
     booth
     wantsPanel
     wantsCocktail
+    contactPerson {
+      name
+      email
+      phone
+    }
     talk {
       titleEn
       titleHr

@@ -7,6 +7,7 @@ import {
   type Industry,
   type User,
   type Season,
+  type CompanyApplicationContactPerson,
 } from "@prisma/client";
 import {
   type Simplify,
@@ -28,6 +29,7 @@ export type NotificationEvent =
       company: Company,
       season: Pick<Season, "uid">,
       creator: User,
+      contactPerson: Pick<CompanyApplicationContactPerson, "name" | "email" | "phone">,
       chosen: {
         booth?: string | null,
         talk:
@@ -138,6 +140,7 @@ if (MATTERMOST_WEBHOOK_URL) {
       data.company,
       data.season,
       data.creator,
+      data.contactPerson,
       data.chosen,
     ),
   );

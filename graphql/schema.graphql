@@ -363,6 +363,7 @@ type CompanyApplication {
   approval: CompanyApplicationApproval
   booth: String
   cocktail: ApplicationCocktail
+  contactPerson: CompanyApplicationContactPerson
   createdAt: DateTimeISO!
   feedback: CompanyApplicationFeedback
   forCompany: Company
@@ -420,12 +421,45 @@ input CompanyApplicationApprovedEditInput {
   workshop: WorkshopsCreateInput
 }
 
+type CompanyApplicationContactPerson {
+  email: String!
+  name: String!
+  phone: String!
+}
+
+input CompanyApplicationContactPersonCreateInput {
+  email: String!
+  name: String!
+  phone: String!
+}
+
+input CompanyApplicationContactPersonNullableRelationFilter {
+  is: CompanyApplicationContactPersonWhereInput
+  isNot: CompanyApplicationContactPersonWhereInput
+}
+
+input CompanyApplicationContactPersonOrderByWithRelationInput {
+  email: SortOrder
+  name: SortOrder
+  phone: SortOrder
+}
+
+input CompanyApplicationContactPersonWhereInput {
+  AND: [CompanyApplicationContactPersonWhereInput!]
+  NOT: [CompanyApplicationContactPersonWhereInput!]
+  OR: [CompanyApplicationContactPersonWhereInput!]
+  email: StringFilter
+  name: StringFilter
+  phone: StringFilter
+}
+
 type CompanyApplicationCount {
   panelParticipants(where: ApplicationPresenterWhereInput): Int!
 }
 
 input CompanyApplicationCreateInput {
   booth: String
+  contactPerson: CompanyApplicationContactPersonCreateInput!
   talk: TalkCreateInput
   vat: String!
   wantsCocktail: Boolean!
@@ -488,6 +522,7 @@ input CompanyApplicationOrderByWithRelationInput {
   approval: CompanyApplicationApprovalOrderByWithRelationInput
   booth: SortOrderInput
   cocktail: ApplicationCocktailOrderByWithRelationInput
+  contactPerson: CompanyApplicationContactPersonOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
   panel: CompanyPanelOrderByWithRelationInput
@@ -501,6 +536,7 @@ input CompanyApplicationOrderByWithRelationInput {
 enum CompanyApplicationScalarFieldEnum {
   booth
   cocktailId
+  contactPersonId
   createdAt
   feedbackFormId
   forCompanyId
@@ -519,6 +555,7 @@ input CompanyApplicationWhereInput {
   approval: CompanyApplicationApprovalNullableRelationFilter
   booth: StringNullableFilter
   cocktail: ApplicationCocktailNullableRelationFilter
+  contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
   panel: CompanyPanelNullableRelationFilter
@@ -536,6 +573,7 @@ input CompanyApplicationWhereUniqueInput {
   approval: CompanyApplicationApprovalNullableRelationFilter
   booth: StringNullableFilter
   cocktail: ApplicationCocktailNullableRelationFilter
+  contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
   forSeason: SeasonRelationFilter

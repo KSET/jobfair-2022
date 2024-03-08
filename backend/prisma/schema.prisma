@@ -416,6 +416,10 @@ model CompanyApplication {
   /// @TypeGraphQL.omit(input: true)
   updatedAt     DateTime             @updatedAt
 
+  contactPerson   CompanyApplicationContactPerson? @relation(fields: [contactPersonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  contactPersonId Int?                             @unique()
+
   panelParticipants ApplicationPresenter[]
 
   cocktail   ApplicationCocktail? @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
@@ -443,6 +447,17 @@ model CompanyApplication {
   panelId Int?
 
   @@unique([forCompanyId, forSeasonId])
+}
+
+model CompanyApplicationContactPerson {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String
+  phone String
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplication CompanyApplication?
 }
 
 model CompanyApplicationFeedback {

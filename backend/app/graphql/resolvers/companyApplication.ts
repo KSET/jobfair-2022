@@ -23,6 +23,8 @@ import {
   Company,
   CompanyApplication,
   CompanyApplicationApproval,
+  CompanyApplicationContactPerson,
+  CompanyApplicationContactPersonCreateInput,
   FindManyCompanyApplicationArgs,
   Season,
   CompanyApplicationFeedback,
@@ -114,6 +116,9 @@ import {
 import {
   transformSelect as transformSelectFeedback,
 } from "./companyApplicationFeedback";
+import {
+  transformSelect as transformSelectContactPerson,
+} from "./companyApplicationContactPerson";
 
 const photoMimeTypes = new Set([
   "image/png",
@@ -137,6 +142,13 @@ export class EventUserApplications {
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationFieldResolver {
+  @FieldResolver(() => CompanyApplicationContactPerson, { nullable: true })
+  contactPerson(
+    @Root() application: CompanyApplication,
+  ): CompanyApplicationContactPerson | null {
+    return application.contactPerson || null;
+  }
+
   @FieldResolver(() => ApplicationTalk, { nullable: true })
   talk(
     @Root() application: CompanyApplication,
@@ -242,6 +254,14 @@ export class CompanyApplicationFieldResolver {
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationFieldResolver>({
+  contactPerson(select) {
+    select.contactPerson = {
+      select: transformSelectContactPerson(select.contactPerson as Record<string, unknown>),
+    };
+
+    return select;
+  },
+
   talk(select) {
     select.talk = {
       select: transformSelectTalks(select.talk as Record<string, unknown>),
@@ -319,6 +339,9 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
 class CompanyApplicationCreateInput {
   @Field()
     vat: string = "";
+
+  @Field(() => CompanyApplicationContactPersonCreateInput)
+    contactPerson: CompanyApplicationContactPersonCreateInput = null as never;
 
   @Field(() => String, { nullable: true })
     booth: string | null = null;
@@ -743,6 +766,9 @@ export class CompanyApplicationAdminResolver {
       if (!oldApplication) {
         const entity = await prisma.companyApplication.create({
           data: {
+            contactPerson: {
+              create: info.contactPerson,
+            },
             booth: info.booth,
             wantsPanel: info.wantsPanel,
             wantsCocktail: info.wantsCocktail,
@@ -859,6 +885,9 @@ export class CompanyApplicationAdminResolver {
         },
 
         data: {
+          contactPerson: {
+            update: info.contactPerson,
+          },
           booth: info.booth,
           wantsPanel: info.wantsPanel,
           wantsCocktail: info.wantsCocktail,
@@ -1054,7 +1083,7 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
-    const fields = omit([ "vat" ], info);
+    const fields = omit([ "vat", "contactPerson" ], info);
     const hasSomethingSelected = Object.values(fields).some(Boolean);
 
     if (!hasSomethingSelected) {
@@ -1349,6 +1378,9 @@ export class CompanyApplicationCreateResolver {
       if (!oldApplication) {
         const entity = await prisma.companyApplication.create({
           data: {
+            contactPerson: {
+              create: info.contactPerson,
+            },
             booth: info.booth,
             wantsPanel: info.wantsPanel,
             wantsCocktail: info.wantsCocktail,
@@ -1439,6 +1471,7 @@ export class CompanyApplicationCreateResolver {
               company,
               season: currentSeason,
               creator: ctx.user!,
+              contactPerson: info.contactPerson,
               chosen: {
                 ...chosen,
                 talk: entity.talk,
@@ -1479,6 +1512,9 @@ export class CompanyApplicationCreateResolver {
         },
 
         data: {
+          contactPerson: {
+            update: info.contactPerson,
+          },
           booth: info.booth,
           wantsPanel: info.wantsPanel,
           wantsCocktail: info.wantsCocktail,

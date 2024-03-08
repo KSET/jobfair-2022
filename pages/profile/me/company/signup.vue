@@ -11,6 +11,41 @@
       <div :class="$style.panels">
         <Panel
           :class="[$style.panel, $style.panelBreakable]"
+          :collapsed="false"
+        >
+          <template #header>
+            <strong>
+              <translated-text trans-key="company-signup.form.contact-person" />
+            </strong>
+          </template>
+
+          <fieldset
+            :class="$style.formFieldset"
+          >
+            <app-formgroup
+              :class="$style.formContainer"
+              :errors="contactPerson.errors.info"
+              :inputs="contactPerson.forms.info"
+              :loading="isLoading"
+              no-form
+            >
+              <template #after>
+                <div
+                  v-if="contactPerson.errors.info.entity.length > 0"
+                  :class="$style.errorContainer"
+                >
+                  <translated-text
+                    v-for="err in contactPerson.errors.info.entity"
+                    :key="err.message"
+                    :trans-key="err.message"
+                  />
+                </div>
+              </template>
+            </app-formgroup>
+          </fieldset>
+        </Panel>
+        <Panel
+          :class="[$style.panel, $style.panelBreakable]"
           collapsed
         >
           <template #header>
@@ -153,9 +188,11 @@
     useUserStore,
   } from "~/store/user";
   import {
+    companyApplicationContactPersonCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
+    type ContactPerson,
     type Presenter,
     type Talk,
     type Workshop,
@@ -240,6 +277,11 @@
                   booth
                   wantsPanel
                   wantsCocktail
+                  contactPerson {
+                      name
+                      email
+                      phone
+                  }
                   talk {
                       titleEn
                       titleHr
@@ -292,6 +334,16 @@
       })().then((resp) => resp?.data);
 
       talkCategoriesStore.setTalkCategories(resp?.talkCategories);
+
+      const contactPersonCreateForm = companyApplicationContactPersonCreate(resp?.companyApplication?.contactPerson)();
+      const contactPerson = reactive({
+        forms: {
+          info: contactPersonCreateForm,
+        },
+        errors: {
+          info: toErrors(contactPersonCreateForm),
+        },
+      });
 
       const items = reactive(
         map(
@@ -375,6 +427,7 @@
         items,
         booths,
         booth,
+        contactPerson,
         async handleFormSubmit() {
           const selectedObj = filter((item) => item.selected, items);
           for (const item of Object.values(items)) {
@@ -386,9 +439,12 @@
             }
           }
 
+          resetErrorsFor(contactPerson.errors.info);
+
           // eslint-disable-next-line camelcase
           const info: IPageProfileMeCompanySignup_CreateApplicationMutationVariables["info"] = {
             vat,
+            contactPerson: toData<ContactPerson>(contactPerson.forms.info),
             booth: unref(booth).key,
             talk:
               selectedObj.talk
@@ -492,6 +548,16 @@
               continue;
             }
 
+            if (field.startsWith("contactPerson.")) {
+              const errors = path<AuthError[]>(field.substring("contactPerson.".length), contactPerson) || [];
+
+              errors.push({
+                message,
+              });
+
+              continue;
+            }
+
             const errors = path<AuthError[]>(field, items) || [];
 
             errors.push({
@@ -583,6 +649,10 @@
       background-color: $background-color;
 
       &:first-child {
+        margin-top: 1rem;
+      }
+
+      &:has(legend):first-child {
         margin-top: 1.75rem;
       }
 

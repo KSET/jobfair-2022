@@ -223,26 +223,6 @@ mutation EditApprovedCompanyApplication($info: CompanyApplicationApprovedEditInp
     }
 }
 
-mutation AdminCreateCompanyApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
-    createCompanyApplicationFor(company: $company, season: $season, info: $info) {
-        entity {
-            talk {
-                uid
-            }
-            workshop {
-                uid
-            }
-            wantsCocktail
-            wantsPanel
-        }
-
-        errors {
-            field
-            message
-        }
-    }
-}
-
 mutation UpdateResume($info: ResumeCreateInput!) {
     updateResume(info: $info) {
         errors {

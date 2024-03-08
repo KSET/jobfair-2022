@@ -71,16 +71,18 @@
             v-text="application.forCompany.industry.name"
           />
           <strong v-text="application.forCompany.brandName" />
-          <a
-            :href="$router.resolve({
+          <NuxtLink
+            :to="{
               name: 'admin-season-season-applications-company-edit',
               params: {
                 season: application.forSeason.uid,
                 company: application.forCompany.uid,
               },
-            }).href"
+            }"
             class="ml-2"
-          >Edit</a>
+          >
+            Edit
+          </NuxtLink>
           <ul>
             <li v-if="application.booth" class="mt-3 mb-2">
               <strong>Booth</strong>:

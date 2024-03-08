@@ -1,9 +1,9 @@
 import {
   z,
-  ZodType,
+  type ZodType,
 } from "zod";
 import {
-  ZodTypeDef,
+  type ZodTypeDef,
 } from "zod/lib/types";
 
 export const PASSWORD_LENGTH_MIN = 8 as const;
@@ -90,6 +90,13 @@ const companyPresenterValidation = z.object({
 });
 export const CompanyPresenterValidation = <T>(presenter: T) => formatValidation(companyTalkValidation, presenter);
 
+const companyContactPersonValidation = z.object({
+  name: z.string().min(2).max(255),
+  email: z.string().email().max(255),
+  phone: z.string().min(4).max(80),
+});
+export const CompanyContactPersonValidation = <T>(contactPerson: T) => formatValidation(companyContactPersonValidation, contactPerson);
+
 const companyTalkValidation = z.object({
   titleEn: z.string().min(1).max(75),
   titleHr: z.optional(z.string().min(1).max(75)),
@@ -125,6 +132,7 @@ const companyCocktailValidation = z.object({
 export const CompanyCocktailValidation = <T>(cocktail: T) => formatValidation(companyCocktailValidation, cocktail);
 
 const companyApplicationValidation = z.object({
+  contactPerson: companyContactPersonValidation,
   booth: z.nullable(z.string()),
   talk: z.nullable(companyTalkValidation),
   workshop: z.nullable(companyWorkshopValidation),

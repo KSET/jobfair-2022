@@ -6,6 +6,7 @@ import {
   type IApplicationPresenter,
   type IApplicationTalk,
   type IApplicationWorkshop,
+  type ICompanyApplicationContactPerson,
   type ICompanyApplicationFeedback,
   type IImage,
 } from "~/graphql/schema";
@@ -19,6 +20,30 @@ import {
   computed,
   unref,
 } from "#imports";
+
+export type ContactPerson = Pick<
+  ICompanyApplicationContactPerson,
+  "name" | "email" | "phone"
+>;
+export const companyApplicationContactPersonCreate =
+  <T extends ContactPerson>(contactPerson?: T | null) =>
+  (): Record<keyof ContactPerson, InputEntry> => ({
+    name: {
+      value: contactPerson?.name || "",
+      type: "text" as const,
+      placeholder: "Matija Horvat",
+    },
+    email: {
+      value: contactPerson?.email || "",
+      type: "email" as const,
+      placeholder: "matija.horvat@example.com",
+    },
+    phone: {
+      value: contactPerson?.phone || "",
+      type: "tel" as const,
+      placeholder: "+385987654321",
+    },
+  });
 
 export type Presenter = Pick<IApplicationPresenter,
   "firstName"

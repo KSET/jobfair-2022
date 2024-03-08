@@ -7,6 +7,7 @@ import {
   type User,
   type ApplicationWorkshop,
   type ApplicationPresenter,
+  type CompanyApplicationContactPerson,
 } from "@prisma/client";
 import {
   filter,
@@ -73,6 +74,7 @@ export default class MattermostNotificationService {
     company: Company,
     season: CurrentSeason,
     creator: User,
+    contactPerson: Pick<CompanyApplicationContactPerson, "name" | "email" | "phone">,
     chosen: {
       booth?: string | null,
       talk: boolean | null | Pick<ApplicationTalk, "titleHr" | "titleEn" | "descriptionHr" | "descriptionEn" | "language"> & {
@@ -89,11 +91,14 @@ export default class MattermostNotificationService {
     const has = (bool: unknown) => bool ? ":white_check_mark:" : ":x:";
 
     let text = `
-# :tada: NOVA PRIJAVA :tada:
+# NOVA PRIJAVA :tada:
 
 ### :sparkles: [${ company.brandName }](${ PUBLIC_BASE_URL }/admin/companies/${ company.vat }/edit) :sparkles:
-prijavio/la [${ creator.firstName } ${ creator.lastName }](${ PUBLIC_BASE_URL }/admin/users/${ creator.uid })
 
+#### Kontakt osoba
+**${ contactPerson.name }** | [${ contactPerson.email }](mailto:${ encodeURIComponent(`${ contactPerson.name } <${ contactPerson.email }>`) }) | [${ contactPerson.phone }](tel:${ encodeURIComponent(contactPerson.phone) })
+
+#### Odabrano
 | - | - |
 |----|----|
 | Štand | ${ chosen.booth || ":x:" } |

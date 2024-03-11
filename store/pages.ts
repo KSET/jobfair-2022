@@ -98,6 +98,11 @@ export const usePagesStore = defineStore(
             if: () => userStore.hasCompany,
           },
           {
+            name: "profile.company.register",
+            to: { name: "profile-register-company" },
+            if: () => !userStore.hasCompany && seasonsStore.applicationsOpen,
+          },
+          {
             name: "profile.company.signup",
             to: { name: "profile-me-company-signup" },
             if: () => userStore.hasCompany && seasonsStore.applicationsOpen,

@@ -167,7 +167,7 @@
       </div>
 
       <div
-        v-if="currentSeason && !hasCompany && false"
+        v-if="applicationsOpen && !hasCompany"
         :class="$style.item"
       >
         <div :class="$style.itemContent">
@@ -180,8 +180,8 @@
         </div>
 
         <div :class="$style.itemActions">
-          <a
-            :href="$router.resolve({ name: 'profile-register-company' }).href"
+          <NuxtLink
+            :to="{ name: 'profile-register-company' }"
             class="ml-auto"
           >
             <p-button
@@ -192,7 +192,7 @@
                 trans-key="profile.company.register"
               />
             </p-button>
-          </a>
+          </NuxtLink>
         </div>
       </div>
 

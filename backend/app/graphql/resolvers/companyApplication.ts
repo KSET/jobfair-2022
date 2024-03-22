@@ -651,7 +651,7 @@ export class CompanyApplicationAdminResolver {
         if (photoFile) {
           if (
             !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
           ) {
             return {
               errors: [
@@ -711,7 +711,7 @@ export class CompanyApplicationAdminResolver {
         if (photoFile) {
           if (
             !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
           ) {
             return {
               errors: [
@@ -1204,7 +1204,6 @@ export class CompanyApplicationCreateResolver {
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
-
           forCompanyId_forSeasonId: {
             forCompanyId: company.id,
             forSeasonId: currentSeason.id,
@@ -1263,7 +1262,7 @@ export class CompanyApplicationCreateResolver {
         if (photoFile) {
           if (
             !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
           ) {
             return {
               errors: [
@@ -1323,7 +1322,7 @@ export class CompanyApplicationCreateResolver {
         if (photoFile) {
           if (
             !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
           ) {
             return {
               errors: [
@@ -1873,7 +1872,7 @@ export class CompanyApplicationCreateResolver {
         if (photoFile) {
           if (
             !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.endsWith(ext))
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
           ) {
             return [
               `File must have extension: ${ photoExtensions.join(", ") }`,

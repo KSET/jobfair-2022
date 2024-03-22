@@ -496,7 +496,7 @@ export class CompanyInfoMutationsResolver {
     info.vat = info.vat.trim().toUpperCase();
 
     const [ company ] = ctx.user.companies;
-    const isInCompany = company && company.vat === info.vat;
+    const isInCompany = company?.vat === info.vat;
 
     if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
       return {

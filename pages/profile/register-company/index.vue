@@ -173,8 +173,9 @@
           try {
             const vat = String(info.vat.value);
             const resp = await companyStore.validateVat(vat);
+            const respInfo = resp?.info;
 
-            if (!resp?.valid) {
+            if (!resp?.valid || !respInfo) {
               errors.vat.push({
                 message: "errors.vat.invalid",
               });
@@ -191,11 +192,9 @@
             }
 
             resetInfo();
-            info.vat.value = vat;
-            if (resp.info) {
-              info.address.value = resp.info.address;
-              info.legalName.value = resp.info.legalName;
-            }
+            info.vat.value = respInfo.vat;
+            info.address.value = respInfo.address;
+            info.legalName.value = respInfo.legalName;
             await industriesStore.fetchIndustries();
             info.industry.value = unref(industriesOptions)[0]?.label || "";
           } finally {

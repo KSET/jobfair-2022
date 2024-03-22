@@ -34,10 +34,26 @@ const checkVat = async (info: CheckVatArgs) => {
 
 export class VatValidationService {
   public static async validate(vat: string) {
-    const info = await this.remoteInfo(vat);
+    const validatedVat = this.validateLocal(vat);
+
+    if (!validatedVat) {
+      return {
+        valid: false,
+        info: null,
+      };
+    }
+
+    const info = await this.remoteInfo(validatedVat);
+
+    if (!info) {
+      return {
+        valid: false,
+        info: null,
+      };
+    }
 
     return {
-      valid: this.validateLocal(vat) || null !== info,
+      valid: true,
       info,
     };
   }
@@ -77,20 +93,30 @@ export class VatValidationService {
   }
 
   private static validateLocal(vat: string) {
-    const { isValid } = checkVAT(vat, countriesWithoutBrazil);
+    const { isValid, value } = checkVAT(vat, countriesWithoutBrazil);
 
-    return isValid;
+    if (!isValid) {
+      return null;
+    }
+
+    if (!value) {
+      return null;
+    }
+
+    return value;
   }
 
-  private static formatRemote(remoteData: { name: string, address: string, }) {
+  private static formatRemote(remoteData: CheckVatResponse) {
     const {
       name,
       address,
+      vatNumber,
     } = remoteData;
 
     return {
       address,
       legalName: name,
+      vat: vatNumber,
     };
   }
 }

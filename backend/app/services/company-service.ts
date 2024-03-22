@@ -6,28 +6,39 @@ import {
 } from "./vat-validation-service";
 
 export class CompanyService {
-  public static async validateVat(vat: string) {
-    vat = vat.trim().toUpperCase();
+  public static async validateVat(untrustedVat: string) {
+    untrustedVat = untrustedVat.trim().toUpperCase();
+
+    const valid = await VatValidationService.validate(untrustedVat);
+
+    const validVatInfo = valid.info;
+
+    if (!valid.valid || !validVatInfo) {
+      return {
+        valid: false as const,
+        exists: false as const,
+        info: null,
+      };
+    }
 
     const exists = await prisma.company.findFirst({
       where: {
-        vat,
+        vat: validVatInfo.vat,
       },
     });
 
     if (exists) {
       return {
-        valid: true,
-        exists: true,
+        valid: true as const,
+        exists: true as const,
         info: null,
       };
     }
 
-    const valid = await VatValidationService.validate(vat);
-
     return {
-      ...valid,
-      exists: false,
+      valid: true as const,
+      exists: false as const,
+      info: validVatInfo,
     };
   }
 }

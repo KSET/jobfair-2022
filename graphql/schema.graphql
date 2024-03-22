@@ -2307,6 +2307,7 @@ type ValidateVatResponse {
 type VatData {
   address: String!
   legalName: String!
+  vat: String!
 }
 
 input WorkshopCreateInput {

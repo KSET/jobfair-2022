@@ -247,6 +247,9 @@ class VatData {
 
   @Field()
     legalName: string = "";
+
+  @Field()
+    vat: string = "";
 }
 
 @ObjectType()
@@ -306,8 +309,6 @@ export class CompanyInfoMutationsResolver {
       };
     }
 
-    info.vat = info.vat.trim().toUpperCase();
-
     const vatValidation = await CompanyService.validateVat(info.vat);
 
     if (!vatValidation.valid) {
@@ -331,6 +332,8 @@ export class CompanyInfoMutationsResolver {
         ],
       };
     }
+
+    info.vat = vatValidation.info.vat;
 
     const industry = await ctx.prisma.industry.findFirst({
       where: {

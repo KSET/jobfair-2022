@@ -3181,6 +3181,7 @@ export type IValidateVatResponse = {
 export type IVatData = {
   address: Scalars['String']['output'];
   legalName: Scalars['String']['output'];
+  vat: Scalars['String']['output'];
 };
 
 export type IWorkshopCreateInput = {
@@ -3363,7 +3364,7 @@ export type IUpdatePasswordMutationVariables = Exact<{
 
 export type IUpdatePasswordMutation = IUpdatePasswordMutation_Mutation;
 
-export type IValidateVatMutation_validateVat_ValidateVatResponse_info_VatData = { address: string, legalName: string };
+export type IValidateVatMutation_validateVat_ValidateVatResponse_info_VatData = { address: string, legalName: string, vat: string };
 
 export type IValidateVatMutation_validateVat_ValidateVatResponse = { valid: boolean, exists: boolean, info?: IValidateVatMutation_validateVat_ValidateVatResponse_info_VatData | null };
 
@@ -5884,6 +5885,7 @@ export type IValidateVatResponseResolvers<ContextType = any, ParentType extends 
 export type IVatDataResolvers<ContextType = any, ParentType extends IResolversParentTypes['VatData'] = IResolversParentTypes['VatData']> = {
   address?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   legalName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  vat?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6306,6 +6308,7 @@ export const ValidateVat = gql`
     info {
       address
       legalName
+      vat
     }
   }
 }

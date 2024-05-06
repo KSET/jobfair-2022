@@ -3,6 +3,8 @@
 
 generator client {
   provider = "prisma-client-js"
+
+  previewFeatures = ["views"]
 }
 
 generator typegraphql {
@@ -69,6 +71,9 @@ model User {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedUsers CompanyScannedUser[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  UserCompanyComponentRatings UserCompanyComponentRating[]
 }
 
 model Session {
@@ -170,6 +175,11 @@ model Company {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedUsers CompanyScannedUser[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  UserCompanyComponentRatings            UserCompanyComponentRating[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  UserCompanyComponentRatingAveragesView UserCompanyComponentRatingAveragesView[]
 }
 
 model Industry {
@@ -363,6 +373,11 @@ model Season {
 
   // @TypeGraphQL.omit(output: true, input: true)
   scannedUsers CompanyScannedUser[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  UserCompanyComponentRatings            UserCompanyComponentRating[]
+  /// @TypeGraphQL.omit(output: true, input: true)
+  UserCompanyComponentRatingAveragesView UserCompanyComponentRatingAveragesView[]
 }
 
 model Sponsor {
@@ -1030,4 +1045,50 @@ model News {
   createdAt DateTime @default(now())
   /// @TypeGraphQL.omit(input: true)
   updatedAt DateTime @updatedAt
+}
+
+model UserCompanyComponentRating {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id Int @id @default(autoincrement())
+
+  component String
+  rating    Int
+  comment   String?
+
+  /// @TypeGraphQL.omit(input: true)
+  forUser   User @relation(fields: [forUserId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forUserId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forCompany   Company @relation(fields: [forCompanyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forCompanyId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+}
+
+view UserCompanyComponentRatingAveragesView {
+  component String
+  ratingAvg Float
+
+  /// @TypeGraphQL.omit(input: true)
+  forCompany   Company @relation(fields: [forCompanyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forCompanyId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  @@unique([forSeasonId, forCompanyId, component])
 }

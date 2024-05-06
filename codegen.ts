@@ -42,6 +42,8 @@ export default {
     "./pages/admin/season/[season]/reservations/scanned.vue",
     "./pages/profile/me/company/signup.vue",
     "./pages/admin/season/[season]/applications/[company]/edit.vue",
+    "./pages/admin/season/[season]/ratings/**/*.vue",
+    "./pages/company/[uid]/rate/**/*.vue",
   ],
   generates: {
     [inGraphqlDir("schema.ts")]: {

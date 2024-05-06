@@ -134,6 +134,7 @@
 
       <fieldset
         v-for="season in seasons"
+        :id="`season-${ season.uid }`"
         :key="season.uid"
         class="mb-3"
       >
@@ -233,6 +234,16 @@
             >
               Feedback
             </nuxt-link>
+          </li>
+          <li>
+            <h3>Ocjenjivanje</h3>
+            <ul>
+              <li>
+                <nuxt-link :to="{ name: 'admin-season-season-ratings-qr-codes', params: { season: season.uid } }">
+                  QR Kodovi
+                </nuxt-link>
+              </li>
+            </ul>
           </li>
         </ul>
 

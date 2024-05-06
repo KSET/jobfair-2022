@@ -10,6 +10,7 @@
       <slot />
     </main>
     <app-footer :show-logos="$route.name === 'index'" />
+    <ConfirmDialog />
   </div>
 </template>
 
@@ -17,6 +18,7 @@
   import {
     defineComponent,
   } from "vue";
+  import ConfirmDialog from "primevue/confirmdialog";
   import AppFooter from "~/components/nav/AppFooter.vue";
   import AppHeader from "~/components/nav/AppHeader.vue";
 
@@ -26,6 +28,7 @@
     components: {
       AppFooter,
       AppHeader,
+      ConfirmDialog,
     },
   });
 </script>

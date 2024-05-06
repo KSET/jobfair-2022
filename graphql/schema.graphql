@@ -586,6 +586,8 @@ input CompanyApplicationWhereUniqueInput {
 }
 
 type CompanyCount {
+  UserCompanyComponentRatingAveragesView(where: UserCompanyComponentRatingAveragesViewWhereInput): Int!
+  UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   applications(where: CompanyApplicationWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   members(where: UserWhereInput): Int!
@@ -943,6 +945,17 @@ input FileWhereInput {
   uploader: UserRelationFilter
 }
 
+input FloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
+}
+
 type GateGuardianLog {
   eventId: Int!
   eventType: String!
@@ -1118,6 +1131,7 @@ type Mutation {
   deleteResume: Boolean!
   deleteSeason(uid: String!): Season
   deleteSponsor(sponsor: String!): Boolean!
+  deleteUserCompanyComponentRating(companyUid: String!, component: String!, seasonUid: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
   editNews(info: NewsCreateInput!, uid: String!): NewsCreateResponse
   gateGuardianScan(eventType: String!, eventUid: String!, userUid: String!): GateGuardianScanResponse
@@ -1151,6 +1165,7 @@ type Mutation {
   updateSeason(info: SeasonUpdateInput!): Season
   updateTranslation(data: TranslationCreateInput!): Translation
   updateUser(info: UserUpdateInput!, uid: String!): UpdateProfileResponse
+  upsertUserCompanyComponentRating(comment: String, companyUid: String!, component: String!, rating: Int!, seasonUid: String!): UserCompanyComponentRating!
   usePasswordReset(info: PasswordResetUseInput!): PasswordResetUseResponse!
   validateVat(vat: String!): ValidateVatResponse!
 }
@@ -1180,6 +1195,17 @@ input NestedDateTimeNullableFilter {
   lte: DateTimeISO
   not: NestedDateTimeNullableFilter
   notIn: [DateTimeISO!]
+}
+
+input NestedFloatFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatFilter
+  notIn: [Float!]
 }
 
 input NestedIntFilter {
@@ -1413,6 +1439,7 @@ type Query {
   companyApplication: CompanyApplication
   companyApplicationFor(company: String!, season: String!): CompanyApplication
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
+  companyComponentAverageRatings(seasonUid: String!): [UserCompanyComponentRatingComponentAverage!]!
   companyInfo(uid: String!): Company
   currentSeason: Season
   eventLog(orderBy: [EventLogOrderByWithRelationInput!], page: Int!, perPage: Int!, where: String): EventLogPaginationResult!
@@ -1446,6 +1473,8 @@ type Query {
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
   user(uid: String!): User
+  userCompanyComponentRating(companyUid: String!, component: String!, seasonUid: String!): UserCompanyComponentRating
+  userCompanyComponentRatings(companyUid: String!, seasonUid: String!): [UserCompanyComponentRating!]!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
@@ -1803,6 +1832,7 @@ type Season {
   applicationsFrom: DateTimeISO!
   applicationsUntil: DateTimeISO!
   calendar: [CalendarItem!]!
+  companyComponentAverageRatings: [UserCompanyComponentRatingComponentAverage!]!
   companyScannedCvs: Int!
   endsAt: DateTimeISO!
   entryCount: Int!
@@ -1826,6 +1856,8 @@ type Season {
 }
 
 type SeasonCount {
+  UserCompanyComponentRatingAveragesView(where: UserCompanyComponentRatingAveragesViewWhereInput): Int!
+  UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   calendar(where: CalendarItemWhereInput): Int!
   companies(where: CompanyApplicationWhereInput): Int!
   entryLog(where: EntryResumeLogWhereInput): Int!
@@ -2196,8 +2228,42 @@ type User {
   updatedAt: DateTimeISO!
 }
 
+type UserCompanyComponentRating {
+  comment: String
+  component: String!
+  createdAt: DateTimeISO!
+  forCompany: Company!
+  forSeason: Season!
+  forUser: User!
+  rating: Int!
+  updatedAt: DateTimeISO!
+}
+
+input UserCompanyComponentRatingAveragesViewWhereInput {
+  AND: [UserCompanyComponentRatingAveragesViewWhereInput!]
+  NOT: [UserCompanyComponentRatingAveragesViewWhereInput!]
+  OR: [UserCompanyComponentRatingAveragesViewWhereInput!]
+  component: StringFilter
+  ratingAvg: FloatFilter
+}
+
+type UserCompanyComponentRatingComponentAverage {
+  averageRating: Float!
+  component: String!
+}
+
+input UserCompanyComponentRatingWhereInput {
+  AND: [UserCompanyComponentRatingWhereInput!]
+  NOT: [UserCompanyComponentRatingWhereInput!]
+  OR: [UserCompanyComponentRatingWhereInput!]
+  comment: StringNullableFilter
+  component: StringFilter
+  rating: IntFilter
+}
+
 type UserCount {
   News(where: NewsWhereInput): Int!
+  UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   companies(where: CompanyWhereInput): Int!
   events(where: EventLogWhereInput): Int!
   files(where: FileWhereInput): Int!

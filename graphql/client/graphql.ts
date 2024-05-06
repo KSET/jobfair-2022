@@ -654,11 +654,23 @@ export type CompanyApplicationWhereUniqueInput = {
 };
 
 export type CompanyCount = {
+  UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   applications: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   members: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+};
+
+
+export type CompanyCountUserCompanyComponentRatingAveragesViewArgs = {
+  where?: InputMaybe<UserCompanyComponentRatingAveragesViewWhereInput>;
+};
+
+
+export type CompanyCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<UserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -1051,6 +1063,17 @@ export type FileWhereInput = {
   uploader?: InputMaybe<UserRelationFilter>;
 };
 
+export type FloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  not?: InputMaybe<NestedFloatFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
+};
+
 export type GateGuardianLog = {
   eventId: Scalars['Int']['output'];
   eventType: Scalars['String']['output'];
@@ -1271,6 +1294,7 @@ export type Mutation = {
   deleteResume: Scalars['Boolean']['output'];
   deleteSeason?: Maybe<Season>;
   deleteSponsor: Scalars['Boolean']['output'];
+  deleteUserCompanyComponentRating: Scalars['Boolean']['output'];
   editApprovedCompanyApplication?: Maybe<EditApprovedCompanyApplicationResponse>;
   editNews?: Maybe<NewsCreateResponse>;
   gateGuardianScan?: Maybe<GateGuardianScanResponse>;
@@ -1304,6 +1328,7 @@ export type Mutation = {
   updateSeason?: Maybe<Season>;
   updateTranslation?: Maybe<Translation>;
   updateUser?: Maybe<UpdateProfileResponse>;
+  upsertUserCompanyComponentRating: UserCompanyComponentRating;
   usePasswordReset: PasswordResetUseResponse;
   validateVat: ValidateVatResponse;
 };
@@ -1408,6 +1433,13 @@ export type MutationDeleteSeasonArgs = {
 
 export type MutationDeleteSponsorArgs = {
   sponsor: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteUserCompanyComponentRatingArgs = {
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -1590,6 +1622,15 @@ export type MutationUpdateUserArgs = {
 };
 
 
+export type MutationUpsertUserCompanyComponentRatingArgs = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
 export type MutationUsePasswordResetArgs = {
   info: PasswordResetUseInput;
 };
@@ -1624,6 +1665,17 @@ export type NestedDateTimeNullableFilter = {
   lte?: InputMaybe<Scalars['DateTimeISO']['input']>;
   not?: InputMaybe<NestedDateTimeNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['DateTimeISO']['input']>>;
+};
+
+export type NestedFloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  not?: InputMaybe<NestedFloatFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
 export type NestedIntFilter = {
@@ -1857,6 +1909,7 @@ export type Query = {
   companyApplication?: Maybe<CompanyApplication>;
   companyApplicationFor?: Maybe<CompanyApplication>;
   companyApplications?: Maybe<Array<CompanyApplication>>;
+  companyComponentAverageRatings: Array<UserCompanyComponentRatingComponentAverage>;
   companyInfo?: Maybe<Company>;
   currentSeason?: Maybe<Season>;
   eventLog: EventLogPaginationResult;
@@ -1890,6 +1943,8 @@ export type Query = {
   translation?: Maybe<Translation>;
   translations: Array<Translation>;
   user?: Maybe<User>;
+  userCompanyComponentRating?: Maybe<UserCompanyComponentRating>;
+  userCompanyComponentRatings: Array<UserCompanyComponentRating>;
   users: Array<User>;
 };
 
@@ -1949,6 +2004,11 @@ export type QueryCompanyApplicationsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+
+export type QueryCompanyComponentAverageRatingsArgs = {
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -2142,6 +2202,19 @@ export type QueryTranslationsArgs = {
 
 export type QueryUserArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type QueryUserCompanyComponentRatingArgs = {
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type QueryUserCompanyComponentRatingsArgs = {
+  companyUid: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -2558,6 +2631,7 @@ export type Season = {
   applicationsFrom: Scalars['DateTimeISO']['output'];
   applicationsUntil: Scalars['DateTimeISO']['output'];
   calendar: Array<CalendarItem>;
+  companyComponentAverageRatings: Array<UserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];
   endsAt: Scalars['DateTimeISO']['output'];
   entryCount: Scalars['Int']['output'];
@@ -2581,6 +2655,8 @@ export type Season = {
 };
 
 export type SeasonCount = {
+  UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   calendar: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   entryLog: Scalars['Int']['output'];
@@ -2592,6 +2668,16 @@ export type SeasonCount = {
   scannedUsers: Scalars['Int']['output'];
   sponsors: Scalars['Int']['output'];
   talkCategories: Scalars['Int']['output'];
+};
+
+
+export type SeasonCountUserCompanyComponentRatingAveragesViewArgs = {
+  where?: InputMaybe<UserCompanyComponentRatingAveragesViewWhereInput>;
+};
+
+
+export type SeasonCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<UserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -3003,8 +3089,42 @@ export type User = {
   updatedAt: Scalars['DateTimeISO']['output'];
 };
 
+export type UserCompanyComponentRating = {
+  comment?: Maybe<Scalars['String']['output']>;
+  component: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  forCompany: Company;
+  forSeason: Season;
+  forUser: User;
+  rating: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type UserCompanyComponentRatingAveragesViewWhereInput = {
+  AND?: InputMaybe<Array<UserCompanyComponentRatingAveragesViewWhereInput>>;
+  NOT?: InputMaybe<Array<UserCompanyComponentRatingAveragesViewWhereInput>>;
+  OR?: InputMaybe<Array<UserCompanyComponentRatingAveragesViewWhereInput>>;
+  component?: InputMaybe<StringFilter>;
+  ratingAvg?: InputMaybe<FloatFilter>;
+};
+
+export type UserCompanyComponentRatingComponentAverage = {
+  averageRating: Scalars['Float']['output'];
+  component: Scalars['String']['output'];
+};
+
+export type UserCompanyComponentRatingWhereInput = {
+  AND?: InputMaybe<Array<UserCompanyComponentRatingWhereInput>>;
+  NOT?: InputMaybe<Array<UserCompanyComponentRatingWhereInput>>;
+  OR?: InputMaybe<Array<UserCompanyComponentRatingWhereInput>>;
+  comment?: InputMaybe<StringNullableFilter>;
+  component?: InputMaybe<StringFilter>;
+  rating?: InputMaybe<IntFilter>;
+};
+
 export type UserCount = {
   News: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   events: Scalars['Int']['output'];
   files: Scalars['Int']['output'];
@@ -3022,6 +3142,11 @@ export type UserCount = {
 
 export type UserCountNewsArgs = {
   where?: InputMaybe<NewsWhereInput>;
+};
+
+
+export type UserCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<UserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -3626,6 +3751,13 @@ export type PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutati
 
 export type PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = { approveCompanyApplications: Array<{ booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean, cocktail: boolean, forApplication: { forCompany?: { uid: string } | null } }> };
 
+export type PageAdminSeasonRatingsQrCodesDataQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type PageAdminSeasonRatingsQrCodesDataQuery = { season?: { name: string, startsAt: string | Date, endsAt: string | Date, applications: Array<{ forCompany?: { uid: string, legalName: string, brandName: string } | null, approval?: { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean } | null }> } | null };
+
 export type PageAdminSeasonReservationsScannedDataQueryVariables = Exact<{
   season: Scalars['String']['input'];
 }>;
@@ -3652,6 +3784,35 @@ export type PageCalendarEventDataQueryVariables = Exact<{
 
 
 export type PageCalendarEventDataQuery = { calendarItemCompanyUid?: string | null, calendarItem?: { hasEvent: boolean, type?: string | null } | null };
+
+export type PageCompanyUidRate_DataQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+}>;
+
+
+export type PageCompanyUidRate_DataQuery = { userCompanyComponentRating?: { rating: number, comment?: string | null } | null, currentSeason?: { eventFrom: string | Date, eventUntil: string | Date } | null };
+
+export type PageCompanyUidRate_UpsertMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  comment?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PageCompanyUidRate_UpsertMutation = { upsertUserCompanyComponentRating: { rating: number, comment?: string | null } };
+
+export type PageCompanyUidRate_DeleteMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+}>;
+
+
+export type PageCompanyUidRate_DeleteMutation = { deleteUserCompanyComponentRating: boolean };
 
 export type PageGateGuardian_ScanMutationVariables = Exact<{
   userUid: Scalars['String']['input'];
@@ -3801,10 +3962,14 @@ export const PageAdminSeasonApplicationsCompanyEdit_DeleteApplicationDocument = 
 export const PageAdminSeasonApplicationsCompanyEdit_UpsertApplicationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminSeasonApplicationsCompanyEdit_UpsertApplication"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"company"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"info"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CompanyApplicationCreateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCompanyApplicationFor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"company"},"value":{"kind":"Variable","name":{"kind":"Name","value":"company"}}},{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}},{"kind":"Argument","name":{"kind":"Name","value":"info"},"value":{"kind":"Variable","name":{"kind":"Name","value":"info"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entity"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"talk"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workshop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}},{"kind":"Field","name":{"kind":"Name","value":"wantsCocktail"}},{"kind":"Field","name":{"kind":"Name","value":"wantsPanel"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation, PageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables>;
 export const PageAdminSeasonApplicationsApproval_BaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonApplicationsApproval_Base"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wantsPanel"}},{"kind":"Field","name":{"kind":"Name","value":"wantsCocktail"}},{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talk"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"titleEn"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workshop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"titleEn"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"approval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}},{"kind":"Field","name":{"kind":"Name","value":"cocktail"}},{"kind":"Field","name":{"kind":"Name","value":"logoHidden"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonApplicationsApproval_BaseQuery, PageAdminSeasonApplicationsApproval_BaseQueryVariables>;
 export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminSeasonApplicationsApproval_ApproveCompanyApplications"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companies"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ApproveCompanyApplicationsInput"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"approveCompanyApplications"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"companies"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companies"}}},{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}},{"kind":"Field","name":{"kind":"Name","value":"cocktail"}},{"kind":"Field","name":{"kind":"Name","value":"forApplication"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation, PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutationVariables>;
+export const PageAdminSeasonRatingsQrCodesDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonRatingsQrCodesData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"approval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonRatingsQrCodesDataQuery, PageAdminSeasonRatingsQrCodesDataQueryVariables>;
 export const PageAdminSeasonReservationsScannedDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonReservationsScannedData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gateGuardianScanList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"eventId"}},{"kind":"Field","name":{"kind":"Name","value":"forUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"scannedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forCalendarItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"companies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forTalk"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}},{"kind":"Field","name":{"kind":"Name","value":"titleEn"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forWorkshop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}},{"kind":"Field","name":{"kind":"Name","value":"titleEn"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forPanel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scannedAt"}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonReservationsScannedDataQuery, PageAdminSeasonReservationsScannedDataQueryVariables>;
 export const PageAdminUsersScannersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminUsersScanners"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminUsersScannersQuery, PageAdminUsersScannersQueryVariables>;
 export const PageAdminUsersScannersUpdateIsScannerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminUsersScannersUpdateIsScanner"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"isScanner"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateScannerStatusFor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uid"}}},{"kind":"Argument","name":{"kind":"Name","value":"isScanner"},"value":{"kind":"Variable","name":{"kind":"Name","value":"isScanner"}}}]}]}}]} as unknown as DocumentNode<PageAdminUsersScannersUpdateIsScannerMutation, PageAdminUsersScannersUpdateIsScannerMutationVariables>;
 export const PageCalendarEventDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageCalendarEventData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"uid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"calendarItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasEvent"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"calendarItemCompanyUid"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"uid"}}}]}]}}]} as unknown as DocumentNode<PageCalendarEventDataQuery, PageCalendarEventDataQueryVariables>;
+export const PageCompanyUidRate_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageCompanyUidRate_Data"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"component"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userCompanyComponentRating"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"companyUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"component"},"value":{"kind":"Variable","name":{"kind":"Name","value":"component"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rating"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentSeason"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"eventFrom"}},{"kind":"Field","name":{"kind":"Name","value":"eventUntil"}}]}}]}}]} as unknown as DocumentNode<PageCompanyUidRate_DataQuery, PageCompanyUidRate_DataQueryVariables>;
+export const PageCompanyUidRate_UpsertDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageCompanyUidRate_Upsert"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"component"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"rating"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"comment"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upsertUserCompanyComponentRating"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"companyUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"component"},"value":{"kind":"Variable","name":{"kind":"Name","value":"component"}}},{"kind":"Argument","name":{"kind":"Name","value":"rating"},"value":{"kind":"Variable","name":{"kind":"Name","value":"rating"}}},{"kind":"Argument","name":{"kind":"Name","value":"comment"},"value":{"kind":"Variable","name":{"kind":"Name","value":"comment"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rating"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}}]}}]} as unknown as DocumentNode<PageCompanyUidRate_UpsertMutation, PageCompanyUidRate_UpsertMutationVariables>;
+export const PageCompanyUidRate_DeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageCompanyUidRate_Delete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"component"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUserCompanyComponentRating"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"companyUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"component"},"value":{"kind":"Variable","name":{"kind":"Name","value":"component"}}}]}]}}]} as unknown as DocumentNode<PageCompanyUidRate_DeleteMutation, PageCompanyUidRate_DeleteMutationVariables>;
 export const PageGateGuardian_ScanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageGateGuardian_Scan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"eventUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"eventType"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gateGuardianScan"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"eventUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"eventUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"eventType"},"value":{"kind":"Variable","name":{"kind":"Name","value":"eventType"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hasReservation"}},{"kind":"Field","name":{"kind":"Name","value":"alreadyScanned"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<PageGateGuardian_ScanMutation, PageGateGuardian_ScanMutationVariables>;
 export const PageGateGuardian_EventListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageGateGuardian_EventList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"calendar"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<PageGateGuardian_EventListQuery, PageGateGuardian_EventListQueryVariables>;
 export const PageParticipants_BaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageParticipants_Base"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionEn"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionHr"}},{"kind":"Field","name":{"kind":"Name","value":"logoHidden"}},{"kind":"Field","name":{"kind":"Name","value":"rasterLogo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thumbUrl"}},{"kind":"Field","name":{"kind":"Name","value":"fullUrl"}}]}}]}}]}}]} as unknown as DocumentNode<PageParticipants_BaseQuery, PageParticipants_BaseQueryVariables>;

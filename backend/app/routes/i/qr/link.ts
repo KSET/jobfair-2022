@@ -1,6 +1,8 @@
-import express from "express";
+import express, {
+  type RequestHandler,
+} from "express";
 import QRCode, {
-  QRCodeToStringOptions,
+  type QRCodeToStringOptions,
 } from "qrcode";
 import {
   z,
@@ -12,11 +14,43 @@ import {
   AuthRouter,
 } from "../../../helpers/route";
 
+const PUBLIC_URL = (process.env.PUBLIC_URL ?? "https://jobfair.fer.unizg.hr").replace(/\/*$/, "");
+
 const router = new AuthRouter({
   role: Role.Admin,
 });
 
-router.postRaw("/", express.json(), async (req, res) => {
+router.getRaw("/", (req, res) => {
+  let payload = {
+    url: req.query.url,
+    isRelative: false,
+  };
+
+  if (!payload.url) {
+    payload = {
+      url: req.query.relativeUrl,
+      isRelative: true,
+    };
+  }
+
+  if ("string" !== typeof payload.url) {
+    return res.sendStatus(404).end();
+  }
+
+  let url = payload.url.trim();
+
+  if (payload.isRelative) {
+    if (!url.startsWith("/")) {
+      url = `/${ url }`;
+    }
+
+    url = `${ PUBLIC_URL }${ url }`;
+  }
+
+  return respondWithQrCode(url, res);
+});
+
+router.postRaw("/", express.json(), (req, res) => {
   const bodyValidator = z.object({
     url: z.string().url(),
   });
@@ -29,6 +63,12 @@ router.postRaw("/", express.json(), async (req, res) => {
 
   const payload = bodyCheck.data.url;
 
+  return respondWithQrCode(payload, res);
+});
+
+type Resp = Parameters<RequestHandler<unknown>>[1];
+
+const respondWithQrCode = async (qrCodeData: string, res: Resp) => {
   const options: QRCodeToStringOptions = {
     errorCorrectionLevel: "quartile",
     scale: 10,
@@ -40,7 +80,7 @@ router.postRaw("/", express.json(), async (req, res) => {
   };
 
   try {
-    const qrCode = await QRCode.toString(payload, options);
+    const qrCode = await QRCode.toString(qrCodeData, options);
 
     const coords = String(qrCode).match(/viewBox="(?<coords>.*?)"/i)?.groups?.coords.split(" ").map(Number) ?? [];
     const x = coords.at(2);
@@ -85,6 +125,6 @@ router.postRaw("/", express.json(), async (req, res) => {
   }
 
   res.end();
-});
+};
 
 export default router;

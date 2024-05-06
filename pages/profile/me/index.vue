@@ -465,40 +465,68 @@
             </nuxt-link>
           </div>
         </div>
-        <div v-if="isEventOngoingOrLater" :class="[$style.item, $style.itemApproval]">
-          <h2 :class="$style.itemHeader">
-            <translated-text trans-key="profile.company.scanUsers.header" />
-          </h2>
-          <div :class="$style.itemActions">
-            <nuxt-link
-              :to="{ name: 'profile-me-company-scans-list' }"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
+        <template v-if="isEventOngoingOrLater">
+          <div :class="[$style.item, $style.itemApproval]">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.company.scanUsers.header" />
+            </h2>
+            <div :class="$style.itemActions">
+              <nuxt-link
+                :to="{ name: 'profile-me-company-scans-list' }"
               >
-                <translated-text
-                  trans-key="profile.company.scanUsers.scanned"
-                />
-              </p-button>
-            </nuxt-link>
+                <p-button
+                  class="p-button-secondary"
+                  tabindex="-1"
+                >
+                  <translated-text
+                    trans-key="profile.company.scanUsers.scanned"
+                  />
+                </p-button>
+              </nuxt-link>
 
-            <nuxt-link
-              v-if="isEventOngoing"
-              :to="{ name: 'profile-me-company-scan-user-qr' }"
-              class="ml-auto"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
+              <nuxt-link
+                v-if="isEventOngoing"
+                :to="{ name: 'profile-me-company-scan-user-qr' }"
+                class="ml-auto"
               >
-                <translated-text
-                  trans-key="profile.company.scanUsers.scan"
-                />
-              </p-button>
-            </nuxt-link>
+                <p-button
+                  class="p-button-secondary"
+                  tabindex="-1"
+                >
+                  <translated-text
+                    trans-key="profile.company.scanUsers.scan"
+                  />
+                </p-button>
+              </nuxt-link>
+            </div>
           </div>
-        </div>
+
+          <div :class="[$style.item]">
+            <div :class="$style.itemContent">
+              <h2 :class="$style.itemHeader">
+                <translated-text trans-key="profile.company.componentRatings.header" />
+              </h2>
+
+              <ul>
+                <li v-if="companyApplication.approval.booth">
+                  <strong>
+                    <translated-text trans-key="profile.company.booth" />
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.booth ?? 'N/A'" /> / 7
+                </li>
+                <li v-if="companyApplication.approval.talkParticipants">
+                  <strong>
+                    <translated-text trans-key="profile.company.talk" />
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.talk ?? 'N/A'" /> / 7
+                </li>
+                <li v-if="companyApplication.approval.workshopParticipants">
+                  <strong>
+                    <translated-text trans-key="profile.company.workshop" />
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.workshop ?? 'N/A'" /> / 7
+                </li>
+              </ul>
+            </div>
+          </div>
+        </template>
 
         <div
           v-if="isFeedbackOpen"
@@ -789,6 +817,20 @@
         formatDate,
         booths,
         currentSeason: computed(() => seasonsStore.currentSeason!),
+        companyComponentAverageRatings: computed(() => {
+          const currentLocale = translationsStore.currentLanguageIso;
+          const ratingsList = seasonsStore.currentSeason?.companyComponentAverageRatings ?? [];
+
+          const mapped = ratingsList.map((x) => [
+            x.component,
+            x.averageRating.toLocaleString(currentLocale, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }),
+          ]);
+
+          return Object.fromEntries(mapped) as Record<string, string>;
+        }),
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         applicationsEditable: computed(() => seasonsStore.areApplicationsEditable),
         isEventOngoing: computed(() => seasonsStore.isEventOngoing),

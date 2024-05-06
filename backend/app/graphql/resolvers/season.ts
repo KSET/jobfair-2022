@@ -70,6 +70,9 @@ import {
 import {
   transformSelect as transformSelectCalendarItem,
 } from "./calendarItem";
+import {
+  UserCompanyComponentRatingComponentAverage
+} from "./userCompanyComponentRating";
 
 @ObjectType()
 export class ReservationItem {
@@ -239,6 +242,39 @@ export class SeasonFieldResolver {
     });
   }
 
+
+  @FieldResolver(() => [UserCompanyComponentRatingComponentAverage])
+  async companyComponentAverageRatings(
+    @Root() season: Season,
+    @Ctx() ctx: Context,
+  ): Promise<GQLField<UserCompanyComponentRatingComponentAverage[]>> {
+    if (!ctx.user) {
+      return [];
+    }
+
+    const [userCompany] = ctx.user.companies;
+    if (!userCompany) {
+      return [];
+    }
+
+    const averages =
+      await ctx.prisma.userCompanyComponentRatingAveragesView.findMany({
+        where: {
+          forCompanyId: userCompany.id,
+          forSeasonId: season.id!,
+        },
+        select: {
+          component: true,
+          ratingAvg: true,
+        },
+      });
+
+    return averages.map((a) => ({
+      component: a.component,
+      averageRating: a.ratingAvg,
+    }));
+  }
+
   @FieldResolver(() => Int)
   companyScannedCvs(
     @Root() season: Season,
@@ -325,6 +361,13 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
   companyScannedCvs(select) {
     select.id = true;
     delete select.companyScannedCvs;
+
+    return select;
+  },
+
+  companyComponentAverageRatings(select) {
+    select.id = true;
+    delete select.companyComponentAverageRatings;
 
     return select;
   },

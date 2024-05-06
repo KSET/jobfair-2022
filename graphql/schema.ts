@@ -656,11 +656,23 @@ export type ICompanyApplicationWhereUniqueInput = {
 };
 
 export type ICompanyCount = {
+  UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   applications: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   members: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+};
+
+
+export type ICompanyCountUserCompanyComponentRatingAveragesViewArgs = {
+  where?: InputMaybe<IUserCompanyComponentRatingAveragesViewWhereInput>;
+};
+
+
+export type ICompanyCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<IUserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -1053,6 +1065,17 @@ export type IFileWhereInput = {
   uploader?: InputMaybe<IUserRelationFilter>;
 };
 
+export type IFloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  not?: InputMaybe<INestedFloatFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
+};
+
 export type IGateGuardianLog = {
   eventId: Scalars['Int']['output'];
   eventType: Scalars['String']['output'];
@@ -1273,6 +1296,7 @@ export type IMutation = {
   deleteResume: Scalars['Boolean']['output'];
   deleteSeason?: Maybe<ISeason>;
   deleteSponsor: Scalars['Boolean']['output'];
+  deleteUserCompanyComponentRating: Scalars['Boolean']['output'];
   editApprovedCompanyApplication?: Maybe<IEditApprovedCompanyApplicationResponse>;
   editNews?: Maybe<INewsCreateResponse>;
   gateGuardianScan?: Maybe<IGateGuardianScanResponse>;
@@ -1306,6 +1330,7 @@ export type IMutation = {
   updateSeason?: Maybe<ISeason>;
   updateTranslation?: Maybe<ITranslation>;
   updateUser?: Maybe<IUpdateProfileResponse>;
+  upsertUserCompanyComponentRating: IUserCompanyComponentRating;
   usePasswordReset: IPasswordResetUseResponse;
   validateVat: IValidateVatResponse;
 };
@@ -1410,6 +1435,13 @@ export type IMutationDeleteSeasonArgs = {
 
 export type IMutationDeleteSponsorArgs = {
   sponsor: Scalars['String']['input'];
+};
+
+
+export type IMutationDeleteUserCompanyComponentRatingArgs = {
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -1592,6 +1624,15 @@ export type IMutationUpdateUserArgs = {
 };
 
 
+export type IMutationUpsertUserCompanyComponentRatingArgs = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
 export type IMutationUsePasswordResetArgs = {
   info: IPasswordResetUseInput;
 };
@@ -1626,6 +1667,17 @@ export type INestedDateTimeNullableFilter = {
   lte?: InputMaybe<Scalars['DateTimeISO']['input']>;
   not?: InputMaybe<INestedDateTimeNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['DateTimeISO']['input']>>;
+};
+
+export type INestedFloatFilter = {
+  equals?: InputMaybe<Scalars['Float']['input']>;
+  gt?: InputMaybe<Scalars['Float']['input']>;
+  gte?: InputMaybe<Scalars['Float']['input']>;
+  in?: InputMaybe<Array<Scalars['Float']['input']>>;
+  lt?: InputMaybe<Scalars['Float']['input']>;
+  lte?: InputMaybe<Scalars['Float']['input']>;
+  not?: InputMaybe<INestedFloatFilter>;
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
 export type INestedIntFilter = {
@@ -1859,6 +1911,7 @@ export type IQuery = {
   companyApplication?: Maybe<ICompanyApplication>;
   companyApplicationFor?: Maybe<ICompanyApplication>;
   companyApplications?: Maybe<Array<ICompanyApplication>>;
+  companyComponentAverageRatings: Array<IUserCompanyComponentRatingComponentAverage>;
   companyInfo?: Maybe<ICompany>;
   currentSeason?: Maybe<ISeason>;
   eventLog: IEventLogPaginationResult;
@@ -1892,6 +1945,8 @@ export type IQuery = {
   translation?: Maybe<ITranslation>;
   translations: Array<ITranslation>;
   user?: Maybe<IUser>;
+  userCompanyComponentRating?: Maybe<IUserCompanyComponentRating>;
+  userCompanyComponentRatings: Array<IUserCompanyComponentRating>;
   users: Array<IUser>;
 };
 
@@ -1951,6 +2006,11 @@ export type IQueryCompanyApplicationsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+
+export type IQueryCompanyComponentAverageRatingsArgs = {
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -2144,6 +2204,19 @@ export type IQueryTranslationsArgs = {
 
 export type IQueryUserArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IQueryUserCompanyComponentRatingArgs = {
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryUserCompanyComponentRatingsArgs = {
+  companyUid: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -2560,6 +2633,7 @@ export type ISeason = {
   applicationsFrom: Scalars['DateTimeISO']['output'];
   applicationsUntil: Scalars['DateTimeISO']['output'];
   calendar: Array<ICalendarItem>;
+  companyComponentAverageRatings: Array<IUserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];
   endsAt: Scalars['DateTimeISO']['output'];
   entryCount: Scalars['Int']['output'];
@@ -2583,6 +2657,8 @@ export type ISeason = {
 };
 
 export type ISeasonCount = {
+  UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   calendar: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   entryLog: Scalars['Int']['output'];
@@ -2594,6 +2670,16 @@ export type ISeasonCount = {
   scannedUsers: Scalars['Int']['output'];
   sponsors: Scalars['Int']['output'];
   talkCategories: Scalars['Int']['output'];
+};
+
+
+export type ISeasonCountUserCompanyComponentRatingAveragesViewArgs = {
+  where?: InputMaybe<IUserCompanyComponentRatingAveragesViewWhereInput>;
+};
+
+
+export type ISeasonCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<IUserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -3005,8 +3091,42 @@ export type IUser = {
   updatedAt: Scalars['DateTimeISO']['output'];
 };
 
+export type IUserCompanyComponentRating = {
+  comment?: Maybe<Scalars['String']['output']>;
+  component: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  forCompany: ICompany;
+  forSeason: ISeason;
+  forUser: IUser;
+  rating: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type IUserCompanyComponentRatingAveragesViewWhereInput = {
+  AND?: InputMaybe<Array<IUserCompanyComponentRatingAveragesViewWhereInput>>;
+  NOT?: InputMaybe<Array<IUserCompanyComponentRatingAveragesViewWhereInput>>;
+  OR?: InputMaybe<Array<IUserCompanyComponentRatingAveragesViewWhereInput>>;
+  component?: InputMaybe<IStringFilter>;
+  ratingAvg?: InputMaybe<IFloatFilter>;
+};
+
+export type IUserCompanyComponentRatingComponentAverage = {
+  averageRating: Scalars['Float']['output'];
+  component: Scalars['String']['output'];
+};
+
+export type IUserCompanyComponentRatingWhereInput = {
+  AND?: InputMaybe<Array<IUserCompanyComponentRatingWhereInput>>;
+  NOT?: InputMaybe<Array<IUserCompanyComponentRatingWhereInput>>;
+  OR?: InputMaybe<Array<IUserCompanyComponentRatingWhereInput>>;
+  comment?: InputMaybe<IStringNullableFilter>;
+  component?: InputMaybe<IStringFilter>;
+  rating?: InputMaybe<IIntFilter>;
+};
+
 export type IUserCount = {
   News: Scalars['Int']['output'];
+  UserCompanyComponentRatings: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   events: Scalars['Int']['output'];
   files: Scalars['Int']['output'];
@@ -3024,6 +3144,11 @@ export type IUserCount = {
 
 export type IUserCountNewsArgs = {
   where?: InputMaybe<INewsWhereInput>;
+};
+
+
+export type IUserCountUserCompanyComponentRatingsArgs = {
+  where?: InputMaybe<IUserCompanyComponentRatingWhereInput>;
 };
 
 
@@ -4194,6 +4319,24 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
 
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string };
+
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean };
+
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication = { forCompany?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company | null, approval?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval | null };
+
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season = { name: string, startsAt: string | Date, endsAt: string | Date, applications: Array<IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication> };
+
+export type IPageAdminSeasonRatingsQrCodesDataQuery_Query = { season?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season | null };
+
+
+export type IPageAdminSeasonRatingsQrCodesDataQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSeasonRatingsQrCodesDataQuery = IPageAdminSeasonRatingsQrCodesDataQuery_Query;
+
 export type IPageAdminSeasonReservationsScannedDataQuery_gateGuardianScanList_GateGuardianLog_forUser_User = { uid: string, name: string, email: string, phone: string };
 
 export type IPageAdminSeasonReservationsScannedDataQuery_gateGuardianScanList_GateGuardianLog_scannedBy_User = { uid: string, name: string };
@@ -4254,6 +4397,50 @@ export type IPageCalendarEventDataQueryVariables = Exact<{
 
 
 export type IPageCalendarEventDataQuery = IPageCalendarEventDataQuery_Query;
+
+export type IPageCompanyUidRate_DataQuery_userCompanyComponentRating_UserCompanyComponentRating = { rating: number, comment?: string | null };
+
+export type IPageCompanyUidRate_DataQuery_currentSeason_Season = { eventFrom: string | Date, eventUntil: string | Date };
+
+export type IPageCompanyUidRate_DataQuery_Query = { userCompanyComponentRating?: IPageCompanyUidRate_DataQuery_userCompanyComponentRating_UserCompanyComponentRating | null, currentSeason?: IPageCompanyUidRate_DataQuery_currentSeason_Season | null };
+
+
+export type IPageCompanyUidRate_DataQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+}>;
+
+
+export type IPageCompanyUidRate_DataQuery = IPageCompanyUidRate_DataQuery_Query;
+
+export type IPageCompanyUidRate_UpsertMutation_upsertUserCompanyComponentRating_UserCompanyComponentRating = { rating: number, comment?: string | null };
+
+export type IPageCompanyUidRate_UpsertMutation_Mutation = { upsertUserCompanyComponentRating: IPageCompanyUidRate_UpsertMutation_upsertUserCompanyComponentRating_UserCompanyComponentRating };
+
+
+export type IPageCompanyUidRate_UpsertMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  comment?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type IPageCompanyUidRate_UpsertMutation = IPageCompanyUidRate_UpsertMutation_Mutation;
+
+export type IPageCompanyUidRate_DeleteMutation_Mutation = { deleteUserCompanyComponentRating: boolean };
+
+
+export type IPageCompanyUidRate_DeleteMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+  component: Scalars['String']['input'];
+}>;
+
+
+export type IPageCompanyUidRate_DeleteMutation = IPageCompanyUidRate_DeleteMutation_Mutation;
 
 export type IPageGateGuardian_ScanMutation_gateGuardianScan_GateGuardianScanResponse_user_User = { name: string, phone: string };
 
@@ -4647,6 +4834,7 @@ export type IResolversTypes = {
   FileRelationFilter: IFileRelationFilter;
   FileWhereInput: IFileWhereInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  FloatFilter: IFloatFilter;
   GateGuardianLog: ResolverTypeWrapper<IGateGuardianLog>;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
   GateGuardianLogOrderByRelationAggregateInput: IGateGuardianLogOrderByRelationAggregateInput;
@@ -4674,6 +4862,7 @@ export type IResolversTypes = {
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
+  NestedFloatFilter: INestedFloatFilter;
   NestedIntFilter: INestedIntFilter;
   NestedIntNullableFilter: INestedIntNullableFilter;
   NestedStringFilter: INestedStringFilter;
@@ -4784,6 +4973,10 @@ export type IResolversTypes = {
   UpdateProfileResponse: ResolverTypeWrapper<IUpdateProfileResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<IUser>;
+  UserCompanyComponentRating: ResolverTypeWrapper<IUserCompanyComponentRating>;
+  UserCompanyComponentRatingAveragesViewWhereInput: IUserCompanyComponentRatingAveragesViewWhereInput;
+  UserCompanyComponentRatingComponentAverage: ResolverTypeWrapper<IUserCompanyComponentRatingComponentAverage>;
+  UserCompanyComponentRatingWhereInput: IUserCompanyComponentRatingWhereInput;
   UserCount: ResolverTypeWrapper<IUserCount>;
   UserCreateInput: IUserCreateInput;
   UserNullableRelationFilter: IUserNullableRelationFilter;
@@ -4913,6 +5106,7 @@ export type IResolversParentTypes = {
   FileRelationFilter: IFileRelationFilter;
   FileWhereInput: IFileWhereInput;
   Float: Scalars['Float']['output'];
+  FloatFilter: IFloatFilter;
   GateGuardianLog: IGateGuardianLog;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
   GateGuardianLogOrderByRelationAggregateInput: IGateGuardianLogOrderByRelationAggregateInput;
@@ -4939,6 +5133,7 @@ export type IResolversParentTypes = {
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
+  NestedFloatFilter: INestedFloatFilter;
   NestedIntFilter: INestedIntFilter;
   NestedIntNullableFilter: INestedIntNullableFilter;
   NestedStringFilter: INestedStringFilter;
@@ -5042,6 +5237,10 @@ export type IResolversParentTypes = {
   UpdateProfileResponse: IUpdateProfileResponse;
   Upload: Scalars['Upload']['output'];
   User: IUser;
+  UserCompanyComponentRating: IUserCompanyComponentRating;
+  UserCompanyComponentRatingAveragesViewWhereInput: IUserCompanyComponentRatingAveragesViewWhereInput;
+  UserCompanyComponentRatingComponentAverage: IUserCompanyComponentRatingComponentAverage;
+  UserCompanyComponentRatingWhereInput: IUserCompanyComponentRatingWhereInput;
   UserCount: IUserCount;
   UserCreateInput: IUserCreateInput;
   UserNullableRelationFilter: IUserNullableRelationFilter;
@@ -5273,6 +5472,8 @@ export type ICompanyApplicationFeedbackResolvers<ContextType = any, ParentType e
 };
 
 export type ICompanyCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyCount'] = IResolversParentTypes['CompanyCount']> = {
+  UserCompanyComponentRatingAveragesView?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountUserCompanyComponentRatingAveragesViewArgs>>;
+  UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountUserCompanyComponentRatingsArgs>>;
   applications?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountApplicationsArgs>>;
   favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountFavouriteResumesArgs>>;
   members?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountMembersArgs>>;
@@ -5510,6 +5711,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteResume?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   deleteSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType, RequireFields<IMutationDeleteSeasonArgs, 'uid'>>;
   deleteSponsor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteSponsorArgs, 'sponsor'>>;
+  deleteUserCompanyComponentRating?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
   editApprovedCompanyApplication?: Resolver<Maybe<IResolversTypes['EditApprovedCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationEditApprovedCompanyApplicationArgs, 'info'>>;
   editNews?: Resolver<Maybe<IResolversTypes['NewsCreateResponse']>, ParentType, ContextType, RequireFields<IMutationEditNewsArgs, 'info' | 'uid'>>;
   gateGuardianScan?: Resolver<Maybe<IResolversTypes['GateGuardianScanResponse']>, ParentType, ContextType, RequireFields<IMutationGateGuardianScanArgs, 'eventType' | 'eventUid' | 'userUid'>>;
@@ -5543,6 +5745,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   updateSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType, RequireFields<IMutationUpdateSeasonArgs, 'info'>>;
   updateTranslation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IMutationUpdateTranslationArgs, 'data'>>;
   updateUser?: Resolver<Maybe<IResolversTypes['UpdateProfileResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateUserArgs, 'info' | 'uid'>>;
+  upsertUserCompanyComponentRating?: Resolver<IResolversTypes['UserCompanyComponentRating'], ParentType, ContextType, RequireFields<IMutationUpsertUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'rating' | 'seasonUid'>>;
   usePasswordReset?: Resolver<IResolversTypes['PasswordResetUseResponse'], ParentType, ContextType, RequireFields<IMutationUsePasswordResetArgs, 'info'>>;
   validateVat?: Resolver<IResolversTypes['ValidateVatResponse'], ParentType, ContextType, RequireFields<IMutationValidateVatArgs, 'vat'>>;
 };
@@ -5608,6 +5811,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   companyApplication?: Resolver<Maybe<IResolversTypes['CompanyApplication']>, ParentType, ContextType>;
   companyApplicationFor?: Resolver<Maybe<IResolversTypes['CompanyApplication']>, ParentType, ContextType, RequireFields<IQueryCompanyApplicationForArgs, 'company' | 'season'>>;
   companyApplications?: Resolver<Maybe<Array<IResolversTypes['CompanyApplication']>>, ParentType, ContextType, Partial<IQueryCompanyApplicationsArgs>>;
+  companyComponentAverageRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType, RequireFields<IQueryCompanyComponentAverageRatingsArgs, 'seasonUid'>>;
   companyInfo?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType, RequireFields<IQueryCompanyInfoArgs, 'uid'>>;
   currentSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
   eventLog?: Resolver<IResolversTypes['EventLogPaginationResult'], ParentType, ContextType, RequireFields<IQueryEventLogArgs, 'page' | 'perPage'>>;
@@ -5641,6 +5845,8 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   translation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IQueryTranslationArgs, 'where'>>;
   translations?: Resolver<Array<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryTranslationsArgs>>;
   user?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IQueryUserArgs, 'uid'>>;
+  userCompanyComponentRating?: Resolver<Maybe<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
+  userCompanyComponentRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingsArgs, 'companyUid' | 'seasonUid'>>;
   users?: Resolver<Array<IResolversTypes['User']>, ParentType, ContextType, Partial<IQueryUsersArgs>>;
 };
 
@@ -5759,6 +5965,7 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
   applicationsFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   applicationsUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   calendar?: Resolver<Array<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
+  companyComponentAverageRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType>;
   companyScannedCvs?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   endsAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   entryCount?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
@@ -5783,6 +5990,8 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
 };
 
 export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['SeasonCount'] = IResolversParentTypes['SeasonCount']> = {
+  UserCompanyComponentRatingAveragesView?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingAveragesViewArgs>>;
+  UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingsArgs>>;
   calendar?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCalendarArgs>>;
   companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCompaniesArgs>>;
   entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountEntryLogArgs>>;
@@ -5858,8 +6067,27 @@ export type IUserResolvers<ContextType = any, ParentType extends IResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IUserCompanyComponentRatingResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCompanyComponentRating'] = IResolversParentTypes['UserCompanyComponentRating']> = {
+  comment?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  component?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  forCompany?: Resolver<IResolversTypes['Company'], ParentType, ContextType>;
+  forSeason?: Resolver<IResolversTypes['Season'], ParentType, ContextType>;
+  forUser?: Resolver<IResolversTypes['User'], ParentType, ContextType>;
+  rating?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IUserCompanyComponentRatingComponentAverageResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCompanyComponentRatingComponentAverage'] = IResolversParentTypes['UserCompanyComponentRatingComponentAverage']> = {
+  averageRating?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
+  component?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IUserCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCount'] = IResolversParentTypes['UserCount']> = {
   News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountNewsArgs>>;
+  UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountUserCompanyComponentRatingsArgs>>;
   companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountCompaniesArgs>>;
   events?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountEventsArgs>>;
   files?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountFilesArgs>>;
@@ -5968,6 +6196,8 @@ export type IResolvers<ContextType = any> = {
   UpdateProfileResponse?: IUpdateProfileResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
   User?: IUserResolvers<ContextType>;
+  UserCompanyComponentRating?: IUserCompanyComponentRatingResolvers<ContextType>;
+  UserCompanyComponentRatingComponentAverage?: IUserCompanyComponentRatingComponentAverageResolvers<ContextType>;
   UserCount?: IUserCountResolvers<ContextType>;
   ValidateVatResponse?: IValidateVatResponseResolvers<ContextType>;
   VatData?: IVatDataResolvers<ContextType>;
@@ -6963,6 +7193,10 @@ export const ProfileBaseData = gql`
   }
   currentSeason {
     ...frag_Season
+    companyComponentAverageRatings {
+      component
+      averageRating
+    }
   }
 }
     ${Frag_Season}`;
@@ -7219,6 +7453,28 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
   }
 }
     `;
+export const PageAdminSeasonRatingsQrCodesData = gql`
+    query PageAdminSeasonRatingsQrCodesData($season: String!) {
+  season(uid: $season) {
+    name
+    startsAt
+    endsAt
+    applications {
+      forCompany {
+        uid
+        legalName
+        brandName
+      }
+      approval {
+        booth
+        talkParticipants
+        workshopParticipants
+        panel
+      }
+    }
+  }
+}
+    `;
 export const PageAdminSeasonReservationsScannedData = gql`
     query PageAdminSeasonReservationsScannedData($season: String!) {
   gateGuardianScanList(season: $season) {
@@ -7283,6 +7539,45 @@ export const PageCalendarEventData = gql`
     type
   }
   calendarItemCompanyUid(uid: $uid)
+}
+    `;
+export const PageCompanyUidRate_Data = gql`
+    query PageCompanyUidRate_Data($seasonUid: String!, $companyUid: String!, $component: String!) {
+  userCompanyComponentRating(
+    seasonUid: $seasonUid
+    companyUid: $companyUid
+    component: $component
+  ) {
+    rating
+    comment
+  }
+  currentSeason {
+    eventFrom
+    eventUntil
+  }
+}
+    `;
+export const PageCompanyUidRate_Upsert = gql`
+    mutation PageCompanyUidRate_Upsert($seasonUid: String!, $companyUid: String!, $component: String!, $rating: Int!, $comment: String) {
+  upsertUserCompanyComponentRating(
+    seasonUid: $seasonUid
+    companyUid: $companyUid
+    component: $component
+    rating: $rating
+    comment: $comment
+  ) {
+    rating
+    comment
+  }
+}
+    `;
+export const PageCompanyUidRate_Delete = gql`
+    mutation PageCompanyUidRate_Delete($seasonUid: String!, $companyUid: String!, $component: String!) {
+  deleteUserCompanyComponentRating(
+    seasonUid: $seasonUid
+    companyUid: $companyUid
+    component: $component
+  )
 }
     `;
 export const PageGateGuardian_Scan = gql`

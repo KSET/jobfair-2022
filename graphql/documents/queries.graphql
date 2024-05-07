@@ -624,6 +624,10 @@ query ProfileBaseData {
     }
     currentSeason {
         ...frag_Season
+        companyComponentAverageRatings {
+            component
+            averageRating
+        }
     }
 }
 

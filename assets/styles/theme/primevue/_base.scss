@@ -117,3 +117,12 @@ button[data-pd-ripple="true"] {
 .p-dialog-mask {
   background-color: rgba(0, 0, 0, 0.35) !important;
 }
+
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-last,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-current,
+.p-paginator .p-paginator-pages .p-paginator-page {
+  color: #00003f;
+}

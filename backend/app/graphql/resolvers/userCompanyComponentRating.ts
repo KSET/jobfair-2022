@@ -194,7 +194,7 @@ export class UserCompanyComponentRatingResolver {
     }
 
     const userId = ctx.user.id;
-    rating = Math.max(0, Math.min(7, rating));
+    rating = Math.max(1, Math.min(10, rating));
 
     comment = comment?.trim().slice(0, 2048) ?? null;
 

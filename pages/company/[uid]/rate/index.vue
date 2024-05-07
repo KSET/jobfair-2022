@@ -1,11 +1,9 @@
 <template>
   <AppMaxWidthContainer>
     <h1>
-      <TranslatedText trans-key="company.rate.header" />
+      <TranslatedText :trans-key="`company.rate.header.${component}`" />
       {{ company.brandName }}
-      <TranslatedText :trans-key="`company.rate.type.${component}`" />
     </h1>
-
 
     <form :class="$style.inputs" @submit.prevent="handleSubmit">
       <div :class="$style.input">
@@ -15,7 +13,7 @@
         <Rating
           id="rating"
           v-model="rating"
-          :stars="7"
+          :stars="10"
           :cancel="false"
           :class="$style.rating"
           :disabled="isLoading"
@@ -244,7 +242,7 @@
     }
 
     payload.rating = Math.round(payload.rating);
-    payload.rating = Math.max(1, Math.min(7, payload.rating));
+    // payload.rating = Math.max(1, Math.min(7, payload.rating));
 
     isLoading.value = true;
     const resp = await upsertRatingMutation({

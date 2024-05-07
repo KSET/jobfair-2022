@@ -98,7 +98,7 @@
   const toast = useToast();
 
   if (!userStore.isLoggedIn) {
-    return navigateTo(unref(joinNowRoute));
+    await navigateTo(unref(joinNowRoute));
   }
 
   const company = computed(() => companyStore.companyInfo!);

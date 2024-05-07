@@ -29,6 +29,7 @@ export const joinNowRoute = ($route: Route) => {
       r: redirectInfo ?? encodeRedirectParam({
         name: "login" !== routeName ? routeName : fallbackRouteName,
         params: $route.params,
+        query: $route.query,
       }),
     },
   };

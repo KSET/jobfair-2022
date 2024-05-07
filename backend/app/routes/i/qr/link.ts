@@ -187,22 +187,17 @@ const breakStringIntoLines = (str: string, maxLineLength: number) => {
   const lines = [];
 
   while (str.length) {
-    console.group("iter");
     const chunk = str.slice(0, maxLineLength + 1);
-    console.log({ chunk });
     const newlineIndex = chunk.indexOf("\n");
-    console.log({ newlineIndex });
 
     if (-1 !== newlineIndex) {
       lines.push(chunk.slice(0, newlineIndex));
       str = str.slice(newlineIndex + 1).trimStart();
-      console.groupEnd();
       continue;
     }
 
     if (chunk.length < maxLineLength) {
       lines.push(str);
-      console.groupEnd();
       break;
     }
 
@@ -220,10 +215,8 @@ const breakStringIntoLines = (str: string, maxLineLength: number) => {
 
     const cutIndex = 0 < lastIndex ? lastIndex + 1 : maxLineLength;
     const newChunk = chunk.slice(0, cutIndex).trim();
-    console.log({ lastIndex, cutIndex, newChunk });
     lines.push(newChunk);
     str = str.slice(cutIndex).trimStart();
-    console.groupEnd();
   }
 
   return lines;

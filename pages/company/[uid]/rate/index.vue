@@ -13,7 +13,7 @@
         <Rating
           id="rating"
           v-model="rating"
-          :stars="10"
+          :stars="MAX_RATING"
           :cancel="false"
           :class="$style.rating"
           :disabled="isLoading"
@@ -25,7 +25,7 @@
             <ImgJobfairTie :class="`w-full h-full ${$style.ratingIconOff}`" />
           </template>
         </Rating>
-        <span v-if="rating" class="text-center">{{ rating }}/7</span>
+        <span v-if="rating" class="text-center">{{ rating }}/{{ MAX_RATING }}</span>
       </div>
 
       <div :class="$style.input">
@@ -89,6 +89,7 @@
   } from "~/composables/useJoinNowRoute";
 
   const ALLOWED_TYPES = [ "booth", "talk", "workshop" ] as const;
+  const MAX_RATING = 10 as const;
 
   const route = useRoute();
   const companyStore = useCompanyStore();

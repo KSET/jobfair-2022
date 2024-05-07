@@ -81,13 +81,25 @@
   import {
     useTranslationsStore,
   } from "~/store/translations";
+  import {
+    useUserStore,
+  } from "~/store/user";
+  import {
+    useJoinNowRoute,
+  } from "~/composables/useJoinNowRoute";
 
   const ALLOWED_TYPES = [ "booth", "talk", "workshop" ] as const;
 
   const route = useRoute();
   const companyStore = useCompanyStore();
+  const userStore = useUserStore();
+  const joinNowRoute = useJoinNowRoute();
   const translationsStore = useTranslationsStore();
   const toast = useToast();
+
+  if (!userStore.isLoggedIn) {
+    return navigateTo(unref(joinNowRoute));
+  }
 
   const company = computed(() => companyStore.companyInfo!);
 

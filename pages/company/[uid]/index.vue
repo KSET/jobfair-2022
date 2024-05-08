@@ -76,7 +76,7 @@
               <translated-text trans-key="company.info.program.talk" />
             </template>
 
-            <div :class="$style.itemHeader">
+            <div v-if="programItems.talk.event" :class="$style.itemHeader">
               <event-info-display :event="{ ...programItems.talk.event!, type: EventType.Talk }" />
               <p-button
                 v-if="loggedIn"
@@ -128,7 +128,7 @@
               <translated-text trans-key="company.info.program.workshop" />
             </template>
 
-            <div :class="$style.itemHeader">
+            <div v-if="programItems.workshop.event" :class="$style.itemHeader">
               <event-info-display :event="{ ...programItems.workshop.event!, type: EventType.Workshop }" />
               <p-button
                 v-if="loggedIn"
@@ -191,7 +191,7 @@
               <translated-text trans-key="company.info.program.panel" />
             </template>
 
-            <div :class="$style.itemHeader">
+            <div v-if="programItems.panel.event" :class="$style.itemHeader">
               <event-info-display :event="{ ...programItems.panel.event!, type: EventType.Panel }" />
               <p-button
                 v-if="loggedIn"

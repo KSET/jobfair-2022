@@ -351,6 +351,7 @@ type Company {
   members: [User!]
   program: CompanyProgram
   rasterLogo: Image
+  ratings: [UserCompanyComponentRatingComponentAverage!]!
   uid: String!
   updatedAt: DateTimeISO!
   vat: String!

@@ -86,6 +86,9 @@ import {
   transformSelect as transformSelectProgram,
   CompanyProgram,
 } from "./companyProgram";
+import {
+  UserCompanyComponentRatingComponentAverage
+} from "./userCompanyComponentRating";
 
 const rasterLogoMimeTypes = new Set([
   "image/png",
@@ -170,6 +173,35 @@ export class CompanyFieldResolver {
     const logoHidden = company.applications?.[0]?.approval?.logoHidden ?? false;
     return Promise.resolve(logoHidden);
   }
+
+  @FieldResolver((_type) => [UserCompanyComponentRatingComponentAverage])
+  async ratings(
+    @Root() company: Company,
+      @Ctx() ctx: Context,
+  ): GQLResponse<UserCompanyComponentRatingComponentAverage[]> {
+    const seasonId = company.applications?.[0]?.forSeasonId;
+
+    if (!seasonId) {
+      return [];
+    }
+
+    const averages =
+      await ctx.prisma.userCompanyComponentRatingAveragesView.findMany({
+        where: {
+          forCompanyId: company.id,
+          forSeasonId: seasonId,
+        },
+        select: {
+          component: true,
+          ratingAvg: true,
+        },
+      });
+
+    return averages.map((a) => ({
+      component: a.component,
+      averageRating: a.ratingAvg,
+    }));
+  }
 }
 
 export const transformSelect = transformSelectFor<CompanyFieldResolver>({
@@ -220,6 +252,26 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
 
     return select;
   },
+
+  ratings(select) {
+    delete select.ratings;
+
+    select.id = true;
+
+    if (!select.applications) {
+      select.applications = {};
+    }
+
+    if (!(select.applications as {select?: Dict}).select) {
+      (select.applications as {select?: Dict}).select = {};
+    }
+
+    (select.applications as {select: Dict}).select.forSeasonId = true;
+
+    console.log(select);
+
+    return select;
+  }
 });
 
 @InputType()

@@ -20,7 +20,7 @@
               <UtilAppImg
                 contain
                 :alt="`${application.forCompany!.brandName} ${info.text}`"
-                :src="`/api/i/qr/link?url=${encodeURIComponent(`https://jobfair.fer.unizg.hr/company/${ application.forCompany!.uid }/rate?season=${ seasonUid }&type=${info.type}`)}&color.dark=%23000&color.logo=%23fff&text=${encodeURIComponent(`${application.forCompany!.brandName}`)}`"
+                :src="`/api/i/qr/link?relativeUrl=${encodeURIComponent(`/company/${ application.forCompany!.uid }/rate?season=${ seasonUid }&type=${info.type}`)}&color.dark=%23000&color.logo=%23fff&text=${encodeURIComponent(`${application.forCompany!.brandName}`)}`"
                 :class="$style.applicationImg"
               />
             </a>
@@ -99,8 +99,6 @@
         text: "Booth",
         type: "booth",
       });
-
-      return links;
     }
 
     if (approval.talkParticipants) {

@@ -511,19 +511,31 @@
                 <li v-if="companyApplication.approval.booth">
                   <strong>
                     <translated-text trans-key="profile.company.booth" />
-                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.booth ?? 'N/A'" /> / 7
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.booth ?? 'N/A'" /> / 10
                 </li>
                 <li v-if="companyApplication.approval.talkParticipants">
                   <strong>
                     <translated-text trans-key="profile.company.talk" />
-                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.talk ?? 'N/A'" /> / 7
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.talk ?? 'N/A'" /> / 10
                 </li>
                 <li v-if="companyApplication.approval.workshopParticipants">
                   <strong>
                     <translated-text trans-key="profile.company.workshop" />
-                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.workshop ?? 'N/A'" /> / 7
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.workshop ?? 'N/A'" /> / 10
                 </li>
               </ul>
+            </div>
+            <div :class="$style.itemActions">
+              <a href="/api/i/qr/rate/booth" target="_blank" class="ml-auto">
+                <p-button
+                  class="p-button-secondary"
+                  tabindex="-1"
+                >
+                  <translated-text
+                    trans-key="profile.company.rate.showBoothQr"
+                  />
+                </p-button>
+              </a>
             </div>
           </div>
         </template>

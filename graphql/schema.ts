@@ -416,6 +416,7 @@ export type ICompany = {
   members?: Maybe<Array<IUser>>;
   program?: Maybe<ICompanyProgram>;
   rasterLogo?: Maybe<IImage>;
+  ratings: Array<IUserCompanyComponentRatingComponentAverage>;
   uid: Scalars['String']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
   vat: Scalars['String']['output'];
@@ -4472,7 +4473,9 @@ export type IPageGateGuardian_EventListQuery = IPageGateGuardian_EventListQuery_
 
 export type IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image = { thumbUrl: string, fullUrl: string };
 
-export type IPageParticipants_BaseQuery_participants_Company = { uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, rasterLogo?: IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image | null };
+export type IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
+
+export type IPageParticipants_BaseQuery_participants_Company = { uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, rasterLogo?: IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image | null, ratings: Array<IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
 
 export type IPageParticipants_BaseQuery_Query = { participants: Array<IPageParticipants_BaseQuery_participants_Company> };
 
@@ -4481,6 +4484,18 @@ export type IPageParticipants_BaseQueryVariables = Exact<{ [key: string]: never;
 
 
 export type IPageParticipants_BaseQuery = IPageParticipants_BaseQuery_Query;
+
+export type IPageParticipants_RatingsQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
+
+export type IPageParticipants_RatingsQuery_participants_Company = { uid: string, brandName: string, ratings: Array<IPageParticipants_RatingsQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
+
+export type IPageParticipants_RatingsQuery_Query = { participants: Array<IPageParticipants_RatingsQuery_participants_Company> };
+
+
+export type IPageParticipants_RatingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IPageParticipants_RatingsQuery = IPageParticipants_RatingsQuery_Query;
 
 export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string };
 
@@ -5402,6 +5417,7 @@ export type ICompanyResolvers<ContextType = any, ParentType extends IResolversPa
   members?: Resolver<Maybe<Array<IResolversTypes['User']>>, ParentType, ContextType>;
   program?: Resolver<Maybe<IResolversTypes['CompanyProgram']>, ParentType, ContextType>;
   rasterLogo?: Resolver<Maybe<IResolversTypes['Image']>, ParentType, ContextType>;
+  ratings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   vat?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
@@ -7617,6 +7633,22 @@ export const PageParticipants_Base = gql`
     rasterLogo {
       thumbUrl
       fullUrl
+    }
+    ratings {
+      averageRating
+      component
+    }
+  }
+}
+    `;
+export const PageParticipants_Ratings = gql`
+    query PageParticipants_Ratings {
+  participants {
+    uid
+    brandName
+    ratings {
+      averageRating
+      component
     }
   }
 }

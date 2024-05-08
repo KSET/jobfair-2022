@@ -13,13 +13,8 @@ import {
 import {
   prisma,
 } from "../../../../providers/prisma";
-import {
-  Role,
-} from "../../../../helpers/auth";
 
-const router = new AuthRouter({
-  role: Role.Admin,
-});
+const router = new AuthRouter();
 
 router.getRaw("/", async (req, res) => {
   const user = req.user!;

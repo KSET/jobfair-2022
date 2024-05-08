@@ -140,6 +140,7 @@
             }
             ratings {
               averageRating
+              ratingCount
               component
             }
           }
@@ -162,12 +163,22 @@
     }[],
   ) =>
     participants
-      .map((x) => ({
-        uid: x.uid,
-        brandName: x.brandName,
-        rating: x.ratings.find((x) => "booth" === x.component)?.averageRating ?? 0,
-      }))
-      .filter((x) => x.rating)
+      .map((x) => {
+        const rating = x.ratings.find((x) => "booth" === x.component);
+
+        if (!rating) {
+          return null;
+        }
+
+        return {
+          uid: x.uid,
+          brandName: x.brandName,
+          rating: rating.averageRating,
+          ratingCount: rating.ratingCount,
+        };
+      })
+      .filter(Boolean)
+      .filter((x) => 10 < x.ratingCount)
       .sort((lt, gt) => gt.rating - lt.rating)
       .slice(0, 10)
   ;
@@ -182,6 +193,7 @@
           brandName
           ratings {
             averageRating
+            ratingCount
             component
           }
         }

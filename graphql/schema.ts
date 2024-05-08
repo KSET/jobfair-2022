@@ -3110,12 +3110,14 @@ export type IUserCompanyComponentRatingAveragesViewWhereInput = {
   OR?: InputMaybe<Array<IUserCompanyComponentRatingAveragesViewWhereInput>>;
   component?: InputMaybe<IStringFilter>;
   ratingAvg?: InputMaybe<IFloatFilter>;
+  ratingCount?: InputMaybe<IIntFilter>;
 };
 
 export type IUserCompanyComponentRatingComponentAverage = {
   averageRating: Scalars['Float']['output'];
   comments: Array<Scalars['String']['output']>;
   component: Scalars['String']['output'];
+  ratingCount?: Maybe<Scalars['Int']['output']>;
 };
 
 export type IUserCompanyComponentRatingWhereInput = {
@@ -4506,7 +4508,7 @@ export type IPageGateGuardian_EventListQuery = IPageGateGuardian_EventListQuery_
 
 export type IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image = { thumbUrl: string, fullUrl: string };
 
-export type IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
+export type IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, ratingCount?: number | null, component: string };
 
 export type IPageParticipants_BaseQuery_participants_Company = { uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, rasterLogo?: IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image | null, ratings: Array<IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
 
@@ -4518,7 +4520,7 @@ export type IPageParticipants_BaseQueryVariables = Exact<{ [key: string]: never;
 
 export type IPageParticipants_BaseQuery = IPageParticipants_BaseQuery_Query;
 
-export type IPageParticipants_RatingsQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
+export type IPageParticipants_RatingsQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, ratingCount?: number | null, component: string };
 
 export type IPageParticipants_RatingsQuery_participants_Company = { uid: string, brandName: string, ratings: Array<IPageParticipants_RatingsQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
 
@@ -6134,6 +6136,7 @@ export type IUserCompanyComponentRatingComponentAverageResolvers<ContextType = a
   averageRating?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
   comments?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   component?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  ratingCount?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7696,6 +7699,7 @@ export const PageParticipants_Base = gql`
     }
     ratings {
       averageRating
+      ratingCount
       component
     }
   }
@@ -7708,6 +7712,7 @@ export const PageParticipants_Ratings = gql`
     brandName
     ratings {
       averageRating
+      ratingCount
       component
     }
   }

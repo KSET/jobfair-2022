@@ -1077,8 +1077,9 @@ model UserCompanyComponentRating {
 }
 
 view UserCompanyComponentRatingAveragesView {
-  component String
-  ratingAvg Float
+  component   String
+  ratingAvg   Float
+  ratingCount Int
 
   /// @TypeGraphQL.omit(input: true)
   forCompany   Company @relation(fields: [forCompanyId], references: [id], onDelete: Cascade)

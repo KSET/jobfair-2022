@@ -194,12 +194,14 @@ export class CompanyFieldResolver {
         select: {
           component: true,
           ratingAvg: true,
+          ratingCount: true,
         },
       });
 
     return averages.map((a) => ({
       component: a.component,
       averageRating: a.ratingAvg,
+      ratingCount: a.ratingCount,
     }));
   }
 }

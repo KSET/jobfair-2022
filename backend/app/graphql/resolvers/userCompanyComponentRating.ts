@@ -86,6 +86,9 @@ export class UserCompanyComponentRatingComponentAverage {
   @Field(() => Float, { nullable: false })
   averageRating: number = 0;
 
+  @Field(() => Int, { nullable: true })
+  ratingCount: number = 0;
+
   @Field(() => [String], { nullable: false })
   comments: string[] = [];
 }
@@ -186,8 +189,11 @@ export class UserCompanyComponentRatingResolver {
         select: {
           component: true,
           ratingAvg: true,
+          ratingCount: true,
         },
       });
+
+    console.log(averages);
 
     let comments = {} as Record<string, string[]>;
     if (isAdmin) {
@@ -216,6 +222,7 @@ export class UserCompanyComponentRatingResolver {
     return averages.map((a) => ({
       component: a.component,
       averageRating: a.ratingAvg,
+      ratingCount: a.ratingCount,
       comments: comments[a.component] ?? [],
     }));
   }

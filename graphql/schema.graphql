@@ -2246,12 +2246,14 @@ input UserCompanyComponentRatingAveragesViewWhereInput {
   OR: [UserCompanyComponentRatingAveragesViewWhereInput!]
   component: StringFilter
   ratingAvg: FloatFilter
+  ratingCount: IntFilter
 }
 
 type UserCompanyComponentRatingComponentAverage {
   averageRating: Float!
   comments: [String!]!
   component: String!
+  ratingCount: Int
 }
 
 input UserCompanyComponentRatingWhereInput {

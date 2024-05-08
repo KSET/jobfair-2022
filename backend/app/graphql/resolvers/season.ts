@@ -235,9 +235,10 @@ export class SeasonFieldResolver {
       return 0;
     }
 
-    return ctx.prisma.entryResumeLog.count({
+    return ctx.prisma.gateGuardianLog.count({
       where: {
-        seasonId: season.id,
+        forSeasonId: season.id!,
+        eventType: "ulaz",
       },
     });
   }

@@ -122,6 +122,9 @@ export class GateGuardianResolver {
 
     if (!canView) {
       return {
+        user: null,
+        hasReservation: false,
+        alreadyScanned: false,
         error: "Access denied. Cannot use this endpoint.",
       };
     }
@@ -133,6 +136,9 @@ export class GateGuardianResolver {
 
     if (!selectItems) {
       return {
+        user: null,
+        hasReservation: false,
+        alreadyScanned: false,
         error: "Something went wrong. Invalid query.",
       };
     }
@@ -151,6 +157,7 @@ export class GateGuardianResolver {
       return {
         user: null,
         hasReservation: false,
+        alreadyScanned: false,
         error: "User not found.",
       };
     }
@@ -174,6 +181,7 @@ export class GateGuardianResolver {
         return {
           user: dbUser,
           hasReservation: false,
+          alreadyScanned: false,
           error: "No active season.",
         };
       }
@@ -236,6 +244,7 @@ export class GateGuardianResolver {
       return {
         user: dbUser,
         hasReservation: false,
+        alreadyScanned: false,
         error: "Calendar event not found. Please check if the right event is selected.",
       };
     }
@@ -273,6 +282,7 @@ export class GateGuardianResolver {
       return {
         user: dbUser,
         hasReservation: false,
+        alreadyScanned: false,
       };
     }
 

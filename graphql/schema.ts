@@ -2011,6 +2011,7 @@ export type IQueryCompanyApplicationsArgs = {
 
 
 export type IQueryCompanyComponentAverageRatingsArgs = {
+  companyUid?: InputMaybe<Scalars['String']['input']>;
   seasonUid: Scalars['String']['input'];
 };
 
@@ -3113,6 +3114,7 @@ export type IUserCompanyComponentRatingAveragesViewWhereInput = {
 
 export type IUserCompanyComponentRatingComponentAverage = {
   averageRating: Scalars['Float']['output'];
+  comments: Array<Scalars['String']['output']>;
   component: Scalars['String']['output'];
 };
 
@@ -3333,6 +3335,19 @@ export type IWorkshopsCreateInput = {
   titleEn: Scalars['String']['input'];
   titleHr: Scalars['String']['input'];
 };
+
+export type IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQuery_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage = { component: string, averageRating: number, comments: Array<string> };
+
+export type IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQuery_Query = { companyComponentAverageRatings: Array<IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQuery_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage> };
+
+
+export type IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+}>;
+
+
+export type IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQuery = IComponentAdminSeasonRatingsCompaniesCompanyComments_DataQuery_Query;
 
 export type ILoginMutation_login_AuthResponse_errors_FieldError = { field: string, message: string };
 
@@ -4321,6 +4336,24 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, ratings: Array<IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage> };
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication = { forCompany?: IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company | null };
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season = { applications: Array<IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication> };
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery_Query = { season?: IPageAdminSeasonRatingsCompanies_DataQuery_season_Season | null };
+
+
+export type IPageAdminSeasonRatingsCompanies_DataQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSeasonRatingsCompanies_DataQuery = IPageAdminSeasonRatingsCompanies_DataQuery_Query;
 
 export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string };
 
@@ -6099,6 +6132,7 @@ export type IUserCompanyComponentRatingResolvers<ContextType = any, ParentType e
 
 export type IUserCompanyComponentRatingComponentAverageResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCompanyComponentRatingComponentAverage'] = IResolversParentTypes['UserCompanyComponentRatingComponentAverage']> = {
   averageRating?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
+  comments?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   component?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6432,6 +6466,15 @@ export const StoreCalendarEventsAllCalendarFragment = gql`
       fullUrl
       thumbUrl
     }
+  }
+}
+    `;
+export const ComponentAdminSeasonRatingsCompaniesCompanyComments_Data = gql`
+    query ComponentAdminSeasonRatingsCompaniesCompanyComments_Data($seasonUid: String!, $companyUid: String!) {
+  companyComponentAverageRatings(seasonUid: $seasonUid, companyUid: $companyUid) {
+    component
+    averageRating
+    comments
   }
 }
     `;
@@ -7466,6 +7509,23 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
     forApplication {
       forCompany {
         uid
+      }
+    }
+  }
+}
+    `;
+export const PageAdminSeasonRatingsCompanies_Data = gql`
+    query PageAdminSeasonRatingsCompanies_Data($season: String!) {
+  season(uid: $season) {
+    applications {
+      forCompany {
+        uid
+        legalName
+        brandName
+        ratings {
+          averageRating
+          component
+        }
       }
     }
   }

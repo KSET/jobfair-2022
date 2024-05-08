@@ -81,11 +81,11 @@ export function useQuery<TData, TVars extends object>(
   },
 ) {
   return (
-    () =>
+    (variableOverrides?: MaybeRef<Partial<TVars>>) =>
       doQuery<TData, TVars>(
         unref(query),
         {
-          variables: unref(reactive(variables ?? {}) as TVars),
+          variables: unref(reactive({ ...variables, ...variableOverrides }) as TVars),
           headers: unref(context)?.headers,
         },
       )

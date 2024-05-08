@@ -257,18 +257,8 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
     delete select.ratings;
 
     select.id = true;
-
-    if (!select.applications) {
-      select.applications = {};
-    }
-
-    if (!(select.applications as {select?: Dict}).select) {
-      (select.applications as {select?: Dict}).select = {};
-    }
-
-    (select.applications as {select: Dict}).select.forSeasonId = true;
-
-    console.log(select);
+    set(select, "applications.select.forSeasonId", true);
+    set(select, "applications.orderBy.forSeasonId", "desc");
 
     return select;
   }

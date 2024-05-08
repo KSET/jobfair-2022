@@ -243,6 +243,11 @@
                   QR Kodovi
                 </nuxt-link>
               </li>
+              <li>
+                <nuxt-link :to="{ name: 'admin-season-season-ratings-companies', params: { season: season.uid } }">
+                  Ocjene
+                </nuxt-link>
+              </li>
             </ul>
           </li>
         </ul>

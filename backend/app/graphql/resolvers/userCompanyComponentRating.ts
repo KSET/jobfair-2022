@@ -25,6 +25,8 @@ import { transformSelect as transformSelectSeason } from "./season";
 import { Dict, GQLField, GQLResponse } from "../../types/helpers";
 import { Context } from "../../types/apollo-context";
 import { GraphQLResolveInfo } from "graphql";
+import { Role, hasAtLeastRole } from "../../helpers/auth";
+import { groupBy, map } from "rambdax";
 
 @Resolver((_of) => UserCompanyComponentRating)
 export class UserFieldResolver {
@@ -68,12 +70,24 @@ export const transformSelect = transformSelectFor<UserFieldResolver>({
 });
 
 @ObjectType()
+export class UserCompanyComponentRatingComponentComments {
+  @Field(() => String, { nullable: false })
+  component: string = "";
+
+  @Field(() => [String], { nullable: false })
+  comments: string[] = [];
+}
+
+@ObjectType()
 export class UserCompanyComponentRatingComponentAverage {
   @Field(() => String, { nullable: false })
   component: string = "";
 
   @Field(() => Float, { nullable: false })
   averageRating: number = 0;
+
+  @Field(() => [String], { nullable: false })
+  comments: string[] = [];
 }
 
 @Resolver(() => UserCompanyComponentRating)
@@ -144,20 +158,27 @@ export class UserCompanyComponentRatingResolver {
     @Ctx() ctx: Context,
     @Arg("seasonUid", () => String)
     seasonUid: string,
+    @Arg("companyUid", () => String, { nullable: true })
+    companyUid: string | null = null,
   ): GQLResponse<UserCompanyComponentRatingComponentAverage[]> {
     if (!ctx.user) {
       return [];
     }
 
-    const [userCompany] = ctx.user.companies;
-    if (!userCompany) {
+    const isAdmin = hasAtLeastRole(Role.Admin, ctx.user);
+
+    const userCompany = ctx.user.companies.at(0);
+    if (!userCompany && !isAdmin) {
       return [];
     }
+    companyUid = companyUid ?? userCompany!.uid;
 
     const averages =
       await ctx.prisma.userCompanyComponentRatingAveragesView.findMany({
         where: {
-          forCompanyId: userCompany.id,
+          forCompany: {
+            uid: companyUid,
+          },
           forSeason: {
             uid: seasonUid,
           },
@@ -168,9 +189,34 @@ export class UserCompanyComponentRatingResolver {
         },
       });
 
+    let comments = {} as Record<string, string[]>;
+    if (isAdmin) {
+      const ratings = await ctx.prisma.userCompanyComponentRating.findMany({
+        where: {
+          forCompany: {
+            uid: companyUid,
+          },
+          forSeason: {
+            uid: seasonUid,
+          },
+          comment: {
+            not: null,
+          },
+        },
+        select: {
+          component: true,
+          comment: true,
+        },
+      });
+
+      const grouped = groupBy((r) => r.component, ratings);
+      comments = map((x) => x.map((r) => r.comment).filter(Boolean), grouped);
+    }
+
     return averages.map((a) => ({
       component: a.component,
       averageRating: a.ratingAvg,
+      comments: comments[a.component] ?? [],
     }));
   }
 

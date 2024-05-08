@@ -197,7 +197,7 @@
         const respResume = await scanResumeMutation({
           userUid: data.u,
           eventUid: selectedEventValue.uid,
-          eventTyle: selectedEventValue.type,
+          eventType: selectedEventValue.type,
         }).then((resp) => resp?.data?.gateGuardianScan);
 
         if (!respResume) {

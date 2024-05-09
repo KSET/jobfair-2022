@@ -1,20 +1,27 @@
 <template>
-  <div
-    :class="$style.container"
-    :style="{
-      'grid-template-columns': `repeat(${totalVotes}, minmax(0, 1fr))`,
-    }"
-  >
+  <div class="relative">
     <div
-      v-for="option in liveVoteResults"
-      :key="option.option"
-      :data-option="option.option"
-      :class="$style.result"
+      :class="$style.container"
       :style="{
-        'grid-column': `span ${option.voteCount}`,
+        'grid-template-columns': `repeat(${totalVotes}, minmax(0, 1fr))`,
       }"
-      v-text="`${Math.round(option.voteCount / totalVotes * 100)}%`"
-    />
+    >
+      <div
+        v-for="option in liveVoteResults"
+        :key="option.option"
+        :data-option="option.option"
+        :class="$style.result"
+        :style="{
+          'grid-column': `span ${option.voteCount}`,
+        }"
+        v-text="`${Math.round(option.voteCount / totalVotes * 100)}%`"
+      />
+    </div>
+    <div :class="$style.qrContainer">
+      <div>
+        <img :src="`/api/i/qr/link?relativeUrl=${encodeURIComponent(`/live-vote/${season.uid!}/`)}`">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -95,6 +102,30 @@
 
     &[data-option="against"] {
       background-color: $fer-dark-blue;
+    }
+  }
+
+  .qrContainer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 40vh;
+    display: flex;
+
+    > div {
+      margin: 0 auto;
+      height: 100%;
+
+      > img {
+        aspect-ratio: 1;
+        height: 100%;
+        border-radius: 4px 4px 0 0;
+        background: $fer-white;
+        object-fit: contain;
+        padding: 8px;
+        object-postition: 50% 50%;
+      }
     }
   }
 </style>

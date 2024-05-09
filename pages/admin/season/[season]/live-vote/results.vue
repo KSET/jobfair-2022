@@ -2,6 +2,10 @@
   <AppMaxWidthContainer>
     <h1>Rezultati glasanja</h1>
 
+    <div style="max-width: 20em; margin: 0 auto;">
+      <img :src="`/api/i/qr/link?relativeUrl=${encodeURIComponent(`/live-vote/${season.uid!}/`)}`">
+    </div>
+
     <div
       :style="{
         display: 'grid',

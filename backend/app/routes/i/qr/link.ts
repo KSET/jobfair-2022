@@ -2,19 +2,14 @@ import express, {
   type RequestHandler,
 } from "express";
 import {
-  Role,
-} from "../../../helpers/auth";
-import {
-  AuthRouter,
+  Router,
 } from "../../../helpers/route";
 import {
   QrCodeService,
   type QrInfo,
 } from "../../../services/qr-service";
 
-const router = new AuthRouter({
-  role: Role.Admin,
-});
+const router = new Router();
 
 router.getRaw("/", (req, res) => {
   const queryCheck = QrCodeService.validateQrInfo(req.query);

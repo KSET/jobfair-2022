@@ -97,7 +97,3 @@
     return pageData?.season?.applications?.map((x) => x.forCompany).filter(Boolean) ?? [];
   });
 </script>
-
-<style lang="scss" module>
-
-</style>

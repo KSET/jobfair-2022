@@ -74,6 +74,12 @@ model User {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   UserCompanyComponentRatings UserCompanyComponentRating[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  LiveVote LiveVote[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  LiveVoteComment LiveVoteComment[]
 }
 
 model Session {
@@ -378,6 +384,12 @@ model Season {
   UserCompanyComponentRatings            UserCompanyComponentRating[]
   /// @TypeGraphQL.omit(output: true, input: true)
   UserCompanyComponentRatingAveragesView UserCompanyComponentRatingAveragesView[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  LiveVote LiveVote[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  LiveVoteComment LiveVoteComment[]
 }
 
 model Sponsor {
@@ -1092,4 +1104,46 @@ view UserCompanyComponentRatingAveragesView {
   forSeasonId Int
 
   @@unique([forSeasonId, forCompanyId, component])
+}
+
+model LiveVote {
+  option String
+
+  /// @TypeGraphQL.omit(input: true)
+  forUser   User @relation(fields: [forUserId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forUserId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  @@unique([forSeasonId, forUserId])
+}
+
+model LiveVoteComment {
+  id Int @id @default(autoincrement())
+
+  comment String
+
+  /// @TypeGraphQL.omit(input: true)
+  forUser   User @relation(fields: [forUserId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forUserId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
 }

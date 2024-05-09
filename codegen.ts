@@ -45,6 +45,8 @@ export default {
     "./pages/admin/season/[season]/ratings/**/*.vue",
     "./pages/company/[uid]/rate/**/*.vue",
     "./components/page/admin/season/_season_/ratings/**/*.vue",
+    "./pages/live-vote/**/*.vue",
+    "./pages/admin/season/[season]/live-vote/**/*.vue",
   ],
   generates: {
     [inGraphqlDir("schema.ts")]: {

@@ -250,6 +250,16 @@
               </li>
             </ul>
           </li>
+          <li>
+            <h3>Live glasnje</h3>
+            <ul>
+              <li>
+                <nuxt-link :to="{ name: 'admin-season-season-live-vote-results', params: { season: season.uid } }">
+                  Rezultati
+                </nuxt-link>
+              </li>
+            </ul>
+          </li>
         </ul>
 
         <h2>PR</h2>

@@ -1111,6 +1111,43 @@ input IntNullableFilter {
   notIn: [Int!]
 }
 
+type LiveVote {
+  createdAt: DateTimeISO!
+  forSeason: Season!
+  forUser: User!
+  option: String!
+  updatedAt: DateTimeISO!
+}
+
+type LiveVoteComment {
+  comment: String!
+  createdAt: DateTimeISO!
+  forSeason: Season!
+  forUser: User!
+  id: Int!
+  updatedAt: DateTimeISO!
+}
+
+input LiveVoteCommentWhereInput {
+  AND: [LiveVoteCommentWhereInput!]
+  NOT: [LiveVoteCommentWhereInput!]
+  OR: [LiveVoteCommentWhereInput!]
+  comment: StringFilter
+  id: IntFilter
+}
+
+type LiveVoteResult {
+  option: String!
+  voteCount: Int!
+}
+
+input LiveVoteWhereInput {
+  AND: [LiveVoteWhereInput!]
+  NOT: [LiveVoteWhereInput!]
+  OR: [LiveVoteWhereInput!]
+  option: StringFilter
+}
+
 type Mutation {
   addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
@@ -1118,6 +1155,8 @@ type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createIndustry(name: String!): Industry
+  createLiveVote(seasonUid: String!, vote: String!): LiveVote
+  createLiveVoteComment(comment: String!, seasonUid: String!): LiveVoteComment
   createNews(info: NewsCreateInput!): NewsCreateResponse
   createPartner(info: PartnerCreateInput!, season: String!): CreatePartnerResponse!
   createPressRelease(info: PressReleaseWithFilesCreateInput!): CreatePressReleaseResponse
@@ -1127,6 +1166,7 @@ type Mutation {
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
+  deleteLiveVoteComment(commentId: Int!): Boolean!
   deleteNews(uid: String!): Boolean
   deletePartner(partner: String!): Boolean!
   deleteResume: Boolean!
@@ -1447,6 +1487,11 @@ type Query {
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
   gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
+  liveVoteComments(seasonUid: String!): [LiveVoteComment!]!
+  liveVoteResults(seasonUid: String!): [LiveVoteResult!]!
+  liveVotes(seasonUid: String!): [LiveVote!]!
+  myLiveVote(seasonUid: String!): LiveVote
+  myLiveVoteComments(seasonUid: String!): [LiveVoteComment!]!
   news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
   newsItemByUid(uid: String!): News
@@ -1857,6 +1902,8 @@ type Season {
 }
 
 type SeasonCount {
+  LiveVote(where: LiveVoteWhereInput): Int!
+  LiveVoteComment(where: LiveVoteCommentWhereInput): Int!
   UserCompanyComponentRatingAveragesView(where: UserCompanyComponentRatingAveragesViewWhereInput): Int!
   UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   calendar(where: CalendarItemWhereInput): Int!
@@ -2266,6 +2313,8 @@ input UserCompanyComponentRatingWhereInput {
 }
 
 type UserCount {
+  LiveVote(where: LiveVoteWhereInput): Int!
+  LiveVoteComment(where: LiveVoteCommentWhereInput): Int!
   News(where: NewsWhereInput): Int!
   UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   companies(where: CompanyWhereInput): Int!

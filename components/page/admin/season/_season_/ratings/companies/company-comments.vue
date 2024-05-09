@@ -41,6 +41,3 @@
     },
   })().then((res) => res?.data);
 </script>
-
-<style lang="scss" module>
-</style>

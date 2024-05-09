@@ -1276,6 +1276,43 @@ export type IIntNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type ILiveVote = {
+  createdAt: Scalars['DateTimeISO']['output'];
+  forSeason: ISeason;
+  forUser: IUser;
+  option: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type ILiveVoteComment = {
+  comment: Scalars['String']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  forSeason: ISeason;
+  forUser: IUser;
+  id: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type ILiveVoteCommentWhereInput = {
+  AND?: InputMaybe<Array<ILiveVoteCommentWhereInput>>;
+  NOT?: InputMaybe<Array<ILiveVoteCommentWhereInput>>;
+  OR?: InputMaybe<Array<ILiveVoteCommentWhereInput>>;
+  comment?: InputMaybe<IStringFilter>;
+  id?: InputMaybe<IIntFilter>;
+};
+
+export type ILiveVoteResult = {
+  option: Scalars['String']['output'];
+  voteCount: Scalars['Int']['output'];
+};
+
+export type ILiveVoteWhereInput = {
+  AND?: InputMaybe<Array<ILiveVoteWhereInput>>;
+  NOT?: InputMaybe<Array<ILiveVoteWhereInput>>;
+  OR?: InputMaybe<Array<ILiveVoteWhereInput>>;
+  option?: InputMaybe<IStringFilter>;
+};
+
 export type IMutation = {
   addCompanyMember?: Maybe<Scalars['String']['output']>;
   approveCompanyApplications: Array<ICompanyApplicationApproval>;
@@ -1283,6 +1320,8 @@ export type IMutation = {
   createCompanyApplication?: Maybe<ICreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<ICreateCompanyApplicationResponse>;
   createIndustry?: Maybe<IIndustry>;
+  createLiveVote?: Maybe<ILiveVote>;
+  createLiveVoteComment?: Maybe<ILiveVoteComment>;
   createNews?: Maybe<INewsCreateResponse>;
   createPartner: ICreatePartnerResponse;
   createPressRelease?: Maybe<ICreatePressReleaseResponse>;
@@ -1292,6 +1331,7 @@ export type IMutation = {
   deleteCalendarItem: Scalars['Boolean']['output'];
   deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
+  deleteLiveVoteComment: Scalars['Boolean']['output'];
   deleteNews?: Maybe<Scalars['Boolean']['output']>;
   deletePartner: Scalars['Boolean']['output'];
   deleteResume: Scalars['Boolean']['output'];
@@ -1370,6 +1410,18 @@ export type IMutationCreateIndustryArgs = {
 };
 
 
+export type IMutationCreateLiveVoteArgs = {
+  seasonUid: Scalars['String']['input'];
+  vote: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateLiveVoteCommentArgs = {
+  comment: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
 export type IMutationCreateNewsArgs = {
   info: INewsCreateInput;
 };
@@ -1416,6 +1468,11 @@ export type IMutationDeleteCompanyApplicationForArgs = {
 
 export type IMutationDeleteCompanyPanelArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IMutationDeleteLiveVoteCommentArgs = {
+  commentId: Scalars['Int']['input'];
 };
 
 
@@ -1919,6 +1976,11 @@ export type IQuery = {
   findFirstTranslation?: Maybe<ITranslation>;
   gateGuardianScanList?: Maybe<Array<IGateGuardianLog>>;
   industries: Array<IIndustry>;
+  liveVoteComments: Array<ILiveVoteComment>;
+  liveVoteResults: Array<ILiveVoteResult>;
+  liveVotes: Array<ILiveVote>;
+  myLiveVote?: Maybe<ILiveVote>;
+  myLiveVoteComments: Array<ILiveVoteComment>;
   news: Array<INews>;
   newsItem?: Maybe<INews>;
   newsItemByUid?: Maybe<INews>;
@@ -2051,6 +2113,31 @@ export type IQueryIndustriesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<IIndustryWhereInput>;
+};
+
+
+export type IQueryLiveVoteCommentsArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryLiveVoteResultsArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryLiveVotesArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryMyLiveVoteArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryMyLiveVoteCommentsArgs = {
+  seasonUid: Scalars['String']['input'];
 };
 
 
@@ -2659,6 +2746,8 @@ export type ISeason = {
 };
 
 export type ISeasonCount = {
+  LiveVote: Scalars['Int']['output'];
+  LiveVoteComment: Scalars['Int']['output'];
   UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
   calendar: Scalars['Int']['output'];
@@ -2672,6 +2761,16 @@ export type ISeasonCount = {
   scannedUsers: Scalars['Int']['output'];
   sponsors: Scalars['Int']['output'];
   talkCategories: Scalars['Int']['output'];
+};
+
+
+export type ISeasonCountLiveVoteArgs = {
+  where?: InputMaybe<ILiveVoteWhereInput>;
+};
+
+
+export type ISeasonCountLiveVoteCommentArgs = {
+  where?: InputMaybe<ILiveVoteCommentWhereInput>;
 };
 
 
@@ -3130,6 +3229,8 @@ export type IUserCompanyComponentRatingWhereInput = {
 };
 
 export type IUserCount = {
+  LiveVote: Scalars['Int']['output'];
+  LiveVoteComment: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
@@ -3144,6 +3245,16 @@ export type IUserCount = {
   roles: Scalars['Int']['output'];
   scannedEntries: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+};
+
+
+export type IUserCountLiveVoteArgs = {
+  where?: InputMaybe<ILiveVoteWhereInput>;
+};
+
+
+export type IUserCountLiveVoteCommentArgs = {
+  where?: InputMaybe<ILiveVoteCommentWhereInput>;
 };
 
 
@@ -4339,6 +4450,32 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
 
+export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteResults_LiveVoteResult = { option: string, voteCount: number };
+
+export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteComments_LiveVoteComment_forUser_User = { name: string };
+
+export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteComments_LiveVoteComment = { id: number, comment: string, createdAt: string | Date, forUser: IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteComments_LiveVoteComment_forUser_User };
+
+export type IPageAdminSeasonLiveVoteResults_DataQuery_Query = { liveVoteResults: Array<IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteResults_LiveVoteResult>, liveVoteComments: Array<IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteComments_LiveVoteComment> };
+
+
+export type IPageAdminSeasonLiveVoteResults_DataQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSeasonLiveVoteResults_DataQuery = IPageAdminSeasonLiveVoteResults_DataQuery_Query;
+
+export type IPageAdminSeasonLiveVoteResults_DeleteCommentMutation_Mutation = { deleteLiveVoteComment: boolean };
+
+
+export type IPageAdminSeasonLiveVoteResults_DeleteCommentMutationVariables = Exact<{
+  commentId: Scalars['Int']['input'];
+}>;
+
+
+export type IPageAdminSeasonLiveVoteResults_DeleteCommentMutation = IPageAdminSeasonLiveVoteResults_DeleteCommentMutation_Mutation;
+
 export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
 
 export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, ratings: Array<IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage> };
@@ -4505,6 +4642,80 @@ export type IPageGateGuardian_EventListQueryVariables = Exact<{ [key: string]: n
 
 
 export type IPageGateGuardian_EventListQuery = IPageGateGuardian_EventListQuery_Query;
+
+export type IPageLiveVoteSeason_DataQuery_season_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
+
+export type IPageLiveVoteSeason_DataQuery_Query = { season?: IPageLiveVoteSeason_DataQuery_season_Season | null };
+
+
+export type IPageLiveVoteSeason_DataQueryVariables = Exact<{
+  uid: Scalars['String']['input'];
+}>;
+
+
+export type IPageLiveVoteSeason_DataQuery = IPageLiveVoteSeason_DataQuery_Query;
+
+export type IPageLiveVoteSeasonIndex_DataQuery_myLiveVote_LiveVote = { option: string };
+
+export type IPageLiveVoteSeasonIndex_DataQuery_myLiveVoteComments_LiveVoteComment = { id: number, comment: string };
+
+export type IPageLiveVoteSeasonIndex_DataQuery_Query = { myLiveVote?: IPageLiveVoteSeasonIndex_DataQuery_myLiveVote_LiveVote | null, myLiveVoteComments: Array<IPageLiveVoteSeasonIndex_DataQuery_myLiveVoteComments_LiveVoteComment> };
+
+
+export type IPageLiveVoteSeasonIndex_DataQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+}>;
+
+
+export type IPageLiveVoteSeasonIndex_DataQuery = IPageLiveVoteSeasonIndex_DataQuery_Query;
+
+export type IPageLiveVoteSeasonIndex_DeleteCommentMutation_Mutation = { deleteLiveVoteComment: boolean };
+
+
+export type IPageLiveVoteSeasonIndex_DeleteCommentMutationVariables = Exact<{
+  commentId: Scalars['Int']['input'];
+}>;
+
+
+export type IPageLiveVoteSeasonIndex_DeleteCommentMutation = IPageLiveVoteSeasonIndex_DeleteCommentMutation_Mutation;
+
+export type IPageLiveVoteSeasonIndex_SubmitCommentMutation_createLiveVoteComment_LiveVoteComment = { id: number, comment: string };
+
+export type IPageLiveVoteSeasonIndex_SubmitCommentMutation_Mutation = { createLiveVoteComment?: IPageLiveVoteSeasonIndex_SubmitCommentMutation_createLiveVoteComment_LiveVoteComment | null };
+
+
+export type IPageLiveVoteSeasonIndex_SubmitCommentMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  comment: Scalars['String']['input'];
+}>;
+
+
+export type IPageLiveVoteSeasonIndex_SubmitCommentMutation = IPageLiveVoteSeasonIndex_SubmitCommentMutation_Mutation;
+
+export type IPageLiveVoteSeasonIndex_SubmitVoteMutation_createLiveVote_LiveVote = { option: string };
+
+export type IPageLiveVoteSeasonIndex_SubmitVoteMutation_Mutation = { createLiveVote?: IPageLiveVoteSeasonIndex_SubmitVoteMutation_createLiveVote_LiveVote | null };
+
+
+export type IPageLiveVoteSeasonIndex_SubmitVoteMutationVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  vote: Scalars['String']['input'];
+}>;
+
+
+export type IPageLiveVoteSeasonIndex_SubmitVoteMutation = IPageLiveVoteSeasonIndex_SubmitVoteMutation_Mutation;
+
+export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_liveVoteResults_LiveVoteResult = { option: string, voteCount: number };
+
+export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_Query = { liveVoteResults: Array<IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_liveVoteResults_LiveVoteResult> };
+
+
+export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+}>;
+
+
+export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery = IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_Query;
 
 export type IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image = { thumbUrl: string, fullUrl: string };
 
@@ -4910,6 +5121,11 @@ export type IResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LiveVote: ResolverTypeWrapper<ILiveVote>;
+  LiveVoteComment: ResolverTypeWrapper<ILiveVoteComment>;
+  LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
+  LiveVoteResult: ResolverTypeWrapper<ILiveVoteResult>;
+  LiveVoteWhereInput: ILiveVoteWhereInput;
   Mutation: ResolverTypeWrapper<{}>;
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
@@ -5181,6 +5397,11 @@ export type IResolversParentTypes = {
   Int: Scalars['Int']['output'];
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LiveVote: ILiveVote;
+  LiveVoteComment: ILiveVoteComment;
+  LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
+  LiveVoteResult: ILiveVoteResult;
+  LiveVoteWhereInput: ILiveVoteWhereInput;
   Mutation: {};
   NestedBoolFilter: INestedBoolFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
@@ -5743,6 +5964,31 @@ export type IIndustryCountResolvers<ContextType = any, ParentType extends IResol
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ILiveVoteResolvers<ContextType = any, ParentType extends IResolversParentTypes['LiveVote'] = IResolversParentTypes['LiveVote']> = {
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  forSeason?: Resolver<IResolversTypes['Season'], ParentType, ContextType>;
+  forUser?: Resolver<IResolversTypes['User'], ParentType, ContextType>;
+  option?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ILiveVoteCommentResolvers<ContextType = any, ParentType extends IResolversParentTypes['LiveVoteComment'] = IResolversParentTypes['LiveVoteComment']> = {
+  comment?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  forSeason?: Resolver<IResolversTypes['Season'], ParentType, ContextType>;
+  forUser?: Resolver<IResolversTypes['User'], ParentType, ContextType>;
+  id?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ILiveVoteResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['LiveVoteResult'] = IResolversParentTypes['LiveVoteResult']> = {
+  option?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  voteCount?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IMutationResolvers<ContextType = any, ParentType extends IResolversParentTypes['Mutation'] = IResolversParentTypes['Mutation']> = {
   addCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationAddCompanyMemberArgs, 'email'>>;
   approveCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType, RequireFields<IMutationApproveCompanyApplicationsArgs, 'companies' | 'season'>>;
@@ -5750,6 +5996,8 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   createCompanyApplication?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationArgs, 'info'>>;
   createCompanyApplicationFor?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationForArgs, 'company' | 'info' | 'season'>>;
   createIndustry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType, RequireFields<IMutationCreateIndustryArgs, 'name'>>;
+  createLiveVote?: Resolver<Maybe<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IMutationCreateLiveVoteArgs, 'seasonUid' | 'vote'>>;
+  createLiveVoteComment?: Resolver<Maybe<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IMutationCreateLiveVoteCommentArgs, 'comment' | 'seasonUid'>>;
   createNews?: Resolver<Maybe<IResolversTypes['NewsCreateResponse']>, ParentType, ContextType, RequireFields<IMutationCreateNewsArgs, 'info'>>;
   createPartner?: Resolver<IResolversTypes['CreatePartnerResponse'], ParentType, ContextType, RequireFields<IMutationCreatePartnerArgs, 'info' | 'season'>>;
   createPressRelease?: Resolver<Maybe<IResolversTypes['CreatePressReleaseResponse']>, ParentType, ContextType, RequireFields<IMutationCreatePressReleaseArgs, 'info'>>;
@@ -5759,6 +6007,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteCalendarItem?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCalendarItemArgs, 'uid'>>;
   deleteCompanyApplicationFor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyApplicationForArgs, 'company' | 'season'>>;
   deleteCompanyPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyPanelArgs, 'uid'>>;
+  deleteLiveVoteComment?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteLiveVoteCommentArgs, 'commentId'>>;
   deleteNews?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<IMutationDeleteNewsArgs, 'uid'>>;
   deletePartner?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeletePartnerArgs, 'partner'>>;
   deleteResume?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
@@ -5871,6 +6120,11 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   findFirstTranslation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryFindFirstTranslationArgs>>;
   gateGuardianScanList?: Resolver<Maybe<Array<IResolversTypes['GateGuardianLog']>>, ParentType, ContextType, RequireFields<IQueryGateGuardianScanListArgs, 'season'>>;
   industries?: Resolver<Array<IResolversTypes['Industry']>, ParentType, ContextType, Partial<IQueryIndustriesArgs>>;
+  liveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryLiveVoteCommentsArgs, 'seasonUid'>>;
+  liveVoteResults?: Resolver<Array<IResolversTypes['LiveVoteResult']>, ParentType, ContextType, RequireFields<IQueryLiveVoteResultsArgs, 'seasonUid'>>;
+  liveVotes?: Resolver<Array<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IQueryLiveVotesArgs, 'seasonUid'>>;
+  myLiveVote?: Resolver<Maybe<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IQueryMyLiveVoteArgs, 'seasonUid'>>;
+  myLiveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryMyLiveVoteCommentsArgs, 'seasonUid'>>;
   news?: Resolver<Array<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsArgs, 'lang'>>;
   newsItem?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsItemArgs, 'slug'>>;
   newsItemByUid?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsItemByUidArgs, 'uid'>>;
@@ -6043,6 +6297,8 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
 };
 
 export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['SeasonCount'] = IResolversParentTypes['SeasonCount']> = {
+  LiveVote?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountLiveVoteArgs>>;
+  LiveVoteComment?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountLiveVoteCommentArgs>>;
   UserCompanyComponentRatingAveragesView?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingAveragesViewArgs>>;
   UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingsArgs>>;
   calendar?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCalendarArgs>>;
@@ -6141,6 +6397,8 @@ export type IUserCompanyComponentRatingComponentAverageResolvers<ContextType = a
 };
 
 export type IUserCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['UserCount'] = IResolversParentTypes['UserCount']> = {
+  LiveVote?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountLiveVoteArgs>>;
+  LiveVoteComment?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountLiveVoteCommentArgs>>;
   News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountNewsArgs>>;
   UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountUserCompanyComponentRatingsArgs>>;
   companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountCompaniesArgs>>;
@@ -6222,6 +6480,9 @@ export type IResolvers<ContextType = any> = {
   ImageVariationCount?: IImageVariationCountResolvers<ContextType>;
   Industry?: IIndustryResolvers<ContextType>;
   IndustryCount?: IIndustryCountResolvers<ContextType>;
+  LiveVote?: ILiveVoteResolvers<ContextType>;
+  LiveVoteComment?: ILiveVoteCommentResolvers<ContextType>;
+  LiveVoteResult?: ILiveVoteResultResolvers<ContextType>;
   Mutation?: IMutationResolvers<ContextType>;
   News?: INewsResolvers<ContextType>;
   NewsCreateResponse?: INewsCreateResponseResolvers<ContextType>;
@@ -7517,6 +7778,27 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
   }
 }
     `;
+export const PageAdminSeasonLiveVoteResults_Data = gql`
+    query PageAdminSeasonLiveVoteResults_Data($seasonUid: String!) {
+  liveVoteResults(seasonUid: $seasonUid) {
+    option
+    voteCount
+  }
+  liveVoteComments(seasonUid: $seasonUid) {
+    id
+    comment
+    createdAt
+    forUser {
+      name
+    }
+  }
+}
+    `;
+export const PageAdminSeasonLiveVoteResults_DeleteComment = gql`
+    mutation PageAdminSeasonLiveVoteResults_DeleteComment($commentId: Int!) {
+  deleteLiveVoteComment(commentId: $commentId)
+}
+    `;
 export const PageAdminSeasonRatingsCompanies_Data = gql`
     query PageAdminSeasonRatingsCompanies_Data($season: String!) {
   season(uid: $season) {
@@ -7681,6 +7963,71 @@ export const PageGateGuardian_EventList = gql`
     title
     text
     type
+  }
+}
+    `;
+export const PageLiveVoteSeason_Data = gql`
+    query PageLiveVoteSeason_Data($uid: String!) {
+  season(uid: $uid) {
+    uid
+    name
+    startsAt
+    endsAt
+    applicationsFrom
+    applicationsUntil
+    applicationsEditableFrom
+    applicationsEditableUntil
+    showParticipantsFrom
+    showParticipantsUntil
+    showPartnersFrom
+    showPartnersUntil
+    showSponsorsFrom
+    showSponsorsUntil
+    eventFrom
+    eventUntil
+    feedbackFrom
+    feedbackUntil
+    scheduleFrom
+    scheduleUntil
+  }
+}
+    `;
+export const PageLiveVoteSeasonIndex_Data = gql`
+    query PageLiveVoteSeasonIndex_Data($seasonUid: String!) {
+  myLiveVote(seasonUid: $seasonUid) {
+    option
+  }
+  myLiveVoteComments(seasonUid: $seasonUid) {
+    id
+    comment
+  }
+}
+    `;
+export const PageLiveVoteSeasonIndex_DeleteComment = gql`
+    mutation PageLiveVoteSeasonIndex_DeleteComment($commentId: Int!) {
+  deleteLiveVoteComment(commentId: $commentId)
+}
+    `;
+export const PageLiveVoteSeasonIndex_SubmitComment = gql`
+    mutation PageLiveVoteSeasonIndex_SubmitComment($seasonUid: String!, $comment: String!) {
+  createLiveVoteComment(seasonUid: $seasonUid, comment: $comment) {
+    id
+    comment
+  }
+}
+    `;
+export const PageLiveVoteSeasonIndex_SubmitVote = gql`
+    mutation PageLiveVoteSeasonIndex_SubmitVote($seasonUid: String!, $vote: String!) {
+  createLiveVote(seasonUid: $seasonUid, vote: $vote) {
+    option
+  }
+}
+    `;
+export const PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResults = gql`
+    query PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResults($seasonUid: String!) {
+  liveVoteResults(seasonUid: $seasonUid) {
+    option
+    voteCount
   }
 }
     `;

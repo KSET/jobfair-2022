@@ -125,7 +125,7 @@ export class LiveVoteResolver {
     return res.map((x) => ({
       option: x.option,
       voteCount: x._count._all,
-    }));
+    })).sort((lt, gt) => lt.option.localeCompare(gt.option));
   }
 
   @Query(() => LiveVote, { nullable: true })

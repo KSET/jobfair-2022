@@ -9,6 +9,9 @@
           alt="Job Fair"
           src="~/assets/images/logo/jobfair.png"
         >
+        <h3 v-if="timeUntilNextEvent > 60" :class="$style.heroContentSupertitle">
+          {{ timeUntilNextEventFormatted }}
+        </h3>
         <h3 :class="$style.heroContentSupertitle">
           <translated-text trans-key="index.hero.date" />
         </h3>
@@ -226,6 +229,31 @@
     useQuery,
   } from "~/composables/useQuery";
 
+  const msToHuman = (ms: number) => {
+    // const s = Math.floor((ms) / 1000) % 60;
+    const m = Math.floor((ms / (1000 * 60)) % 60);
+    const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
+    const d = Math.floor(ms / (1000 * 60 * 60 * 24));
+    const str = [
+      "d",
+      "h",
+      "min",
+      // "s",
+    ];
+    const values = [
+      d,
+      h,
+      m,
+      // s,
+    ];
+    return (
+      values
+        .map((value, i) => value ? `${ value }${ str[i] }` : null)
+        .filter(Boolean)
+        .join(" ")
+    );
+  };
+
   export default defineComponent({
     name: "PageIndex",
 
@@ -243,6 +271,17 @@
       const galleryStore = useGalleryStore();
       const joinNowRoute = useJoinNowRoute();
       const seasonsStore = useSeasonsStore();
+
+      const timeUntilNextEvent = ref(new Date("2025-05-22T11:00:00+01:00").getTime() - Date.now());
+      const timeUntilNextEventInterval = ref(null as null | number | NodeJS.Timeout);
+      const timeUntilNextEventFormatted = computed(() => msToHuman(timeUntilNextEvent.value));
+
+      onMounted(() => {
+        clearInterval(timeUntilNextEventInterval.value as never);
+        timeUntilNextEventInterval.value = setInterval(() => {
+          timeUntilNextEvent.value = new Date("2025-05-22T11:00:00+01:00").getTime() - Date.now();
+        }, 798);
+      });
 
       const initialData = await useQuery<IPageIndexDataQuery, IPageIndexDataQueryVariables>({
         query: PageIndexData,
@@ -269,6 +308,8 @@
         mediaPartners: initialData?.partners ?? [],
         joinNowRoute,
         dotGet,
+        timeUntilNextEventFormatted,
+        timeUntilNextEvent,
       };
     },
   });

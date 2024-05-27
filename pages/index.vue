@@ -230,27 +230,21 @@
   } from "~/composables/useQuery";
 
   const msToHuman = (ms: number) => {
-    // const s = Math.floor((ms) / 1000) % 60;
+    const s = Math.floor((ms) / 1000) % 60;
     const m = Math.floor((ms / (1000 * 60)) % 60);
     const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
     const d = Math.floor(ms / (1000 * 60 * 60 * 24));
-    const str = [
-      "d",
-      "h",
-      "min",
-      // "s",
-    ];
     const values = [
       d,
       h,
       m,
-      // s,
+      s,
     ];
+
     return (
       values
-        .map((value, i) => value ? `${ value }${ str[i] }` : null)
-        .filter(Boolean)
-        .join(" ")
+        .map((x) => x.toFixed(0).padStart(2, "0"))
+        .join(":")
     );
   };
 

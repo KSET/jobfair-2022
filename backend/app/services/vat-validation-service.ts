@@ -66,10 +66,6 @@ export class VatValidationService {
     const countryCode = vat.slice(0, 2);
     const vatNumber = vat.slice(2);
 
-    if (isNaN(Number(vatNumber))) {
-      return null;
-    }
-
     try {
       const [ result ] = await checkVat({
         countryCode,
@@ -111,12 +107,13 @@ export class VatValidationService {
       name,
       address,
       vatNumber,
+      countryCode,
     } = remoteData;
 
     return {
       address,
       legalName: name,
-      vat: vatNumber,
+      vat: countryCode + vatNumber,
     };
   }
 }

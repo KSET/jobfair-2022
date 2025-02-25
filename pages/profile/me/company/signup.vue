@@ -333,7 +333,9 @@
         `),
       })().then((resp) => resp?.data);
 
+      console.log("talkCategoriesStore-b4", talkCategoriesStore.talkCategories);
       talkCategoriesStore.setTalkCategories(resp?.talkCategories);
+      console.log("talkCategoriesStore-after", talkCategoriesStore.talkCategories);
 
       const contactPersonCreateForm = companyApplicationContactPersonCreate(resp?.companyApplication?.contactPerson)();
       const contactPerson = reactive({

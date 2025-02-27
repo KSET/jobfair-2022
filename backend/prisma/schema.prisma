@@ -262,6 +262,20 @@ model File {
   uploaderId Int
 }
 
+model GalleryImage {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id      Int     @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid     String  @unique @default(cuid())
+  name    String
+  order   Int
+  visible Boolean
+
+  photo   Image @relation(fields: [photoId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  photoId Int
+}
+
 model Image {
   /// @TypeGraphQL.omit(output: true, input: true)
   id        Int            @id @default(autoincrement())
@@ -300,6 +314,9 @@ model Image {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   News News[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  GalleryImage GalleryImage[]
 }
 
 model ImageVariation {

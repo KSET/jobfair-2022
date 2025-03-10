@@ -408,8 +408,11 @@ export type Company = {
   createdAt: Scalars['DateTimeISO']['output'];
   descriptionEn: Scalars['String']['output'];
   descriptionHr: Scalars['String']['output'];
+  facebook?: Maybe<Scalars['String']['output']>;
   industry?: Maybe<Industry>;
+  instagram?: Maybe<Scalars['String']['output']>;
   legalName: Scalars['String']['output'];
+  linkedIn?: Maybe<Scalars['String']['output']>;
   logoHidden: Scalars['Boolean']['output'];
   members?: Maybe<Array<User>>;
   program?: Maybe<CompanyProgram>;
@@ -704,7 +707,10 @@ export type CompanyOrderByWithRelationInput = {
   brandName?: InputMaybe<SortOrder>;
   descriptionEn?: InputMaybe<SortOrder>;
   descriptionHr?: InputMaybe<SortOrder>;
+  facebook?: InputMaybe<SortOrderInput>;
+  instagram?: InputMaybe<SortOrderInput>;
   legalName?: InputMaybe<SortOrder>;
+  linkedIn?: InputMaybe<SortOrderInput>;
   vat?: InputMaybe<SortOrder>;
   website?: InputMaybe<SortOrder>;
 };
@@ -778,9 +784,12 @@ export enum CompanyScalarFieldEnum {
   CreatedAt = 'createdAt',
   DescriptionEn = 'descriptionEn',
   DescriptionHr = 'descriptionHr',
+  Facebook = 'facebook',
   Id = 'id',
   IndustryId = 'industryId',
+  Instagram = 'instagram',
   LegalName = 'legalName',
+  LinkedIn = 'linkedIn',
   RasterLogoId = 'rasterLogoId',
   Uid = 'uid',
   UpdatedAt = 'updatedAt',
@@ -836,7 +845,10 @@ export type CompanyWhereInput = {
   brandName?: InputMaybe<StringFilter>;
   descriptionEn?: InputMaybe<StringFilter>;
   descriptionHr?: InputMaybe<StringFilter>;
+  facebook?: InputMaybe<StringNullableFilter>;
+  instagram?: InputMaybe<StringNullableFilter>;
   legalName?: InputMaybe<StringFilter>;
+  linkedIn?: InputMaybe<StringNullableFilter>;
   vat?: InputMaybe<StringFilter>;
   website?: InputMaybe<StringFilter>;
 };
@@ -849,7 +861,10 @@ export type CompanyWhereUniqueInput = {
   brandName?: InputMaybe<StringFilter>;
   descriptionEn?: InputMaybe<StringFilter>;
   descriptionHr?: InputMaybe<StringFilter>;
+  facebook?: InputMaybe<StringNullableFilter>;
+  instagram?: InputMaybe<StringNullableFilter>;
   legalName?: InputMaybe<StringFilter>;
+  linkedIn?: InputMaybe<StringNullableFilter>;
   vat?: InputMaybe<Scalars['String']['input']>;
   website?: InputMaybe<StringFilter>;
 };
@@ -864,8 +879,11 @@ export type CreateCompanyInput = {
   brandName: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
   descriptionHr: Scalars['String']['input'];
+  facebook?: InputMaybe<Scalars['String']['input']>;
   industry: Scalars['String']['input'];
+  instagram?: InputMaybe<Scalars['String']['input']>;
   legalName: Scalars['String']['input'];
+  linkedIn?: InputMaybe<Scalars['String']['input']>;
   rasterLogo?: InputMaybe<Scalars['Upload']['input']>;
   vat: Scalars['String']['input'];
   vectorLogo?: InputMaybe<Scalars['Upload']['input']>;
@@ -874,6 +892,11 @@ export type CreateCompanyInput = {
 
 export type CreateCompanyResponse = {
   entity?: Maybe<Company>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type CreateGalleryImageResponse = {
+  entity?: Maybe<GalleryImage>;
   errors?: Maybe<Array<FieldError>>;
 };
 
@@ -1075,6 +1098,29 @@ export type FloatFilter = {
   notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
+export type GalleryImage = {
+  name: Scalars['String']['output'];
+  order: Scalars['Int']['output'];
+  uid: Scalars['String']['output'];
+  visible: Scalars['Boolean']['output'];
+};
+
+export type GalleryImageCreateInput = {
+  name: Scalars['String']['input'];
+  photo: Scalars['Upload']['input'];
+  visible: Scalars['Boolean']['input'];
+};
+
+export type GalleryImageWhereInput = {
+  AND?: InputMaybe<Array<GalleryImageWhereInput>>;
+  NOT?: InputMaybe<Array<GalleryImageWhereInput>>;
+  OR?: InputMaybe<Array<GalleryImageWhereInput>>;
+  name?: InputMaybe<StringFilter>;
+  order?: InputMaybe<IntFilter>;
+  photo?: InputMaybe<ImageRelationFilter>;
+  visible?: InputMaybe<BoolFilter>;
+};
+
 export type GateGuardianLog = {
   eventId: Scalars['Int']['output'];
   eventType: Scalars['String']['output'];
@@ -1124,6 +1170,7 @@ export type Image = {
 export type ImageCount = {
   ApplicationPresenter: Scalars['Int']['output'];
   Company: Scalars['Int']['output'];
+  GalleryImage: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
   Partner: Scalars['Int']['output'];
   Sponsor: Scalars['Int']['output'];
@@ -1137,6 +1184,11 @@ export type ImageCountApplicationPresenterArgs = {
 
 export type ImageCountCompanyArgs = {
   where?: InputMaybe<CompanyWhereInput>;
+};
+
+
+export type ImageCountGalleryImageArgs = {
+  where?: InputMaybe<GalleryImageWhereInput>;
 };
 
 
@@ -1317,6 +1369,7 @@ export type Mutation = {
   checkPasswordReset?: Maybe<User>;
   createCompanyApplication?: Maybe<CreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<CreateCompanyApplicationResponse>;
+  createGalleryImage?: Maybe<CreateGalleryImageResponse>;
   createIndustry?: Maybe<Industry>;
   createLiveVote?: Maybe<LiveVote>;
   createLiveVoteComment?: Maybe<LiveVoteComment>;
@@ -1329,6 +1382,7 @@ export type Mutation = {
   deleteCalendarItem: Scalars['Boolean']['output'];
   deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
+  deleteGalleryImage: Scalars['Boolean']['output'];
   deleteLiveVoteComment: Scalars['Boolean']['output'];
   deleteNews?: Maybe<Scalars['Boolean']['output']>;
   deletePartner: Scalars['Boolean']['output'];
@@ -1337,6 +1391,7 @@ export type Mutation = {
   deleteSponsor: Scalars['Boolean']['output'];
   deleteUserCompanyComponentRating: Scalars['Boolean']['output'];
   editApprovedCompanyApplication?: Maybe<EditApprovedCompanyApplicationResponse>;
+  editGalleryImage?: Maybe<CreateGalleryImageResponse>;
   editNews?: Maybe<NewsCreateResponse>;
   gateGuardianScan?: Maybe<GateGuardianScanResponse>;
   login: AuthResponse;
@@ -1353,6 +1408,7 @@ export type Mutation = {
   resumeSetIsFavourite: Scalars['Boolean']['output'];
   scanUserQr?: Maybe<CompanyScanUserQrResponse>;
   scanUserQrRefine?: Maybe<CompanyScanUserQrResponse>;
+  swapGalleryImageOrder: Scalars['Boolean']['output'];
   swapPartnerOrder: Scalars['Boolean']['output'];
   swapSponsorOrder: Scalars['Boolean']['output'];
   updateCalendarItem?: Maybe<CalendarItem>;
@@ -1400,6 +1456,11 @@ export type MutationCreateCompanyApplicationForArgs = {
   company: Scalars['String']['input'];
   info: CompanyApplicationCreateInput;
   season: Scalars['String']['input'];
+};
+
+
+export type MutationCreateGalleryImageArgs = {
+  info: GalleryImageCreateInput;
 };
 
 
@@ -1469,6 +1530,11 @@ export type MutationDeleteCompanyPanelArgs = {
 };
 
 
+export type MutationDeleteGalleryImageArgs = {
+  galleryImage: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteLiveVoteCommentArgs = {
   commentId: Scalars['Int']['input'];
 };
@@ -1503,6 +1569,12 @@ export type MutationDeleteUserCompanyComponentRatingArgs = {
 
 export type MutationEditApprovedCompanyApplicationArgs = {
   info: CompanyApplicationApprovedEditInput;
+};
+
+
+export type MutationEditGalleryImageArgs = {
+  info: GalleryImageCreateInput;
+  uid: Scalars['String']['input'];
 };
 
 
@@ -1587,6 +1659,12 @@ export type MutationScanUserQrArgs = {
 export type MutationScanUserQrRefineArgs = {
   refineData: CompanyScanUserQrRefineData;
   userUid: Scalars['String']['input'];
+};
+
+
+export type MutationSwapGalleryImageOrderArgs = {
+  orderA: Scalars['Int']['input'];
+  orderB: Scalars['Int']['input'];
 };
 
 
@@ -1954,6 +2032,7 @@ export type PressReleaseWithFilesCreateInput = {
 };
 
 export type Query = {
+  allGalleryImages: Array<GalleryImage>;
   allNews: Array<News>;
   allTranslationsFor: Array<Translation>;
   approvedCompanyApplications: Array<CompanyApplicationApproval>;
@@ -1972,6 +2051,7 @@ export type Query = {
   currentSeason?: Maybe<Season>;
   eventLog: EventLogPaginationResult;
   findFirstTranslation?: Maybe<Translation>;
+  galleryImages: Array<GalleryImage>;
   gateGuardianScanList?: Maybe<Array<GateGuardianLog>>;
   industries: Array<Industry>;
   liveVoteComments: Array<LiveVoteComment>;

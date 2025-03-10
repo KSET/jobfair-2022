@@ -410,8 +410,11 @@ export type ICompany = {
   createdAt: Scalars['DateTimeISO']['output'];
   descriptionEn: Scalars['String']['output'];
   descriptionHr: Scalars['String']['output'];
+  facebook?: Maybe<Scalars['String']['output']>;
   industry?: Maybe<IIndustry>;
+  instagram?: Maybe<Scalars['String']['output']>;
   legalName: Scalars['String']['output'];
+  linkedIn?: Maybe<Scalars['String']['output']>;
   logoHidden: Scalars['Boolean']['output'];
   members?: Maybe<Array<IUser>>;
   program?: Maybe<ICompanyProgram>;
@@ -706,7 +709,10 @@ export type ICompanyOrderByWithRelationInput = {
   brandName?: InputMaybe<ISortOrder>;
   descriptionEn?: InputMaybe<ISortOrder>;
   descriptionHr?: InputMaybe<ISortOrder>;
+  facebook?: InputMaybe<ISortOrderInput>;
+  instagram?: InputMaybe<ISortOrderInput>;
   legalName?: InputMaybe<ISortOrder>;
+  linkedIn?: InputMaybe<ISortOrderInput>;
   vat?: InputMaybe<ISortOrder>;
   website?: InputMaybe<ISortOrder>;
 };
@@ -780,9 +786,12 @@ export enum ICompanyScalarFieldEnum {
   CreatedAt = 'createdAt',
   DescriptionEn = 'descriptionEn',
   DescriptionHr = 'descriptionHr',
+  Facebook = 'facebook',
   Id = 'id',
   IndustryId = 'industryId',
+  Instagram = 'instagram',
   LegalName = 'legalName',
+  LinkedIn = 'linkedIn',
   RasterLogoId = 'rasterLogoId',
   Uid = 'uid',
   UpdatedAt = 'updatedAt',
@@ -838,7 +847,10 @@ export type ICompanyWhereInput = {
   brandName?: InputMaybe<IStringFilter>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
+  facebook?: InputMaybe<IStringNullableFilter>;
+  instagram?: InputMaybe<IStringNullableFilter>;
   legalName?: InputMaybe<IStringFilter>;
+  linkedIn?: InputMaybe<IStringNullableFilter>;
   vat?: InputMaybe<IStringFilter>;
   website?: InputMaybe<IStringFilter>;
 };
@@ -851,7 +863,10 @@ export type ICompanyWhereUniqueInput = {
   brandName?: InputMaybe<IStringFilter>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
+  facebook?: InputMaybe<IStringNullableFilter>;
+  instagram?: InputMaybe<IStringNullableFilter>;
   legalName?: InputMaybe<IStringFilter>;
+  linkedIn?: InputMaybe<IStringNullableFilter>;
   vat?: InputMaybe<Scalars['String']['input']>;
   website?: InputMaybe<IStringFilter>;
 };
@@ -866,8 +881,11 @@ export type ICreateCompanyInput = {
   brandName: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
   descriptionHr: Scalars['String']['input'];
+  facebook?: InputMaybe<Scalars['String']['input']>;
   industry: Scalars['String']['input'];
+  instagram?: InputMaybe<Scalars['String']['input']>;
   legalName: Scalars['String']['input'];
+  linkedIn?: InputMaybe<Scalars['String']['input']>;
   rasterLogo?: InputMaybe<Scalars['Upload']['input']>;
   vat: Scalars['String']['input'];
   vectorLogo?: InputMaybe<Scalars['Upload']['input']>;
@@ -876,6 +894,11 @@ export type ICreateCompanyInput = {
 
 export type ICreateCompanyResponse = {
   entity?: Maybe<ICompany>;
+  errors?: Maybe<Array<IFieldError>>;
+};
+
+export type ICreateGalleryImageResponse = {
+  entity?: Maybe<IGalleryImage>;
   errors?: Maybe<Array<IFieldError>>;
 };
 
@@ -1077,6 +1100,29 @@ export type IFloatFilter = {
   notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
 };
 
+export type IGalleryImage = {
+  name: Scalars['String']['output'];
+  order: Scalars['Int']['output'];
+  uid: Scalars['String']['output'];
+  visible: Scalars['Boolean']['output'];
+};
+
+export type IGalleryImageCreateInput = {
+  name: Scalars['String']['input'];
+  photo: Scalars['Upload']['input'];
+  visible: Scalars['Boolean']['input'];
+};
+
+export type IGalleryImageWhereInput = {
+  AND?: InputMaybe<Array<IGalleryImageWhereInput>>;
+  NOT?: InputMaybe<Array<IGalleryImageWhereInput>>;
+  OR?: InputMaybe<Array<IGalleryImageWhereInput>>;
+  name?: InputMaybe<IStringFilter>;
+  order?: InputMaybe<IIntFilter>;
+  photo?: InputMaybe<IImageRelationFilter>;
+  visible?: InputMaybe<IBoolFilter>;
+};
+
 export type IGateGuardianLog = {
   eventId: Scalars['Int']['output'];
   eventType: Scalars['String']['output'];
@@ -1126,6 +1172,7 @@ export type IImage = {
 export type IImageCount = {
   ApplicationPresenter: Scalars['Int']['output'];
   Company: Scalars['Int']['output'];
+  GalleryImage: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
   Partner: Scalars['Int']['output'];
   Sponsor: Scalars['Int']['output'];
@@ -1139,6 +1186,11 @@ export type IImageCountApplicationPresenterArgs = {
 
 export type IImageCountCompanyArgs = {
   where?: InputMaybe<ICompanyWhereInput>;
+};
+
+
+export type IImageCountGalleryImageArgs = {
+  where?: InputMaybe<IGalleryImageWhereInput>;
 };
 
 
@@ -1319,6 +1371,7 @@ export type IMutation = {
   checkPasswordReset?: Maybe<IUser>;
   createCompanyApplication?: Maybe<ICreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<ICreateCompanyApplicationResponse>;
+  createGalleryImage?: Maybe<ICreateGalleryImageResponse>;
   createIndustry?: Maybe<IIndustry>;
   createLiveVote?: Maybe<ILiveVote>;
   createLiveVoteComment?: Maybe<ILiveVoteComment>;
@@ -1331,6 +1384,7 @@ export type IMutation = {
   deleteCalendarItem: Scalars['Boolean']['output'];
   deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
+  deleteGalleryImage: Scalars['Boolean']['output'];
   deleteLiveVoteComment: Scalars['Boolean']['output'];
   deleteNews?: Maybe<Scalars['Boolean']['output']>;
   deletePartner: Scalars['Boolean']['output'];
@@ -1339,6 +1393,7 @@ export type IMutation = {
   deleteSponsor: Scalars['Boolean']['output'];
   deleteUserCompanyComponentRating: Scalars['Boolean']['output'];
   editApprovedCompanyApplication?: Maybe<IEditApprovedCompanyApplicationResponse>;
+  editGalleryImage?: Maybe<ICreateGalleryImageResponse>;
   editNews?: Maybe<INewsCreateResponse>;
   gateGuardianScan?: Maybe<IGateGuardianScanResponse>;
   login: IAuthResponse;
@@ -1355,6 +1410,7 @@ export type IMutation = {
   resumeSetIsFavourite: Scalars['Boolean']['output'];
   scanUserQr?: Maybe<ICompanyScanUserQrResponse>;
   scanUserQrRefine?: Maybe<ICompanyScanUserQrResponse>;
+  swapGalleryImageOrder: Scalars['Boolean']['output'];
   swapPartnerOrder: Scalars['Boolean']['output'];
   swapSponsorOrder: Scalars['Boolean']['output'];
   updateCalendarItem?: Maybe<ICalendarItem>;
@@ -1402,6 +1458,11 @@ export type IMutationCreateCompanyApplicationForArgs = {
   company: Scalars['String']['input'];
   info: ICompanyApplicationCreateInput;
   season: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateGalleryImageArgs = {
+  info: IGalleryImageCreateInput;
 };
 
 
@@ -1471,6 +1532,11 @@ export type IMutationDeleteCompanyPanelArgs = {
 };
 
 
+export type IMutationDeleteGalleryImageArgs = {
+  galleryImage: Scalars['String']['input'];
+};
+
+
 export type IMutationDeleteLiveVoteCommentArgs = {
   commentId: Scalars['Int']['input'];
 };
@@ -1505,6 +1571,12 @@ export type IMutationDeleteUserCompanyComponentRatingArgs = {
 
 export type IMutationEditApprovedCompanyApplicationArgs = {
   info: ICompanyApplicationApprovedEditInput;
+};
+
+
+export type IMutationEditGalleryImageArgs = {
+  info: IGalleryImageCreateInput;
+  uid: Scalars['String']['input'];
 };
 
 
@@ -1589,6 +1661,12 @@ export type IMutationScanUserQrArgs = {
 export type IMutationScanUserQrRefineArgs = {
   refineData: ICompanyScanUserQrRefineData;
   userUid: Scalars['String']['input'];
+};
+
+
+export type IMutationSwapGalleryImageOrderArgs = {
+  orderA: Scalars['Int']['input'];
+  orderB: Scalars['Int']['input'];
 };
 
 
@@ -1956,6 +2034,7 @@ export type IPressReleaseWithFilesCreateInput = {
 };
 
 export type IQuery = {
+  allGalleryImages: Array<IGalleryImage>;
   allNews: Array<INews>;
   allTranslationsFor: Array<ITranslation>;
   approvedCompanyApplications: Array<ICompanyApplicationApproval>;
@@ -1974,6 +2053,7 @@ export type IQuery = {
   currentSeason?: Maybe<ISeason>;
   eventLog: IEventLogPaginationResult;
   findFirstTranslation?: Maybe<ITranslation>;
+  galleryImages: Array<IGalleryImage>;
   gateGuardianScanList?: Maybe<Array<IGateGuardianLog>>;
   industries: Array<IIndustry>;
   liveVoteComments: Array<ILiveVoteComment>;
@@ -5071,6 +5151,7 @@ export type IResolversTypes = {
   CreateCompanyApplicationResponse: ResolverTypeWrapper<ICreateCompanyApplicationResponse>;
   CreateCompanyInput: ICreateCompanyInput;
   CreateCompanyResponse: ResolverTypeWrapper<ICreateCompanyResponse>;
+  CreateGalleryImageResponse: ResolverTypeWrapper<ICreateGalleryImageResponse>;
   CreatePartnerResponse: ResolverTypeWrapper<ICreatePartnerResponse>;
   CreatePressReleaseResponse: ResolverTypeWrapper<ICreatePressReleaseResponse>;
   CreateSponsorResponse: ResolverTypeWrapper<ICreateSponsorResponse>;
@@ -5098,6 +5179,9 @@ export type IResolversTypes = {
   FileWhereInput: IFileWhereInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FloatFilter: IFloatFilter;
+  GalleryImage: ResolverTypeWrapper<IGalleryImage>;
+  GalleryImageCreateInput: IGalleryImageCreateInput;
+  GalleryImageWhereInput: IGalleryImageWhereInput;
   GateGuardianLog: ResolverTypeWrapper<IGateGuardianLog>;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
   GateGuardianLogOrderByRelationAggregateInput: IGateGuardianLogOrderByRelationAggregateInput;
@@ -5349,6 +5433,7 @@ export type IResolversParentTypes = {
   CreateCompanyApplicationResponse: ICreateCompanyApplicationResponse;
   CreateCompanyInput: ICreateCompanyInput;
   CreateCompanyResponse: ICreateCompanyResponse;
+  CreateGalleryImageResponse: ICreateGalleryImageResponse;
   CreatePartnerResponse: ICreatePartnerResponse;
   CreatePressReleaseResponse: ICreatePressReleaseResponse;
   CreateSponsorResponse: ICreateSponsorResponse;
@@ -5375,6 +5460,9 @@ export type IResolversParentTypes = {
   FileWhereInput: IFileWhereInput;
   Float: Scalars['Float']['output'];
   FloatFilter: IFloatFilter;
+  GalleryImage: IGalleryImage;
+  GalleryImageCreateInput: IGalleryImageCreateInput;
+  GalleryImageWhereInput: IGalleryImageWhereInput;
   GateGuardianLog: IGateGuardianLog;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
   GateGuardianLogOrderByRelationAggregateInput: IGateGuardianLogOrderByRelationAggregateInput;
@@ -5667,8 +5755,11 @@ export type ICompanyResolvers<ContextType = any, ParentType extends IResolversPa
   createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   descriptionEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   descriptionHr?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  facebook?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   industry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType>;
+  instagram?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   legalName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  linkedIn?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   logoHidden?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   members?: Resolver<Maybe<Array<IResolversTypes['User']>>, ParentType, ContextType>;
   program?: Resolver<Maybe<IResolversTypes['CompanyProgram']>, ParentType, ContextType>;
@@ -5811,6 +5902,12 @@ export type ICreateCompanyResponseResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ICreateGalleryImageResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['CreateGalleryImageResponse'] = IResolversParentTypes['CreateGalleryImageResponse']> = {
+  entity?: Resolver<Maybe<IResolversTypes['GalleryImage']>, ParentType, ContextType>;
+  errors?: Resolver<Maybe<Array<IResolversTypes['FieldError']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ICreatePartnerResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['CreatePartnerResponse'] = IResolversParentTypes['CreatePartnerResponse']> = {
   entity?: Resolver<Maybe<IResolversTypes['Partner']>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<IResolversTypes['FieldError']>>, ParentType, ContextType>;
@@ -5899,6 +5996,14 @@ export type IFileCountResolvers<ContextType = any, ParentType extends IResolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IGalleryImageResolvers<ContextType = any, ParentType extends IResolversParentTypes['GalleryImage'] = IResolversParentTypes['GalleryImage']> = {
+  name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  order?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  visible?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IGateGuardianLogResolvers<ContextType = any, ParentType extends IResolversParentTypes['GateGuardianLog'] = IResolversParentTypes['GateGuardianLog']> = {
   eventId?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   eventType?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
@@ -5933,6 +6038,7 @@ export type IImageResolvers<ContextType = any, ParentType extends IResolversPare
 export type IImageCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ImageCount'] = IResolversParentTypes['ImageCount']> = {
   ApplicationPresenter?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountApplicationPresenterArgs>>;
   Company?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountCompanyArgs>>;
+  GalleryImage?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountGalleryImageArgs>>;
   News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountNewsArgs>>;
   Partner?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountPartnerArgs>>;
   Sponsor?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountSponsorArgs>>;
@@ -5995,6 +6101,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   checkPasswordReset?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IMutationCheckPasswordResetArgs, 'token'>>;
   createCompanyApplication?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationArgs, 'info'>>;
   createCompanyApplicationFor?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationForArgs, 'company' | 'info' | 'season'>>;
+  createGalleryImage?: Resolver<Maybe<IResolversTypes['CreateGalleryImageResponse']>, ParentType, ContextType, RequireFields<IMutationCreateGalleryImageArgs, 'info'>>;
   createIndustry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType, RequireFields<IMutationCreateIndustryArgs, 'name'>>;
   createLiveVote?: Resolver<Maybe<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IMutationCreateLiveVoteArgs, 'seasonUid' | 'vote'>>;
   createLiveVoteComment?: Resolver<Maybe<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IMutationCreateLiveVoteCommentArgs, 'comment' | 'seasonUid'>>;
@@ -6007,6 +6114,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteCalendarItem?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCalendarItemArgs, 'uid'>>;
   deleteCompanyApplicationFor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyApplicationForArgs, 'company' | 'season'>>;
   deleteCompanyPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyPanelArgs, 'uid'>>;
+  deleteGalleryImage?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteGalleryImageArgs, 'galleryImage'>>;
   deleteLiveVoteComment?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteLiveVoteCommentArgs, 'commentId'>>;
   deleteNews?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<IMutationDeleteNewsArgs, 'uid'>>;
   deletePartner?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeletePartnerArgs, 'partner'>>;
@@ -6015,6 +6123,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteSponsor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteSponsorArgs, 'sponsor'>>;
   deleteUserCompanyComponentRating?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
   editApprovedCompanyApplication?: Resolver<Maybe<IResolversTypes['EditApprovedCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationEditApprovedCompanyApplicationArgs, 'info'>>;
+  editGalleryImage?: Resolver<Maybe<IResolversTypes['CreateGalleryImageResponse']>, ParentType, ContextType, RequireFields<IMutationEditGalleryImageArgs, 'info' | 'uid'>>;
   editNews?: Resolver<Maybe<IResolversTypes['NewsCreateResponse']>, ParentType, ContextType, RequireFields<IMutationEditNewsArgs, 'info' | 'uid'>>;
   gateGuardianScan?: Resolver<Maybe<IResolversTypes['GateGuardianScanResponse']>, ParentType, ContextType, RequireFields<IMutationGateGuardianScanArgs, 'eventType' | 'eventUid' | 'userUid'>>;
   login?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationLoginArgs, 'identifier' | 'password'>>;
@@ -6031,6 +6140,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   resumeSetIsFavourite?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationResumeSetIsFavouriteArgs, 'isFavourite' | 'uid'>>;
   scanUserQr?: Resolver<Maybe<IResolversTypes['CompanyScanUserQrResponse']>, ParentType, ContextType, RequireFields<IMutationScanUserQrArgs, 'userUid'>>;
   scanUserQrRefine?: Resolver<Maybe<IResolversTypes['CompanyScanUserQrResponse']>, ParentType, ContextType, RequireFields<IMutationScanUserQrRefineArgs, 'refineData' | 'userUid'>>;
+  swapGalleryImageOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapGalleryImageOrderArgs, 'orderA' | 'orderB'>>;
   swapPartnerOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapPartnerOrderArgs, 'orderA' | 'orderB' | 'season'>>;
   swapSponsorOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapSponsorOrderArgs, 'orderA' | 'orderB' | 'season'>>;
   updateCalendarItem?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType, RequireFields<IMutationUpdateCalendarItemArgs, 'input'>>;
@@ -6100,6 +6210,7 @@ export type IPressReleaseResolvers<ContextType = any, ParentType extends IResolv
 };
 
 export type IQueryResolvers<ContextType = any, ParentType extends IResolversParentTypes['Query'] = IResolversParentTypes['Query']> = {
+  allGalleryImages?: Resolver<Array<IResolversTypes['GalleryImage']>, ParentType, ContextType>;
   allNews?: Resolver<Array<IResolversTypes['News']>, ParentType, ContextType, Partial<IQueryAllNewsArgs>>;
   allTranslationsFor?: Resolver<Array<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IQueryAllTranslationsForArgs, 'language'>>;
   approvedCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType>;
@@ -6118,6 +6229,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   currentSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
   eventLog?: Resolver<IResolversTypes['EventLogPaginationResult'], ParentType, ContextType, RequireFields<IQueryEventLogArgs, 'page' | 'perPage'>>;
   findFirstTranslation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryFindFirstTranslationArgs>>;
+  galleryImages?: Resolver<Array<IResolversTypes['GalleryImage']>, ParentType, ContextType>;
   gateGuardianScanList?: Resolver<Maybe<Array<IResolversTypes['GateGuardianLog']>>, ParentType, ContextType, RequireFields<IQueryGateGuardianScanListArgs, 'season'>>;
   industries?: Resolver<Array<IResolversTypes['Industry']>, ParentType, ContextType, Partial<IQueryIndustriesArgs>>;
   liveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryLiveVoteCommentsArgs, 'seasonUid'>>;
@@ -6459,6 +6571,7 @@ export type IResolvers<ContextType = any> = {
   CompanyScannedUser?: ICompanyScannedUserResolvers<ContextType>;
   CreateCompanyApplicationResponse?: ICreateCompanyApplicationResponseResolvers<ContextType>;
   CreateCompanyResponse?: ICreateCompanyResponseResolvers<ContextType>;
+  CreateGalleryImageResponse?: ICreateGalleryImageResponseResolvers<ContextType>;
   CreatePartnerResponse?: ICreatePartnerResponseResolvers<ContextType>;
   CreatePressReleaseResponse?: ICreatePressReleaseResponseResolvers<ContextType>;
   CreateSponsorResponse?: ICreateSponsorResponseResolvers<ContextType>;
@@ -6472,6 +6585,7 @@ export type IResolvers<ContextType = any> = {
   FieldError?: IFieldErrorResolvers<ContextType>;
   File?: IFileResolvers<ContextType>;
   FileCount?: IFileCountResolvers<ContextType>;
+  GalleryImage?: IGalleryImageResolvers<ContextType>;
   GateGuardianLog?: IGateGuardianLogResolvers<ContextType>;
   GateGuardianScanResponse?: IGateGuardianScanResponseResolvers<ContextType>;
   Image?: IImageResolvers<ContextType>;

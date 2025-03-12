@@ -965,14 +965,19 @@ input FloatFilter {
 type GalleryImage {
   name: String!
   order: Int!
+  photo: Image
   uid: String!
   visible: Boolean!
 }
 
 input GalleryImageCreateInput {
   name: String!
-  photo: Upload!
+  photo: Upload
   visible: Boolean!
+}
+
+input GalleryImageFilter {
+  take: Int
 }
 
 input GalleryImageWhereInput {
@@ -1196,7 +1201,7 @@ type Mutation {
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
-  deleteGalleryImage(galleryImage: String!): Boolean!
+  deleteGalleryImage(uid: String!): Boolean!
   deleteLiveVoteComment(commentId: Int!): Boolean!
   deleteNews(uid: String!): Boolean
   deletePartner(partner: String!): Boolean!
@@ -1519,7 +1524,8 @@ type Query {
   currentSeason: Season
   eventLog(orderBy: [EventLogOrderByWithRelationInput!], page: Int!, perPage: Int!, where: String): EventLogPaginationResult!
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
-  galleryImages: [GalleryImage!]!
+  galleryImageItemByUid(uid: String!): GalleryImage
+  galleryImages(filter: GalleryImageFilter): [GalleryImage!]!
   gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   liveVoteComments(seasonUid: String!): [LiveVoteComment!]!

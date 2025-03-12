@@ -94,6 +94,13 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-pr-gallery' }">
+              Uredi galeriju
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 

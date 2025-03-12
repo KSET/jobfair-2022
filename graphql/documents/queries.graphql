@@ -161,6 +161,17 @@ fragment frag_News on News {
     content
 }
 
+fragment frag_GalleryImage on GalleryImage {
+    uid
+    name
+    order
+    visible
+    photo {
+        thumbUrl
+        fullUrl
+    }
+}
+
 query Profile {
     profile {
         ...frag_UserProfile
@@ -210,6 +221,10 @@ query PageIndexData($language: String!) {
 
     news(lang: $language, filter: { take: 3 }) {
         ...frag_News
+    }
+
+    galleryImages(filter: { take: 6 }) {
+        ...frag_GalleryImage
     }
 }
 
@@ -384,6 +399,40 @@ query NewsItem($slug: String!, $lang: String!, $filter: NewsFilter) {
 query NewsItemByUid($uid: String!) {
     newsItemByUid(uid: $uid) {
         ...frag_News
+        uid
+        photo {
+            uid
+            name
+            full {
+                mimeType
+            }
+        }
+    }
+}
+
+query GalleryImages($filter: GalleryImageFilter) {
+    galleryImages(filter: $filter) {
+        ...frag_GalleryImage
+    }
+}
+
+query AllGalleryImages {
+    allGalleryImages {
+        ...frag_GalleryImage
+        uid
+        photo {
+            uid
+            name
+            full {
+                mimeType
+            }
+        }
+    }
+}
+
+query GalleryImagItemByUid($uid: String!) {
+    galleryImageItemByUid(uid: $uid) {
+        ...frag_GalleryImage
         uid
         photo {
             uid

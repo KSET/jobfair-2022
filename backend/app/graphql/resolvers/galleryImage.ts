@@ -1,8 +1,9 @@
 import {
-  GalleryImage, SponsorCreateInput,
+  GalleryImage, Image,
 } from "@generated/type-graphql";
 import {
-  Arg, Authorized, Ctx, Field, Info, InputType, Int, Mutation, ObjectType, Query, Resolver,
+  Arg, Authorized, Ctx, Field, FieldResolver, Info, InputType, Int, Mutation, ObjectType, Query, Resolver,
+  Root,
 } from "type-graphql";
 import {
   type GraphQLResolveInfo,
@@ -14,9 +15,10 @@ import {
   type Context,
 } from "../../types/apollo-context";
 import {
-  toSelect, transformSelectFor,
+  toSelect, transformSelectDefaults, transformSelectFor,
 } from "../helpers/resolver";
 import {
+  GQLField,
   type Dict, type GQLResponse,
 } from "../../types/helpers";
 import {
@@ -37,15 +39,31 @@ import {
 import {
   swap,
 } from "../../services/helpers/orderable";
+import {
+  transformSelect as transformSelectImage,
+} from "./image";
 
 @Resolver(() => GalleryImage)
 export class GalleryImageFieldResolver {
-
+  @FieldResolver(() => Image, { nullable: true })
+  photo(
+    @Root() galleryImage: GalleryImage,
+  ): GQLField<Image, "nullable"> {
+    return galleryImage.photo ?? null;
+  }
 }
 
 export const transformSelect = transformSelectFor<GalleryImageFieldResolver>({
-
+  ...transformSelectDefaults({
+    photo: transformSelectImage,
+  }),
 });
+
+@InputType()
+class GalleryImageFilter {
+  @Field(() => Int, { nullable: true })
+    take: number = 0;
+}
 
 @InputType()
 export class GalleryImageCreateInput {
@@ -58,7 +76,7 @@ export class GalleryImageCreateInput {
   @Field()
     visible: boolean = false;
 
-  @Field(() => GraphQLUpload)
+  @Field(() => GraphQLUpload, { nullable: true })
     photo: FileUpload = null as unknown as FileUpload;
 }
 
@@ -72,8 +90,10 @@ export class GalleryImageQueryResolver {
   galleryImages(
     @Ctx() ctx: Context,
       @Info() info: GraphQLResolveInfo,
+      @Arg("filter", { nullable: true }) filter?: GalleryImageFilter,
   ): GQLResponse<GalleryImage[]> {
     return ctx.prisma.galleryImage.findMany({
+      take: filter?.take,
       where: {
         visible: true,
       },
@@ -99,6 +119,31 @@ export class GalleryImageQueryResolver {
       },
     });
   }
+
+  @Query(() => GalleryImage, { nullable: true })
+  galleryImageItemByUid(
+    @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+      @Arg("uid") uid: string,
+  ): GQLResponse<GalleryImage, "nullable"> {
+    // const { user } = ctx;
+
+    // if (!user) {
+    //   return null;
+    // };
+
+    // if (!hasAtLeastRole(Role.Admin, user)) {
+    //   return null;
+    // }
+        
+    return ctx.prisma.galleryImage.findFirst({
+      where: {
+        uid,
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
+
 
   @Mutation(() => CreateGalleryImageResponse, { nullable: true })
   async createGalleryImage(
@@ -266,7 +311,7 @@ export class GalleryImageQueryResolver {
   @Mutation(() => Boolean)
   async deleteGalleryImage(
   @Ctx() ctx: Context,
-    @Arg("galleryImage") galleryImageUid: string,
+    @Arg("uid") uid: string,
   ) {
     const { user } = ctx;
 
@@ -281,7 +326,7 @@ export class GalleryImageQueryResolver {
     const success = await ctx.prisma.$transaction(async (prisma) => {
       const galleryImage = await prisma.galleryImage.delete({
         where: {
-          uid: galleryImageUid,
+          uid: uid,
         },
         select: {
           order: true,

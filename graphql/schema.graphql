@@ -769,6 +769,11 @@ type CreateCompanyResponse {
   errors: [FieldError!]
 }
 
+type CreateGalleryImageResponse {
+  entity: GalleryImage
+  errors: [FieldError!]
+}
+
 type CreatePartnerResponse {
   entity: Partner
   errors: [FieldError!]
@@ -957,6 +962,34 @@ input FloatFilter {
   notIn: [Float!]
 }
 
+type GalleryImage {
+  name: String!
+  order: Int!
+  photo: Image
+  uid: String!
+  visible: Boolean!
+}
+
+input GalleryImageCreateInput {
+  name: String!
+  photo: Upload
+  visible: Boolean!
+}
+
+input GalleryImageFilter {
+  take: Int
+}
+
+input GalleryImageWhereInput {
+  AND: [GalleryImageWhereInput!]
+  NOT: [GalleryImageWhereInput!]
+  OR: [GalleryImageWhereInput!]
+  name: StringFilter
+  order: IntFilter
+  photo: ImageRelationFilter
+  visible: BoolFilter
+}
+
 type GateGuardianLog {
   eventId: Int!
   eventType: String!
@@ -1006,6 +1039,7 @@ type Image {
 type ImageCount {
   ApplicationPresenter(where: ApplicationPresenterWhereInput): Int!
   Company(where: CompanyWhereInput): Int!
+  GalleryImage(where: GalleryImageWhereInput): Int!
   News(where: NewsWhereInput): Int!
   Partner(where: PartnerWhereInput): Int!
   Sponsor(where: SponsorWhereInput): Int!
@@ -1154,6 +1188,7 @@ type Mutation {
   checkPasswordReset(token: String!): User
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
+  createGalleryImage(info: GalleryImageCreateInput!): CreateGalleryImageResponse
   createIndustry(name: String!): Industry
   createLiveVote(seasonUid: String!, vote: String!): LiveVote
   createLiveVoteComment(comment: String!, seasonUid: String!): LiveVoteComment
@@ -1166,6 +1201,7 @@ type Mutation {
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
+  deleteGalleryImage(uid: String!): Boolean!
   deleteLiveVoteComment(commentId: Int!): Boolean!
   deleteNews(uid: String!): Boolean
   deletePartner(partner: String!): Boolean!
@@ -1174,6 +1210,7 @@ type Mutation {
   deleteSponsor(sponsor: String!): Boolean!
   deleteUserCompanyComponentRating(companyUid: String!, component: String!, seasonUid: String!): Boolean!
   editApprovedCompanyApplication(info: CompanyApplicationApprovedEditInput!): EditApprovedCompanyApplicationResponse
+  editGalleryImage(info: GalleryImageCreateInput!, uid: String!): CreateGalleryImageResponse
   editNews(info: NewsCreateInput!, uid: String!): NewsCreateResponse
   gateGuardianScan(eventType: String!, eventUid: String!, userUid: String!): GateGuardianScanResponse
   login(identifier: String!, password: String!): AuthResponse!
@@ -1190,6 +1227,7 @@ type Mutation {
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
   scanUserQr(userUid: String!): CompanyScanUserQrResponse
   scanUserQrRefine(refineData: CompanyScanUserQrRefineData!, userUid: String!): CompanyScanUserQrResponse
+  swapGalleryImageOrder(orderA: Int!, orderB: Int!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
@@ -1467,6 +1505,7 @@ input PressReleaseWithFilesCreateInput {
 }
 
 type Query {
+  allGalleryImages: [GalleryImage!]!
   allNews(filter: NewsFilter): [News!]!
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
@@ -1485,6 +1524,8 @@ type Query {
   currentSeason: Season
   eventLog(orderBy: [EventLogOrderByWithRelationInput!], page: Int!, perPage: Int!, where: String): EventLogPaginationResult!
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
+  galleryImageItemByUid(uid: String!): GalleryImage
+  galleryImages(filter: GalleryImageFilter): [GalleryImage!]!
   gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   liveVoteComments(seasonUid: String!): [LiveVoteComment!]!

@@ -12,7 +12,6 @@ concurrency:
 
 jobs:
   build-frontend:
-    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
       - name: Login to Docker Hub
@@ -38,7 +37,6 @@ jobs:
             ksetcomp/jobfair-2022-frontend:${{ github.sha }}
 
   build-backend:
-    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
       - name: Login to Docker Hub
@@ -64,7 +62,6 @@ jobs:
             ksetcomp/jobfair-2022-backend:${{ github.sha }}
 
   notify-watchtower:
-    runs-on: [self-hosted]
     needs: [build-frontend, build-backend]
     steps:
       - name: Notify Watchtower

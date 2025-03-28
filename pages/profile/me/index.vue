@@ -110,7 +110,7 @@
           </div>
         </template>
       </template>
-      <div v-if="false && !hasCompany" :class="$style.item">
+      <div v-if="!hasCompany" :class="$style.item">
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
             <translated-text trans-key="profile.resume.header" />
@@ -430,7 +430,7 @@
         </div>
 
         <div
-          v-if="isEventOngoing && false"
+          v-if="isEventOngoing"
           :class="[$style.item, $style.itemApproval]"
         >
           <h2 :class="$style.itemHeader">
@@ -554,7 +554,6 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
-              v-if="false"
               :to="{ name: 'profile-me-company-resumes' }"
             >
               <p-button

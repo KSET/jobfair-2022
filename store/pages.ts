@@ -125,7 +125,7 @@ export const usePagesStore = defineStore(
           {
             name: "profile.cv",
             to: { name: "profile-me-cv" },
-            if: () => !userStore.hasCompany,
+            if: () => !userStore.hasCompany && false,
           },
         ] as const);
       },

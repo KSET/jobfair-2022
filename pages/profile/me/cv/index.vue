@@ -251,9 +251,9 @@
       const isLoading = ref(false);
       const toast = useToast();
 
-      if ("$WITH_CV" !== process.env.NODE_ENV) {
-        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
-      }
+      // if ("$WITH_CV" !== process.env.NODE_ENV) {
+      //   throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+      // }
 
       type Resume = NonNullable<IMyResumeQuery["profile"]>["resume"];
       const resumeQuery = () => useQuery<IMyResumeQuery, IMyResumeQueryVariables>({
@@ -499,6 +499,8 @@
           if ("string" === typeof data[FormFor.Pdf]?.cv) {
             data[FormFor.Pdf].keepOld = "" !== data[FormFor.Pdf]?.cv;
             data[FormFor.Pdf].cv = null;
+          } else if (data[FormFor.Pdf]) {
+            data[FormFor.Pdf].keepOld = false;
           }
 
           for (const item of [

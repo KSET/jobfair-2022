@@ -3548,7 +3548,7 @@ export type ILoginMutation_login_AuthResponse_entity_User_roles_Role = { name: s
 
 export type ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry = { name: string };
 
-export type ILoginMutation_login_AuthResponse_entity_User_companies_Company = { uid: string, vat: string, legalName: string, brandName: string, address: string, website: string, descriptionEn: string, descriptionHr: string, industry?: ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry | null };
+export type ILoginMutation_login_AuthResponse_entity_User_companies_Company = { uid: string, vat: string, legalName: string, brandName: string, address: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, descriptionEn: string, descriptionHr: string, industry?: ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry | null };
 
 export type ILoginMutation_login_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -3950,7 +3950,7 @@ export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPan
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
-export type IFrag_CompanyFragment = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type IFrag_CompanyFragment = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type IFrag_NewsFragment = { lang: string, slug: string, date: string | Date, title: string, description: string, content: string, photo?: IEditNewsMutation_editNews_NewsCreateResponse_entity_News_photo_Image | null };
 
@@ -4012,7 +4012,7 @@ export type IPageIndexDataQueryVariables = Exact<{
 
 export type IPageIndexDataQuery = IPageIndexDataQuery_Query;
 
-export type ICompanyQuery_company_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type ICompanyQuery_company_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type ICompanyQuery_Query = { company?: ICompanyQuery_company_Company | null };
 
@@ -4056,7 +4056,7 @@ export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_C
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null };
 
-export type ICompanyInfoQuery_companyInfo_Company = { uid: string, brandName: string, descriptionEn: string, descriptionHr: string, website: string, rasterLogo?: ICompanyInfoQuery_companyInfo_Company_rasterLogo_Image | null, program?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram | null };
+export type ICompanyInfoQuery_companyInfo_Company = { uid: string, brandName: string, descriptionEn: string, descriptionHr: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, rasterLogo?: ICompanyInfoQuery_companyInfo_Company_rasterLogo_Image | null, program?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram | null };
 
 export type ICompanyInfoQuery_Query = { companyInfo?: ICompanyInfoQuery_companyInfo_Company | null };
 
@@ -4195,7 +4195,7 @@ export type IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory
 
 export type IAdminCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
@@ -6677,6 +6677,9 @@ export const Frag_UserProfile = gql`
     brandName
     address
     website
+    instagram
+    facebook
+    linkedIn
     descriptionEn
     descriptionHr
     industry {
@@ -6785,6 +6788,9 @@ export const Frag_Company = gql`
   address
   vat
   website
+  instagram
+  facebook
+  linkedIn
   industry {
     name
   }
@@ -7214,6 +7220,9 @@ export const CompanyInfo = gql`
     descriptionEn
     descriptionHr
     website
+    instagram
+    facebook
+    linkedIn
     rasterLogo {
       thumbUrl
       fullUrl

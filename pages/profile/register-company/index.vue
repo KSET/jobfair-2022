@@ -144,8 +144,11 @@
         ...info_,
         industry: {
           ...info_.industry,
+        },
+        descriptionEn: {
+          ...info_.descriptionEn,
           classes: [
-            $style.column2,
+            $style.column1,
           ],
         },
       });
@@ -283,6 +286,14 @@
 
       .column2 {
         grid-column: 2;
+
+        @include media(lg) {
+          grid-column: initial;
+        }
+      }
+
+      .column1 {
+        grid-column: 1;
 
         @include media(lg) {
           grid-column: initial;

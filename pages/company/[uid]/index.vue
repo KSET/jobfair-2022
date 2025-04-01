@@ -31,20 +31,26 @@
         </h4>
         <p :class="$style.companyDescriptionText" v-text="translateFor(company, 'description')" />
         <hr>
-        <p>
-          <translated-text
-            trans-key="company.info.website"
-          />&#58;
-          <a
-            :href="company.website"
-            rel="noopener noreferrer"
-            target="_blank"
+        <div :class="$style.socialIconContainer">
+          <div
+            v-for="social in companySocials"
+            :key="social.icon"
+            :class="$style.socialIcon"
           >
-            <strong>
-              {{ formatWebsite(company.website) }}
-            </strong>
-          </a>
-        </p>
+            <a
+              :class="$style.socialIconLink"
+              :href="social.href"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <app-img
+                :alt="social.name"
+                :src="social.icon"
+                contain
+              />
+            </a>
+          </div>
+        </div>
       </div>
     </div>
     <div :class="$style.eventContainer">
@@ -428,6 +434,46 @@
         return info;
       }), false);
 
+      const globResult = import.meta.glob([
+        "../../../assets/images/page/company-info/icons/socials/*.png",
+      ], { eager: true }) as unknown as Record<string, { default: string, }>;
+
+      const socialIcons =
+        Object.fromEntries(
+          Object
+            .entries(globResult)
+            .filter(([ key ]) => key.startsWith("../../../assets/images/page/company-info/icons/socials"))
+            .map(([ key, value ]) => [
+              key.replace(/.*\/icon-(.*)\..*?$/, "$1"),
+              value.default,
+            ])
+          ,
+        )
+      ;
+
+      const companySocials = [
+        unref(company).website && {
+          name: "Website",
+          href: unref(company).website,
+          icon: socialIcons.web,
+        },
+        unref(company).linkedIn && {
+          name: "LinkedIn",
+          href: unref(company).linkedIn,
+          icon: socialIcons.ln,
+        },
+        unref(company).instagram && {
+          name: "Instagram",
+          href: unref(company).instagram,
+          icon: socialIcons.ig,
+        },
+        unref(company).facebook && {
+          name: "Facebook",
+          href: unref(company).facebook,
+          icon: socialIcons.fb,
+        },
+      ].filter(Boolean);
+
       const signupLoading = ref(false);
 
       return {
@@ -441,6 +487,7 @@
         EventType,
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
         joinNowRoute: useJoinNow(),
+        companySocials,
         formatWebsite(website: string) {
           try {
             const url = new URL(website);
@@ -736,4 +783,27 @@
     opacity: .7;
     color: $fer-black;
   }
+
+  .socialIconContainer {
+      display: flex;
+      gap: .875rem;
+      max-width: 12em;
+
+      .socialIcon {
+        flex: 1;
+        width: auto;
+        height: 1.3125rem;
+        padding: 0;
+        transition-property: opacity;
+
+        .socialIconLink {
+          width: 100%;
+          height: 100%;
+        }
+
+        &:hover {
+          opacity: .8;
+        }
+      }
+    }
 </style>

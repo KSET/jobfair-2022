@@ -1,5 +1,5 @@
 <template>
-  <app-user-profile-container :class="$style.container">
+  <app-user-profile-container v-if="false" :class="$style.container">
     <h1>
       <translated-text trans-key="profile.cv" />
     </h1>

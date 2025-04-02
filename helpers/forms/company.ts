@@ -24,6 +24,7 @@ type Company = Omit<ICompany,
   | "createdAt"
   | "updatedAt"
   | "logoHidden"
+  | "ratings"
   | "uid"> & {
   vectorLogo: Pick<IFile,
     "uid"
@@ -64,6 +65,24 @@ export const companyCreate =
           value: company?.website ?? "",
           type: "text" as const,
           placeholder: "https://www.kset.org",
+        },
+        instagram: {
+          value: company?.instagram ?? "",
+          type: "text" as const,
+          placeholder: "https://www.instagram.com/klubkset/",
+          required: false,
+        },
+        facebook: {
+          value: company?.facebook ?? "",
+          type: "text" as const,
+          placeholder: "https://web.facebook.com/KSETZg",
+          required: false,
+        },
+        linkedIn: {
+          value: company?.linkedIn ?? "",
+          type: "text" as const,
+          placeholder: "https://www.linkedin.com/company/kset/",
+          required: false,
         },
         industry: {
           value: company?.industry?.name ?? "",

@@ -410,8 +410,11 @@ export type ICompany = {
   createdAt: Scalars['DateTimeISO']['output'];
   descriptionEn: Scalars['String']['output'];
   descriptionHr: Scalars['String']['output'];
+  facebook?: Maybe<Scalars['String']['output']>;
   industry?: Maybe<IIndustry>;
+  instagram?: Maybe<Scalars['String']['output']>;
   legalName: Scalars['String']['output'];
+  linkedIn?: Maybe<Scalars['String']['output']>;
   logoHidden: Scalars['Boolean']['output'];
   members?: Maybe<Array<IUser>>;
   program?: Maybe<ICompanyProgram>;
@@ -706,7 +709,10 @@ export type ICompanyOrderByWithRelationInput = {
   brandName?: InputMaybe<ISortOrder>;
   descriptionEn?: InputMaybe<ISortOrder>;
   descriptionHr?: InputMaybe<ISortOrder>;
+  facebook?: InputMaybe<ISortOrderInput>;
+  instagram?: InputMaybe<ISortOrderInput>;
   legalName?: InputMaybe<ISortOrder>;
+  linkedIn?: InputMaybe<ISortOrderInput>;
   vat?: InputMaybe<ISortOrder>;
   website?: InputMaybe<ISortOrder>;
 };
@@ -780,9 +786,12 @@ export enum ICompanyScalarFieldEnum {
   CreatedAt = 'createdAt',
   DescriptionEn = 'descriptionEn',
   DescriptionHr = 'descriptionHr',
+  Facebook = 'facebook',
   Id = 'id',
   IndustryId = 'industryId',
+  Instagram = 'instagram',
   LegalName = 'legalName',
+  LinkedIn = 'linkedIn',
   RasterLogoId = 'rasterLogoId',
   Uid = 'uid',
   UpdatedAt = 'updatedAt',
@@ -838,7 +847,10 @@ export type ICompanyWhereInput = {
   brandName?: InputMaybe<IStringFilter>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
+  facebook?: InputMaybe<IStringNullableFilter>;
+  instagram?: InputMaybe<IStringNullableFilter>;
   legalName?: InputMaybe<IStringFilter>;
+  linkedIn?: InputMaybe<IStringNullableFilter>;
   vat?: InputMaybe<IStringFilter>;
   website?: InputMaybe<IStringFilter>;
 };
@@ -851,7 +863,10 @@ export type ICompanyWhereUniqueInput = {
   brandName?: InputMaybe<IStringFilter>;
   descriptionEn?: InputMaybe<IStringFilter>;
   descriptionHr?: InputMaybe<IStringFilter>;
+  facebook?: InputMaybe<IStringNullableFilter>;
+  instagram?: InputMaybe<IStringNullableFilter>;
   legalName?: InputMaybe<IStringFilter>;
+  linkedIn?: InputMaybe<IStringNullableFilter>;
   vat?: InputMaybe<Scalars['String']['input']>;
   website?: InputMaybe<IStringFilter>;
 };
@@ -866,8 +881,11 @@ export type ICreateCompanyInput = {
   brandName: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
   descriptionHr: Scalars['String']['input'];
+  facebook?: InputMaybe<Scalars['String']['input']>;
   industry: Scalars['String']['input'];
+  instagram?: InputMaybe<Scalars['String']['input']>;
   legalName: Scalars['String']['input'];
+  linkedIn?: InputMaybe<Scalars['String']['input']>;
   rasterLogo?: InputMaybe<Scalars['Upload']['input']>;
   vat: Scalars['String']['input'];
   vectorLogo?: InputMaybe<Scalars['Upload']['input']>;
@@ -1085,19 +1103,14 @@ export type IFloatFilter = {
 export type IGalleryImage = {
   name: Scalars['String']['output'];
   order: Scalars['Int']['output'];
-  photo?: Maybe<IImage>;
   uid: Scalars['String']['output'];
   visible: Scalars['Boolean']['output'];
 };
 
 export type IGalleryImageCreateInput = {
   name: Scalars['String']['input'];
-  photo?: InputMaybe<Scalars['Upload']['input']>;
+  photo: Scalars['Upload']['input'];
   visible: Scalars['Boolean']['input'];
-};
-
-export type IGalleryImageFilter = {
-  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type IGalleryImageWhereInput = {
@@ -1520,7 +1533,7 @@ export type IMutationDeleteCompanyPanelArgs = {
 
 
 export type IMutationDeleteGalleryImageArgs = {
-  uid: Scalars['String']['input'];
+  galleryImage: Scalars['String']['input'];
 };
 
 
@@ -2040,7 +2053,6 @@ export type IQuery = {
   currentSeason?: Maybe<ISeason>;
   eventLog: IEventLogPaginationResult;
   findFirstTranslation?: Maybe<ITranslation>;
-  galleryImageItemByUid?: Maybe<IGalleryImage>;
   galleryImages: Array<IGalleryImage>;
   gateGuardianScanList?: Maybe<Array<IGateGuardianLog>>;
   industries: Array<IIndustry>;
@@ -2166,16 +2178,6 @@ export type IQueryFindFirstTranslationArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ITranslationWhereInput>;
-};
-
-
-export type IQueryGalleryImageItemByUidArgs = {
-  uid: Scalars['String']['input'];
-};
-
-
-export type IQueryGalleryImagesArgs = {
-  filter?: InputMaybe<IGalleryImageFilter>;
 };
 
 
@@ -3546,7 +3548,7 @@ export type ILoginMutation_login_AuthResponse_entity_User_roles_Role = { name: s
 
 export type ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry = { name: string };
 
-export type ILoginMutation_login_AuthResponse_entity_User_companies_Company = { uid: string, vat: string, legalName: string, brandName: string, address: string, website: string, descriptionEn: string, descriptionHr: string, industry?: ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry | null };
+export type ILoginMutation_login_AuthResponse_entity_User_companies_Company = { uid: string, vat: string, legalName: string, brandName: string, address: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, descriptionEn: string, descriptionHr: string, industry?: ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry | null };
 
 export type ILoginMutation_login_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -3912,51 +3914,6 @@ export type IDeleteNewsMutationVariables = Exact<{
 
 export type IDeleteNewsMutation = IDeleteNewsMutation_Mutation;
 
-export type ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse_errors_FieldError = { field: string, message: string };
-
-export type ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse_entity_GalleryImage = { uid: string };
-
-export type ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse = { errors?: Array<ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse_errors_FieldError> | null, entity?: ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse_entity_GalleryImage | null };
-
-export type ICreateGalleryImageMutation_Mutation = { createGalleryImage?: ICreateGalleryImageMutation_createGalleryImage_CreateGalleryImageResponse | null };
-
-
-export type ICreateGalleryImageMutationVariables = Exact<{
-  info: IGalleryImageCreateInput;
-}>;
-
-
-export type ICreateGalleryImageMutation = ICreateGalleryImageMutation_Mutation;
-
-export type IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_errors_FieldError = { field: string, message: string };
-
-export type IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image = { thumbUrl: string, fullUrl: string };
-
-export type IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
-
-export type IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse = { errors?: Array<IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_errors_FieldError> | null, entity?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage | null };
-
-export type IEditGalleryImageMutation_Mutation = { editGalleryImage?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse | null };
-
-
-export type IEditGalleryImageMutationVariables = Exact<{
-  uid: Scalars['String']['input'];
-  info: IGalleryImageCreateInput;
-}>;
-
-
-export type IEditGalleryImageMutation = IEditGalleryImageMutation_Mutation;
-
-export type IDeleteGalleryImageMutation_Mutation = { deleteGalleryImage: boolean };
-
-
-export type IDeleteGalleryImageMutationVariables = Exact<{
-  uid: Scalars['String']['input'];
-}>;
-
-
-export type IDeleteGalleryImageMutation = IDeleteGalleryImageMutation_Mutation;
-
 export type IFrag_SeasonFragment = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
 export type IFrag_UserProfileFragment = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
@@ -3993,11 +3950,9 @@ export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPan
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
-export type IFrag_CompanyFragment = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type IFrag_CompanyFragment = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type IFrag_NewsFragment = { lang: string, slug: string, date: string | Date, title: string, description: string, content: string, photo?: IEditNewsMutation_editNews_NewsCreateResponse_entity_News_photo_Image | null };
-
-export type IFrag_GalleryImageFragment = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
 
 export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -4047,9 +4002,7 @@ export type IPageIndexDataQuery_partners_Partner = { name: string, url: string, 
 
 export type IPageIndexDataQuery_news_News = { lang: string, slug: string, date: string | Date, title: string, description: string, content: string, photo?: IEditNewsMutation_editNews_NewsCreateResponse_entity_News_photo_Image | null };
 
-export type IPageIndexDataQuery_galleryImages_GalleryImage = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
-
-export type IPageIndexDataQuery_Query = { sponsors: Array<IPageIndexDataQuery_sponsors_Sponsor>, partners: Array<IPageIndexDataQuery_partners_Partner>, news: Array<IPageIndexDataQuery_news_News>, galleryImages: Array<IPageIndexDataQuery_galleryImages_GalleryImage> };
+export type IPageIndexDataQuery_Query = { sponsors: Array<IPageIndexDataQuery_sponsors_Sponsor>, partners: Array<IPageIndexDataQuery_partners_Partner>, news: Array<IPageIndexDataQuery_news_News> };
 
 
 export type IPageIndexDataQueryVariables = Exact<{
@@ -4059,7 +4012,7 @@ export type IPageIndexDataQueryVariables = Exact<{
 
 export type IPageIndexDataQuery = IPageIndexDataQuery_Query;
 
-export type ICompanyQuery_company_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type ICompanyQuery_company_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type ICompanyQuery_Query = { company?: ICompanyQuery_company_Company | null };
 
@@ -4103,7 +4056,7 @@ export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_C
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null };
 
-export type ICompanyInfoQuery_companyInfo_Company = { uid: string, brandName: string, descriptionEn: string, descriptionHr: string, website: string, rasterLogo?: ICompanyInfoQuery_companyInfo_Company_rasterLogo_Image | null, program?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram | null };
+export type ICompanyInfoQuery_companyInfo_Company = { uid: string, brandName: string, descriptionEn: string, descriptionHr: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, rasterLogo?: ICompanyInfoQuery_companyInfo_Company_rasterLogo_Image | null, program?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram | null };
 
 export type ICompanyInfoQuery_Query = { companyInfo?: ICompanyInfoQuery_companyInfo_Company | null };
 
@@ -4226,40 +4179,6 @@ export type INewsItemByUidQueryVariables = Exact<{
 
 export type INewsItemByUidQuery = INewsItemByUidQuery_Query;
 
-export type IGalleryImagesQuery_galleryImages_GalleryImage = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
-
-export type IGalleryImagesQuery_Query = { galleryImages: Array<IGalleryImagesQuery_galleryImages_GalleryImage> };
-
-
-export type IGalleryImagesQueryVariables = Exact<{
-  filter?: InputMaybe<IGalleryImageFilter>;
-}>;
-
-
-export type IGalleryImagesQuery = IGalleryImagesQuery_Query;
-
-export type IAllGalleryImagesQuery_allGalleryImages_GalleryImage = { uid: string, name: string, order: number, visible: boolean, photo?: INewsItemByUidQuery_newsItemByUid_News_photo_Image | null };
-
-export type IAllGalleryImagesQuery_Query = { allGalleryImages: Array<IAllGalleryImagesQuery_allGalleryImages_GalleryImage> };
-
-
-export type IAllGalleryImagesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type IAllGalleryImagesQuery = IAllGalleryImagesQuery_Query;
-
-export type IGalleryImagItemByUidQuery_galleryImageItemByUid_GalleryImage = { uid: string, name: string, order: number, visible: boolean, photo?: INewsItemByUidQuery_newsItemByUid_News_photo_Image | null };
-
-export type IGalleryImagItemByUidQuery_Query = { galleryImageItemByUid?: IGalleryImagItemByUidQuery_galleryImageItemByUid_GalleryImage | null };
-
-
-export type IGalleryImagItemByUidQueryVariables = Exact<{
-  uid: Scalars['String']['input'];
-}>;
-
-
-export type IGalleryImagItemByUidQuery = IGalleryImagItemByUidQuery_Query;
-
 export type IAdminInitialDataQuery_industries_Industry = { name: string };
 
 export type IAdminInitialDataQuery_seasons_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
@@ -4276,7 +4195,7 @@ export type IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory
 
 export type IAdminCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
@@ -5262,7 +5181,6 @@ export type IResolversTypes = {
   FloatFilter: IFloatFilter;
   GalleryImage: ResolverTypeWrapper<IGalleryImage>;
   GalleryImageCreateInput: IGalleryImageCreateInput;
-  GalleryImageFilter: IGalleryImageFilter;
   GalleryImageWhereInput: IGalleryImageWhereInput;
   GateGuardianLog: ResolverTypeWrapper<IGateGuardianLog>;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
@@ -5544,7 +5462,6 @@ export type IResolversParentTypes = {
   FloatFilter: IFloatFilter;
   GalleryImage: IGalleryImage;
   GalleryImageCreateInput: IGalleryImageCreateInput;
-  GalleryImageFilter: IGalleryImageFilter;
   GalleryImageWhereInput: IGalleryImageWhereInput;
   GateGuardianLog: IGateGuardianLog;
   GateGuardianLogListRelationFilter: IGateGuardianLogListRelationFilter;
@@ -5838,8 +5755,11 @@ export type ICompanyResolvers<ContextType = any, ParentType extends IResolversPa
   createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   descriptionEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   descriptionHr?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  facebook?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   industry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType>;
+  instagram?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   legalName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  linkedIn?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   logoHidden?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   members?: Resolver<Maybe<Array<IResolversTypes['User']>>, ParentType, ContextType>;
   program?: Resolver<Maybe<IResolversTypes['CompanyProgram']>, ParentType, ContextType>;
@@ -6079,7 +5999,6 @@ export type IFileCountResolvers<ContextType = any, ParentType extends IResolvers
 export type IGalleryImageResolvers<ContextType = any, ParentType extends IResolversParentTypes['GalleryImage'] = IResolversParentTypes['GalleryImage']> = {
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   order?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
-  photo?: Resolver<Maybe<IResolversTypes['Image']>, ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   visible?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -6195,7 +6114,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteCalendarItem?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCalendarItemArgs, 'uid'>>;
   deleteCompanyApplicationFor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyApplicationForArgs, 'company' | 'season'>>;
   deleteCompanyPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyPanelArgs, 'uid'>>;
-  deleteGalleryImage?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteGalleryImageArgs, 'uid'>>;
+  deleteGalleryImage?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteGalleryImageArgs, 'galleryImage'>>;
   deleteLiveVoteComment?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteLiveVoteCommentArgs, 'commentId'>>;
   deleteNews?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<IMutationDeleteNewsArgs, 'uid'>>;
   deletePartner?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeletePartnerArgs, 'partner'>>;
@@ -6310,8 +6229,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   currentSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
   eventLog?: Resolver<IResolversTypes['EventLogPaginationResult'], ParentType, ContextType, RequireFields<IQueryEventLogArgs, 'page' | 'perPage'>>;
   findFirstTranslation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryFindFirstTranslationArgs>>;
-  galleryImageItemByUid?: Resolver<Maybe<IResolversTypes['GalleryImage']>, ParentType, ContextType, RequireFields<IQueryGalleryImageItemByUidArgs, 'uid'>>;
-  galleryImages?: Resolver<Array<IResolversTypes['GalleryImage']>, ParentType, ContextType, Partial<IQueryGalleryImagesArgs>>;
+  galleryImages?: Resolver<Array<IResolversTypes['GalleryImage']>, ParentType, ContextType>;
   gateGuardianScanList?: Resolver<Maybe<Array<IResolversTypes['GateGuardianLog']>>, ParentType, ContextType, RequireFields<IQueryGateGuardianScanListArgs, 'season'>>;
   industries?: Resolver<Array<IResolversTypes['Industry']>, ParentType, ContextType, Partial<IQueryIndustriesArgs>>;
   liveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryLiveVoteCommentsArgs, 'seasonUid'>>;
@@ -6759,6 +6677,9 @@ export const Frag_UserProfile = gql`
     brandName
     address
     website
+    instagram
+    facebook
+    linkedIn
     descriptionEn
     descriptionHr
     industry {
@@ -6867,6 +6788,9 @@ export const Frag_Company = gql`
   address
   vat
   website
+  instagram
+  facebook
+  linkedIn
   industry {
     name
   }
@@ -6884,18 +6808,6 @@ export const Frag_News = gql`
   title
   description
   content
-}
-    `;
-export const Frag_GalleryImage = gql`
-    fragment frag_GalleryImage on GalleryImage {
-  uid
-  name
-  order
-  visible
-  photo {
-    thumbUrl
-    fullUrl
-  }
 }
     `;
 export const StoreCalendarEventsAllCalendarFragment = gql`
@@ -7240,38 +7152,6 @@ export const DeleteNews = gql`
   deleteNews(uid: $uid)
 }
     `;
-export const CreateGalleryImage = gql`
-    mutation CreateGalleryImage($info: GalleryImageCreateInput!) {
-  createGalleryImage(info: $info) {
-    errors {
-      field
-      message
-    }
-    entity {
-      uid
-    }
-  }
-}
-    `;
-export const EditGalleryImage = gql`
-    mutation EditGalleryImage($uid: String!, $info: GalleryImageCreateInput!) {
-  editGalleryImage(uid: $uid, info: $info) {
-    errors {
-      field
-      message
-    }
-    entity {
-      uid
-      ...frag_GalleryImage
-    }
-  }
-}
-    ${Frag_GalleryImage}`;
-export const DeleteGalleryImage = gql`
-    mutation DeleteGalleryImage($uid: String!) {
-  deleteGalleryImage(uid: $uid)
-}
-    `;
 export const Profile = gql`
     query Profile {
   profile {
@@ -7323,12 +7203,8 @@ export const PageIndexData = gql`
   news(lang: $language, filter: {take: 3}) {
     ...frag_News
   }
-  galleryImages(filter: {take: 6}) {
-    ...frag_GalleryImage
-  }
 }
-    ${Frag_News}
-${Frag_GalleryImage}`;
+    ${Frag_News}`;
 export const Company = gql`
     query Company($vat: String!) {
   company(vat: $vat) {
@@ -7344,6 +7220,9 @@ export const CompanyInfo = gql`
     descriptionEn
     descriptionHr
     website
+    instagram
+    facebook
+    linkedIn
     rasterLogo {
       thumbUrl
       fullUrl
@@ -7523,43 +7402,6 @@ export const NewsItemByUid = gql`
   }
 }
     ${Frag_News}`;
-export const GalleryImages = gql`
-    query GalleryImages($filter: GalleryImageFilter) {
-  galleryImages(filter: $filter) {
-    ...frag_GalleryImage
-  }
-}
-    ${Frag_GalleryImage}`;
-export const AllGalleryImages = gql`
-    query AllGalleryImages {
-  allGalleryImages {
-    ...frag_GalleryImage
-    uid
-    photo {
-      uid
-      name
-      full {
-        mimeType
-      }
-    }
-  }
-}
-    ${Frag_GalleryImage}`;
-export const GalleryImagItemByUid = gql`
-    query GalleryImagItemByUid($uid: String!) {
-  galleryImageItemByUid(uid: $uid) {
-    ...frag_GalleryImage
-    uid
-    photo {
-      uid
-      name
-      full {
-        mimeType
-      }
-    }
-  }
-}
-    ${Frag_GalleryImage}`;
 export const AdminInitialData = gql`
     query AdminInitialData {
   industries {

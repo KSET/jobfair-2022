@@ -110,10 +110,8 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="gallery-container" :class="$style.container">
-      <div>
+      <div class="col-12 md:col-6 mt-7 md:mt-8">
         <h2 :class="$style.subHeader">
           <translated-text trans-key="press.press-gallery.header" />
         </h2>
@@ -122,7 +120,7 @@
         </p>
         <div :class="$style.galleryContainer">
           <div
-            v-for="galleryItem in galleryImages"
+            v-for="galleryItem in gallery"
             :key="galleryItem.url"
             :class="$style.galleryItem"
           >
@@ -157,9 +155,6 @@
     type IPressReleasesQuery,
     type IPressReleasesQueryVariables,
     PressReleases,
-    GalleryImages,
-    type IGalleryImagesQuery,
-    type IGalleryImagesQueryVariables,
   } from "~/graphql/schema";
   import {
     useGalleryStore,
@@ -184,32 +179,14 @@
       const galleryStore = useGalleryStore();
       const seasonsStore = useSeasonsStore();
 
+      const resp = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
+        query: PressReleases,
+        variables: {
+          season: seasonsStore.currentSeason?.uid,
+        },
+      })();
 
-      const { data: pressReleasesResp } = useAsyncData("pressReleases", async () => {
-        const result = await useQuery<IPressReleasesQuery, IPressReleasesQueryVariables>({
-          query: PressReleases,
-          variables: {
-            season: seasonsStore.currentSeason?.uid,
-          },
-        })();
-
-        return result?.data?.pressReleases ?? [];
-      });
-
-      const { data: galleryImagesResp } = await useAsyncData("galleryImages", async () => {
-        const result = await useQuery<IGalleryImagesQuery, IGalleryImagesQueryVariables>({
-          query: GalleryImages,
-        })();
-
-        return result?.data?.galleryImages ?? [];
-      });
-
-      const releases = pressReleasesResp.value ?? [];
-      const galleryImages = galleryImagesResp.value ?? [];
-
-      if (0 < galleryImages.length) {
-        galleryStore.setGalleryImages(galleryImages);
-      }
+      const releases = resp?.data?.pressReleases || [];
 
       const PreviewIcons = import.meta.glob("../assets/images/page/press/*.png", { eager: true }) as unknown as Record<string, { default: string, }>;
       const previewIcons =
@@ -223,7 +200,8 @@
 
       return {
         contactEmail: ref(""),
-        galleryImages: computed(() => galleryStore.items),
+
+        gallery: computed(() => galleryStore.items),
 
         mediaReleases:
           releases
@@ -511,7 +489,7 @@
     .galleryContainer {
       display: grid;
       gap: .8rem;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
 
       .galleryItem {
         overflow: hidden;

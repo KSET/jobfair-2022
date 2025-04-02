@@ -83,7 +83,7 @@
         <div class="col-12">
           <div class="grid">
             <div
-              v-for="galleryItem in galleryImages"
+              v-for="galleryItem in gallery"
               :key="galleryItem.url"
               class="col-6 md:col-4"
             >
@@ -97,16 +97,12 @@
           </div>
         </div>
 
-        <div class="col-12 text-center">
-          <nuxt-link
-            :to="{ name: 'press', hash: '#gallery-container' }"
-          >
-            <p-button class="p-button-outlined">
-              <translated-text trans-key="index.gallery.showMore" />
-              <icon-chevron-right />
-            </p-button>
-          </nuxt-link>
-        </div>
+        <!--        <div class="col-12 text-center">-->
+        <!--          <p-button class="p-button-outlined">-->
+        <!--            <translated-text trans-key="index.gallery.showMore" />-->
+        <!--            <icon-chevron-right />-->
+        <!--          </p-button>-->
+        <!--        </div>-->
       </div>
     </div>
 
@@ -291,8 +287,7 @@
       newsStore.setNews(initialData?.news ?? []);
       const news = computed(() => limitLength(3)(newsStore.items));
 
-      galleryStore.setGalleryImages(initialData?.galleryImages ?? []);
-      const galleryImages = computed(() => limitLength(6)(galleryStore.items));
+      const gallery = computed(() => galleryStore.items);
 
       return {
         isLoggedIn: computed(() => userStore.isLoggedIn),
@@ -302,7 +297,7 @@
         partnersShown: computed(() => seasonsStore.arePartnersShown),
         sponsorsShown: computed(() => seasonsStore.areSponsorsShown),
         news,
-        galleryImages,
+        gallery,
         projectFriends: initialData?.sponsors ?? [],
         mediaPartners: initialData?.partners ?? [],
         joinNowRoute,

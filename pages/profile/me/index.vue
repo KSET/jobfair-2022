@@ -116,12 +116,8 @@
             <translated-text trans-key="profile.resume.header" />
           </h2>
 
-          <div v-if="!resume">
-            <translated-text trans-key="profile.resume.unsubmitted" />
-          </div>
-          <div v-else>
-            <translated-text trans-key="profile.resume.submitted" />
-            <i class="pi pi-check" />
+          <div>
+            <translated-text trans-key="profile.resume.text" />
           </div>
         </div>
         <div :class="$style.itemActions">
@@ -134,12 +130,7 @@
               tabindex="-1"
             >
               <translated-text
-                v-if="!resume"
                 trans-key="profile.resume.create"
-              />
-              <translated-text
-                v-else
-                trans-key="profile.resume.update"
               />
             </p-button>
           </nuxt-link>
@@ -439,7 +430,7 @@
         </div>
 
         <div
-          v-if="isEventOngoing"
+          v-if="isEventOngoing && false"
           :class="[$style.item, $style.itemApproval]"
         >
           <h2 :class="$style.itemHeader">
@@ -563,6 +554,7 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
+              v-if="false"
               :to="{ name: 'profile-me-company-resumes' }"
             >
               <p-button

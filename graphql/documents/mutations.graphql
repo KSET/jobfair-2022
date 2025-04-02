@@ -265,33 +265,3 @@ mutation EditNews($uid: String!, $info: NewsCreateInput!) {
 mutation DeleteNews($uid: String!) {
     deleteNews(uid: $uid)
 }
-
-mutation CreateGalleryImage($info: GalleryImageCreateInput!) {
-    createGalleryImage(info: $info) {
-        errors {
-            field
-            message
-        }
-        entity {
-            uid
-        }
-    }
-}
-
-mutation EditGalleryImage($uid: String!, $info: GalleryImageCreateInput!) {
-    editGalleryImage(uid: $uid, info: $info) {
-        errors {
-            field
-            message
-        }
-        entity {
-            uid
-            ...frag_GalleryImage
-        }
-    }
-}
-
-mutation DeleteGalleryImage($uid: String!) {
-    deleteGalleryImage(uid: $uid)
-}
-

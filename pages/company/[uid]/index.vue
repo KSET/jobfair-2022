@@ -44,6 +44,7 @@
               target="_blank"
             >
               <app-img
+                :class="$style.socialIconImg"
                 :alt="social.name"
                 :src="social.icon"
                 contain
@@ -790,15 +791,19 @@
       max-width: 12em;
 
       .socialIcon {
-        flex: 1;
-        width: auto;
-        height: 1.3125rem;
+        width: 1.3125rem;
+        height: 100%;
         padding: 0;
         transition-property: opacity;
 
         .socialIconLink {
-          width: 100%;
+          width: 1.3125rem;
           height: 100%;
+          display: block;
+        }
+
+        .socialIconImg {
+          width: 1.3125rem;
         }
 
         &:hover {

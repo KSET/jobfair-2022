@@ -271,6 +271,15 @@ class CreateCompanyInput extends CompanyCreateInput {
   @Field()
     industry: string = "";
 
+  @Field(() => String, { nullable: true })
+    instagram?: string = undefined;
+
+  @Field(() => String, { nullable: true })
+    facebook?: string = undefined;
+
+  @Field(() => String, { nullable: true })
+    linkedIn?: string = undefined;
+
   @Field(() => GraphQLUpload, { nullable: true })
     vectorLogo: FileUpload | null = null;
 

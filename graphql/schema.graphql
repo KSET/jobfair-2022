@@ -345,8 +345,11 @@ type Company {
   createdAt: DateTimeISO!
   descriptionEn: String!
   descriptionHr: String!
+  facebook: String
   industry: Industry
+  instagram: String
   legalName: String!
+  linkedIn: String
   logoHidden: Boolean!
   members: [User!]
   program: CompanyProgram
@@ -601,7 +604,10 @@ input CompanyOrderByWithRelationInput {
   brandName: SortOrder
   descriptionEn: SortOrder
   descriptionHr: SortOrder
+  facebook: SortOrderInput
+  instagram: SortOrderInput
   legalName: SortOrder
+  linkedIn: SortOrderInput
   vat: SortOrder
   website: SortOrder
 }
@@ -670,9 +676,12 @@ enum CompanyScalarFieldEnum {
   createdAt
   descriptionEn
   descriptionHr
+  facebook
   id
   industryId
+  instagram
   legalName
+  linkedIn
   rasterLogoId
   uid
   updatedAt
@@ -728,7 +737,10 @@ input CompanyWhereInput {
   brandName: StringFilter
   descriptionEn: StringFilter
   descriptionHr: StringFilter
+  facebook: StringNullableFilter
+  instagram: StringNullableFilter
   legalName: StringFilter
+  linkedIn: StringNullableFilter
   vat: StringFilter
   website: StringFilter
 }
@@ -741,7 +753,10 @@ input CompanyWhereUniqueInput {
   brandName: StringFilter
   descriptionEn: StringFilter
   descriptionHr: StringFilter
+  facebook: StringNullableFilter
+  instagram: StringNullableFilter
   legalName: StringFilter
+  linkedIn: StringNullableFilter
   vat: String
   website: StringFilter
 }
@@ -756,8 +771,11 @@ input CreateCompanyInput {
   brandName: String!
   descriptionEn: String!
   descriptionHr: String!
+  facebook: String
   industry: String!
+  instagram: String
   legalName: String!
+  linkedIn: String
   rasterLogo: Upload
   vat: String!
   vectorLogo: Upload

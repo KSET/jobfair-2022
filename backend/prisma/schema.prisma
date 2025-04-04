@@ -145,6 +145,9 @@ model Company {
   brandName     String
   address       String
   website       String
+  instagram     String?
+  facebook      String?
+  linkedIn      String?
   /// @TypeGraphQL.omit(input: true)
   industry      Industry @relation(fields: [industryId], references: [id])
   /// @TypeGraphQL.omit(input: true)

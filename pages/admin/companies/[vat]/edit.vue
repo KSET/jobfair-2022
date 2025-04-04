@@ -193,6 +193,9 @@
               address
               vat
               website
+              facebook
+              instagram
+              linkedIn
               industry {
                   name
               }

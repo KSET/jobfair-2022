@@ -39,6 +39,9 @@ fragment frag_UserProfile on User {
         brandName
         address
         website
+        instagram
+        facebook
+        linkedIn
         descriptionEn
         descriptionHr
         industry {
@@ -143,6 +146,9 @@ fragment frag_Company on Company {
     address
     vat
     website
+    instagram
+    facebook
+    linkedIn
     industry {
         name
     }
@@ -241,6 +247,9 @@ query CompanyInfo($uid: String!) {
         descriptionEn
         descriptionHr
         website
+        instagram
+        facebook
+        linkedIn
         rasterLogo {
             thumbUrl
             fullUrl

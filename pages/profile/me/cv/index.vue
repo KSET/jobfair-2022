@@ -141,10 +141,10 @@
       >
         <template #header>
           <strong>
-            <translated-text trans-key="footerlegal.privacyPolicy.header" />
+            <translated-text trans-key="footer.legal.privacyPolicy.header" />
           </strong>
         </template>
-        <translated-text trans-key="footerlegal.privacyPolicy.text" />
+        <translated-text trans-key="footer.legal.privacyPolicy.text" />
       </PDialog>
 
       <div class="mt-3 flex">

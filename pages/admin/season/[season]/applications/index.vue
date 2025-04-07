@@ -59,66 +59,68 @@
           <data :value="statistics.panels" v-text="statistics.panels" />
         </div>
       </div>
-      <ul>
-        <li
-          v-for="application in companyApplications"
-          :key="JSON.stringify(application)"
-          class="mt-2"
-        >
-          <span
-            class="mr-2 p-1 px-2 border-round"
-            style="background-color: rgb(0 0 0 / 15%);"
-            v-text="application.forCompany.industry.name"
-          />
-          <strong v-text="application.forCompany.brandName" />
-          <NuxtLink
-            :to="{
-              name: 'admin-season-season-applications-company-edit',
-              params: {
-                season: application.forSeason.uid,
-                company: application.forCompany.uid,
-              },
-            }"
-            class="ml-2"
-          >
-            Edit
-          </NuxtLink>
-          <ul>
-            <li v-if="application.booth" class="mt-3 mb-2">
-              <strong>Booth</strong>:
-              <kbd
-                class="p-1 px-2 border-round"
-                style="background: rgb(62 13 64 / 30%);"
-                v-text="booths[application.booth]"
-              />
-            </li>
-            <li v-if="application.talk" class="mt-3 mb-2">
-              <strong>Talk</strong>:
-              <kbd
-                class="mr-1 p-1 px-2 border-round"
-                style="background: rgb(13 62 64 / 30%);"
-                v-text="application.talk.category.name"
-              />
-              <em v-text="application.talk.titleEn" />
-            </li>
-            <li v-if="application.workshop">
-              <strong>Workshop</strong>: <em v-text="application.workshop.titleEn" />
-            </li>
-            <li v-if="application.wantsCocktail">
-              <strong>
-                Cocktail
-                <i class="ml-2 pi pi-check" />
-              </strong>
-            </li>
-            <li v-if="application.wantsPanel">
-              <strong>
-                Panel
-                <i class="ml-2 pi pi-check" />
-              </strong>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <p-button icon="pi pi-external-link" label="Export" @click="exportCSV()" />
+
+
+      <DataTable
+        ref="dt"
+        :lazy="true"
+        :value="companyApplications"
+        :exportable="true"
+        :responsive-layout="'scroll'"
+        striped-rows
+        scrollable
+      >
+        <Column field="forCompany.industry.name" header="Industry" />
+        <Column field="forCompany.brandName" header="Brand Name" />
+        <Column field="booth" header="Booth">
+          <template #body="{ data }">
+            <span v-if="data.booth" class="p-1 px-2 border-round leading-4" style="background: rgb(62 13 64 / 30%)">
+              {{ booths[data.booth] }}
+            </span>
+          </template>
+        </Column>
+        <Column field="talk.titleEn" header="Talk Title">
+          <template #body="{ data }">
+            <span v-if="data.talk">
+              <kbd class="mr-1 p-1 px-2 border-round" style="background: rgb(13 62 64 / 30%)">
+                {{ data.talk.category.name }}
+              </kbd>
+              <em>{{ data.talk.titleEn }}</em>
+            </span>
+          </template>
+        </Column>
+        <Column field="workshop.titleEn" header="Workshop Title">
+          <template #body="{ data }">
+            <em v-if="data.workshop">{{ data.workshop.titleEn }}</em>
+          </template>
+        </Column>
+        <Column field="wantsCocktail" header="Wants Cocktail">
+          <template #body="{ data }">
+            <i v-if="data.wantsCocktail" class="pi pi-check" />
+          </template>
+        </Column>
+        <Column field="wantsPanel" header="Wants Panel">
+          <template #body="{ data }">
+            <i v-if="data.wantsPanel" class="pi pi-check" />
+          </template>
+        </Column>
+        <Column header="Actions">
+          <template #body="{ data }">
+            <NuxtLink
+              :to="{
+                name: 'admin-season-season-applications-company-edit',
+                params: {
+                  season: data.forSeason.uid,
+                  company: data.forCompany.uid,
+                },
+              }"
+            >
+              Edit
+            </NuxtLink>
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </app-max-width-container>
 </template>
@@ -127,10 +129,20 @@
   import {
     ref,
     unref,
+    nextTick,
   } from "vue";
   import {
     sortObject,
   } from "rambdax";
+  import {
+    unparse,
+  } from "papaparse";
+  import type {
+    UnparseConfig,
+  } from "papaparse";
+
+  import DataTable from "primevue/datatable";
+  import Column from "primevue/column";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
@@ -155,6 +167,8 @@
 
     components: {
       AppMaxWidthContainer,
+      DataTable,
+      Column,
     },
 
     async setup() {
@@ -163,6 +177,8 @@
       const route = useRoute();
       const industriesStore = useIndustriesStore();
       const talkCategoriesStore = useTalkCategoriesStore();
+
+      const dt = ref<DataTable | null>(null);
 
       const res = await useQuery<IAdminCompanyApplicationsQuery, IAdminCompanyApplicationsQueryVariables>({
         query: AdminCompanyApplications,
@@ -225,6 +241,31 @@
         statistics,
         booths,
         companyApplications: res?.companyApplications || [],
+        dt,
+        exportCSV() {
+          // const $dt = unref(dt);
+
+          // if (!$dt) {
+          //   console.error("DataTable reference is null.");
+          //   return;
+          // }
+
+          // // Prepare custom exportable data
+          // const exportData = companyApplications;
+
+          // console.log("Export Data:", exportData);
+
+          // // Use the exportCSV method with options and data
+          // const csv = unparse(exportData, {} as UnparseConfig);
+          // const blob = new Blob([ csv ], { type: "text/csv;charset=utf-8;" });
+          // const link = document.createElement("a");
+          // link.href = URL.createObjectURL(blob);
+          // link.download = "export_companyApplications.csv";
+          // link.click();
+
+          // // Log the export data for debugging purposes
+          // console.log("Export Data:", exportData);
+        },
       };
     },
   });

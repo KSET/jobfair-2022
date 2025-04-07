@@ -771,5 +771,9 @@
       text-decoration: underline;
       color: #ecb000;
     }
+
+    .dialog:not(:global(.p-dialog-maximized)) {
+    max-width: 700px;
+    }
   }
 </style>

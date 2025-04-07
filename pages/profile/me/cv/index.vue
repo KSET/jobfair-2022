@@ -1,5 +1,5 @@
 <template>
-  <app-user-profile-container v-if="false" :class="$style.container">
+  <app-user-profile-container :class="$style.container">
     <h1>
       <translated-text trans-key="profile.cv" />
     </h1>
@@ -122,10 +122,30 @@
           >
 
           <span class="ml-2">
-            <translated-text trans-key="form.cv.gdpr" />
+            <translated-text
+              trans-key="form.cv.gdpr"
+              :class="$style.formGDPR"
+
+              @click.prevent="privacyPolicyOpen = true"
+            />
           </span>
         </label>
       </div>
+      <PDialog
+        v-model:visible="privacyPolicyOpen"
+        :class="$style.dialog"
+        dismissable-mask
+        maximizable
+        modal
+        position="bottom"
+      >
+        <template #header>
+          <strong>
+            <translated-text trans-key="footerlegal.privacyPolicy.header" />
+          </strong>
+        </template>
+        <translated-text trans-key="footerlegal.privacyPolicy.text" />
+      </PDialog>
 
       <div class="mt-3 flex">
         <p-button
@@ -173,6 +193,7 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import Dialog from "primevue/dialog";
   import {
     type MaybeRef,
     type Dict,
@@ -243,6 +264,8 @@
       TranslatedText,
       AppAutocomplete,
       Chip,
+      PDialog: Dialog,
+
     },
 
     async setup() {
@@ -250,6 +273,7 @@
 
       const isLoading = ref(false);
       const toast = useToast();
+      const privacyPolicyOpen = ref(false);
 
       // if ("$WITH_CV" !== process.env.NODE_ENV) {
       //   throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
@@ -446,6 +470,7 @@
         FormFor,
         resume,
         gdprCheckbox,
+        privacyPolicyOpen,
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         searchFields: useThrottleFn(async (name: Autocompetable) => {
           const info = infoFor[name];
@@ -739,6 +764,12 @@
           margin-left: $gap;
         }
       }
+    }
+
+    .formGDPR {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #ecb000;
     }
   }
 </style>

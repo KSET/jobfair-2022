@@ -409,7 +409,8 @@ model Season {
   LiveVote LiveVote[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  LiveVoteComment LiveVoteComment[]
+  LiveVoteComment             LiveVoteComment[]
+  ApplicationCocktailCategory ApplicationCocktailCategory[]
 }
 
 model Sponsor {
@@ -469,9 +470,9 @@ model CompanyApplication {
 
   panelParticipants ApplicationPresenter[]
 
-  cocktail   ApplicationCocktail? @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  cocktail   ApplicationCocktailCategory?
   /// @TypeGraphQL.omit(output: true, input: true)
-  cocktailId Int?                 @unique()
+  cocktailId Int?                         @unique()
 
   approval CompanyApplicationApproval?
 
@@ -617,14 +618,23 @@ model ApplicationTalkCategory {
   @@unique([forSeasonId, name])
 }
 
-model ApplicationCocktail {
+model ApplicationCocktailCategory {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id     Int    @id @default(autoincrement())
-  name   String
-  colour String
+  id          Int    @id @default(autoincrement())
+  name        String
+  colour      String
+  ingredients String
 
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication? @relation(fields: [forApplicationId], references: [id])
+
+  forSeason        Season? @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplication CompanyApplication[]
+  forApplicationId Int     @unique
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId      Int?
+
+  @@unique([forSeasonId, name])
 }
 
 model ApplicationPresenter {

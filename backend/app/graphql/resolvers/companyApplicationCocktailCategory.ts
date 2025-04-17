@@ -92,6 +92,29 @@ export class CompanyApplicationCocktailCategoryResolver {
       select: toSelect(info, transformSelect),
     });
   }
+
+  @Query(() => [ ApplicationCocktailCategory ])
+  cocktailCategories(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo
+  ) {
+    const now = new Date();
+
+    return ctx.prisma.applicationCocktailCategory.findMany({
+      cursor: undefined,
+      where: {
+        forSeason: {
+          startsAt: {
+            lte: now,
+          },
+          endsAt: {
+            gte: now,
+          },
+        }
+      },
+      select: toSelect(info, transformSelect),
+    });
+  }
 }
 
 

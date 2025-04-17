@@ -6,7 +6,7 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktail,
+  ApplicationCocktailCategory,
   ApplicationTalk,
   ApplicationWorkshop,
   ApplicationPresenter,
@@ -28,7 +28,7 @@ import {
 } from "./companyApplicationWorkshop";
 import {
   transformSelect as transformSelectCocktail,
-} from "./companyApplicationCocktail";
+} from "./companyApplicationCocktailCategory";
 import {
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
@@ -47,8 +47,8 @@ export class CompanyProgram {
   @Field(() => ApplicationWorkshop, { nullable: true })
     workshop: ApplicationWorkshop | null = null;
 
-  @Field(() => ApplicationCocktail, { nullable: true })
-    cocktail: ApplicationCocktail | null = null;
+  @Field(() => ApplicationCocktailCategory, { nullable: true })
+    cocktail: ApplicationCocktailCategory | null = null;
 
   @Field(() => [ ApplicationPresenter ])
     panelParticipants: ApplicationPresenter[] = [];
@@ -95,10 +95,10 @@ export class CompanyProgramFieldResolver {
     return approved(program?.workshop, "workshopParticipants", program);
   }
 
-  @FieldResolver(() => ApplicationCocktail, { nullable: true })
+  @FieldResolver(() => ApplicationCocktailCategory, { nullable: true })
   cocktail(
     @Root() program: CompanyProgram,
-  ): GQLField<ApplicationCocktail, "nullable"> {
+  ): GQLField<ApplicationCocktailCategory, "nullable"> {
     return approved(program?.cocktail, "cocktail", program);
   }
 

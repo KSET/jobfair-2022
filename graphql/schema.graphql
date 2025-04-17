@@ -3,32 +3,42 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type ApplicationCocktail {
-  _count: ApplicationCocktailCount
+type ApplicationCocktailCategory {
   colour: String!
-  forApplication: [CompanyApplication!]!
+  forSeason: Season
+  ingredients: String!
   name: String!
 }
 
-type ApplicationCocktailCount {
-  forApplication(where: CompanyApplicationWhereInput): Int!
+input ApplicationCocktailCategoryListRelationFilter {
+  every: ApplicationCocktailCategoryWhereInput
+  none: ApplicationCocktailCategoryWhereInput
+  some: ApplicationCocktailCategoryWhereInput
 }
 
-input ApplicationCocktailNullableRelationFilter {
-  is: ApplicationCocktailWhereInput
-  isNot: ApplicationCocktailWhereInput
+input ApplicationCocktailCategoryNullableRelationFilter {
+  is: ApplicationCocktailCategoryWhereInput
+  isNot: ApplicationCocktailCategoryWhereInput
 }
 
-input ApplicationCocktailOrderByWithRelationInput {
+input ApplicationCocktailCategoryOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ApplicationCocktailCategoryOrderByWithRelationInput {
   colour: SortOrder
+  forSeason: SeasonOrderByWithRelationInput
+  ingredients: SortOrder
   name: SortOrder
 }
 
-input ApplicationCocktailWhereInput {
-  AND: [ApplicationCocktailWhereInput!]
-  NOT: [ApplicationCocktailWhereInput!]
-  OR: [ApplicationCocktailWhereInput!]
+input ApplicationCocktailCategoryWhereInput {
+  AND: [ApplicationCocktailCategoryWhereInput!]
+  NOT: [ApplicationCocktailCategoryWhereInput!]
+  OR: [ApplicationCocktailCategoryWhereInput!]
   colour: StringFilter
+  forSeason: SeasonNullableRelationFilter
+  ingredients: StringFilter
   name: StringFilter
 }
 
@@ -335,6 +345,7 @@ input CalendarUpdateInput {
 
 input CocktailCreateInput {
   colour: String!
+  ingredients: String!
   name: String!
 }
 
@@ -366,7 +377,7 @@ type CompanyApplication {
   _count: CompanyApplicationCount
   approval: CompanyApplicationApproval
   booth: String
-  cocktail: ApplicationCocktail
+  cocktail: ApplicationCocktailCategory
   contactPerson: CompanyApplicationContactPerson
   createdAt: DateTimeISO!
   feedback: CompanyApplicationFeedback
@@ -525,7 +536,7 @@ input CompanyApplicationOrderByRelationAggregateInput {
 input CompanyApplicationOrderByWithRelationInput {
   approval: CompanyApplicationApprovalOrderByWithRelationInput
   booth: SortOrderInput
-  cocktail: ApplicationCocktailOrderByWithRelationInput
+  cocktail: ApplicationCocktailCategoryOrderByWithRelationInput
   contactPerson: CompanyApplicationContactPersonOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
@@ -558,7 +569,7 @@ input CompanyApplicationWhereInput {
   OR: [CompanyApplicationWhereInput!]
   approval: CompanyApplicationApprovalNullableRelationFilter
   booth: StringNullableFilter
-  cocktail: ApplicationCocktailNullableRelationFilter
+  cocktail: ApplicationCocktailCategoryNullableRelationFilter
   contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
@@ -576,7 +587,7 @@ input CompanyApplicationWhereUniqueInput {
   OR: [CompanyApplicationWhereInput!]
   approval: CompanyApplicationApprovalNullableRelationFilter
   booth: StringNullableFilter
-  cocktail: ApplicationCocktailNullableRelationFilter
+  cocktail: ApplicationCocktailCategoryNullableRelationFilter
   contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
@@ -658,7 +669,7 @@ input CompanyPanelWhereInput {
 
 type CompanyProgram {
   booth: String
-  cocktail: ApplicationCocktail
+  cocktail: ApplicationCocktailCategory
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
@@ -1204,6 +1215,7 @@ type Mutation {
   addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   checkPasswordReset(token: String!): User
+  createCocktailCategory(info: CocktailCreateInput!, seasonUid: String!): ApplicationCocktailCategory
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createGalleryImage(info: GalleryImageCreateInput!): CreateGalleryImageResponse
@@ -1249,6 +1261,7 @@ type Mutation {
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
+  updateCocktailCategory(cocktailName: String!, info: CocktailCreateInput!, seasonUid: String!): ApplicationCocktailCategory!
   updateCompanyApplicationFeedback(input: CompanyApplicationFeedbackCreateInput!): CompanyApplicationFeedback
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
@@ -1527,6 +1540,7 @@ type Query {
   allNews(filter: NewsFilter): [News!]!
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
+  availableCocktailCategories: [ApplicationCocktailCategory!]!
   booths: [Booth!]!
   calendar(filter: CalendarFilterInput, season: String): [CalendarItem!]!
   calendarItem(uid: String!): CalendarItem
@@ -1961,6 +1975,7 @@ type Season {
 }
 
 type SeasonCount {
+  ApplicationCocktailCategory(where: ApplicationCocktailCategoryWhereInput): Int!
   LiveVote(where: LiveVoteWhereInput): Int!
   LiveVoteComment(where: LiveVoteCommentWhereInput): Int!
   UserCompanyComponentRatingAveragesView(where: UserCompanyComponentRatingAveragesViewWhereInput): Int!
@@ -2006,6 +2021,7 @@ input SeasonNullableRelationFilter {
 }
 
 input SeasonOrderByWithRelationInput {
+  ApplicationCocktailCategory: ApplicationCocktailCategoryOrderByRelationAggregateInput
   applicationsEditableFrom: SortOrder
   applicationsEditableUntil: SortOrder
   applicationsFrom: SortOrder
@@ -2088,6 +2104,7 @@ input SeasonUpdateInput {
 
 input SeasonWhereInput {
   AND: [SeasonWhereInput!]
+  ApplicationCocktailCategory: ApplicationCocktailCategoryListRelationFilter
   NOT: [SeasonWhereInput!]
   OR: [SeasonWhereInput!]
   applicationsEditableFrom: DateTimeFilter
@@ -2120,6 +2137,7 @@ input SeasonWhereInput {
 
 input SeasonWhereUniqueInput {
   AND: [SeasonWhereInput!]
+  ApplicationCocktailCategory: ApplicationCocktailCategoryListRelationFilter
   NOT: [SeasonWhereInput!]
   OR: [SeasonWhereInput!]
   applicationsEditableFrom: DateTimeFilter

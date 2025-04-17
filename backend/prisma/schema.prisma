@@ -630,7 +630,7 @@ model ApplicationCocktailCategory {
 
   forSeason        Season? @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplicationId Int     @unique
+  forApplicationId Int?     @unique
   /// @TypeGraphQL.omit(output: true, input: true)
   forSeasonId      Int?
 

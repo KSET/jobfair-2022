@@ -16,7 +16,7 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktail,
+  ApplicationCocktailCategory,
   ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
@@ -108,7 +108,7 @@ import {
 import {
   CocktailCreateInput,
   transformSelect as transformSelectCocktail,
-} from "./companyApplicationCocktail";
+} from "./companyApplicationCocktailCategory";
 import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
@@ -184,10 +184,10 @@ export class CompanyApplicationFieldResolver {
     return application.approval || null;
   }
 
-  @FieldResolver(() => ApplicationCocktail, { nullable: true })
+  @FieldResolver(() => ApplicationCocktailCategory, { nullable: true })
   cocktail(
     @Root() application: CompanyApplication,
-  ): ApplicationCocktail | null {
+  ): ApplicationCocktailCategory | null {
     return application.cocktail || null;
   }
 

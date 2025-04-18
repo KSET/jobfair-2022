@@ -106,7 +106,7 @@ import {
   transformSelect as transformSelectApproval,
 } from "./companyApplicationApproval";
 import {
-  CocktailCreateInput,
+  CocktailChooseInput,
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktailCategory";
 import {
@@ -370,8 +370,8 @@ class CompanyApplicationApprovedEditInput {
   @Field(() => WorkshopsCreateInput, { nullable: true })
     workshop: WorkshopsCreateInput | null = null;
 
-  @Field(() => CocktailCreateInput, { nullable: true })
-    cocktail: CocktailCreateInput | null = null;
+  @Field(() => CocktailChooseInput, { nullable: true })
+    cocktail: CocktailChooseInput | null = null;
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
@@ -2203,15 +2203,24 @@ export class CompanyApplicationCreateResolver {
       }
 
       data[id] = {
-        upsert: {
-          create: {
-            ...entry,
-          },
-          update: {
-            ...entry,
-          },
-        },
-      };
+        connect: {
+          forSeasonId_name: {
+            forSeasonId: currentSeason.id,
+            name: entry.name
+          }
+        }
+      }
+
+      // data[id] = {
+      //   upsert: {
+      //     create: {
+      //       ...entry,
+      //     },
+      //     update: {
+      //       ...entry,
+      //     },
+      //   },
+      // };
     }
 
     const entity = await ctx.prisma.companyApplication.update({

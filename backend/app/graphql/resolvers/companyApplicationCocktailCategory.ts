@@ -1,6 +1,5 @@
 import {
   Arg,
-  Args,
   Ctx,
   Field,
   FieldResolver,
@@ -13,7 +12,6 @@ import {
 } from "type-graphql";
 import {
   ApplicationCocktailCategory,
-  CompanyApplication,
   Season,
 } from "@generated/type-graphql";
 import {
@@ -21,12 +19,8 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
-  Dict,
   GQLField,
 } from "../../types/helpers";
-import {
-  transformSelect as transformSelectApplication,
-} from "./companyApplication";
 import { Context } from "../../types/apollo-context";
 import { hasAtLeastRole, Role } from "../../helpers/auth";
 import { EventsService } from "../../services/events-service";
@@ -45,6 +39,12 @@ export class CocktailCreateInput {
   
   @Field()
     ingredients: string = "";
+}
+
+@InputType()
+export class CocktailChooseInput {
+  @Field()
+    name: string = "";
 }
 
 @Resolver(() => ApplicationCocktailCategory)

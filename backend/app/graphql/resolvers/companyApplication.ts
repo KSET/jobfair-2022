@@ -2210,17 +2210,6 @@ export class CompanyApplicationCreateResolver {
           }
         }
       }
-
-      // data[id] = {
-      //   upsert: {
-      //     create: {
-      //       ...entry,
-      //     },
-      //     update: {
-      //       ...entry,
-      //     },
-      //   },
-      // };
     }
 
     const entity = await ctx.prisma.companyApplication.update({

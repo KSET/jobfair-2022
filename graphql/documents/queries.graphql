@@ -516,6 +516,12 @@ query AdminCompanyApplications($season: String!) {
                 name
             }
         }
+        cocktail {
+            name
+            type {
+                type
+            }
+        }
         workshop {
             language
             titleEn

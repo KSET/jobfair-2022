@@ -11,6 +11,7 @@ import {
   ApplicationPresenter,
   CompanyApplicationApproval,
   CompanyPanel,
+  ApplicationCocktail,
 } from "@generated/type-graphql";
 import {
   Dict,
@@ -27,7 +28,7 @@ import {
 } from "./companyApplicationWorkshop";
 import {
   transformSelect as transformSelectCocktail,
-} from "./companyApplicationCocktailType";
+} from "./companyApplicationCocktail";
 import {
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
@@ -46,8 +47,8 @@ export class CompanyProgram {
   @Field(() => ApplicationWorkshop, { nullable: true })
     workshop: ApplicationWorkshop | null = null;
 
-  // @Field(() => ApplicationCocktailCategory, { nullable: true })
-  //   cocktail: ApplicationCocktailCategory | null = null;
+  @Field(() => ApplicationCocktail, { nullable: true })
+    cocktail: ApplicationCocktail | null = null;
 
   @Field(() => [ ApplicationPresenter ])
     panelParticipants: ApplicationPresenter[] = [];
@@ -94,12 +95,12 @@ export class CompanyProgramFieldResolver {
     return approved(program?.workshop, "workshopParticipants", program);
   }
 
-  // @FieldResolver(() => ApplicationCocktailCategory, { nullable: true })
-  // cocktail(
-  //   @Root() program: CompanyProgram,
-  // ): GQLField<ApplicationCocktailCategory, "nullable"> {
-  //   return approved(program?.cocktail, "cocktail", program);
-  // }
+  @FieldResolver(() => ApplicationCocktail, { nullable: true })
+  cocktail(
+    @Root() program: CompanyProgram,
+  ): GQLField<ApplicationCocktail, "nullable"> {
+    return approved(program?.cocktail, "cocktail", program);
+  }
 
   @FieldResolver(() => [ ApplicationPresenter ])
   panelParticipants(
@@ -184,14 +185,14 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
     delete select.workshop;
   }),
 
-  // cocktail: withApplications((select) => {
-  //   select.applications.select.cocktail = {
-  //     select: transformSelectCocktail(select.cocktail as Dict),
-  //   };
-  //   select.applications.select.approval.select.cocktail = true;
+  cocktail: withApplications((select) => {
+    select.applications.select.cocktail = {
+      select: transformSelectCocktail(select.cocktail as Dict),
+    };
+    select.applications.select.approval.select.cocktail = true;
 
-  //   delete select.cocktail;
-  // }),
+    delete select.cocktail;
+  }),
 
   panelParticipants: withApplications((select) => {
     select.applications.select.panelParticipants = {

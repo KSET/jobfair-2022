@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Ctx,
   Field,
   FieldResolver,
@@ -12,6 +13,7 @@ import {
 } from "type-graphql";
 import {
   ApplicationCocktailType,
+  FindManyApplicationCocktailTypeArgs,
   Season,
 } from "@generated/type-graphql";
 import {
@@ -55,22 +57,30 @@ export class CompanyApplicationCocktailTypeResolver {
   @Query(() => [ ApplicationCocktailType ])
   availableCocktailTypes(
   @Ctx() ctx: Context,
-    @Info() info: GraphQLResolveInfo
+  @Info() info: GraphQLResolveInfo,
+  @Args() args: FindManyApplicationCocktailTypeArgs,
   ) {
     const now = new Date();
 
 
     return ctx.prisma.applicationCocktailType.findMany({
+      ...args,
       cursor: undefined,
       where: {
-        forSeason: {
-          startsAt: {
-            lte: now,
-          },
-          endsAt: {
-            gte: now,
-          },
-        },
+        ...(
+          args.where
+            ? args.where
+            : {
+              forSeason: {
+                startsAt: {
+                  lte: now,
+                },
+                endsAt: {
+                  gte: now,
+                },
+              },
+            }
+        ),
         forApplicationCocktail: null
       },
       select: toSelect(info, transformSelect),
@@ -80,21 +90,29 @@ export class CompanyApplicationCocktailTypeResolver {
   @Query(() => [ ApplicationCocktailType ])
   cocktailTypes(
   @Ctx() ctx: Context,
-    @Info() info: GraphQLResolveInfo
+    @Info() info: GraphQLResolveInfo,
+    @Args() args: FindManyApplicationCocktailTypeArgs,
   ) {
     const now = new Date();
 
     return ctx.prisma.applicationCocktailType.findMany({
+      ...args,
       cursor: undefined,
       where: {
-        forSeason: {
-          startsAt: {
-            lte: now,
-          },
-          endsAt: {
-            gte: now,
-          },
-        }
+        ...(
+          args.where
+            ? args.where
+            : {
+              forSeason: {
+                startsAt: {
+                  lte: now,
+                },
+                endsAt: {
+                  gte: now,
+                },
+              },
+            }
+        ),
       },
       select: toSelect(info, transformSelect),
     });

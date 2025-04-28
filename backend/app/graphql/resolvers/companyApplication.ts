@@ -16,7 +16,6 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktailCategory,
   ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
@@ -28,6 +27,7 @@ import {
   FindManyCompanyApplicationArgs,
   Season,
   CompanyApplicationFeedback,
+  ApplicationCocktail,
 } from "@generated/type-graphql";
 import {
   groupBy,
@@ -108,7 +108,7 @@ import {
 import {
   CocktailChooseInput,
   transformSelect as transformSelectCocktail,
-} from "./companyApplicationCocktailCategory";
+} from "./companyApplicationCocktail";
 import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
@@ -184,10 +184,10 @@ export class CompanyApplicationFieldResolver {
     return application.approval || null;
   }
 
-  @FieldResolver(() => ApplicationCocktailCategory, { nullable: true })
+  @FieldResolver(() => ApplicationCocktail, { nullable: true })
   cocktail(
     @Root() application: CompanyApplication,
-  ): ApplicationCocktailCategory | null {
+  ): ApplicationCocktail | null {
     return application.cocktail || null;
   }
 
@@ -2203,9 +2203,27 @@ export class CompanyApplicationCreateResolver {
       }
 
       data[id] = {
-        connect: {
-          forSeasonId_name: {
-            forSeasonId: currentSeason.id,
+        upsert: {
+          create: {
+            type: {
+              connect: {
+                forSeasonId_type: {
+                  forSeasonId: currentSeason.id,
+                  type: entry.type
+                }
+              }
+            },
+            name: entry.name
+          },
+          update: {
+            type: {
+              connect: {
+                forSeasonId_type: {
+                  forSeasonId: currentSeason.id,
+                  type: entry.type
+                }
+              }
+            },
             name: entry.name
           }
         }
@@ -2242,7 +2260,11 @@ export class CompanyApplicationCreateResolver {
             photo: true,
           },
         },
-        cocktail: true,
+        cocktail: {
+          include: {
+            type: true
+          }
+        },
       },
     });
 

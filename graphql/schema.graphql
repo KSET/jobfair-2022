@@ -3,6 +3,14 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type ApplicationCocktail {
+  createdAt: DateTimeISO!
+  name: String!
+  type: ApplicationCocktailType!
+  uid: String!
+  updatedAt: DateTimeISO!
+}
+
 input ApplicationCocktailNullableRelationFilter {
   is: ApplicationCocktailWhereInput
   isNot: ApplicationCocktailWhereInput
@@ -17,6 +25,11 @@ type ApplicationCocktailType {
   type: String!
 }
 
+input ApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput {
+  forSeasonId: Int!
+  type: String!
+}
+
 input ApplicationCocktailTypeListRelationFilter {
   every: ApplicationCocktailTypeWhereInput
   none: ApplicationCocktailTypeWhereInput
@@ -27,11 +40,31 @@ input ApplicationCocktailTypeOrderByRelationAggregateInput {
   _count: SortOrder
 }
 
+input ApplicationCocktailTypeOrderByWithRelationInput {
+  forSeason: SeasonOrderByWithRelationInput
+  type: SortOrder
+}
+
+enum ApplicationCocktailTypeScalarFieldEnum {
+  forSeasonId
+  id
+  type
+}
+
 input ApplicationCocktailTypeWhereInput {
   AND: [ApplicationCocktailTypeWhereInput!]
   NOT: [ApplicationCocktailTypeWhereInput!]
   OR: [ApplicationCocktailTypeWhereInput!]
   forSeason: SeasonNullableRelationFilter
+  type: StringFilter
+}
+
+input ApplicationCocktailTypeWhereUniqueInput {
+  AND: [ApplicationCocktailTypeWhereInput!]
+  NOT: [ApplicationCocktailTypeWhereInput!]
+  OR: [ApplicationCocktailTypeWhereInput!]
+  forSeason: SeasonNullableRelationFilter
+  forSeasonId_type: ApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput
   type: StringFilter
 }
 
@@ -343,6 +376,11 @@ input CalendarUpdateInput {
   uid: String
 }
 
+input CocktailChooseInput {
+  name: String!
+  type: String!
+}
+
 type Company {
   _count: CompanyCount
   address: String!
@@ -371,6 +409,7 @@ type CompanyApplication {
   _count: CompanyApplicationCount
   approval: CompanyApplicationApproval
   booth: String
+  cocktail: ApplicationCocktail
   contactPerson: CompanyApplicationContactPerson
   createdAt: DateTimeISO!
   feedback: CompanyApplicationFeedback
@@ -396,6 +435,7 @@ type CompanyApplicationApproval {
 }
 
 input CompanyApplicationApprovedEditInput {
+  cocktail: CocktailChooseInput
   panel: [PresenterCreateInput!]!
   talk: TalksCreateInput
   vat: String!
@@ -631,6 +671,7 @@ input CompanyPanelWhereInput {
 
 type CompanyProgram {
   booth: String
+  cocktail: ApplicationCocktail
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
@@ -1501,13 +1542,13 @@ type Query {
   allNews(filter: NewsFilter): [News!]!
   allTranslationsFor(language: String!): [Translation!]!
   approvedCompanyApplications: [CompanyApplicationApproval!]!
-  availableCocktailTypes: [ApplicationCocktailType!]!
+  availableCocktailTypes(cursor: ApplicationCocktailTypeWhereUniqueInput, distinct: [ApplicationCocktailTypeScalarFieldEnum!], orderBy: [ApplicationCocktailTypeOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationCocktailTypeWhereInput): [ApplicationCocktailType!]!
   booths: [Booth!]!
   calendar(filter: CalendarFilterInput, season: String): [CalendarItem!]!
   calendarItem(uid: String!): CalendarItem
   calendarItemCompanyUid(uid: String!): String
   calendarOld: [CalendarEvent!]!
-  cocktailTypes: [ApplicationCocktailType!]!
+  cocktailTypes(cursor: ApplicationCocktailTypeWhereUniqueInput, distinct: [ApplicationCocktailTypeScalarFieldEnum!], orderBy: [ApplicationCocktailTypeOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationCocktailTypeWhereInput): [ApplicationCocktailType!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
   companyApplication: CompanyApplication

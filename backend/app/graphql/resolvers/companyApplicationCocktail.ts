@@ -3,7 +3,9 @@ import {
   ApplicationCocktailType,
 } from "@generated/type-graphql";
 import {
+  Field,
   FieldResolver,
+  InputType,
   Resolver,
   Root,
 } from "type-graphql";
@@ -30,3 +32,13 @@ export const transformSelect = transformSelectFor<CompanyApplicationCocktailFiel
     return select;
   },
 });
+
+@InputType()
+export class CocktailChooseInput {
+  @Field()
+    name: string = "";
+
+  @Field()
+    type: string = "";
+
+}

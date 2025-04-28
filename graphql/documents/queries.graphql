@@ -120,7 +120,9 @@ fragment frag_CompanyApplication on CompanyApplication {
     }
     cocktail {
         name
-        colour
+        type{
+            type
+        }
     }
     panelParticipants {
         ...frag_ApplicationPresenter
@@ -351,6 +353,18 @@ query TalkCategories($season: String) {
     }
 }
 
+query CocktailTypes($season: String) {
+    cocktailTypes(where: { forSeason: { is: { uid: { equals: $season } } } }) {
+        type
+    }
+}
+
+query AvailableCocktailTypes($season: String) {
+    availableCocktailTypes(where: { forSeason: { is: { uid: { equals: $season } } } }) {
+        type
+    }
+}
+
 query PressRelease($uid: String!) {
     pressRelease(uid: $uid) {
         title
@@ -522,6 +536,9 @@ query AdminCompanyApplications($season: String!) {
 query CurrentCompanyApplication {
     talkCategories {
         name
+    }
+    availableCocktailTypes {
+        type
     }
     booths {
         name

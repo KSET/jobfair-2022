@@ -216,24 +216,30 @@ export const companyApplicationWorkshopCreate =
 
 export type Cocktail = Omit<IApplicationCocktail,
   "_count"
-  | "forApplication"
+  | "forSeason"
+  | "createdAt"
+  | "updatedAt"
   | "uid">;
-export const companyApplicationCocktailCreate =
+  export const companyApplicationCocktailCreate =
   <T extends Cocktail>(cocktail?: T | null) =>
-    (): Record<keyof Cocktail, InputEntry> =>
+    (
+      {
+        cocktailTypes = [] as string[],
+      } = {},
+    ): Record<keyof Cocktail, InputEntry> =>
       ({
         name: {
           value: cocktail?.name || "",
           type: "text" as const,
           placeholder: "StreaKSET",
         },
-        colour: {
-          value: cocktail?.colour || "",
-          type: "text" as const,
-          placeholder: "KSET orange (#ff7000)",
+        type: {
+          value: cocktail?.type?.type || cocktailTypes[0] || "",
+          type: "dropdown" as const,
+          options: cocktailTypes.map((x) => ({ label: x, value: x })),
         },
-      })
-;
+      });
+
 
 export type FeedbackDate = Pick<ICompanyApplicationFeedback,
   "dateRating"

@@ -34,19 +34,11 @@ export type Scalars = {
 };
 
 export type IApplicationCocktail = {
-  _count?: Maybe<IApplicationCocktailCount>;
-  colour: Scalars['String']['output'];
-  forApplication: Array<ICompanyApplication>;
+  createdAt: Scalars['DateTimeISO']['output'];
   name: Scalars['String']['output'];
-};
-
-export type IApplicationCocktailCount = {
-  forApplication: Scalars['Int']['output'];
-};
-
-
-export type IApplicationCocktailCountForApplicationArgs = {
-  where?: InputMaybe<ICompanyApplicationWhereInput>;
+  type: IApplicationCocktailType;
+  uid: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
 };
 
 export type IApplicationCocktailNullableRelationFilter = {
@@ -55,15 +47,61 @@ export type IApplicationCocktailNullableRelationFilter = {
 };
 
 export type IApplicationCocktailOrderByWithRelationInput = {
-  colour?: InputMaybe<ISortOrder>;
   name?: InputMaybe<ISortOrder>;
+};
+
+export type IApplicationCocktailType = {
+  forSeason?: Maybe<ISeason>;
+  type: Scalars['String']['output'];
+};
+
+export type IApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput = {
+  forSeasonId: Scalars['Int']['input'];
+  type: Scalars['String']['input'];
+};
+
+export type IApplicationCocktailTypeListRelationFilter = {
+  every?: InputMaybe<IApplicationCocktailTypeWhereInput>;
+  none?: InputMaybe<IApplicationCocktailTypeWhereInput>;
+  some?: InputMaybe<IApplicationCocktailTypeWhereInput>;
+};
+
+export type IApplicationCocktailTypeOrderByRelationAggregateInput = {
+  _count?: InputMaybe<ISortOrder>;
+};
+
+export type IApplicationCocktailTypeOrderByWithRelationInput = {
+  forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
+  type?: InputMaybe<ISortOrder>;
+};
+
+export enum IApplicationCocktailTypeScalarFieldEnum {
+  ForSeasonId = 'forSeasonId',
+  Id = 'id',
+  Type = 'type'
+}
+
+export type IApplicationCocktailTypeWhereInput = {
+  AND?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  NOT?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  OR?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
+  type?: InputMaybe<IStringFilter>;
+};
+
+export type IApplicationCocktailTypeWhereUniqueInput = {
+  AND?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  NOT?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  OR?: InputMaybe<Array<IApplicationCocktailTypeWhereInput>>;
+  forSeason?: InputMaybe<ISeasonNullableRelationFilter>;
+  forSeasonId_type?: InputMaybe<IApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput>;
+  type?: InputMaybe<IStringFilter>;
 };
 
 export type IApplicationCocktailWhereInput = {
   AND?: InputMaybe<Array<IApplicationCocktailWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationCocktailWhereInput>>;
   OR?: InputMaybe<Array<IApplicationCocktailWhereInput>>;
-  colour?: InputMaybe<IStringFilter>;
   name?: InputMaybe<IStringFilter>;
 };
 
@@ -398,9 +436,9 @@ export type ICalendarUpdateInput = {
   uid?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type ICocktailCreateInput = {
-  colour: Scalars['String']['input'];
+export type ICocktailChooseInput = {
   name: Scalars['String']['input'];
+  type: Scalars['String']['input'];
 };
 
 export type ICompany = {
@@ -456,34 +494,8 @@ export type ICompanyApplicationApproval = {
   workshopParticipants: Scalars['Int']['output'];
 };
 
-export type ICompanyApplicationApprovalNullableRelationFilter = {
-  is?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
-  isNot?: InputMaybe<ICompanyApplicationApprovalWhereInput>;
-};
-
-export type ICompanyApplicationApprovalOrderByWithRelationInput = {
-  booth?: InputMaybe<ISortOrder>;
-  cocktail?: InputMaybe<ISortOrder>;
-  logoHidden?: InputMaybe<ISortOrder>;
-  panel?: InputMaybe<ISortOrder>;
-  talkParticipants?: InputMaybe<ISortOrder>;
-  workshopParticipants?: InputMaybe<ISortOrder>;
-};
-
-export type ICompanyApplicationApprovalWhereInput = {
-  AND?: InputMaybe<Array<ICompanyApplicationApprovalWhereInput>>;
-  NOT?: InputMaybe<Array<ICompanyApplicationApprovalWhereInput>>;
-  OR?: InputMaybe<Array<ICompanyApplicationApprovalWhereInput>>;
-  booth?: InputMaybe<IBoolFilter>;
-  cocktail?: InputMaybe<IBoolFilter>;
-  logoHidden?: InputMaybe<IBoolFilter>;
-  panel?: InputMaybe<IBoolFilter>;
-  talkParticipants?: InputMaybe<IIntFilter>;
-  workshopParticipants?: InputMaybe<IIntFilter>;
-};
-
 export type ICompanyApplicationApprovedEditInput = {
-  cocktail?: InputMaybe<ICocktailCreateInput>;
+  cocktail?: InputMaybe<ICocktailChooseInput>;
   panel: Array<IPresenterCreateInput>;
   talk?: InputMaybe<ITalksCreateInput>;
   vat: Scalars['String']['input'];
@@ -593,7 +605,6 @@ export type ICompanyApplicationOrderByRelationAggregateInput = {
 };
 
 export type ICompanyApplicationOrderByWithRelationInput = {
-  approval?: InputMaybe<ICompanyApplicationApprovalOrderByWithRelationInput>;
   booth?: InputMaybe<ISortOrderInput>;
   cocktail?: InputMaybe<IApplicationCocktailOrderByWithRelationInput>;
   contactPerson?: InputMaybe<ICompanyApplicationContactPersonOrderByWithRelationInput>;
@@ -609,7 +620,6 @@ export type ICompanyApplicationOrderByWithRelationInput = {
 
 export enum ICompanyApplicationScalarFieldEnum {
   Booth = 'booth',
-  CocktailId = 'cocktailId',
   ContactPersonId = 'contactPersonId',
   CreatedAt = 'createdAt',
   FeedbackFormId = 'feedbackFormId',
@@ -626,7 +636,6 @@ export type ICompanyApplicationWhereInput = {
   AND?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   NOT?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   OR?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
-  approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<IStringNullableFilter>;
   cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
   contactPerson?: InputMaybe<ICompanyApplicationContactPersonNullableRelationFilter>;
@@ -644,7 +653,6 @@ export type ICompanyApplicationWhereUniqueInput = {
   AND?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   NOT?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
   OR?: InputMaybe<Array<ICompanyApplicationWhereInput>>;
-  approval?: InputMaybe<ICompanyApplicationApprovalNullableRelationFilter>;
   booth?: InputMaybe<IStringNullableFilter>;
   cocktail?: InputMaybe<IApplicationCocktailNullableRelationFilter>;
   contactPerson?: InputMaybe<ICompanyApplicationContactPersonNullableRelationFilter>;
@@ -1374,6 +1382,7 @@ export type IMutation = {
   addCompanyMember?: Maybe<Scalars['String']['output']>;
   approveCompanyApplications: Array<ICompanyApplicationApproval>;
   checkPasswordReset?: Maybe<IUser>;
+  createCocktailType?: Maybe<IApplicationCocktailType>;
   createCompanyApplication?: Maybe<ICreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<ICreateCompanyApplicationResponse>;
   createGalleryImage?: Maybe<ICreateGalleryImageResponse>;
@@ -1406,6 +1415,7 @@ export type IMutation = {
   register: IAuthResponse;
   registerCompany?: Maybe<ICreateCompanyResponse>;
   removeCompanyMember?: Maybe<Scalars['String']['output']>;
+  renameCocktailType: IApplicationCocktailType;
   renameIndustry?: Maybe<IIndustry>;
   renameTalkCategory?: Maybe<IApplicationTalkCategory>;
   requestPasswordReset: Scalars['String']['output'];
@@ -1451,6 +1461,12 @@ export type IMutationApproveCompanyApplicationsArgs = {
 
 export type IMutationCheckPasswordResetArgs = {
   token: Scalars['String']['input'];
+};
+
+
+export type IMutationCreateCocktailTypeArgs = {
+  season: Scalars['String']['input'];
+  type: Scalars['String']['input'];
 };
 
 
@@ -1616,6 +1632,13 @@ export type IMutationRegisterCompanyArgs = {
 
 export type IMutationRemoveCompanyMemberArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type IMutationRenameCocktailTypeArgs = {
+  newCocktailType: Scalars['String']['input'];
+  oldCocktailType: Scalars['String']['input'];
+  season: Scalars['String']['input'];
 };
 
 
@@ -2043,11 +2066,13 @@ export type IQuery = {
   allNews: Array<INews>;
   allTranslationsFor: Array<ITranslation>;
   approvedCompanyApplications: Array<ICompanyApplicationApproval>;
+  availableCocktailTypes: Array<IApplicationCocktailType>;
   booths: Array<IBooth>;
   calendar: Array<ICalendarItem>;
   calendarItem?: Maybe<ICalendarItem>;
   calendarItemCompanyUid?: Maybe<Scalars['String']['output']>;
   calendarOld: Array<ICalendarEvent>;
+  cocktailTypes: Array<IApplicationCocktailType>;
   companies: Array<ICompany>;
   company?: Maybe<ICompany>;
   companyApplication?: Maybe<ICompanyApplication>;
@@ -2110,6 +2135,16 @@ export type IQueryAllTranslationsForArgs = {
 };
 
 
+export type IQueryAvailableCocktailTypesArgs = {
+  cursor?: InputMaybe<IApplicationCocktailTypeWhereUniqueInput>;
+  distinct?: InputMaybe<Array<IApplicationCocktailTypeScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<IApplicationCocktailTypeOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<IApplicationCocktailTypeWhereInput>;
+};
+
+
 export type IQueryCalendarArgs = {
   filter?: InputMaybe<ICalendarFilterInput>;
   season?: InputMaybe<Scalars['String']['input']>;
@@ -2123,6 +2158,16 @@ export type IQueryCalendarItemArgs = {
 
 export type IQueryCalendarItemCompanyUidArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IQueryCocktailTypesArgs = {
+  cursor?: InputMaybe<IApplicationCocktailTypeWhereUniqueInput>;
+  distinct?: InputMaybe<Array<IApplicationCocktailTypeScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<IApplicationCocktailTypeOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<IApplicationCocktailTypeWhereInput>;
 };
 
 
@@ -2842,6 +2887,7 @@ export type ISeason = {
 };
 
 export type ISeasonCount = {
+  ApplicationCocktailType: Scalars['Int']['output'];
   LiveVote: Scalars['Int']['output'];
   LiveVoteComment: Scalars['Int']['output'];
   UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
@@ -2857,6 +2903,11 @@ export type ISeasonCount = {
   scannedUsers: Scalars['Int']['output'];
   sponsors: Scalars['Int']['output'];
   talkCategories: Scalars['Int']['output'];
+};
+
+
+export type ISeasonCountApplicationCocktailTypeArgs = {
+  where?: InputMaybe<IApplicationCocktailTypeWhereInput>;
 };
 
 
@@ -2962,6 +3013,7 @@ export type ISeasonNullableRelationFilter = {
 };
 
 export type ISeasonOrderByWithRelationInput = {
+  ApplicationCocktailType?: InputMaybe<IApplicationCocktailTypeOrderByRelationAggregateInput>;
   applicationsEditableFrom?: InputMaybe<ISortOrder>;
   applicationsEditableUntil?: InputMaybe<ISortOrder>;
   applicationsFrom?: InputMaybe<ISortOrder>;
@@ -3044,6 +3096,7 @@ export type ISeasonUpdateInput = {
 
 export type ISeasonWhereInput = {
   AND?: InputMaybe<Array<ISeasonWhereInput>>;
+  ApplicationCocktailType?: InputMaybe<IApplicationCocktailTypeListRelationFilter>;
   NOT?: InputMaybe<Array<ISeasonWhereInput>>;
   OR?: InputMaybe<Array<ISeasonWhereInput>>;
   applicationsEditableFrom?: InputMaybe<IDateTimeFilter>;
@@ -3076,6 +3129,7 @@ export type ISeasonWhereInput = {
 
 export type ISeasonWhereUniqueInput = {
   AND?: InputMaybe<Array<ISeasonWhereInput>>;
+  ApplicationCocktailType?: InputMaybe<IApplicationCocktailTypeListRelationFilter>;
   NOT?: InputMaybe<Array<ISeasonWhereInput>>;
   OR?: InputMaybe<Array<ISeasonWhereInput>>;
   applicationsEditableFrom?: InputMaybe<IDateTimeFilter>;
@@ -3780,6 +3834,33 @@ export type IRenameTalkCategoryMutationVariables = Exact<{
 
 export type IRenameTalkCategoryMutation = IRenameTalkCategoryMutation_Mutation;
 
+export type ICreateCocktailTypeMutation_createCocktailType_ApplicationCocktailType = { type: string };
+
+export type ICreateCocktailTypeMutation_Mutation = { createCocktailType?: ICreateCocktailTypeMutation_createCocktailType_ApplicationCocktailType | null };
+
+
+export type ICreateCocktailTypeMutationVariables = Exact<{
+  type: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+}>;
+
+
+export type ICreateCocktailTypeMutation = ICreateCocktailTypeMutation_Mutation;
+
+export type IRenameCocktailTypeMutation_renameCocktailType_ApplicationCocktailType = { type: string };
+
+export type IRenameCocktailTypeMutation_Mutation = { renameCocktailType: IRenameCocktailTypeMutation_renameCocktailType_ApplicationCocktailType };
+
+
+export type IRenameCocktailTypeMutationVariables = Exact<{
+  oldCocktailType: Scalars['String']['input'];
+  newCocktailType: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IRenameCocktailTypeMutation = IRenameCocktailTypeMutation_Mutation;
+
 export type IRegisterCompanyMutation_registerCompany_CreateCompanyResponse_errors_FieldError = { message: string, field: string };
 
 export type IRegisterCompanyMutation_registerCompany_CreateCompanyResponse_entity_Company_industry_Industry = { name: string };
@@ -3999,7 +4080,9 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_workshop_Applica
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, goal: string, notesEn: string, notesHr: string, presenters: Array<IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter> };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail = { name: string, colour: string };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail_type_ApplicationCocktailType = { type: string };
+
+export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail = { name: string, type: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail_type_ApplicationCocktailType };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
@@ -4154,6 +4237,30 @@ export type ITalkCategoriesQueryVariables = Exact<{
 
 
 export type ITalkCategoriesQuery = ITalkCategoriesQuery_Query;
+
+export type ICocktailTypesQuery_cocktailTypes_ApplicationCocktailType = { type: string };
+
+export type ICocktailTypesQuery_Query = { cocktailTypes: Array<ICocktailTypesQuery_cocktailTypes_ApplicationCocktailType> };
+
+
+export type ICocktailTypesQueryVariables = Exact<{
+  season?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ICocktailTypesQuery = ICocktailTypesQuery_Query;
+
+export type IAvailableCocktailTypesQuery_availableCocktailTypes_ApplicationCocktailType = { type: string };
+
+export type IAvailableCocktailTypesQuery_Query = { availableCocktailTypes: Array<IAvailableCocktailTypesQuery_availableCocktailTypes_ApplicationCocktailType> };
+
+
+export type IAvailableCocktailTypesQueryVariables = Exact<{
+  season?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type IAvailableCocktailTypesQuery = IAvailableCocktailTypesQuery_Query;
 
 export type IPressReleaseQuery_pressRelease_PressRelease_file_File = { name: string, mimeType: string, uid: string };
 
@@ -4341,11 +4448,13 @@ export type IAdminCompanyApplicationsQuery = IAdminCompanyApplicationsQuery_Quer
 
 export type ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory = { name: string };
 
+export type ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCocktailType = { type: string };
+
 export type ICurrentCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
 export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
-export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
+export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, availableCocktailTypes: Array<ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCocktailType>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
 
 
 export type ICurrentCompanyApplicationQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5162,9 +5271,16 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type IResolversTypes = {
   ApplicationCocktail: ResolverTypeWrapper<IApplicationCocktail>;
-  ApplicationCocktailCount: ResolverTypeWrapper<IApplicationCocktailCount>;
   ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
   ApplicationCocktailOrderByWithRelationInput: IApplicationCocktailOrderByWithRelationInput;
+  ApplicationCocktailType: ResolverTypeWrapper<IApplicationCocktailType>;
+  ApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput: IApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput;
+  ApplicationCocktailTypeListRelationFilter: IApplicationCocktailTypeListRelationFilter;
+  ApplicationCocktailTypeOrderByRelationAggregateInput: IApplicationCocktailTypeOrderByRelationAggregateInput;
+  ApplicationCocktailTypeOrderByWithRelationInput: IApplicationCocktailTypeOrderByWithRelationInput;
+  ApplicationCocktailTypeScalarFieldEnum: IApplicationCocktailTypeScalarFieldEnum;
+  ApplicationCocktailTypeWhereInput: IApplicationCocktailTypeWhereInput;
+  ApplicationCocktailTypeWhereUniqueInput: IApplicationCocktailTypeWhereUniqueInput;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: ResolverTypeWrapper<IApplicationPresenter>;
   ApplicationPresenterCount: ResolverTypeWrapper<IApplicationPresenterCount>;
@@ -5204,13 +5320,10 @@ export type IResolversTypes = {
   CalendarItemOrderByWithRelationInput: ICalendarItemOrderByWithRelationInput;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
-  CocktailCreateInput: ICocktailCreateInput;
+  CocktailChooseInput: ICocktailChooseInput;
   Company: ResolverTypeWrapper<ICompany>;
   CompanyApplication: ResolverTypeWrapper<ICompanyApplication>;
   CompanyApplicationApproval: ResolverTypeWrapper<ICompanyApplicationApproval>;
-  CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
-  CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
-  CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationContactPerson: ResolverTypeWrapper<ICompanyApplicationContactPerson>;
   CompanyApplicationContactPersonCreateInput: ICompanyApplicationContactPersonCreateInput;
@@ -5448,9 +5561,15 @@ export type IResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type IResolversParentTypes = {
   ApplicationCocktail: IApplicationCocktail;
-  ApplicationCocktailCount: IApplicationCocktailCount;
   ApplicationCocktailNullableRelationFilter: IApplicationCocktailNullableRelationFilter;
   ApplicationCocktailOrderByWithRelationInput: IApplicationCocktailOrderByWithRelationInput;
+  ApplicationCocktailType: IApplicationCocktailType;
+  ApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput: IApplicationCocktailTypeForSeasonIdTypeCompoundUniqueInput;
+  ApplicationCocktailTypeListRelationFilter: IApplicationCocktailTypeListRelationFilter;
+  ApplicationCocktailTypeOrderByRelationAggregateInput: IApplicationCocktailTypeOrderByRelationAggregateInput;
+  ApplicationCocktailTypeOrderByWithRelationInput: IApplicationCocktailTypeOrderByWithRelationInput;
+  ApplicationCocktailTypeWhereInput: IApplicationCocktailTypeWhereInput;
+  ApplicationCocktailTypeWhereUniqueInput: IApplicationCocktailTypeWhereUniqueInput;
   ApplicationCocktailWhereInput: IApplicationCocktailWhereInput;
   ApplicationPresenter: IApplicationPresenter;
   ApplicationPresenterCount: IApplicationPresenterCount;
@@ -5489,13 +5608,10 @@ export type IResolversParentTypes = {
   CalendarItemOrderByWithRelationInput: ICalendarItemOrderByWithRelationInput;
   CalendarItemWhereInput: ICalendarItemWhereInput;
   CalendarUpdateInput: ICalendarUpdateInput;
-  CocktailCreateInput: ICocktailCreateInput;
+  CocktailChooseInput: ICocktailChooseInput;
   Company: ICompany;
   CompanyApplication: ICompanyApplication;
   CompanyApplicationApproval: ICompanyApplicationApproval;
-  CompanyApplicationApprovalNullableRelationFilter: ICompanyApplicationApprovalNullableRelationFilter;
-  CompanyApplicationApprovalOrderByWithRelationInput: ICompanyApplicationApprovalOrderByWithRelationInput;
-  CompanyApplicationApprovalWhereInput: ICompanyApplicationApprovalWhereInput;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
   CompanyApplicationContactPerson: ICompanyApplicationContactPerson;
   CompanyApplicationContactPersonCreateInput: ICompanyApplicationContactPersonCreateInput;
@@ -5719,15 +5835,17 @@ export type IResolversParentTypes = {
 };
 
 export type IApplicationCocktailResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationCocktail'] = IResolversParentTypes['ApplicationCocktail']> = {
-  _count?: Resolver<Maybe<IResolversTypes['ApplicationCocktailCount']>, ParentType, ContextType>;
-  colour?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
-  forApplication?: Resolver<Array<IResolversTypes['CompanyApplication']>, ParentType, ContextType>;
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<IResolversTypes['ApplicationCocktailType'], ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type IApplicationCocktailCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationCocktailCount'] = IResolversParentTypes['ApplicationCocktailCount']> = {
-  forApplication?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IApplicationCocktailCountForApplicationArgs>>;
+export type IApplicationCocktailTypeResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationCocktailType'] = IResolversParentTypes['ApplicationCocktailType']> = {
+  forSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
+  type?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6201,6 +6319,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   addCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationAddCompanyMemberArgs, 'email'>>;
   approveCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType, RequireFields<IMutationApproveCompanyApplicationsArgs, 'companies' | 'season'>>;
   checkPasswordReset?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IMutationCheckPasswordResetArgs, 'token'>>;
+  createCocktailType?: Resolver<Maybe<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, RequireFields<IMutationCreateCocktailTypeArgs, 'season' | 'type'>>;
   createCompanyApplication?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationArgs, 'info'>>;
   createCompanyApplicationFor?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationForArgs, 'company' | 'info' | 'season'>>;
   createGalleryImage?: Resolver<Maybe<IResolversTypes['CreateGalleryImageResponse']>, ParentType, ContextType, RequireFields<IMutationCreateGalleryImageArgs, 'info'>>;
@@ -6233,6 +6352,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   register?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationRegisterArgs, 'info'>>;
   registerCompany?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationRegisterCompanyArgs, 'info'>>;
   removeCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationRemoveCompanyMemberArgs, 'email'>>;
+  renameCocktailType?: Resolver<IResolversTypes['ApplicationCocktailType'], ParentType, ContextType, RequireFields<IMutationRenameCocktailTypeArgs, 'newCocktailType' | 'oldCocktailType' | 'season'>>;
   renameIndustry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType, RequireFields<IMutationRenameIndustryArgs, 'newName' | 'oldName'>>;
   renameTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationRenameTalkCategoryArgs, 'newName' | 'oldName' | 'season'>>;
   requestPasswordReset?: Resolver<IResolversTypes['String'], ParentType, ContextType, RequireFields<IMutationRequestPasswordResetArgs, 'identifier'>>;
@@ -6316,11 +6436,13 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   allNews?: Resolver<Array<IResolversTypes['News']>, ParentType, ContextType, Partial<IQueryAllNewsArgs>>;
   allTranslationsFor?: Resolver<Array<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IQueryAllTranslationsForArgs, 'language'>>;
   approvedCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType>;
+  availableCocktailTypes?: Resolver<Array<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, Partial<IQueryAvailableCocktailTypesArgs>>;
   booths?: Resolver<Array<IResolversTypes['Booth']>, ParentType, ContextType>;
   calendar?: Resolver<Array<IResolversTypes['CalendarItem']>, ParentType, ContextType, Partial<IQueryCalendarArgs>>;
   calendarItem?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType, RequireFields<IQueryCalendarItemArgs, 'uid'>>;
   calendarItemCompanyUid?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IQueryCalendarItemCompanyUidArgs, 'uid'>>;
   calendarOld?: Resolver<Array<IResolversTypes['CalendarEvent']>, ParentType, ContextType>;
+  cocktailTypes?: Resolver<Array<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, Partial<IQueryCocktailTypesArgs>>;
   companies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType, Partial<IQueryCompaniesArgs>>;
   company?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType, RequireFields<IQueryCompanyArgs, 'vat'>>;
   companyApplication?: Resolver<Maybe<IResolversTypes['CompanyApplication']>, ParentType, ContextType>;
@@ -6512,6 +6634,7 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
 };
 
 export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['SeasonCount'] = IResolversParentTypes['SeasonCount']> = {
+  ApplicationCocktailType?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountApplicationCocktailTypeArgs>>;
   LiveVote?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountLiveVoteArgs>>;
   LiveVoteComment?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountLiveVoteCommentArgs>>;
   UserCompanyComponentRatingAveragesView?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingAveragesViewArgs>>;
@@ -6647,7 +6770,7 @@ export type IVatDataResolvers<ContextType = any, ParentType extends IResolversPa
 
 export type IResolvers<ContextType = any> = {
   ApplicationCocktail?: IApplicationCocktailResolvers<ContextType>;
-  ApplicationCocktailCount?: IApplicationCocktailCountResolvers<ContextType>;
+  ApplicationCocktailType?: IApplicationCocktailTypeResolvers<ContextType>;
   ApplicationPresenter?: IApplicationPresenterResolvers<ContextType>;
   ApplicationPresenterCount?: IApplicationPresenterCountResolvers<ContextType>;
   ApplicationTalk?: IApplicationTalkResolvers<ContextType>;
@@ -6864,7 +6987,9 @@ export const Frag_CompanyApplication = gql`
   }
   cocktail {
     name
-    colour
+    type {
+      type
+    }
   }
   panelParticipants {
     ...frag_ApplicationPresenter
@@ -7128,6 +7253,24 @@ export const RenameTalkCategory = gql`
     mutation RenameTalkCategory($oldName: String!, $newName: String!, $season: String!) {
   renameTalkCategory(oldName: $oldName, newName: $newName, season: $season) {
     name
+  }
+}
+    `;
+export const CreateCocktailType = gql`
+    mutation CreateCocktailType($type: String!, $season: String!) {
+  createCocktailType(type: $type, season: $season) {
+    type
+  }
+}
+    `;
+export const RenameCocktailType = gql`
+    mutation RenameCocktailType($oldCocktailType: String!, $newCocktailType: String!, $season: String!) {
+  renameCocktailType(
+    oldCocktailType: $oldCocktailType
+    newCocktailType: $newCocktailType
+    season: $season
+  ) {
+    type
   }
 }
     `;
@@ -7477,6 +7620,20 @@ export const TalkCategories = gql`
   }
 }
     `;
+export const CocktailTypes = gql`
+    query CocktailTypes($season: String) {
+  cocktailTypes(where: {forSeason: {is: {uid: {equals: $season}}}}) {
+    type
+  }
+}
+    `;
+export const AvailableCocktailTypes = gql`
+    query AvailableCocktailTypes($season: String) {
+  availableCocktailTypes(where: {forSeason: {is: {uid: {equals: $season}}}}) {
+    type
+  }
+}
+    `;
 export const PressRelease = gql`
     query PressRelease($uid: String!) {
   pressRelease(uid: $uid) {
@@ -7664,6 +7821,9 @@ export const CurrentCompanyApplication = gql`
     query CurrentCompanyApplication {
   talkCategories {
     name
+  }
+  availableCocktailTypes {
+    type
   }
   booths {
     name

@@ -146,6 +146,9 @@
     useTalkCategoriesStore,
   } from "~/store/talkCategories";
   import {
+    useCocktailTypesStore,
+  } from "~/store/cocktailTypes";
+  import {
     useSeasonsStore,
   } from "~/store/seasons";
   import useTitle from "~/composables/useTitle";
@@ -184,6 +187,7 @@
       const userStore = useUserStore();
       const companyStore = useCompanyStore();
       const talkCategoriesStore = useTalkCategoriesStore();
+      const cocktailTypesStore = useCocktailTypesStore();
       const seasonsStore = useSeasonsStore();
 
       const company = userStore.company!;
@@ -280,7 +284,9 @@
         [FormFor.Cocktail]: form({
           info: companyApplicationCocktailCreate(
             companyApplication.cocktail,
-          )(),
+          )({
+            cocktailTypes: cocktailTypesStore.cocktailTypes,
+          }),
         }),
         [FormFor.Panel]: form({
           presenter: extendTo<NonNullable<ICurrentCompanyApplicationQuery["companyApplication"]>["panelParticipants"][0]>(

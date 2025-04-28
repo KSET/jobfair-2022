@@ -11,7 +11,7 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktailCategory,
+  ApplicationCocktailType,
   Season,
 } from "@generated/type-graphql";
 import {
@@ -29,35 +29,18 @@ import {
   transformSelect as transformSelectSeason,
 } from "./season";
 
-@InputType()
-export class CocktailCreateInput {
-  @Field()
-    name: string = "";
 
-  @Field()
-    colour: string = "";
-  
-  @Field()
-    ingredients: string = "";
-}
-
-@InputType()
-export class CocktailChooseInput {
-  @Field()
-    name: string = "";
-}
-
-@Resolver(() => ApplicationCocktailCategory)
-export class CompanyApplicationCocktailCategoryFieldResolver {
+@Resolver(() => ApplicationCocktailType)
+export class CompanyApplicationCocktailTypeFieldResolver {
   @FieldResolver(() => Season, { nullable: true })
   forSeason(
-    @Root() cocktailCategory: ApplicationCocktailCategory,
+    @Root() cocktailType: ApplicationCocktailType,
   ): GQLField<Season, "nullable"> {
-    return cocktailCategory.forSeason;
+    return cocktailType.forSeason;
   }
 }
 
-export const transformSelect = transformSelectFor<CompanyApplicationCocktailCategoryFieldResolver>({
+export const transformSelect = transformSelectFor<CompanyApplicationCocktailTypeFieldResolver>({
   forSeason(select) {
     select.forSeason = {
       select: transformSelectSeason(select.forSeason as Record<string, unknown>),
@@ -67,16 +50,17 @@ export const transformSelect = transformSelectFor<CompanyApplicationCocktailCate
   },
 });
 
-@Resolver(() => ApplicationCocktailCategory)
-export class CompanyApplicationCocktailCategoryResolver {
-  @Query(() => [ ApplicationCocktailCategory ])
-  availableCocktailCategories(
+@Resolver(() => ApplicationCocktailType)
+export class CompanyApplicationCocktailTypeResolver {
+  @Query(() => [ ApplicationCocktailType ])
+  availableCocktailTypes(
   @Ctx() ctx: Context,
     @Info() info: GraphQLResolveInfo
   ) {
     const now = new Date();
 
-    return ctx.prisma.applicationCocktailCategory.findMany({
+
+    return ctx.prisma.applicationCocktailType.findMany({
       cursor: undefined,
       where: {
         forSeason: {
@@ -87,20 +71,20 @@ export class CompanyApplicationCocktailCategoryResolver {
             gte: now,
           },
         },
-        forApplication: null
+        forApplicationCocktail: null
       },
       select: toSelect(info, transformSelect),
     });
   }
 
-  @Query(() => [ ApplicationCocktailCategory ])
-  cocktailCategories(
+  @Query(() => [ ApplicationCocktailType ])
+  cocktailTypes(
   @Ctx() ctx: Context,
     @Info() info: GraphQLResolveInfo
   ) {
     const now = new Date();
 
-    return ctx.prisma.applicationCocktailCategory.findMany({
+    return ctx.prisma.applicationCocktailType.findMany({
       cursor: undefined,
       where: {
         forSeason: {
@@ -118,13 +102,13 @@ export class CompanyApplicationCocktailCategoryResolver {
 }
 
 
-@Resolver(() => ApplicationCocktailCategory)
+@Resolver(() => ApplicationCocktailType)
 export class CompanyApplicationCocktailAdminResolver {
-  @Mutation(() => ApplicationCocktailCategory, { nullable: true })
-  createCocktailCategory(
+  @Mutation(() => ApplicationCocktailType, { nullable: true })
+  createCocktailType(
     @Ctx() ctx: Context,
-    @Arg("info") cocktail: CocktailCreateInput,
-    @Arg("seasonUid") season: string,
+    @Arg("type") type: string,
+    @Arg("season") season: string,
   ) {
     if (!ctx.user) {
       return null;
@@ -134,13 +118,11 @@ export class CompanyApplicationCocktailAdminResolver {
       return null;
     }
     
-    void EventsService.logEvent("cocktail-category:create", ctx.user.id, cocktail.name);
+    void EventsService.logEvent("cocktail-type:create", ctx.user.id, type);
 
-    return ctx.prisma.applicationCocktailCategory.create({
+    return ctx.prisma.applicationCocktailType.create({
       data: {
-        colour: cocktail.colour,
-        name: cocktail.name,
-        ingredients: cocktail.ingredients,
+        type: type,
         forSeason: {
           connect: {
             uid: season
@@ -150,12 +132,12 @@ export class CompanyApplicationCocktailAdminResolver {
     });
   }
 
-  @Mutation(() => ApplicationCocktailCategory)
-  async updateCocktailCategory(
+  @Mutation(() => ApplicationCocktailType)
+  async renameCocktailType(
     @Ctx() ctx: Context,
-    @Arg("cocktailName") cocktailName: string,
-    @Arg("info") cocktail: CocktailCreateInput,
-    @Arg("seasonUid") seasonUid: string
+    @Arg("oldCocktailType") oldCocktailType: string,
+    @Arg("newCocktailType") newCocktailType: string,
+    @Arg("season") seasonUid: string
   ) {
 
     if (!ctx.user) {
@@ -179,17 +161,17 @@ export class CompanyApplicationCocktailAdminResolver {
       return null;
     }
 
-    void EventsService.logEvent("cocktail-category:update", ctx.user.id, { oldName: cocktailName, season: seasonUid, new: cocktail });
+    void EventsService.logEvent("cocktail-type:update", ctx.user.id, { oldType: oldCocktailType, season: seasonUid, newType: newCocktailType });
 
-    return ctx.prisma.applicationCocktailCategory.update({
+    return ctx.prisma.applicationCocktailType.update({
       where: {
-        forSeasonId_name: {
-          name: cocktailName,
+        forSeasonId_type: {
+          type: oldCocktailType,
           forSeasonId: season.id,
         },
       },
       data: {
-        ...cocktail,
+        type: newCocktailType,
         forSeason: {
           connect: {
             uid: seasonUid
@@ -198,6 +180,5 @@ export class CompanyApplicationCocktailAdminResolver {
       },
     });
   }
-
 }
 

@@ -919,6 +919,7 @@ input EventReservationWhereInput {
 
 enum EventType {
   hotTalk
+  other
   panel
   talk
   workshop

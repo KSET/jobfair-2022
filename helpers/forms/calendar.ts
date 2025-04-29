@@ -16,6 +16,7 @@ export enum CalendarType {
   HotTalk = "hot-talk",
   Panel = "panel",
   LoosenUp = "loosen-up",
+  Other = "other",
 }
 
 const calendarTypeLabels: Record<CalendarType, string> = {
@@ -24,6 +25,7 @@ const calendarTypeLabels: Record<CalendarType, string> = {
   [CalendarType.LoosenUp]: "Loosen Up",
   [CalendarType.Panel]: "Panel",
   [CalendarType.Workshop]: "Workshop",
+  [CalendarType.Other]: "Other Content",
 };
 
 type Item<T> = Partial<T> | null | undefined;

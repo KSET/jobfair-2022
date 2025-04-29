@@ -231,7 +231,7 @@
         )
       ;
 
-      const otherContent = [ "panel", "hot-talk", "loosen-up", "other-content" ];
+      const otherContent = [ "panel", "hot-talk", "loosen-up", "other" ];
       const groupedEvents = groupBy(
         (event) => event.class!,
         events.filter((event) => event.class && !otherContent.includes(event.class) && !event.noGroup),

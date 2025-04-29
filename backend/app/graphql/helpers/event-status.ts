@@ -7,6 +7,7 @@ export enum EventType {
   talk = "talk",
   panel = "panel",
   hotTalk = "hot-talk",
+  other = "other",
 }
 
 export type Event = {

@@ -1,77 +1,18 @@
 <template>
-  <app-max-width-container :not-found="!isScheduleShown" :class="$style.container">
-    <h1>
-      <translated-text trans-key="schedule.header" />
-    </h1>
+  <app-max-width-container :not-found="!isScheduleShown">
+    <div :class="$style.container">
+      <h1>
+        <translated-text trans-key="schedule.header" />
+      </h1>
 
-    <div v-if="events.length > 0" :class="$style.calendarContainer">
-      <vue-calendar
-        v-if="!isMd"
-        :click-to-navigate="false"
-        :dblclick-to-navigate="false"
-        :disable-views="['years', 'year', 'month', 'day']"
-        :events="events"
-        :hide-weekdays="unusedDays"
-        :selected-date="events[0].start"
-        :split-days="splitDays"
-        :time-from="(minHours - (timeStepMinutes / 60)) * 60"
-        :time-step="timeStepMinutes"
-        :time-to="(maxHours + (timeStepMinutes / 60)) * 60"
-        :watch-real-time="false"
-        active-view="week"
-        hide-title-bar
-        hide-view-selector
-      >
-        <template #event="{ event }">
-          <component
-            :is="event.hasEvent ? 'a' : 'div'"
-            :class="$style.eventContainer"
-            :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
-            target="_blank"
-            :title="event.text ? `${event.title}\n----------\n${event.text}` : event.title"
-          >
-            <strong
-              :class="$style.eventTitle"
-              v-text="event.title"
-            />
-            <br>
-            <span
-              :class="$style.eventTime"
-            >
-              <time
-                :datetime="event.start.toISOString()"
-                v-text="formatEventTime(event.start)"
-              />
-              &ndash;
-              <time
-                :datetime="event.end.toISOString()"
-                v-text="formatEventTime(event.end)"
-              />
-            </span>
-            <div
-              v-if="event.location"
-              :class="$style.eventLocation"
-            >
-              <i class="pi pi-map-marker" />
-              {{ event.location }}
-            </div>
-            <div
-              v-if="event.text"
-              :class="$style.eventText"
-              v-text="event.text"
-            />
-          </component>
-        </template>
-      </vue-calendar>
-      <template v-else>
+      <div v-if="events.length > 0" :class="$style.calendarContainer">
         <vue-calendar
-          v-for="day in usedDays"
-          :key="day"
+          v-if="!isMd"
           :click-to-navigate="false"
           :dblclick-to-navigate="false"
           :disable-views="['years', 'year', 'month', 'day']"
           :events="events"
-          :hide-weekdays="[ ...unusedDays, day ]"
+          :hide-weekdays="unusedDays"
           :selected-date="events[0].start"
           :split-days="splitDays"
           :time-from="(minHours - (timeStepMinutes / 60)) * 60"
@@ -81,7 +22,6 @@
           active-view="week"
           hide-title-bar
           hide-view-selector
-          hide-weekends
         >
           <template #event="{ event }">
             <component
@@ -89,10 +29,10 @@
               :class="$style.eventContainer"
               :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
               target="_blank"
+              :title="event.text ? `${event.title}\n----------\n${event.text}` : event.title"
             >
               <strong
                 :class="$style.eventTitle"
-                :data-event="JSON.stringify(event)"
                 v-text="event.title"
               />
               <br>
@@ -124,14 +64,75 @@
             </component>
           </template>
         </vue-calendar>
-      </template>
+        <template v-else>
+          <vue-calendar
+            v-for="day in usedDays"
+            :key="day"
+            :click-to-navigate="false"
+            :dblclick-to-navigate="false"
+            :disable-views="['years', 'year', 'month', 'day']"
+            :events="events"
+            :hide-weekdays="[ ...unusedDays, day ]"
+            :selected-date="events[0].start"
+            :split-days="splitDays"
+            :time-from="(minHours - (timeStepMinutes / 60)) * 60"
+            :time-step="timeStepMinutes"
+            :time-to="(maxHours + (timeStepMinutes / 60)) * 60"
+            :watch-real-time="false"
+            active-view="week"
+            hide-title-bar
+            hide-view-selector
+            hide-weekends
+          >
+            <template #event="{ event }">
+              <component
+                :is="event.hasEvent ? 'a' : 'div'"
+                :class="$style.eventContainer"
+                :href="$router.resolve({ name: 'calendar-event-uid', params: { uid: event.uid } }).href"
+                target="_blank"
+              >
+                <strong
+                  :class="$style.eventTitle"
+                  :data-event="JSON.stringify(event)"
+                  v-text="event.title"
+                />
+                <br>
+                <span
+                  :class="$style.eventTime"
+                >
+                  <time
+                    :datetime="event.start.toISOString()"
+                    v-text="formatEventTime(event.start)"
+                  />
+                  &ndash;
+                  <time
+                    :datetime="event.end.toISOString()"
+                    v-text="formatEventTime(event.end)"
+                  />
+                </span>
+                <div
+                  v-if="event.location"
+                  :class="$style.eventLocation"
+                >
+                  <i class="pi pi-map-marker" />
+                  {{ event.location }}
+                </div>
+                <div
+                  v-if="event.text"
+                  :class="$style.eventText"
+                  v-text="event.text"
+                />
+              </component>
+            </template>
+          </vue-calendar>
+        </template>
+      </div>
+      <div v-else>
+        <h2>
+          <translated-text trans-key="schedule.no-events" />
+        </h2>
+      </div>
     </div>
-    <div v-else>
-      <h2>
-        <translated-text trans-key="schedule.no-events" />
-      </h2>
-    </div>
-
     <div v-if="events.length > 0" class="text-right my-2 text-xl">
       <a href="/api/user/calendar/event/all.ics">
         <translated-text trans-key="schedule.as-ical.public" />

@@ -231,7 +231,11 @@
         )
       ;
 
-      const groupedEvents = groupBy((event) => event.class!, events.filter((event) => event.class && !event.noGroup));
+      const otherContent = [ "panel", "talk", "workshop" ];
+      const groupedEvents = groupBy(
+        (event) => event.class!,
+        events.filter((event) => event.class && (!otherContent.includes(event.class) || event.noGroup)),
+      );
 
       const splitDays =
         Object

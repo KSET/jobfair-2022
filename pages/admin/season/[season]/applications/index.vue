@@ -108,9 +108,9 @@
               <strong>
                 Cocktail
                 <i class="ml-2 pi pi-check" />
-                <em v-text="application.cocktail.name" />
-                <em> : </em>
-                <em v-text="application.cocktail.type.type" />
+                <em v-text="application.cocktail?.name" />
+                <em v-if="application.cocktail?.name"> : </em>
+                <em v-text="application.cocktail?.type?.type" />
               </strong>
             </li>
             <li v-if="application.wantsPanel">

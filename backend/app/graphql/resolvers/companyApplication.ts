@@ -16,7 +16,6 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktail,
   ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
@@ -28,6 +27,7 @@ import {
   FindManyCompanyApplicationArgs,
   Season,
   CompanyApplicationFeedback,
+  ApplicationCocktail,
 } from "@generated/type-graphql";
 import {
   groupBy,
@@ -106,7 +106,7 @@ import {
   transformSelect as transformSelectApproval,
 } from "./companyApplicationApproval";
 import {
-  CocktailCreateInput,
+  CocktailChooseInput,
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
 import {
@@ -370,8 +370,8 @@ class CompanyApplicationApprovedEditInput {
   @Field(() => WorkshopsCreateInput, { nullable: true })
     workshop: WorkshopsCreateInput | null = null;
 
-  @Field(() => CocktailCreateInput, { nullable: true })
-    cocktail: CocktailCreateInput | null = null;
+  @Field(() => CocktailChooseInput, { nullable: true })
+    cocktail: CocktailChooseInput | null = null;
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
@@ -2205,13 +2205,29 @@ export class CompanyApplicationCreateResolver {
       data[id] = {
         upsert: {
           create: {
-            ...entry,
+            type: {
+              connect: {
+                forSeasonId_type: {
+                  forSeasonId: currentSeason.id,
+                  type: entry.type
+                }
+              }
+            },
+            name: entry.name
           },
           update: {
-            ...entry,
-          },
-        },
-      };
+            type: {
+              connect: {
+                forSeasonId_type: {
+                  forSeasonId: currentSeason.id,
+                  type: entry.type
+                }
+              }
+            },
+            name: entry.name
+          }
+        }
+      }
     }
 
     const entity = await ctx.prisma.companyApplication.update({
@@ -2244,7 +2260,11 @@ export class CompanyApplicationCreateResolver {
             photo: true,
           },
         },
-        cocktail: true,
+        cocktail: {
+          include: {
+            type: true
+          }
+        },
       },
     });
 

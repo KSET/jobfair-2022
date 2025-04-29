@@ -6,12 +6,12 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktail,
   ApplicationTalk,
   ApplicationWorkshop,
   ApplicationPresenter,
   CompanyApplicationApproval,
   CompanyPanel,
+  ApplicationCocktail,
 } from "@generated/type-graphql";
 import {
   Dict,

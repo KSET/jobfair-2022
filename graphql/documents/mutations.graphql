@@ -138,6 +138,18 @@ mutation RenameTalkCategory($oldName: String!, $newName: String!, $season: Strin
     }
 }
 
+mutation CreateCocktailType($type: String!, $season: String!) {
+    createCocktailType(type: $type, season: $season) {
+        type
+    }
+}
+
+mutation RenameCocktailType($oldCocktailType: String!, $newCocktailType: String!, $season: String!) {
+    renameCocktailType(oldCocktailType: $oldCocktailType, newCocktailType: $newCocktailType, season: $season) {
+        type
+    }
+}
+
 mutation RegisterCompany($info: CreateCompanyInput!) {
     registerCompany(info: $info) {
         errors {

@@ -25,6 +25,7 @@ import {
   type IUpdateCompanyInfoMutationVariables,
   type IValidateVatMutation,
   type IValidateVatMutationVariables,
+  type IApplicationCocktailType,
   RegisterCompany,
   UpdateCompanyInfo,
   ValidateVat,
@@ -32,6 +33,9 @@ import {
 import {
   useTalkCategoriesStore,
 } from "~/store/talkCategories";
+import {
+  useCocktailTypesStore,
+} from "~/store/cocktailTypes";
 
 type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication">> | null | undefined;
 
@@ -110,6 +114,7 @@ export const useCompanyStore = defineStore(
 
       async fetchCurrentApplication() {
         const talkCategoriesStore = useTalkCategoriesStore();
+        const cocktailTypesStore = useCocktailTypesStore();
 
         const resp = await useQuery<ICurrentCompanyApplicationQuery, ICurrentCompanyApplicationQueryVariables>({
           query: CurrentCompanyApplication,
@@ -119,6 +124,14 @@ export const useCompanyStore = defineStore(
 
         this.applicationInfo = info;
         talkCategoriesStore.setTalkCategories(info?.talkCategories);
+
+        const cocktailTypes = [
+          ...(info?.availableCocktailTypes || []),
+          info?.companyApplication?.cocktail?.type?.type ? info?.companyApplication?.cocktail?.type : null,
+        ].filter((x) => x) as IApplicationCocktailType[];
+
+        cocktailTypesStore.setCocktailTypes(cocktailTypes);
+
 
         return info;
       },

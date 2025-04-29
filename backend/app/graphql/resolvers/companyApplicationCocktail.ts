@@ -1,4 +1,8 @@
 import {
+  ApplicationCocktail,
+  ApplicationCocktailType,
+} from "@generated/type-graphql";
+import {
   Field,
   FieldResolver,
   InputType,
@@ -6,35 +10,23 @@ import {
   Root,
 } from "type-graphql";
 import {
-  ApplicationCocktail,
-  CompanyApplication,
-} from "@generated/type-graphql";
-import {
   transformSelectFor,
 } from "../helpers/resolver";
-import {
-  Dict,
-} from "../../types/helpers";
-import {
-  transformSelect as transformSelectApplication,
-} from "./companyApplication";
 
 @Resolver(() => ApplicationCocktail)
 export class CompanyApplicationCocktailFieldResolver {
-  @FieldResolver(() => [ CompanyApplication ])
-  forApplication(
-    @Root() cocktail: ApplicationCocktail,
-  ): CompanyApplication[] {
-    return cocktail.forApplication || [];
+  @FieldResolver(() => ApplicationCocktailType)
+  type(
+  @Root() application: ApplicationCocktail,
+  ) {
+    return application.type;
   }
 }
 
 export const transformSelect = transformSelectFor<CompanyApplicationCocktailFieldResolver>({
-  forApplication(select) {
-    select.forApplication = {
-      select: {
-        forApplication: transformSelectApplication(select.forApplication as Dict),
-      },
+  type(select) {
+    select.type = {
+      select: select.type,
     };
 
     return select;
@@ -42,10 +34,11 @@ export const transformSelect = transformSelectFor<CompanyApplicationCocktailFiel
 });
 
 @InputType()
-export class CocktailCreateInput {
+export class CocktailChooseInput {
   @Field()
     name: string = "";
 
   @Field()
-    colour: string = "";
+    type: string = "";
+
 }

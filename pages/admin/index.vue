@@ -191,6 +191,13 @@
           </li>
           <li>
             <nuxt-link
+              :to="{ name: 'admin-season-season-applications-cocktail-types', params: { season: season.uid } }"
+            >
+              Ponuda koktela
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
               :to="{ name: 'admin-season-season-applications-approval', params: { season: season.uid } }"
             >
               Odobri

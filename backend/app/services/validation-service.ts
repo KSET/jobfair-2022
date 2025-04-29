@@ -127,7 +127,6 @@ export const CompanyWorkshopValidation = <T>(workshop: T) => formatValidation(co
 
 const companyCocktailValidation = z.object({
   name: z.string().min(1),
-  colour: z.string().min(1),
 });
 export const CompanyCocktailValidation = <T>(cocktail: T) => formatValidation(companyCocktailValidation, cocktail);
 

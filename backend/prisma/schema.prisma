@@ -409,7 +409,7 @@ model Season {
   LiveVote LiveVote[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  LiveVoteComment             LiveVoteComment[]
+  LiveVoteComment         LiveVoteComment[]
   ApplicationCocktailType ApplicationCocktailType[]
 }
 
@@ -471,9 +471,11 @@ model CompanyApplication {
   panelParticipants ApplicationPresenter[]
 
   cocktail ApplicationCocktail?
-  /// @TypeGraphQL.omit(output: true, input: true)
 
+  /// @TypeGraphQL.omit(output: true, input: true)
   approval CompanyApplicationApproval?
+
+  internship ApplicationInternship?
 
   /// @TypeGraphQL.omit(input: true)
   feedbackForm   Form? @relation(fields: [feedbackFormId], references: [id], onDelete: Cascade)
@@ -489,9 +491,9 @@ model CompanyApplication {
   /// @TypeGraphQL.omit(output: true, input: true)
   forSeasonId Int
 
-  panel               CompanyPanel?        @relation(fields: [panelId], references: [id])
+  panel   CompanyPanel? @relation(fields: [panelId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
-  panelId             Int?
+  panelId Int?
 
   @@unique([forCompanyId, forSeasonId])
 }
@@ -619,25 +621,25 @@ model ApplicationTalkCategory {
 
 model ApplicationCocktail {
   /// @TypeGraphQL.omit(output: true, input: true)
-  id             Int                         @id @default(autoincrement())
+  id  Int    @id @default(autoincrement())
   /// @TypeGraphQL.omit(input: true)
-  uid            String                      @unique @default(cuid())
+  uid String @unique @default(cuid())
 
-  name           String
+  name String
 
   /// @TypeGraphQL.omit(input: true)
-  type       ApplicationCocktailType @relation(fields: [typeId], references: [id])
+  type           ApplicationCocktailType @relation(fields: [typeId], references: [id])
   /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication          @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
+  forApplication CompanyApplication      @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(input: true)
-  createdAt      DateTime                    @default(now())
+  createdAt      DateTime                @default(now())
   /// @TypeGraphQL.omit(input: true)
-  updatedAt      DateTime                    @updatedAt
+  updatedAt      DateTime                @updatedAt
 
   /// @TypeGraphQL.omit(output: true, input: true)
   forApplicationId Int @unique
   /// @TypeGraphQL.omit(output: true, input: true)
-  typeId       Int     @unique
+  typeId           Int @unique
 }
 
 model ApplicationCocktailType {
@@ -646,14 +648,37 @@ model ApplicationCocktailType {
   type String
 
   /// @TypeGraphQL.omit(input: true)
-  forApplicationCocktail ApplicationCocktail? 
+  forApplicationCocktail ApplicationCocktail?
 
-  forSeason           Season?               @relation(fields: [forSeasonId], references: [id])
+  forSeason   Season? @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
-  forSeasonId         Int?
+  forSeasonId Int?
 
   @@unique([forSeasonId, type])
-	@@map("ApplicationCocktailType")
+  @@map("ApplicationCocktailType")
+}
+
+model ApplicationInternship {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  position      String
+  competencies  String
+  description   String
+  workingPeriod String
+  duration      String
+
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(input: true)
+  createdAt      DateTime           @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt      DateTime           @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int @unique
 }
 
 model ApplicationPresenter {

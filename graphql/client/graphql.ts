@@ -1017,6 +1017,7 @@ export type EventReservationWhereInput = {
 
 export enum EventType {
   HotTalk = 'hotTalk',
+  Other = 'other',
   Panel = 'panel',
   Talk = 'talk',
   Workshop = 'workshop'

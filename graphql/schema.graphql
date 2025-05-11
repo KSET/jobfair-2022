@@ -3,6 +3,42 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type AdditionalContent {
+  _count: AdditionalContentCount
+  createdAt: DateTimeISO!
+  descriptionEn: String!
+  descriptionHr: String!
+  event: CalendarItem
+  presenters: [ApplicationPresenter!]!
+  titleEn: String!
+  titleHr: String!
+  uid: String!
+  updatedAt: DateTimeISO!
+}
+
+type AdditionalContentCount {
+  presenters(where: ApplicationPresenterWhereInput): Int!
+}
+
+input AdditionalContentCreateInput {
+  descriptionEn: String!
+  descriptionHr: String!
+  presenters: [PresenterCreateInput!]!
+  titleEn: String!
+  titleHr: String!
+}
+
+input AdditionalContentWhereInput {
+  AND: [AdditionalContentWhereInput!]
+  NOT: [AdditionalContentWhereInput!]
+  OR: [AdditionalContentWhereInput!]
+  descriptionEn: StringFilter
+  descriptionHr: StringFilter
+  event: CalendarItemNullableRelationFilter
+  titleEn: StringFilter
+  titleHr: StringFilter
+}
+
 type ApplicationCocktail {
   createdAt: DateTimeISO!
   name: String!
@@ -75,6 +111,32 @@ input ApplicationCocktailWhereInput {
   name: StringFilter
 }
 
+input ApplicationInternshipNullableRelationFilter {
+  is: ApplicationInternshipWhereInput
+  isNot: ApplicationInternshipWhereInput
+}
+
+input ApplicationInternshipOrderByWithRelationInput {
+  competencies: SortOrder
+  description: SortOrder
+  duration: SortOrder
+  position: SortOrder
+  url: SortOrder
+  workingPeriod: SortOrder
+}
+
+input ApplicationInternshipWhereInput {
+  AND: [ApplicationInternshipWhereInput!]
+  NOT: [ApplicationInternshipWhereInput!]
+  OR: [ApplicationInternshipWhereInput!]
+  competencies: StringFilter
+  description: StringFilter
+  duration: StringFilter
+  position: StringFilter
+  url: StringFilter
+  workingPeriod: StringFilter
+}
+
 type ApplicationPresenter {
   _count: ApplicationPresenterCount
   bioEn: String!
@@ -87,6 +149,7 @@ type ApplicationPresenter {
 }
 
 type ApplicationPresenterCount {
+  forAdditionalContents(where: AdditionalContentWhereInput): Int!
   forPanels(where: CompanyApplicationWhereInput): Int!
   forTalks(where: ApplicationTalkWhereInput): Int!
   forWorkshops(where: ApplicationWorkshopWhereInput): Int!
@@ -310,6 +373,7 @@ type CalendarItem {
   capacity: Int!
   companies: [Company!]
   end: DateTimeISO!
+  forAdditionalContent: AdditionalContent
   forPanel: CompanyPanel
   forTalk: ApplicationTalk
   forWorkshop: ApplicationWorkshop
@@ -545,6 +609,7 @@ input CompanyApplicationOrderByWithRelationInput {
   contactPerson: CompanyApplicationContactPersonOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
+  internship: ApplicationInternshipOrderByWithRelationInput
   panel: CompanyPanelOrderByWithRelationInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
   talk: ApplicationTalkOrderByWithRelationInput
@@ -576,6 +641,7 @@ input CompanyApplicationWhereInput {
   contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
+  internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -594,6 +660,7 @@ input CompanyApplicationWhereUniqueInput {
   forCompany: CompanyRelationFilter
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
   forSeason: SeasonRelationFilter
+  internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -772,6 +839,11 @@ input CompanyWhereUniqueInput {
   linkedIn: StringNullableFilter
   vat: String
   website: StringFilter
+}
+
+type CreateAdditionalContentResponse {
+  entity: AdditionalContent
+  errors: [FieldError!]
 }
 
 type CreateCompanyApplicationResponse {
@@ -1218,6 +1290,7 @@ type Mutation {
   addCompanyMember(email: String!): String
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   checkPasswordReset(token: String!): User
+  createAdditionalContent(input: AdditionalContentCreateInput!): CreateAdditionalContentResponse
   createCocktailType(season: String!, type: String!): ApplicationCocktailType
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
@@ -1231,6 +1304,7 @@ type Mutation {
   createSeason(info: SeasonCreateInput!): Season
   createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
   createTalkCategory(name: String!, season: String!): ApplicationTalkCategory
+  deleteAdditionalContent(uid: String!): AdditionalContent
   deleteCalendarItem(uid: String!): Boolean!
   deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!

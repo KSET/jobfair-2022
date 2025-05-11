@@ -119,17 +119,7 @@ import {
 import {
   transformSelect as transformSelectContactPerson,
 } from "./companyApplicationContactPerson";
-
-const photoMimeTypes = new Set([
-  "image/png",
-  "image/jpeg",
-]);
-
-const photoExtensions = [
-  ".jpeg",
-  ".jpg",
-  ".png",
-];
+import { photoExtensions, photoMimeTypes } from "../helpers/photo";
 
 @ObjectType()
 export class EventUserApplications {

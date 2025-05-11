@@ -1019,6 +1019,7 @@ export type IEventReservationWhereInput = {
 
 export enum IEventType {
   HotTalk = 'hotTalk',
+  Other = 'other',
   Panel = 'panel',
   Talk = 'talk',
   Workshop = 'workshop'

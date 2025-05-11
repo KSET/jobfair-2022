@@ -1622,6 +1622,7 @@ type Query {
   calendar(filter: CalendarFilterInput, season: String): [CalendarItem!]!
   calendarItem(uid: String!): CalendarItem
   calendarItemCompanyUid(uid: String!): String
+  calendarItemPanelPresenters(uid: String!): [ApplicationPresenter!]!
   calendarOld: [CalendarEvent!]!
   cocktailTypes(cursor: ApplicationCocktailTypeWhereUniqueInput, distinct: [ApplicationCocktailTypeScalarFieldEnum!], orderBy: [ApplicationCocktailTypeOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationCocktailTypeWhereInput): [ApplicationCocktailType!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!

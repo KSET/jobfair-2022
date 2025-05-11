@@ -1,5 +1,6 @@
 import {
   AdditionalContent,
+  ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
   CalendarItem,
@@ -16,6 +17,7 @@ import {
   InputType,
   Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   Root,
@@ -380,6 +382,35 @@ export class CalendarItemInfoResolver {
       select: toSelect(gqlInfo, transformSelect),
     });
   }
+  
+  @Query(() => [ ApplicationPresenter ])
+  async calendarItemPanelPresenters(
+    @Ctx() ctx: Context,
+      @Arg("uid") uid: string,
+  ): GQLResponse<ApplicationPresenter[]> {
+    const item = await ctx.prisma.calendarItem.findFirst({
+      where: {
+        uid,
+      },
+      select: {
+        forPanel: {
+          select: {
+            companies: {
+              select: {
+                panelParticipants: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return item?.forPanel?.companies.reduce(
+      (participants, c) => participants.concat(c.panelParticipants),
+      [] as ApplicationPresenter[]
+    ) 
+    || [] as ApplicationPresenter[];
+  }
 
   @Query(() => String, { nullable: true })
   async calendarItemCompanyUid(
@@ -492,6 +523,7 @@ export class CalendarItemInfoResolver {
     });
   }
 }
+
 
 @Resolver(() => CalendarItem)
 export class CalendarUpdateResolver {

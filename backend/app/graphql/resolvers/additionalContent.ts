@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Field, FieldResolver, Info, InputType, Mutation, ObjectType, Resolver, Root } from "type-graphql";
 import { PresenterCreateInput } from "./companyPresenter";
 import { toSelect, transformSelectFor } from "../helpers/resolver";
-import { AdditionalContent, AdditionalContentUpdateInput, ApplicationPresenter, CalendarItem } from "@generated/type-graphql";
+import { AdditionalContent, ApplicationPresenter, CalendarItem } from "@generated/type-graphql";
 import { Dict, GQLField, GQLResponse } from "../../types/helpers";
 import { transformSelect as transformSelectPresenter } from "./companyPresenter";
 import {transformSelect as transformSelectEvent} from "./calendarItem"
@@ -71,6 +71,14 @@ class AdditionalContentCreateInputBase {
 export class AdditionalContentCreateInput extends AdditionalContentCreateInputBase {
   @Field(() => [ PresenterCreateInput ])
     presenters: PresenterCreateInput[] = [];
+}
+
+@InputType()
+export class AdditionalContentUpdateInput extends AdditionalContentCreateInputBase {
+  @Field(() => [ PresenterCreateInput ])
+    presenters: PresenterCreateInput[] = [];
+  @Field(() => String)
+    uid: string = "";
 }
 
 type PresenterCreate = NonNullable<NonNullable<NonNullable<NonNullable<Prisma.CompanyApplicationUpdateArgs["data"]["workshop"]>["create"]>["presenters"]>["create"]>;
@@ -192,29 +200,70 @@ export class AdditionalContentResolver {
 
       throw e;
     }
-
   }
 
   // @Authorized(Role.Admin)
-  // @Mutation(() => AdditionalContent, { nullable: true })
-  // updateAdditionalContent(
+  // @Mutation(() => CreateAdditionalContentResponse, { nullable: true })
+  // async updateAdditionalContent(
   //   @Ctx() ctx: Context,
-  //     @Arg("input", () => AdditionalContentUpdateInput) input: AdditionalContentCreateInput,
-  //     @Info() gqlInfo: GraphQLResolveInfo,
-  // ): GQLResponse<AdditionalContent, "nullable"> {
-  //   return ctx.prisma.additionalContent.upsert({
-  //     data: {
-  //       descriptionEn: input.descriptionEn,
-  //       descriptionHr: input.descriptionHr,
-  //       titleEn: input.titleEn,
-  //       titleHr: input.titleHr,
-  //       // TODO: presenters
-  //     },
+  //     @Arg("input", () => AdditionalContentUpdateInput) input: AdditionalContentUpdateInput,
+  // ): GQLResponse<CreateAdditionalContentResponse, "nullable"> {
+
+  //   const oldContent = prisma.additionalContent.findFirst({
   //     where: {
-  //       uid: input.uid || "",
+  //       uid: input.uid,
   //     },
-  //     select: toSelect(gqlInfo, transformSelect)
-  //   });
+  //     select: {
+  //       presenters: {
+  //         select: {
+  //           bioEn: true,
+  //           bioHr: true,
+  //           firstName: true,
+  //           lastName: true,
+  //           photo: true,
+  //         }
+  //       },
+  //       descriptionEn: true,
+  //       descriptionHr: true,
+  //       titleEn: true,
+  //       titleHr: true,
+  //       uid: true,
+  //     }
+  //   })
+
+
+  //   try {
+  //     const presentersCreate: PresenterCreate = await createPresenters(oldContent, input.presenters, input.titleHr, ctx.user!);
+      
+  //     return {
+  //       entity: 
+  //         await ctx.prisma.additionalContent.create({
+  //         data: {
+  //           descriptionEn: input.descriptionEn,
+  //           descriptionHr: input.descriptionHr,
+  //           titleEn: input.titleEn,
+  //           titleHr: input.titleHr,
+  //           presenters: {
+  //             create: presentersCreate,
+  //           },
+  //         }
+  //       }) 
+  //     }
+
+  //   } catch (e) {
+  //     if (e instanceof PresenterCreateError) {
+  //       return {
+  //         errors: [
+  //           {
+  //             field: e.field,
+  //             message: e.message,
+  //           },
+  //         ],
+  //       };
+  //     }
+
+  //     throw e;
+  //   }
   // }
 
   @Authorized(Role.Admin)

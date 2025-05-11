@@ -1,4 +1,5 @@
 import {
+  AdditionalContent,
   ApplicationTalk,
   ApplicationWorkshop,
   CalendarItem,
@@ -54,6 +55,10 @@ import {
 import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
+import {
+  AdditionalContentCreateInput,
+  transformSelect as transformSelectContent,
+} from "./additionalContent";
 import {
   transformSelect as transformSelectTalk,
 } from "./companyApplicationTalk";
@@ -138,6 +143,13 @@ export class CalendarItemFieldResolver {
     return calendarItem.forPanel;
   }
 
+  @FieldResolver(() => AdditionalContent, { nullable: true })
+  forAdditionalContent(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<AdditionalContent, "nullable"> {
+    return calendarItem.forAdditionalContent;
+  }
+
   @FieldResolver(() => [ Company ], { nullable: true })
   companies(
     @Root() calendarItem: CalendarItem,
@@ -171,6 +183,7 @@ export class CalendarItemFieldResolver {
       || calendarItem.forTalk?.titleHr
       || calendarItem.forWorkshop?.titleHr
       || calendarItem.forPanel?.name
+      || calendarItem.forAdditionalContent?.titleHr
       || ""
     );
   }
@@ -198,6 +211,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
     select.forTalkId = true;
     select.forWorkshopId = true;
     select.forPanelId = true;
+    select.forAdditionalContentId = true;
 
     delete select.capacity;
 
@@ -269,6 +283,12 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
           name: true,
         },
       },
+      forAdditionalContent: {
+        select: {
+          titleHr: true,
+          titleEn: true,
+        },
+      },
     };
 
     return mergeDeepRight(select, data);
@@ -278,6 +298,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
     select.forTalkId = true;
     select.forWorkshopId = true;
     select.forPanelId = true;
+    select.forAdditionalContentId = true;
 
     delete select.hasEvent;
 
@@ -289,6 +310,8 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
   forTalk: forItemSelect("forTalk", () => transformSelectTalk),
 
   forPanel: forItemSelect("forPanel", () => transformSelectPanel),
+
+  forAdditionalContent: forItemSelect("forAdditionalContent", () => transformSelectContent),
 
   companies(select) {
     const transformed = transformSelectCompany(select.companies as Dict);
@@ -532,6 +555,16 @@ export class CalendarUpdateResolver {
 
         break;
       }
+
+      case "other": {
+        (data as Dict).forAdditionalContent = {
+          connect: {
+            uid: input.forUid!,
+          },
+        };
+
+        break;
+      }
     }
 
     return ctx.prisma.calendarItem.upsert({
@@ -557,3 +590,4 @@ export class CalendarUpdateResolver {
     }).then(() => true).catch(() => false);
   }
 }
+

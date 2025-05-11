@@ -25,7 +25,7 @@ const calendarTypeLabels: Record<CalendarType, string> = {
   [CalendarType.LoosenUp]: "Loosen Up",
   [CalendarType.Panel]: "Panel",
   [CalendarType.Workshop]: "Workshop",
-  [CalendarType.Other]: "Other Content",
+  [CalendarType.Other]: "Additional Content",
 };
 
 type Item<T> = Partial<T> | null | undefined;

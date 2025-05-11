@@ -199,10 +199,10 @@
         )
       ;
 
-      const otherContent = [ "panel", "hot-talk", "loosen-up", "other" ];
+      const additionalContent = [ "panel", "hot-talk", "loosen-up", "other" ];
       const groupedEvents = groupBy(
         (event) => event.class!,
-        events.filter((event) => event.class && !otherContent.includes(event.class) && !event.noGroup),
+        events.filter((event) => event.class && !additionalContent.includes(event.class) && !event.noGroup),
       );
 
       const splitDays =
@@ -226,7 +226,7 @@
 
       splitDays.push({
         id: splitDays.length + 1,
-        label: "Other content",
+        label: "Additional content",
         class: "other-split",
       });
 

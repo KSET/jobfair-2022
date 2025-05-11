@@ -669,6 +669,7 @@ model ApplicationInternship {
   description   String
   workingPeriod String
   duration      String
+  url           String
 
   /// @TypeGraphQL.omit(input: true)
   forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)

@@ -49,20 +49,6 @@ export class CompanyApplicationInternshipFindResolver {
                 }
               }
             )
-            // ...(
-            //   args.where
-            //     ? args.where
-            //     : {
-            //       forSeason: {
-            //         startsAt: {
-            //           lte: now,
-            //         },
-            //         endsAt: {
-            //           gte: now,
-            //         },
-            //       },
-            //     }
-            // ),
           },
           select: toSelect(info, transformSelect),
     })
@@ -86,6 +72,9 @@ export class InternshipCreateInput {
 
   @Field()
     duration: string = "";
+
+  @Field()
+    url: string = "";
 }
 
 

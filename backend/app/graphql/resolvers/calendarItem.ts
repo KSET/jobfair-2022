@@ -58,6 +58,9 @@ import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
 import {
+  transformSelect as transformSelectPresenter,
+} from "./companyPresenter";
+import {
   AdditionalContentCreateInput,
   transformSelect as transformSelectContent,
 } from "./additionalContent";
@@ -162,6 +165,24 @@ export class CalendarItemFieldResolver {
       calendarItem.forPanel?.companies?.map((company) => company.forCompany).filter(Boolean),
     ]);
   }
+
+  @FieldResolver(() => [ ApplicationPresenter ], { nullable: true })
+  participants(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<ApplicationPresenter[], "nullable"> {
+    return firstDefinedAsArray([
+      calendarItem.forTalk?.forApplication?.panelParticipants,
+      calendarItem.forWorkshop?.forApplication?.panelParticipants,
+      calendarItem.forAdditionalContent?.presenters,
+      calendarItem.forPanel?.companies?.reduce(
+        (arr, company) => 
+          company.panelParticipants 
+        ? arr.concat(...company.panelParticipants) 
+        : arr, [] as ApplicationPresenter[]
+      ).filter(Boolean),
+    ]);
+  }
+
 
   @FieldResolver(() => String)
   title(
@@ -326,6 +347,18 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
 
     return select;
   },
+
+  participants(select) {
+    const transformed = transformSelectPresenter(select.participants as Dict);
+
+    select = set(select, "forTalk.select.forApplication.select.panelParticipants.select", transformed);
+    select = set(select, "forWorkshop.select.forApplication.select.panelParticipants.select", transformed);
+    select = set(select, "forPanel.select.companies.select.panelParticipants.select", transformed);
+
+    delete select.participants;
+
+    return select;
+  }
 });
 
 @InputType()

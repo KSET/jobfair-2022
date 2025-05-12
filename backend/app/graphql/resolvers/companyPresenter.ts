@@ -54,6 +54,9 @@ export class PresenterCreateInput {
   @Field()
     bioHr: string = "";
 
+  @Field(() => String, { nullable: true })
+    type: string = "participant";
+
   @Field(() => GraphQLUpload, { nullable: true })
     photo: FileUpload | null = null;
 }

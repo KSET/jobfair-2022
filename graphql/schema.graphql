@@ -145,6 +145,7 @@ type ApplicationPresenter {
   firstName: String!
   lastName: String!
   photo: Image
+  type: String!
   updatedAt: DateTimeISO!
 }
 
@@ -174,6 +175,7 @@ input ApplicationPresenterWhereInput {
   firstName: StringFilter
   lastName: StringFilter
   photo: ImageNullableRelationFilter
+  type: StringFilter
 }
 
 type ApplicationTalk {
@@ -1551,6 +1553,7 @@ input PresenterCreateInput {
   firstName: String!
   lastName: String!
   photo: Upload
+  type: String
 }
 
 type PressRelease {

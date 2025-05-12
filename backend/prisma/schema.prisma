@@ -690,6 +690,9 @@ model ApplicationPresenter {
   bioEn     String
   bioHr     String
   photo     Image?   @relation(fields: [photoId], references: [id])
+
+  type      String   @default("participant")
+
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime @default(now())
   /// @TypeGraphQL.omit(input: true)

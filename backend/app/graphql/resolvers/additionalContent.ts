@@ -202,69 +202,59 @@ export class AdditionalContentResolver {
     }
   }
 
-  // @Authorized(Role.Admin)
-  // @Mutation(() => CreateAdditionalContentResponse, { nullable: true })
-  // async updateAdditionalContent(
-  //   @Ctx() ctx: Context,
-  //     @Arg("input", () => AdditionalContentUpdateInput) input: AdditionalContentUpdateInput,
-  // ): GQLResponse<CreateAdditionalContentResponse, "nullable"> {
+  @Authorized(Role.Admin)
+  @Mutation(() => CreateAdditionalContentResponse, { nullable: true })
+  async updateAdditionalContent(
+    @Ctx() ctx: Context,
+      @Arg("input", () => AdditionalContentUpdateInput) input: AdditionalContentUpdateInput,
+  ): GQLResponse<CreateAdditionalContentResponse, "nullable"> {
 
-  //   const oldContent = prisma.additionalContent.findFirst({
-  //     where: {
-  //       uid: input.uid,
-  //     },
-  //     select: {
-  //       presenters: {
-  //         select: {
-  //           bioEn: true,
-  //           bioHr: true,
-  //           firstName: true,
-  //           lastName: true,
-  //           photo: true,
-  //         }
-  //       },
-  //       descriptionEn: true,
-  //       descriptionHr: true,
-  //       titleEn: true,
-  //       titleHr: true,
-  //       uid: true,
-  //     }
-  //   })
+    const oldContent = await prisma.additionalContent.findFirst({
+      where: {
+        uid: input.uid,
+      },
+      include: {
+        presenters: true,
+      }
+    });
 
 
-  //   try {
-  //     const presentersCreate: PresenterCreate = await createPresenters(oldContent, input.presenters, input.titleHr, ctx.user!);
+    try {
+      const presentersCreate: PresenterCreate = await createPresenters(oldContent, input.presenters, input.titleHr, ctx.user!);
       
-  //     return {
-  //       entity: 
-  //         await ctx.prisma.additionalContent.create({
-  //         data: {
-  //           descriptionEn: input.descriptionEn,
-  //           descriptionHr: input.descriptionHr,
-  //           titleEn: input.titleEn,
-  //           titleHr: input.titleHr,
-  //           presenters: {
-  //             create: presentersCreate,
-  //           },
-  //         }
-  //       }) 
-  //     }
+      return {
+        entity: 
+          await ctx.prisma.additionalContent.update({
+          data: {
+            descriptionEn: input.descriptionEn,
+            descriptionHr: input.descriptionHr,
+            titleEn: input.titleEn,
+            titleHr: input.titleHr,
+            presenters: {
+              create: presentersCreate
+            },
+          },
+          where: {
+            uid: input.uid
+          }
+        }) 
+      }
 
-  //   } catch (e) {
-  //     if (e instanceof PresenterCreateError) {
-  //       return {
-  //         errors: [
-  //           {
-  //             field: e.field,
-  //             message: e.message,
-  //           },
-  //         ],
-  //       };
-  //     }
+    } catch (e) {
+      if (e instanceof PresenterCreateError) {
+        return {
+          errors: [
+            {
+              field: e.field,
+              message: e.message,
+            },
+          ],
+        };
+      }
 
-  //     throw e;
-  //   }
-  // }
+      throw e;
+    }
+  }
 
   @Authorized(Role.Admin)
   @Mutation(() => AdditionalContent, { nullable: true })

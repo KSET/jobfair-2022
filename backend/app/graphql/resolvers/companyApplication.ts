@@ -28,6 +28,7 @@ import {
   Season,
   CompanyApplicationFeedback,
   ApplicationCocktail,
+  ApplicationInternship,
 } from "@generated/type-graphql";
 import {
   groupBy,
@@ -110,6 +111,10 @@ import {
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
 import {
+  InternshipCreateInput,
+  transformSelect as transformSelectInternship
+} from "./companyApplicationInternship"
+import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
@@ -189,6 +194,13 @@ export class CompanyApplicationFieldResolver {
     @Root() application: CompanyApplication,
   ): ApplicationCocktail | null {
     return application.cocktail || null;
+  }
+  
+  @FieldResolver(() => ApplicationInternship, { nullable: true })
+  internship(
+    @Root() application: CompanyApplication,
+  ): ApplicationInternship | null {
+    return application.internship || null;
   }
 
   @FieldResolver(() => [ ApplicationPresenter ])
@@ -310,6 +322,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     return select;
   },
 
+  internship(select) {
+    select.internship = {
+      select: transformSelectInternship(select.internship as Dict),
+    };
+
+    return select;
+  },
+
   panelParticipants(select) {
     select.panelParticipants = {
       select: transformSelectPresenter(select.panelParticipants as Dict),
@@ -375,6 +395,9 @@ class CompanyApplicationApprovedEditInput {
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
+
+  @Field(() => InternshipCreateInput, { nullable: true })
+    internship: InternshipCreateInput | null = null;
 }
 
 @ObjectType()
@@ -2230,6 +2253,24 @@ export class CompanyApplicationCreateResolver {
       }
     }
 
+    // internship if any approved, likely to change later
+    if(Object.entries(approval).some(x => x[0] != "id" && x[1])) {
+      const id = "internship" as const;
+      const entry = info[id];
+      if(entry) {
+        data[id] = {
+          upsert: {
+            create: {
+              ...entry
+            },
+            update: {
+              ...entry
+            }
+          }
+        }
+      }
+    }
+
     const entity = await ctx.prisma.companyApplication.update({
       data,
       where: {
@@ -2265,6 +2306,7 @@ export class CompanyApplicationCreateResolver {
             type: true
           }
         },
+        internship: true,
       },
     });
 

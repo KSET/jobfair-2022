@@ -390,9 +390,18 @@
                   <i class="pi pi-check" />
                 </em>
               </li>
+              <li>
+                <strong>
+                  <translated-text trans-key="profile.company.internship" />
+                </strong>
+                <em v-if="companyApplication.internship">
+                  <i class="pi pi-check" />
+                </em>
+                <translated-text v-else trans-key="profile.company.internship.missingCompanyInfo" />
+              </li>
             </ul>
           </div>
-          <div v-if="isApproved && isApprovedWithoutBooth && applicationsEditable" :class="$style.itemActions">
+          <div v-if="isApproved && applicationsEditable" :class="$style.itemActions">
             <nuxt-link
               :to="{ name: 'profile-me-company-application-edit' }"
               class="ml-auto"

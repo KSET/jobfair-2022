@@ -12,6 +12,7 @@ import {
   CompanyApplicationApproval,
   CompanyPanel,
   ApplicationCocktail,
+  ApplicationInternship,
 } from "@generated/type-graphql";
 import {
   Dict,
@@ -35,6 +36,9 @@ import {
 import {
   transformSelect as transformSelectPanel,
 } from "./companyPanel";
+import {
+  transformSelect as transformSelectInternship,
+} from "./companyApplicationInternship";
 
 @ObjectType()
 export class CompanyProgram {
@@ -55,6 +59,9 @@ export class CompanyProgram {
 
   @Field(() => CompanyPanel, { nullable: true })
     panel: CompanyPanel | null = null;
+
+  @Field(() => ApplicationInternship, { nullable: true })
+    internship: ApplicationInternship | null = null;
 
   approval: CompanyApplicationApproval | null = null;
 }
@@ -115,6 +122,14 @@ export class CompanyProgramFieldResolver {
   ): GQLField<CompanyPanel, "nullable"> {
     return approved(program?.panel, "panel", program);
   }
+
+  @FieldResolver(() => ApplicationInternship, { nullable: true })
+  internship(
+    @Root() program: CompanyProgram,
+  ): GQLField<ApplicationInternship, "nullable"> {
+    return program?.internship ?? null;
+  }
+
 }
 
 type WithApplications<T> = T & {
@@ -211,4 +226,13 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
 
     delete select.panel;
   }),
+
+  internship: withApplications((select) => {
+    select.applications.select.internship = {
+      select: transformSelectInternship(select.internship as Dict),
+    };
+    
+    delete select.internship;
+  }),
+  
 });

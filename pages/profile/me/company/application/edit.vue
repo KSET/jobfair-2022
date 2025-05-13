@@ -124,6 +124,7 @@
   } from "~/store/user";
   import {
     companyApplicationCocktailCreate,
+    companyApplicationInternshipCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
@@ -161,14 +162,17 @@
     Workshop = "workshop",
     Cocktail = "cocktail",
     Panel = "panel",
+    Internship = "internship",
   }
 
-  const FormToApproval: Record<FormFor, keyof Omit<ICompanyApplicationApproval, "forApplication">> = {
+  const FormToApproval: Partial<Record<FormFor, keyof ICompanyApplicationApproval>> = {
     [FormFor.Panel]: "panel",
     [FormFor.Talk]: "talkParticipants",
     [FormFor.Workshop]: "workshopParticipants",
     [FormFor.Cocktail]: "cocktail",
-  } as const;
+    [FormFor.Internship]: undefined,
+  };
+
 
   export default defineComponent({
     name: "PageProfileCompanyApplicationEdit",
@@ -300,20 +304,25 @@
             ,
           ),
         }),
+        [FormFor.Internship]: form({
+          info: companyApplicationInternshipCreate(
+            companyApplication.internship,
+          )(),
+        }),
       };
 
-      const items = reactive(
-        filter(
-          (_: unknown, formKey: string) => {
-            const key = FormToApproval[formKey as FormFor];
-            const value = approval?.[key];
+      const filtered = filter(
+        (_: unknown, formKey: string) => {
+          const key = FormToApproval[formKey as FormFor];
+          return key ? Boolean(approval?.[key]) : false;
+        },
+        forms,
+      ) as typeof forms;
 
-            return Boolean(value);
-          },
-          forms,
-        ) as typeof forms,
-      );
-
+      const items = reactive({
+        ...filtered,
+        [FormFor.Internship]: forms[FormFor.Internship],
+      });
       const booths = resp?.booths || [];
 
       const booth = ref(booths.find((booth) => booth.key === companyApplication.booth) || booths[0]);
@@ -376,6 +385,16 @@
                   toData(items[FormFor.Panel].forms.presenter[0]),
                 ]
                 : [],
+            internship: items[FormFor.Internship]
+              ? (() => {
+                const data = toData(items[FormFor.Internship].forms.info);
+                return {
+                  ...data,
+                  workingPeriodStart: new Date(data.workingPeriodStart),
+                  workingPeriodEnd: new Date(data.workingPeriodEnd),
+                };
+              })()
+              : null,
           };
 
           for (const presenter of (info[FormFor.Talk]?.presenter || [])) {

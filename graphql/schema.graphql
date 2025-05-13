@@ -75,6 +75,76 @@ input ApplicationCocktailWhereInput {
   name: StringFilter
 }
 
+type ApplicationInternship {
+  company: Company
+  competencies: String!
+  createdAt: DateTimeISO!
+  description: String!
+  duration: String!
+  position: String!
+  uid: String!
+  updatedAt: DateTimeISO!
+  url: String!
+  workingPeriodEnd: DateTimeISO!
+  workingPeriodStart: DateTimeISO!
+}
+
+input ApplicationInternshipNullableRelationFilter {
+  is: ApplicationInternshipWhereInput
+  isNot: ApplicationInternshipWhereInput
+}
+
+input ApplicationInternshipOrderByWithRelationInput {
+  competencies: SortOrder
+  description: SortOrder
+  duration: SortOrder
+  position: SortOrder
+  url: SortOrder
+  workingPeriodEnd: SortOrder
+  workingPeriodStart: SortOrder
+}
+
+enum ApplicationInternshipScalarFieldEnum {
+  competencies
+  createdAt
+  description
+  duration
+  forApplicationId
+  id
+  position
+  uid
+  updatedAt
+  url
+  workingPeriodEnd
+  workingPeriodStart
+}
+
+input ApplicationInternshipWhereInput {
+  AND: [ApplicationInternshipWhereInput!]
+  NOT: [ApplicationInternshipWhereInput!]
+  OR: [ApplicationInternshipWhereInput!]
+  competencies: StringFilter
+  description: StringFilter
+  duration: StringFilter
+  position: StringFilter
+  url: StringFilter
+  workingPeriodEnd: DateTimeFilter
+  workingPeriodStart: DateTimeFilter
+}
+
+input ApplicationInternshipWhereUniqueInput {
+  AND: [ApplicationInternshipWhereInput!]
+  NOT: [ApplicationInternshipWhereInput!]
+  OR: [ApplicationInternshipWhereInput!]
+  competencies: StringFilter
+  description: StringFilter
+  duration: StringFilter
+  position: StringFilter
+  url: StringFilter
+  workingPeriodEnd: DateTimeFilter
+  workingPeriodStart: DateTimeFilter
+}
+
 type ApplicationPresenter {
   _count: ApplicationPresenterCount
   bioEn: String!
@@ -415,6 +485,7 @@ type CompanyApplication {
   feedback: CompanyApplicationFeedback
   forCompany: Company
   forSeason: Season
+  internship: ApplicationInternship
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
   updatedAt: DateTimeISO!
@@ -436,6 +507,7 @@ type CompanyApplicationApproval {
 
 input CompanyApplicationApprovedEditInput {
   cocktail: CocktailChooseInput
+  internship: InternshipCreateInput
   panel: [PresenterCreateInput!]!
   talk: TalksCreateInput
   vat: String!
@@ -545,6 +617,7 @@ input CompanyApplicationOrderByWithRelationInput {
   contactPerson: CompanyApplicationContactPersonOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
+  internship: ApplicationInternshipOrderByWithRelationInput
   panel: CompanyPanelOrderByWithRelationInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
   talk: ApplicationTalkOrderByWithRelationInput
@@ -576,6 +649,7 @@ input CompanyApplicationWhereInput {
   contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
+  internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -594,6 +668,7 @@ input CompanyApplicationWhereUniqueInput {
   forCompany: CompanyRelationFilter
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
   forSeason: SeasonRelationFilter
+  internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -672,6 +747,7 @@ input CompanyPanelWhereInput {
 type CompanyProgram {
   booth: String
   cocktail: ApplicationCocktail
+  internship: ApplicationInternship
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
@@ -1177,6 +1253,16 @@ input IntNullableFilter {
   notIn: [Int!]
 }
 
+input InternshipCreateInput {
+  competencies: String!
+  description: String!
+  duration: String!
+  position: String!
+  url: String!
+  workingPeriodEnd: DateTimeISO!
+  workingPeriodStart: DateTimeISO!
+}
+
 type LiveVote {
   createdAt: DateTimeISO!
   forSeason: Season!
@@ -1564,6 +1650,7 @@ type Query {
   galleryImages(filter: GalleryImageFilter): [GalleryImage!]!
   gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
+  internships(cursor: ApplicationInternshipWhereUniqueInput, distinct: [ApplicationInternshipScalarFieldEnum!], orderBy: [ApplicationInternshipOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationInternshipWhereInput): [ApplicationInternship!]!
   liveVoteComments(seasonUid: String!): [LiveVoteComment!]!
   liveVoteResults(seasonUid: String!): [LiveVoteResult!]!
   liveVotes(seasonUid: String!): [LiveVote!]!

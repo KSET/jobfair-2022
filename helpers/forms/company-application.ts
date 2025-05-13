@@ -1,8 +1,12 @@
 import {
+ asDate,
+} from "../date";
+import {
   type MaybeRef,
 } from "~/helpers/type";
 import {
   type IApplicationCocktail,
+  type IApplicationInternship,
   type IApplicationPresenter,
   type IApplicationTalk,
   type IApplicationWorkshop,
@@ -239,6 +243,59 @@ export type Cocktail = Omit<IApplicationCocktail,
           options: cocktailTypes.map((x) => ({ label: x, value: x })),
         },
       });
+
+export type Internship = Omit<IApplicationInternship,
+  "_count"
+  | "forSeason"
+  | "createdAt"
+  | "updatedAt"
+  | "company"
+  | "uid">;
+export const companyApplicationInternshipCreate =
+  <T extends Internship>(internship?: T | null) =>
+    (
+    ): Record<keyof Internship, InputEntry> =>
+    ({
+      position: {
+        value: internship?.position || "",
+        type: "text" as const,
+        placeholder: "Junior Software Engineer",
+      },
+      competencies: {
+        value: internship?.competencies || "",
+        type: "text" as const,
+        placeholder: "Frontend, Vue.js, GraphQL, Node.js...",
+      },
+      description: {
+        value: internship?.description || "",
+        type: "textarea" as const,
+        placeholder: "Opis se koristi za promociju prema studentima te se ovim tekstom obraćate izravno studentu.",
+      },
+      workingPeriodStart: {
+        value:
+        internship?.workingPeriodStart
+          ? asDate(internship?.workingPeriodStart)
+          : "",
+        type: "date" as const,
+      },
+      workingPeriodEnd: {
+        value:
+        internship?.workingPeriodEnd
+          ? asDate(internship?.workingPeriodEnd)
+          : "",
+        type: "date" as const,
+      },
+      duration: {
+        value: internship?.duration || "",
+        type: "text" as const,
+        placeholder: "2 tjedna",
+      },
+      url: {
+        value: internship?.url || "",
+        type: "text" as const,
+        placeholder: "Informativni link na kojemu studenti mogu pročitati više o praksi",
+      },
+});
 
 
 export type FeedbackDate = Pick<ICompanyApplicationFeedback,

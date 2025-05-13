@@ -4644,7 +4644,9 @@ export type IProfileBaseDataQuery_companyApplication_CompanyApplication_approval
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications = { workshop: number, talk: number };
 
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications };
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship = { position: string };
+
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications, internship?: IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship | null };
 
 export type IProfileBaseDataQuery_profile_User_resume_Resume = { uid: string };
 
@@ -8149,6 +8151,9 @@ export const ProfileBaseData = gql`
     userApplications {
       workshop
       talk
+    }
+    internship {
+      position
     }
   }
   profile {

@@ -704,6 +704,9 @@ query ProfileBaseData {
             workshop
             talk
         }
+        internship {
+            position
+        }
     }
     profile {
         resume {

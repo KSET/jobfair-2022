@@ -390,6 +390,15 @@
                   <i class="pi pi-check" />
                 </em>
               </li>
+              <li>
+                <strong>
+                  <translated-text trans-key="profile.company.internship" />
+                </strong>
+                <em v-if="companyApplication.internship">
+                  <i class="pi pi-check" />
+                </em>
+                <translated-text v-else trans-key="profile.company.internship.missingCompanyInfo" />
+              </li>
             </ul>
           </div>
           <div v-if="isApproved && applicationsEditable" :class="$style.itemActions">

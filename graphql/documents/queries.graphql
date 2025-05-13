@@ -124,6 +124,10 @@ fragment frag_CompanyApplication on CompanyApplication {
             type
         }
     }
+    internship {
+        ...frag_Internship
+ 
+    }
     panelParticipants {
         ...frag_ApplicationPresenter
     }
@@ -178,6 +182,26 @@ fragment frag_GalleryImage on GalleryImage {
         thumbUrl
         fullUrl
     }
+}
+
+fragment frag_Internship on ApplicationInternship {
+    uid
+    position
+    competencies
+    description
+    workingPeriodStart
+    workingPeriodEnd
+    url
+    duration
+    company {
+        uid
+        brandName
+        rasterLogo {
+            fullUrl
+            thumbUrl
+        }
+    }
+
 }
 
 query Profile {
@@ -337,6 +361,9 @@ query CompanyInfo($uid: String!) {
                     location
                 }
             }
+            internship {
+                ...frag_Internship
+            }
         }
     }
 }
@@ -450,6 +477,12 @@ query AllGalleryImages {
                 mimeType
             }
         }
+    }
+}
+
+query Internships {
+    internships {
+        ...frag_Internship
     }
 }
 

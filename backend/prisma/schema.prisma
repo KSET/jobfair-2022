@@ -665,10 +665,13 @@ model ApplicationInternship {
   uid String @unique @default(cuid())
 
   position      String
-  competencies  String
   description   String
-  workingPeriod String
+  competencies  String
+  workingPeriodStart DateTime
+  workingPeriodEnd DateTime
   duration      String
+  
+  url      String
 
   /// @TypeGraphQL.omit(input: true)
   forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)

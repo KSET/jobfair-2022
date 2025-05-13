@@ -396,7 +396,7 @@ class CompanyApplicationApprovedEditInput {
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
 
-  @Field(() => InternshipCreateInput)
+  @Field(() => InternshipCreateInput, { nullable: true })
     internship: InternshipCreateInput | null = null;
 }
 

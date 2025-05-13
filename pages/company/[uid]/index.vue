@@ -272,6 +272,48 @@
               </div>
             </template>
           </TabPanel>
+
+          <TabPanel v-if="programItems.internship">
+            <template #header>
+              <translated-text trans-key="company.info.program.internship" />
+            </template>
+
+            <div v-if="programItems.internship" :class="$style.itemHeader">
+              <span
+                :class="$style.text"
+                v-text="toDateString(programItems.internship.workingPeriodStart)"
+              />
+              <span
+                :class="$style.text"
+              >-</span>
+              <span
+                :class="$style.text"
+                v-text="toDateString(programItems.internship.workingPeriodEnd)"
+              />
+              <span
+                :class="$style.text"
+              >|</span>
+              <span
+                :class="$style.text"
+                v-text="programItems.internship.duration"
+              />
+              <a
+                :href="programItems.internship.url"
+                rel="noopener noreferrer"
+                target="_blank"
+                :class="$style.signupButton"
+                role="button"
+              >
+                <translated-text
+                  trans-key="company.event.program.internship.more-info"
+                />
+              </a>
+            </div>
+
+            <h3 :class="$style.itemTitle" v-text="programItems.internship.position" />
+
+            <p :class="$style.itemDescription" v-text="programItems.internship.description" />
+          </TabPanel>
         </TabView>
       </template>
       <template v-else>
@@ -369,6 +411,7 @@
           "talk",
           "workshop",
           "panel",
+          "internship",
         ]
           .filter((x) => (unref(programItems) as Dict | null)?.[x])
           .map((x, i) => [ x, i ] as const),
@@ -426,6 +469,15 @@
             const item = unref(programItems).panel;
             if (item) {
               info.title = `[Panel] ${ brandName }: ${ item.name }`;
+              info.description = item.description;
+            }
+            break;
+          }
+
+          case "internship": {
+            const item = unref(programItems).internship;
+            if (item) {
+              info.title = `[Summer Internship] ${ brandName }: ${ item.position }`;
               info.description = item.description;
             }
             break;
@@ -497,6 +549,14 @@
           } catch {
             return website;
           }
+        },
+        toDateString(date: string | Date) {
+          const d = new Date(date);
+          return d.toLocaleDateString("hr-HR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
         },
         async handleSignup(type: TReservableEntryName) {
           const loggedIn = userStore.isLoggedIn;
@@ -761,6 +821,19 @@
 
       .signoffButton {
         background-color: $fer-dark-blue;
+      }
+
+      .signupButton {
+        background-color: $fer-yellow;
+
+        span {
+          color: $fer-white;
+        }
+      }
+
+      .text {
+        opacity: .7;
+        color: $fer-dark-blue;
       }
     }
   }

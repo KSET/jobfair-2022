@@ -87,20 +87,6 @@ export class CompanyApplicationInternshipResolver {
                 }
               }
             )
-            // ...(
-            //   args.where
-            //     ? args.where
-            //     : {
-            //       forSeason: {
-            //         startsAt: {
-            //           lte: now,
-            //         },
-            //         endsAt: {
-            //           gte: now,
-            //         },
-            //       },
-            //     }
-            // ),
           },
           select: toSelect(info, transformSelect),
     })

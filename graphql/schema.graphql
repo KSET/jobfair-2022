@@ -28,6 +28,15 @@ input AdditionalContentCreateInput {
   titleHr: String!
 }
 
+input AdditionalContentUpdateInput {
+  descriptionEn: String!
+  descriptionHr: String!
+  presenters: [PresenterCreateInput!]!
+  titleEn: String!
+  titleHr: String!
+  uid: String!
+}
+
 input AdditionalContentWhereInput {
   AND: [AdditionalContentWhereInput!]
   NOT: [AdditionalContentWhereInput!]
@@ -141,6 +150,7 @@ type ApplicationPresenter {
   _count: ApplicationPresenterCount
   bioEn: String!
   bioHr: String!
+  company: Company
   createdAt: DateTimeISO!
   firstName: String!
   lastName: String!
@@ -382,6 +392,7 @@ type CalendarItem {
   grouped: Boolean!
   hasEvent: Boolean!
   location: String
+  participants: [ApplicationPresenter!]
   start: DateTimeISO!
   text: String
   title: String
@@ -1340,6 +1351,7 @@ type Mutation {
   swapGalleryImageOrder(orderA: Int!, orderB: Int!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
+  updateAdditionalContent(input: AdditionalContentUpdateInput!): CreateAdditionalContentResponse
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
   updateCompanyApplicationFeedback(input: CompanyApplicationFeedbackCreateInput!): CompanyApplicationFeedback
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse

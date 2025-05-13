@@ -10,7 +10,7 @@ type PrismaClient = typeof prisma;
 
 export class CalendarEventService {
   public static async getItemIdForEvent(
-    prisma: Pick<PrismaClient, "applicationWorkshop" | "applicationTalk" | "companyPanel">,
+    prisma: Pick<PrismaClient, "applicationWorkshop" | "applicationTalk" | "companyPanel" | "additionalContent">,
     type: EventType,
     uid: string,
   ) {
@@ -37,6 +37,16 @@ export class CalendarEventService {
       }
       case EventType.panel: {
         return await prisma.companyPanel.findFirst({
+          where: {
+            uid,
+          },
+          select: {
+            id: true,
+          },
+        });
+      }
+      case EventType.other: {
+        return await prisma.additionalContent.findFirst({
           where: {
             uid,
           },

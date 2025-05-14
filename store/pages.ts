@@ -36,10 +36,10 @@ export const usePagesStore = defineStore(
         const seasonsStore = useSeasonsStore();
 
         return toPages([
-          {
-            name: "page.name.home",
-            to: { name: "index" },
-          },
+          // {
+          //   name: "page.name.home",
+          //   to: { name: "index" },
+          // },
           {
             name: "page.name.news",
             to: { name: "news" },
@@ -63,10 +63,10 @@ export const usePagesStore = defineStore(
             to: { name: "summer-internships" },
             if: () => seasonsStore.areParticipantsShown,
           },
-          {
-            name: "page.name.contact",
-            to: { name: "contact" },
-          },
+          // {
+          //   name: "page.name.contact",
+          //   to: { name: "contact" },
+          // },
           {
             name: "page.name.press",
             to: { name: "press" },

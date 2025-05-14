@@ -89,6 +89,13 @@ export class CompanyApplicationInternshipResolver {
             )
           },
           select: toSelect(info, transformSelect),
+          orderBy: {
+            forApplication: {
+              forCompany: {
+                brandName: "asc",
+              },
+            },
+          },
     })
   }
 }

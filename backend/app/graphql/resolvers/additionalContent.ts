@@ -31,6 +31,31 @@ export class AdditionalContentFieldResolver {
   ): GQLField<CalendarItem, "nullable"> {
     return content.event;
   }
+
+  @FieldResolver(() => Number)
+  async reservation(
+    @Root() content: AdditionalContent,
+      @Ctx() ctx: Context,
+  ): Promise<GQLField<number>> {
+    const { user } = ctx;
+
+    if (!user) {
+      return 0;
+    }
+
+    const reservation = await ctx.prisma.eventReservation.findUnique({
+      where: {
+        // eslint-disable-next-line camelcase
+        eventId_eventType_userId: {
+          eventType: "other",
+          eventId: content.id!,
+          userId: user.id,
+        },
+      },
+    });
+
+    return reservation?.status ?? 0;
+  }
 }
 
 export const transformSelect = transformSelectFor<AdditionalContentFieldResolver>({

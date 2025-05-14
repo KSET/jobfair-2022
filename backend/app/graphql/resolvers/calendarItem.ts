@@ -100,6 +100,7 @@ export class CalendarItemFieldResolver {
       calendarItem.forTalkId
       || calendarItem.forWorkshopId
       || calendarItem.forPanelId
+      || calendarItem.forAdditionalContentId
       ,
     );
   }

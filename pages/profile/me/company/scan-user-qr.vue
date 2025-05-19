@@ -59,6 +59,21 @@
           </div>
         </form>
 
+        <div v-if="scanResult?.user?.resume?.cv" :class="$style.section">
+          <h2>
+            <translated-text trans-key="resume.section.cv" />
+          </h2>
+
+          <a :class="$style.cvDownload" :href="scanResult.user.resume.cv.url">
+            <p-button class="p-button-text">
+              <i class="pi pi-download p-button-icon p-button-icon-left" />
+              <span class="p-button-label">
+                <translated-text trans-key="resume.scan.cv.download" />
+              </span>
+            </p-button>
+          </a>
+        </div>
+
         <template #footer>
           <p-button
             text
@@ -144,19 +159,24 @@
   const scanFormLoading = ref(false);
 
   const scanUserMutation = useMutation(graphql(/* GraphQL */`
-      mutation PageProfileMeCompanyScanUserQrScan($userUid: String!) {
-          scanUserQr(userUid: $userUid) {
-              user {
-                  uid
-                  name
-                  email
-              }
-              isStarred
-              alreadyScanned
-              note
-              error
-          }
-      }
+    mutation PageProfileMeCompanyScanUserQrScan($userUid: String!) {
+        scanUserQr(userUid: $userUid) {
+            user {
+                uid
+                name
+                email
+                resume {
+                  cv {
+                    url
+                  }
+                }
+            }
+            isStarred
+            alreadyScanned
+            note
+            error
+        }
+    }
   `));
 
   const refineUserScanMutation = useMutation(graphql(/* GraphQL */`
@@ -166,6 +186,11 @@
                 uid
                 name
                 email
+                resume {
+                  cv {
+                    url
+                  }
+                }
             }
             isStarred
             note

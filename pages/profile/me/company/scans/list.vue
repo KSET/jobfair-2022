@@ -12,94 +12,123 @@
       </NuxtLink>
     </div>
 
-    <DataTable
-      ref="dt"
-      v-model:filters="filters"
-      :rows="20"
-      :rows-per-page-options="[2, 5, 10, 20, 50, 100]"
-      :value="scanned"
-      data-key="user.uid"
-      paginator
-      paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-      removable-sort
-      responsive-layout="scroll"
-      row-hover
-      striped-rows
-      :row-class="(entry: DEntry) => ({
-        'p-disabled': entry.meta.isLoading,
-      })"
-      sort-mode="multiple"
-    >
-      <template #header>
-        <div :class="$style.tableHeader">
-          <Button type="button" icon="pi pi-external-link" label="Export" @click="exportCSV" />
-
-          <span class="p-input-icon-left">
-            <i class="pi pi-search" />
-            <InputText v-model="filters['global'].value" :placeholder="translate('search.users')" />
-          </span>
-        </div>
-      </template>
-
-      <Column
-        :sortable="true"
-        field="user.uid"
-        header="#"
-        header-style="width: 6em"
+    <div style="overflow-x: auto;">
+      <DataTable
+        ref="dt"
+        v-model:filters="filters"
+        :rows="20"
+        :rows-per-page-options="[2, 5, 10, 20, 50, 100]"
+        :value="scanned"
+        data-key="user.uid"
+        paginator
+        paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+        removable-sort
+        responsive-layout="scroll"
+        row-hover
+        striped-rows
+        :row-class="(entry: DEntry) => ({
+          'p-disabled': entry.meta.isLoading,
+        })"
+        sort-mode="multiple"
       >
-        <template #body="{ index }">
-          {{ index + 1 }}
-        </template>
-      </Column>
-
-      <Column field="user.name" sortable>
         <template #header>
-          <translated-text trans-key="resume.user.name" />
-        </template>
-      </Column>
+          <div :class="$style.tableHeader">
+            <Button type="button" icon="pi pi-external-link" label="Export" @click="exportCSV" />
 
-      <Column field="user.email" sortable>
-        <template #header>
-          <translated-text trans-key="resume.user.email" />
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" />
+              <InputText v-model="filters['global'].value" :placeholder="translate('search.users')" />
+            </span>
+          </div>
         </template>
-      </Column>
 
-      <Column field="user.phone" sortable>
-        <template #header>
-          <translated-text trans-key="resume.phone" />
-        </template>
-      </Column>
+        <Column
+          :sortable="true"
+          field="user.uid"
+          header="#"
+          header-style="width: 6em"
+        >
+          <template #body="{ index }">
+            {{ index + 1 }}
+          </template>
+        </Column>
 
-      <Column field="note" sortable>
-        <template #header>
-          <translated-text trans-key="resume.user.note" />
-        </template>
-        <template #body="{ data }">
-          <form class="flex flex-column" @submit="handleItemFormSubmit(data, $event)">
-            <textarea v-model="data.note" />
-            <div class="flex">
-              <Button class="ml-auto mt-1" size="small" type="submit">
-                <TranslatedText trans-key="form.save" />
+        <Column field="user.name" sortable>
+          <template #header>
+            <translated-text trans-key="resume.user.name" />
+          </template>
+        </Column>
+
+        <Column field="user.email" sortable>
+          <template #header>
+            <translated-text trans-key="resume.user.email" />
+          </template>
+        </Column>
+
+        <Column field="user.phone" sortable>
+          <template #header>
+            <translated-text trans-key="resume.phone" />
+          </template>
+        </Column>
+
+        <Column field="studyInfo">
+          <template #header>
+            <translated-text trans-key="resume.user.studyInfo" />
+          </template>
+          <template #body="{ data }">
+            <strong>{{ data?.user?.resume?.faculty?.name }}</strong>
+            <span v-if="data?.user?.resume?.faculty?.module"> [{{ data?.user?.resume?.faculty?.module }}] </span>
+            <br>
+            <span v-for="(study, index) in data.user?.resume?.studyYears" :key="index">
+              {{ study?.studyType }} [<strong>{{ study?.studyYear }}</strong>]<span v-if="index < data?.user?.resume?.studyYears?.length - 1">, </span>
+            </span>
+          </template>
+        </Column>
+
+        <Column field="note" sortable>
+          <template #header>
+            <translated-text trans-key="resume.user.note" />
+          </template>
+          <template #body="{ data }">
+            <form class="flex flex-column" @submit="handleItemFormSubmit(data, $event)">
+              <textarea v-model="data.note" />
+              <div class="flex">
+                <Button class="ml-auto mt-1" size="small" type="submit">
+                  <TranslatedText trans-key="form.save" />
+                </Button>
+              </div>
+            </form>
+          </template>
+        </Column>
+
+        <Column field="isStarred" header="⭐" sortable>
+          <template #body="{ data }">
+            <Button
+              text
+              rounded
+              :loading="data.meta.isLoading"
+              :aria-label="data.isStarred ? 'Star' : 'Unstar'"
+              type="button"
+              :icon="data.isStarred ? 'pi pi-star-fill' : 'pi pi-star'"
+              @click="handleToggleStar(data)"
+            />
+          </template>
+        </Column>
+
+        <Column field="download">
+          <template #header>
+            <translated-text trans-key="resume.user.download" />
+          </template>
+          <template #body="{ data }">
+            <a v-if="data.user?.resume?.cv" class="ml-auto" :href="data.user?.resume?.cv?.url" target="_blank">
+              <Button class="ml-auto mt-1" size="small" type="button">
+                <TranslatedText trans-key="form.download" />
               </Button>
-            </div>
-          </form>
-        </template>
-      </Column>
-
-      <Column field="isStarred" header="⭐" sortable>
-        <template #body="{ data }">
-          <Button
-            text
-            rounded
-            :loading="data.meta.isLoading"
-            :aria-label="data.isStarred ? 'Star' : 'Unstar'"
-            type="button"
-            :icon="data.isStarred ? 'pi pi-star-fill' : 'pi pi-star'"
-            @click="handleToggleStar(data)"
-          />
-        </template>
-      </Column>
-    </DataTable>
+            </a>
+          </template>
+        </Column>
+      </DataTable>
+    </div>
 
     <div class="flex mt-3">
       <a class="ml-auto" href="/api/user/resume/export/all.xlsx" target="_blank">
@@ -177,6 +206,19 @@
             name
             email
             phone
+            resume {
+              cv {
+                url
+              }
+              faculty {
+                name
+                module
+              }
+              studyYears {
+                  studyType
+                  studyYear
+              }
+            }
           }
           note
           isStarred
@@ -200,6 +242,11 @@
                 name
                 email
                 phone
+            resume {
+              cv {
+                url
+              }
+            }
             }
             isStarred
             note

@@ -270,7 +270,7 @@
       const joinNowRoute = useJoinNowRoute();
       const seasonsStore = useSeasonsStore();
 
-      const timeUntilNextEvent = ref(new Date("2025-05-22T11:00:00+01:00").getTime() - Date.now());
+      const timeUntilNextEvent = ref(new Date("2025-05-21T11:00:00+00:00").getTime() - Date.now());
       const timeUntilNextEventInterval = ref(null as null | number | NodeJS.Timeout);
       const timeUntilNextEventFormatted = computed(() => msToHuman(timeUntilNextEvent.value));
 

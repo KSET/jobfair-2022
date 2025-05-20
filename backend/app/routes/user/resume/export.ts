@@ -334,9 +334,9 @@ router.getRaw("/all.xlsx", async (req, res) => {
     }
   };
 
-  if (canViewAll) {
-    addResumePage(ResumeFilters.All, allResumes);
-  }
+  // if (canViewAll) {
+  //   addResumePage(ResumeFilters.All, allResumes);
+  // }
   addResumePage(ResumeFilters.Scanned, scannedResumes.map((x) => x.resume));
   addResumePage(ResumeFilters.Favourites, favouriteResumes.map((x) => x.resume));
 

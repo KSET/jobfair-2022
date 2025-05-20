@@ -72,7 +72,7 @@ export const getParticipantCapacityFor =
   (eventType: EventType) => {
     switch (eventType) {
       case EventType.workshop:
-        return 30;
+        return 50;
       case EventType.talk:
       case EventType.panel:
         return 50;

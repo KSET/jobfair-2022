@@ -39,7 +39,7 @@
       <div
         :class="$style.layoutTopbarRight"
       >
-        <ul class="hidden lg:flex">
+        <ul class="hidden xl:flex">
           <li
             v-for="page in pages"
             :key="`top-${page.name}`"
@@ -77,7 +77,7 @@
         </ul>
         <p-button
           :class="$style.sidebarBtn"
-          class="lg:hidden p-button-text"
+          class="xl:hidden p-button-text"
           type="button"
           @click="sidebarOpen = true"
         >

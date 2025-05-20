@@ -2,6 +2,7 @@
   <div class="relative">
     <div
       :class="$style.container"
+      class="relative"
       :style="{
         'grid-template-columns': `repeat(${totalVotes}, minmax(0, 1fr))`,
       }"
@@ -16,6 +17,21 @@
         }"
         v-text="`${Math.round(option.voteCount / totalVotes * 100)}%`"
       />
+
+      <div class="absolute" style="height: 50%; width: 50%; top: 0;">
+        <app-img
+          :src="VisualLeft"
+          alt="Contact"
+          contain
+        />
+      </div>
+      <div class="absolute" style="height: 35%; width: 25%; bottom: 0; right: 0;">
+        <app-img
+          :src="VisualRight"
+          alt="Contact"
+          contain
+        />
+      </div>
     </div>
     <div :class="$style.qrContainer">
       <div>
@@ -35,6 +51,9 @@
   import {
     useSeasonsStore,
   } from "~/store/seasons";
+
+  import VisualLeft from "~/assets/images/page/live-vote/visual-left.png";
+  import VisualRight from "~/assets/images/page/live-vote/visual-right.png";
 
   definePageMeta({
     layout: "empty",
@@ -85,7 +104,8 @@
 
   .container {
     display: grid;
-    min-height: 100vh;
+    min-height: 70vh;
+    background-color: $fer-black;
   }
 
   .result {
@@ -95,6 +115,7 @@
     justify-content: center;
     font-size: max(4.5rem, 8vw);
     text-shadow: 1px 1px 4px $fer-black;
+    max-height: 70vh;
 
     &[data-option="for"] {
       background-color: $fer-yellow;
@@ -107,10 +128,10 @@
 
   .qrContainer {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
     left: 0;
-    height: 40vh;
+    height: 30vh;
     display: flex;
 
     > div {

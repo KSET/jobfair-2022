@@ -99,6 +99,19 @@
           />
         </template>
       </Column>
+
+      <Column field="download">
+        <template #header>
+          <translated-text trans-key="resume.user.download" />
+        </template>
+        <template #body="{ data }">
+          <a v-if="data.user?.resume?.cv" class="ml-auto" :href="data.user?.resume?.cv?.url" target="_blank">
+            <Button class="ml-auto mt-1" size="small" type="button">
+              <TranslatedText trans-key="form.download" />
+            </Button>
+          </a>
+        </template>
+      </Column>
     </DataTable>
 
     <div class="flex mt-3">
@@ -177,6 +190,11 @@
             name
             email
             phone
+            resume {
+              cv {
+                url
+              }
+            }
           }
           note
           isStarred
@@ -200,6 +218,11 @@
                 name
                 email
                 phone
+            resume {
+              cv {
+                url
+              }
+            }
             }
             isStarred
             note

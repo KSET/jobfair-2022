@@ -64,7 +64,7 @@
             <translated-text trans-key="resume.section.cv" />
           </h2>
 
-          <a :class="$style.cvDownload" :href="scanResult.user.resume.cv.url">
+          <a v-if="scanResult?.user?.resume?.cv" :class="$style.cvDownload" :href="scanResult.user.resume.cv.url">
             <p-button class="p-button-text">
               <i class="pi pi-download p-button-icon p-button-icon-left" />
               <span class="p-button-label">

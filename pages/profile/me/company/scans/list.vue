@@ -100,6 +100,15 @@
         </template>
       </Column>
     </DataTable>
+
+    <div class="flex mt-3">
+      <a class="ml-auto" href="/api/user/resume/export/all.xlsx" target="_blank">
+        <p-button class="p-button-text">
+          <i class="pi pi-download p-button-icon p-button-icon-left" />
+          <span class="p-button-label"><translated-text trans-key="resume.download-all" /></span>
+        </p-button>
+      </a>
+    </div>
   </AppMaxWidthContainer>
 </template>
 

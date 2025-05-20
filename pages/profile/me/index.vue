@@ -448,7 +448,7 @@
         </div>
 
         <div
-          v-if="isEventOngoing"
+          v-if="false && isEventOngoing"
           :class="[$style.item, $style.itemApproval]"
         >
           <h2 :class="$style.itemHeader">

@@ -37,7 +37,7 @@ import {
   useCocktailTypesStore,
 } from "~/store/cocktailTypes";
 
-type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication">> | null | undefined;
+type Approval = Partial<Omit<ICompanyApplicationApproval, "forApplication" | "logoHidden">> | null | undefined;
 
 const isApplicationApproved =
   (

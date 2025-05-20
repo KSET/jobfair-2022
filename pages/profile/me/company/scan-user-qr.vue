@@ -38,10 +38,25 @@
     <LazyClientOnly>
       <PDialog v-model:visible="resumeBool" :class="$style.dialog" :closable="!scanFormLoading" @hide="handleModalClose">
         <h3 v-text="scanResult!.user.name" />
-        <h3 v-text="scanResult!.user.email" />
+        <p v-text="scanResult!.user.email" />
+        <div v-if="scanResult?.user.resume?.faculty">
+          <h3 style="display: inline;">
+            <TranslatedText trans-key="profile.cv.form.faculty" />:
+          </h3> &nbsp;
+          <p style="display: inline;" v-text="scanResult.user.resume.faculty.name" />
+        </div>
+        <div v-if="scanResult?.user.resume?.studyYears">
+          <h3><TranslatedText trans-key="profile.cv.form.studyYears" /></h3>:
+          <p v-for="studyYear in scanResult.user.resume.studyYears" :key="studyYear.studyType">
+            {{ studyYear.studyType }} -
+            <TranslatedText trans-key="form.cv.studyYears.studyYear" />
+            {{ studyYear.studyYear }}
+          </p>
+        </div>
 
         <p>
-          ✅ <TranslatedText v-if="scanResult?.alreadyScanned" trans-key="profile.me.company.scan-user-qr.already-scanned" /><TranslatedText v-else trans-key="profile.me.company.scan-user-qr.scan-ok" />
+          ✅ <TranslatedText v-if="scanResult?.alreadyScanned" trans-key="profile.me.company.scan-user-qr.already-scanned" />
+          <TranslatedText v-else trans-key="profile.me.company.scan-user-qr.scan-ok" />
         </p>
 
         <form :class="$style.scanNote" @submit="handleScanFormSubmit">
@@ -169,6 +184,13 @@
                   cv {
                     url
                   }
+                  faculty {
+                    name
+                  }
+                  studyYears {
+                    studyYear
+                    studyType
+                  }
                 }
             }
             isStarred
@@ -189,6 +211,13 @@
                 resume {
                   cv {
                     url
+                  }
+                  faculty {
+                    name
+                  }
+                  studyYears {
+                    studyYear
+                    studyType
                   }
                 }
             }

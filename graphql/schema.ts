@@ -5157,7 +5157,11 @@ export type IPageParticipants_RatingsQuery = IPageParticipants_RatingsQuery_Quer
 
 export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File = { url: string };
 
-export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File | null };
+export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_faculty_ResumeFaculty = { name: string };
+
+export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_studyYears_ResumeStudyYear = { studyYear: number, studyType: string };
+
+export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File | null, faculty?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_faculty_ResumeFaculty | null, studyYears: Array<IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume_studyYears_ResumeStudyYear> };
 
 export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string, resume?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume | null };
 
@@ -5175,7 +5179,11 @@ export type IPageProfileMeCompanyScanUserQrScanMutation = IPageProfileMeCompanyS
 
 export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File = { url: string };
 
-export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File | null };
+export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_faculty_ResumeFaculty = { name: string };
+
+export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_studyYears_ResumeStudyYear = { studyYear: number, studyType: string };
+
+export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_cv_File | null, faculty?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_faculty_ResumeFaculty | null, studyYears: Array<IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume_studyYears_ResumeStudyYear> };
 
 export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string, resume?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume | null };
 
@@ -8755,6 +8763,13 @@ export const PageProfileMeCompanyScanUserQrScan = gql`
         cv {
           url
         }
+        faculty {
+          name
+        }
+        studyYears {
+          studyYear
+          studyType
+        }
       }
     }
     isStarred
@@ -8774,6 +8789,13 @@ export const PageProfileMeCompanyScanUserQrRefineQrScan = gql`
       resume {
         cv {
           url
+        }
+        faculty {
+          name
+        }
+        studyYears {
+          studyYear
+          studyType
         }
       }
     }

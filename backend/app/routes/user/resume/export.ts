@@ -89,6 +89,14 @@ router.getRaw("/all.xlsx", async (req, res) => {
       company: {
         uid: user.companies?.[0]?.uid || "",
       },
+      season: {
+        startsAt: {
+          lte: now,
+        },
+        endsAt: {
+          gte: now,
+        },
+      },
     },
     select: {
       user: true,

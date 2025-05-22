@@ -2961,6 +2961,7 @@ export type Season = {
   calendar: Array<CalendarItem>;
   companyComponentAverageRatings: Array<UserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];
+  companyScannedQRs: Scalars['Int']['output'];
   endsAt: Scalars['DateTimeISO']['output'];
   entryCount: Scalars['Int']['output'];
   eventFrom: Scalars['DateTimeISO']['output'];

@@ -10,7 +10,7 @@
         <strong>Ulaza</strong>: <em v-text="resp.season.entryCount" />
       </li>
       <li>
-        <strong>Skeniranih životopisa</strong>: <em v-text="resp.season.companyScannedCvs" />
+        <strong>Firme skenirani QR</strong>: <em v-text="resp.season.companyScannedQRs" />
       </li>
     </ul>
   </app-max-width-container>
@@ -54,6 +54,7 @@
             season(uid: $season) {
               entryCount
               companyScannedCvs
+              companyScannedQRs
             }
           }
         `,

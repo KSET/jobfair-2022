@@ -8,7 +8,7 @@
       }"
     >
       <div
-        v-for="option in liveVoteResults"
+        v-for="option in [...liveVoteResults].reverse()"
         :key="option.option"
         :data-option="option.option"
         :class="$style.result"

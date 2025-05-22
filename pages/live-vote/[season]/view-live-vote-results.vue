@@ -104,7 +104,7 @@
 
   .container {
     display: grid;
-    min-height: 70vh;
+    min-height: 100vh;
     background-color: $fer-black;
   }
 

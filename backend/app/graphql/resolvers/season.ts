@@ -291,6 +291,22 @@ export class SeasonFieldResolver {
       },
     });
   }
+
+  @FieldResolver(() => Int)
+  companyScannedQRs(
+    @Root() season: Season,
+      @Ctx() ctx: Context,
+  ): GQLField<number> {
+    if (!ctx.user) {
+      return 0;
+    }
+
+    return ctx.prisma.companyScannedUser.count({
+      where: {
+        seasonId: season.id,
+      },
+    });
+  }
 }
 
 export const transformSelect = transformSelectFor<SeasonFieldResolver>({
@@ -369,6 +385,13 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
   companyComponentAverageRatings(select) {
     select.id = true;
     delete select.companyComponentAverageRatings;
+
+    return select;
+  },
+
+  companyScannedQRs(select) {
+    select.id = true;
+    delete select.companyScannedQRs;
 
     return select;
   },

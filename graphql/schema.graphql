@@ -2044,6 +2044,7 @@ type Season {
   calendar: [CalendarItem!]!
   companyComponentAverageRatings: [UserCompanyComponentRatingComponentAverage!]!
   companyScannedCvs: Int!
+  companyScannedQRs: Int!
   endsAt: DateTimeISO!
   entryCount: Int!
   eventFrom: DateTimeISO!

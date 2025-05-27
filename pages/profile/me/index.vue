@@ -572,19 +572,6 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
-              :to="{ name: 'profile-me-company-resumes' }"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
-              >
-                <translated-text
-                  trans-key="profile.company.scanUsers.resumes"
-                />
-              </p-button>
-            </nuxt-link>
-
-            <nuxt-link
               :to="{ name: 'profile-me-company-feedback' }"
               class="ml-auto"
             >

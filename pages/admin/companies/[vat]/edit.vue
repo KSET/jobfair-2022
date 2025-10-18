@@ -98,6 +98,7 @@
     reactive,
     ref,
   } from "vue";
+  // import { useDebounceFn } from "#imports";
   import {
     keys,
     map,
@@ -142,6 +143,9 @@
     type ICreateCompanyResponse,
     type IMutationUpdateCompanyMembersForArgs,
   } from "~/graphql/schema";
+  import type {
+    UserWhereInput,
+  } from "~/graphql/client/graphql";
 
   export default defineComponent({
     name: "PageAdminCompanyEdit",
@@ -176,7 +180,7 @@
           vectorLogo: Pick<IFile, "uid" | "name" | "mimeType">,
           members: QUser[],
         },
-        users: QUser[],
+        // users: QUser[],
       };
       type QueryArgs = {
         vat: string,
@@ -184,55 +188,95 @@
       const res = await useQuery<QueryData, QueryArgs>({
         query: gql`
         query EditInfo($vat: String!) {
-            company(vat: $vat) {
+          company(vat: $vat) {
+            uid
+            legalName
+            brandName
+            descriptionEn
+            descriptionHr
+            address
+            vat
+            website
+            facebook
+            instagram
+            linkedIn
+            industry {
+                name
+            }
+            rasterLogo {
+                uid
+                name
+                full {
+                    mimeType
+                }
+            }
+            vectorLogo {
+                uid
+                name
+                mimeType
+            }
+            members {
               uid
-              legalName
-              brandName
-              descriptionEn
-              descriptionHr
-              address
-              vat
-              website
-              facebook
-              instagram
-              linkedIn
-              industry {
-                  name
-              }
-              rasterLogo {
-                  uid
-                  name
-                  full {
-                      mimeType
-                  }
-              }
-              vectorLogo {
-                  uid
-                  name
-                  mimeType
-              }
-              members {
-                uid
-                name
-                email
-              }
+              name
+              email
             }
+          }
 
-            industries {
-                name
-            }
+          industries {
+              name
+          }
 
-            users {
-                uid
-                name
-                email
-            }
+          # users {
+          #     uid
+          #     name
+          #     email
+          # }
         }
         `,
         variables: {
           vat: route.params.vat as string,
         },
       })();
+
+      type UserQueryData = {
+        users: QUser[],
+      };
+      type UsesrQueryArgs = {
+        where: UserWhereInput,
+      };
+      const resUsers = await useQuery<UserQueryData, UsesrQueryArgs>({
+        query: gql`
+          query UserInfo($where: UserWhereInput!) {
+            users (where: $where) {
+                uid
+                name
+                email
+            }
+          }
+        `,
+        variables: {
+          where: {
+            OR: [ {
+              firstName: {
+                contains: "Din",
+                mode: "insensitive",
+              },
+            }, {
+              lastName: {
+                contains: "Din",
+                mode: "insensitive",
+              },
+            }, {
+              email: {
+                contains: "Din",
+                mode: "insensitive",
+              },
+            } ],
+          } as UserWhereInput,
+        },
+      })();
+
+      console.log(resUsers);
 
       const company = reactive(res?.data?.company ?? {} as QCompany);
 
@@ -250,7 +294,7 @@
       }) as Record<keyof typeof info | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
-      const memberInfo = reactive(companyMembersEdit(res?.data?.company?.members)(res?.data?.users));
+      const memberInfo = reactive(companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
 
       const memberInfoErrors = reactive(mapObject(() => [] as AuthError[], {
         ...memberInfo,

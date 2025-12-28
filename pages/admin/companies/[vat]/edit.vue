@@ -57,6 +57,7 @@
           :errors="memberInfoErrors"
           :inputs="memberInfo"
           :loading="isLoading"
+          @filter="handleFilter"
           @submit="handleMembersUpdate"
         >
           <template #after>
@@ -118,6 +119,9 @@
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import AppDropdown, {
+    type FilterEvent,
+  } from "~/components/util/form/app-dropdown.vue";
   import {
     useIndustriesStore,
   } from "~/store/industries";
@@ -225,12 +229,6 @@
           industries {
               name
           }
-
-          # users {
-          #     uid
-          #     name
-          #     email
-          # }
         }
         `,
         variables: {
@@ -244,39 +242,9 @@
       type UsesrQueryArgs = {
         where: UserWhereInput,
       };
-      const resUsers = await useQuery<UserQueryData, UsesrQueryArgs>({
-        query: gql`
-          query UserInfo($where: UserWhereInput!) {
-            users (where: $where) {
-                uid
-                name
-                email
-            }
-          }
-        `,
-        variables: {
-          where: {
-            OR: [ {
-              firstName: {
-                contains: "Din",
-                mode: "insensitive",
-              },
-            }, {
-              lastName: {
-                contains: "Din",
-                mode: "insensitive",
-              },
-            }, {
-              email: {
-                contains: "Din",
-                mode: "insensitive",
-              },
-            } ],
-          } as UserWhereInput,
-        },
-      })();
 
-      console.log(resUsers);
+      let userSearchHead = "dino";
+
 
       const company = reactive(res?.data?.company ?? {} as QCompany);
 
@@ -294,7 +262,62 @@
       }) as Record<keyof typeof info | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
-      const memberInfo = reactive(companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
+      const memberOptions = [ { label: "xyz", value: "zzz" } ];
+      const selectedMembers = reactive([]);
+      const dropdownModelTest = ref([] as string[]);
+
+      const memberInfo = reactive(companyMembersEdit()());
+      const reloadUsers = async () => {
+        const usersQuery = useQuery<UserQueryData, UsesrQueryArgs>({
+          query: gql`
+            query UserInfo($where: UserWhereInput!) {
+              users (where: $where) {
+                  uid
+                  name
+                  email
+              }
+            }
+          `,
+          variables: {
+            where: {
+              OR: [ {
+                firstName: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              }, {
+                lastName: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              }, {
+                email: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              } ],
+            } as UserWhereInput,
+          },
+        });
+
+        const resUsers = await usersQuery();
+        Object.assign(memberInfo, companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
+      };
+
+
+      const handleFilter = async (ev: FilterEvent) => {
+        // I do not see why disabling is needed here
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (3 <= ev.value.length) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+          if (userSearchHead.substring(0, 3) === ev.value.substring(0, 3)) {
+            return;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          userSearchHead = ev.value;
+          await reloadUsers();
+        }
+      };
 
       const memberInfoErrors = reactive(mapObject(() => [] as AuthError[], {
         ...memberInfo,
@@ -307,6 +330,10 @@
         info,
         errors,
         isLoading,
+        memberOptions,
+        selectedMembers,
+        handleFilter,
+        dropdownModelTest,
         memberInfo,
         memberInfoErrors,
         async handleUpdate() {

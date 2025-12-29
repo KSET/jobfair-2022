@@ -84,9 +84,49 @@ router.getRaw("/all.xlsx", async (req, res) => {
 
   const canViewAll = true || Boolean(application?.feedback?.id) || hasAtLeastRole(Role.Admin, user);
 
+  const scannedUsers = await prisma.companyScannedUser.findMany({
+    where: {
+      company: {
+        uid: user.companies?.[0]?.uid || "",
+      },
+      season: {
+        startsAt: {
+          lte: now,
+        },
+        endsAt: {
+          gte: now,
+        },
+      },
+    },
+    select: {
+      user: true,
+    },
+  });
+
+  const resumeIds = scannedUsers
+    .map((entry) => entry.user.resumeId)
+    .filter((id): id is number => null !== id);
+
+  const scannedResumes = await prisma.resume.findMany({
+    where: {
+      id: { in: resumeIds },
+    },
+    include,
+  });
+
+  const resumeById: Map<number, typeof scannedResumes[0]> = new Map(
+    scannedResumes.map((resume) => [ resume.id, resume ]),
+  );
+
+  const scannedUsersWithResumes = scannedUsers.map(({ user }) => ({
+    user,
+    resume: user.resumeId ? resumeById.get(user.resumeId) ?? null : null,
+  }));
+
+
   const [
     allResumes,
-    scannedResumes,
+    // scannedResumes,
     favouriteResumes,
     translations,
   ] = await Promise.all([
@@ -95,18 +135,18 @@ router.getRaw("/all.xlsx", async (req, res) => {
         include,
       })
       : Promise.resolve([]),
-    prisma.scannedResume.findMany({
-      where: {
-        company: {
-          uid: user.companies?.[0]?.uid || "",
-        },
-      },
-      select: {
-        resume: {
-          include,
-        },
-      },
-    }),
+    // prisma.scannedResume.findMany({
+    //   where: {
+    //     company: {
+    //       uid: user.companies?.[0]?.uid || "",
+    //     },
+    //   },
+    //   select: {
+    //     resume: {
+    //       include,
+    //     },
+    //   },
+    // }),
     prisma.favouriteResume.findMany({
       where: {
         company: {
@@ -174,13 +214,13 @@ router.getRaw("/all.xlsx", async (req, res) => {
 
   const addResumePage = (
     filter: ResumeFilters,
-    resumes: typeof allResumes,
+    resumes: typeof scannedUsersWithResumes,
   ) => {
     const worksheet = workbook.addWorksheet($t(filter));
-    const MAX_STUDY_YEARS = Math.max(...resumes.map((x) => x.studyYears?.length || 0));
-    const MAX_WORK_EXPERIENCES = Math.max(...resumes.map((x) => x.workExperiences?.length || 0));
-    const MAX_PROJECTS = Math.max(...resumes.map((x) => x.projects?.length || 0));
-    const MAX_VOLUNTEER_EXPERIENCES = Math.max(...resumes.map((x) => x.volunteerExperiences?.length || 0));
+    const MAX_STUDY_YEARS = Math.max(...resumes.map((x) => x.resume?.studyYears?.length || 0));
+    const MAX_WORK_EXPERIENCES = Math.max(...resumes.map((x) => x.resume?.workExperiences?.length || 0));
+    const MAX_PROJECTS = Math.max(...resumes.map((x) => x.resume?.projects?.length || 0));
+    const MAX_VOLUNTEER_EXPERIENCES = Math.max(...resumes.map((x) => x.resume?.volunteerExperiences?.length || 0));
 
     worksheet.columns = [
       { header: $t("resume.name"), key: "name" },
@@ -226,119 +266,130 @@ router.getRaw("/all.xlsx", async (req, res) => {
 
     const $fDur = <T extends { start: Date | string, until: Date | string | null | undefined, }>(x: T) => $fDate(x.start, x.until);
 
-    for (const resume of resumes) {
-      const {
-        user: _user,
-        volunteerExperiences,
-        faculty,
-        projects,
-        workExperiences,
-        technologies,
-        studyYears,
-        interests,
-        city,
-        cv,
-      } = resume;
-      const user = _user!;
+    for (const entry of scannedUsers) {
+      const { user } = entry;
+      const resume = resumeById.get(user.resumeId ?? -1) ?? null;
 
-      const row = worksheet.addRow({
-        name: `${ user.firstName } ${ user.lastName }`,
-        city: `${ city }`,
-        phone: `${ user.phone }`,
-        email: `${ user.email }`,
-        facultyName: "",
-        facultyModule: "",
-        ...Object.fromEntries(
-          Array.from({ length: MAX_STUDY_YEARS }, (_, i) => [
-            [ `studyYearsType${ i }`, "" ],
-            [ `studyYearsDuration${ i }`, "" ],
-          ] as const).flat(),
-        ),
-        ...Object.fromEntries(
-          Array.from({ length: MAX_WORK_EXPERIENCES }, (_, i) => [
-            [ `workExperiencesCompany${ i }`, "" ],
-            [ `workExperiencesPosition${ i }`, "" ],
-            [ `workExperiencesDuration${ i }`, "" ],
-          ] as const).flat(),
-        ),
-        ...Object.fromEntries(
-          Array.from({ length: MAX_PROJECTS }, (_, i) => [
-            [ `projectsProject${ i }`, "" ],
-            [ `projectsPosition${ i }`, "" ],
-            [ `projectsDuration${ i }`, "" ],
-          ] as const).flat(),
-        ),
-        ...Object.fromEntries(
-          Array.from({ length: MAX_VOLUNTEER_EXPERIENCES }, (_, i) => [
-            [ `volunteerExperiencesOrganisation${ i }`, "" ],
-            [ `volunteerExperiencesPosition${ i }`, "" ],
-            [ `volunteerExperiencesDuration${ i }`, "" ],
-          ] as const).flat(),
-        ),
-        technologies: "",
-        interests: "",
-        cv: "",
-      });
-
-      if (faculty) {
-        row.getCell("facultyName").value = faculty.name;
-        row.getCell("facultyModule").value = faculty.module;
-      }
-
-      if (studyYears) {
-        studyYears.forEach((studyYear, i) => {
-          row.getCell(`studyYearsType${ i }`).value = studyYear.studyType;
-          row.getCell(`studyYearsDuration${ i }`).value = studyYear.studyYear;
+      if (!resume) {
+        const row = worksheet.addRow({
+          name: `${ user?.firstName } ${ user?.lastName }`,
+          phone: `${ user?.phone }`,
+          email: `${ user?.email }`,
         });
-      }
+      } else {
+        const {
+          user: _user,
+          volunteerExperiences,
+          faculty,
+          projects,
+          workExperiences,
+          technologies,
+          studyYears,
+          interests,
+          city,
+          cv,
+        } = resume;
+        const user = _user;
 
-      if (workExperiences) {
-        workExperiences.forEach((item, i) => {
-          row.getCell(`workExperiencesCompany${ i }`).value = item.company;
-          row.getCell(`workExperiencesPosition${ i }`).value = item.position;
-          row.getCell(`workExperiencesDuration${ i }`).value = $fDur(item);
+        const row = worksheet.addRow({
+          name: `${ user?.firstName } ${ user?.lastName }`,
+          city: `${ city }`,
+          phone: `${ user?.phone }`,
+          email: `${ user?.email }`,
+          facultyName: "",
+          facultyModule: "",
+          ...Object.fromEntries(
+            Array.from({ length: MAX_STUDY_YEARS }, (_, i) => [
+              [ `studyYearsType${ i }`, "" ],
+              [ `studyYearsDuration${ i }`, "" ],
+            ] as const).flat(),
+          ),
+          ...Object.fromEntries(
+            Array.from({ length: MAX_WORK_EXPERIENCES }, (_, i) => [
+              [ `workExperiencesCompany${ i }`, "" ],
+              [ `workExperiencesPosition${ i }`, "" ],
+              [ `workExperiencesDuration${ i }`, "" ],
+            ] as const).flat(),
+          ),
+          ...Object.fromEntries(
+            Array.from({ length: MAX_PROJECTS }, (_, i) => [
+              [ `projectsProject${ i }`, "" ],
+              [ `projectsPosition${ i }`, "" ],
+              [ `projectsDuration${ i }`, "" ],
+            ] as const).flat(),
+          ),
+          ...Object.fromEntries(
+            Array.from({ length: MAX_VOLUNTEER_EXPERIENCES }, (_, i) => [
+              [ `volunteerExperiencesOrganisation${ i }`, "" ],
+              [ `volunteerExperiencesPosition${ i }`, "" ],
+              [ `volunteerExperiencesDuration${ i }`, "" ],
+            ] as const).flat(),
+          ),
+          technologies: "",
+          interests: "",
+          cv: "",
         });
-      }
 
-      if (projects) {
-        projects.forEach((item, i) => {
-          row.getCell(`projectsProject${ i }`).value = item.project;
-          row.getCell(`projectsPosition${ i }`).value = item.position;
-          row.getCell(`projectsDuration${ i }`).value = $fDur(item);
-        });
-      }
+        if (faculty) {
+          row.getCell("facultyName").value = faculty.name;
+          row.getCell("facultyModule").value = faculty.module;
+        }
 
-      if (volunteerExperiences) {
-        volunteerExperiences.forEach((item, i) => {
-          row.getCell(`volunteerExperiencesOrganisation${ i }`).value = item.organisation;
-          row.getCell(`volunteerExperiencesPosition${ i }`).value = item.position;
-          row.getCell(`volunteerExperiencesDuration${ i }`).value = $fDur(item);
-        });
-      }
+        if (studyYears) {
+          studyYears.forEach((studyYear, i) => {
+            row.getCell(`studyYearsType${ i }`).value = studyYear.studyType;
+            row.getCell(`studyYearsDuration${ i }`).value = studyYear.studyYear;
+          });
+        }
 
-      if (technologies) {
-        row.getCell("technologies").value = technologies.map((x) => x.name).join(", ");
-      }
+        if (workExperiences) {
+          workExperiences.forEach((item, i) => {
+            row.getCell(`workExperiencesCompany${ i }`).value = item.company;
+            row.getCell(`workExperiencesPosition${ i }`).value = item.position;
+            row.getCell(`workExperiencesDuration${ i }`).value = $fDur(item);
+          });
+        }
 
-      if (interests) {
-        row.getCell("interests").value = interests.map((x) => x.name).join(", ");
-      }
+        if (projects) {
+          projects.forEach((item, i) => {
+            row.getCell(`projectsProject${ i }`).value = item.project;
+            row.getCell(`projectsPosition${ i }`).value = item.position;
+            row.getCell(`projectsDuration${ i }`).value = $fDur(item);
+          });
+        }
 
-      if (cv) {
-        const url = `${ process.env.BASE_URL || "https://jobfair.fer.unizg.hr/api" }/file/${ cv.uid }`;
-        row.getCell("cv").value = {
-          text: url,
-          hyperlink: url,
-        };
+        if (volunteerExperiences) {
+          volunteerExperiences.forEach((item, i) => {
+            row.getCell(`volunteerExperiencesOrganisation${ i }`).value = item.organisation;
+            row.getCell(`volunteerExperiencesPosition${ i }`).value = item.position;
+            row.getCell(`volunteerExperiencesDuration${ i }`).value = $fDur(item);
+          });
+        }
+
+        if (technologies) {
+          row.getCell("technologies").value = technologies.map((x) => x.name).join(", ");
+        }
+
+        if (interests) {
+          row.getCell("interests").value = interests.map((x) => x.name).join(", ");
+        }
+
+        if (cv) {
+          const url = `${ process.env.BASE_URL || "https://jobfair.fer.unizg.hr/api" }/file/${ cv.uid }`;
+          row.getCell("cv").value = {
+            text: url,
+            hyperlink: url,
+          };
+        }
       }
     }
   };
 
-  if (canViewAll) {
-    addResumePage(ResumeFilters.All, allResumes);
-  }
-  addResumePage(ResumeFilters.Scanned, scannedResumes.map((x) => x.resume));
-  addResumePage(ResumeFilters.Favourites, favouriteResumes.map((x) => x.resume));
+  // if (canViewAll) {
+  //   addResumePage(ResumeFilters.All, allResumes);
+  // }
+  addResumePage(ResumeFilters.Scanned, scannedUsersWithResumes);
+  // addResumePage(ResumeFilters.Favourites, favouriteResumes.map((x) => x.resume));
 
   res
     .header("content-type", "application/vnd.ms-excel")

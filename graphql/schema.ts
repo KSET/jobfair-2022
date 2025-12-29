@@ -2963,6 +2963,7 @@ export type ISeason = {
   calendar: Array<ICalendarItem>;
   companyComponentAverageRatings: Array<IUserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];
+  companyScannedQRs: Scalars['Int']['output'];
   endsAt: Scalars['DateTimeISO']['output'];
   entryCount: Scalars['Int']['output'];
   eventFrom: Scalars['DateTimeISO']['output'];
@@ -5194,7 +5195,11 @@ export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation = IPageProfileMe
 
 export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_cv_File = { url: string };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_cv_File | null };
+export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty = { name: string, module: string };
+
+export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear = { studyType: string, studyYear: number };
+
+export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_cv_File | null, faculty?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty | null, studyYears: Array<IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear> };
 
 export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User = { uid: string, name: string, email: string, phone: string, resume?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume | null };
 
@@ -6782,6 +6787,7 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
   calendar?: Resolver<Array<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
   companyComponentAverageRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType>;
   companyScannedCvs?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  companyScannedQRs?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   endsAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   entryCount?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   eventFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
@@ -8802,6 +8808,14 @@ export const PageProfileMeCompanyScansListData = gql`
       resume {
         cv {
           url
+        }
+        faculty {
+          name
+          module
+        }
+        studyYears {
+          studyType
+          studyYear
         }
       }
     }

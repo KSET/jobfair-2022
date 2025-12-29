@@ -72,7 +72,7 @@
 
         <template v-if="isSignUpPossible">
           <div :class="[$style.item, $style.signUp]">
-            <div :class="$style.itemContent">
+            <div :class="$style.itemContent" style="flex: 1;">
               <h2 :class="$style.itemHeader">
                 <translated-text trans-key="profile.events.sign-up" />
               </h2>
@@ -572,19 +572,6 @@
           </div>
           <div :class="$style.itemActions">
             <nuxt-link
-              :to="{ name: 'profile-me-company-resumes' }"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
-              >
-                <translated-text
-                  trans-key="profile.company.scanUsers.resumes"
-                />
-              </p-button>
-            </nuxt-link>
-
-            <nuxt-link
               :to="{ name: 'profile-me-company-feedback' }"
               class="ml-auto"
             >
@@ -937,6 +924,8 @@
     &.signUp {
       min-height: fit-content;
       grid-column: span 1;
+      display: flex;
+      flex-direction: column;
 
       @media screen and (width <= 1500px) {
         grid-column: span var(--item-columns);

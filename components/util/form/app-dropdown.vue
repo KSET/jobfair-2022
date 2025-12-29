@@ -48,6 +48,7 @@
         :required="required"
         option-label="label"
         option-value="value"
+        @filter="(e)=>$emit('filter', e)"
       />
       <p-dropdown
         v-else
@@ -120,12 +121,17 @@
     ref,
     unref,
   } from "vue";
+  import type {
+    MultiSelectFilterEvent,
+  } from "primevue/multiselect";
   import {
     elseNone, orNone, type AppOptionsProp,
   } from "./helpers";
   import useModelWrapper from "~/composables/useModelWrapper";
   import useReactiveSlots from "~/composables/useReactiveSlots";
   import TranslatedText from "~/components/TranslatedText.vue";
+
+  export type FilterEvent = MultiSelectFilterEvent;
 
   export default defineComponent({
     components: {
@@ -206,7 +212,10 @@
       },
     },
 
-    emits: [ "update:modelValue" ],
+    emits: {
+      "update:modelValue": () => true,
+      filter: (e: FilterEvent) => true,
+    },
 
     setup(props, { emit }) {
       const uniqueId = useId().replace(":", "_");

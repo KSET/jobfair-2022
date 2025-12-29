@@ -128,6 +128,7 @@ export const companyMembersEdit =
           type: "dropdown",
           value: members?.map((member) => member.uid) || [],
           options: unref(users)?.map((user) => ({ label: `${ user.name } (${ user.email })`, value: user.uid })) || [],
+          placeholder: "start typing to search",
         },
       })
 ;

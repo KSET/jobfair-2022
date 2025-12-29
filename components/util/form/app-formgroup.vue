@@ -50,6 +50,7 @@
         :placeholder="input.placeholder"
         :required="input.required ?? true"
         v-bind="input.attrs || {}"
+        @filter="(e)=>$emit('filter', e)"
       >
         <template v-if="errors[inputName].length > 0" #message>
           <translated-text
@@ -265,6 +266,9 @@
   import {
     toClass,
   } from "~/helpers/style";
+  import type {
+    FilterEvent,
+  } from "~/components/util/form/app-dropdown.vue";
 
   export default defineComponent({
     components: {
@@ -306,9 +310,10 @@
       },
     },
 
-    emits: [
-      "submit",
-    ],
+    emits: {
+      submit: (v: boolean) => true,
+      filter: (e: FilterEvent) => true,
+    },
 
     setup(props, { emit }) {
       const labelPrefix = useModelWrapper(props, emit)("labelPrefix");

@@ -57,6 +57,7 @@
           :errors="memberInfoErrors"
           :inputs="memberInfo"
           :loading="isLoading"
+          @filter="handleFilter"
           @submit="handleMembersUpdate"
         >
           <template #after>
@@ -98,6 +99,7 @@
     reactive,
     ref,
   } from "vue";
+  // import { useDebounceFn } from "#imports";
   import {
     keys,
     map,
@@ -117,6 +119,9 @@
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
+  import AppDropdown, {
+    type FilterEvent,
+  } from "~/components/util/form/app-dropdown.vue";
   import {
     useIndustriesStore,
   } from "~/store/industries";
@@ -142,6 +147,9 @@
     type ICreateCompanyResponse,
     type IMutationUpdateCompanyMembersForArgs,
   } from "~/graphql/schema";
+  import type {
+    UserWhereInput,
+  } from "~/graphql/client/graphql";
 
   export default defineComponent({
     name: "PageAdminCompanyEdit",
@@ -176,7 +184,7 @@
           vectorLogo: Pick<IFile, "uid" | "name" | "mimeType">,
           members: QUser[],
         },
-        users: QUser[],
+        // users: QUser[],
       };
       type QueryArgs = {
         vat: string,
@@ -184,55 +192,59 @@
       const res = await useQuery<QueryData, QueryArgs>({
         query: gql`
         query EditInfo($vat: String!) {
-            company(vat: $vat) {
+          company(vat: $vat) {
+            uid
+            legalName
+            brandName
+            descriptionEn
+            descriptionHr
+            address
+            vat
+            website
+            facebook
+            instagram
+            linkedIn
+            industry {
+                name
+            }
+            rasterLogo {
+                uid
+                name
+                full {
+                    mimeType
+                }
+            }
+            vectorLogo {
+                uid
+                name
+                mimeType
+            }
+            members {
               uid
-              legalName
-              brandName
-              descriptionEn
-              descriptionHr
-              address
-              vat
-              website
-              facebook
-              instagram
-              linkedIn
-              industry {
-                  name
-              }
-              rasterLogo {
-                  uid
-                  name
-                  full {
-                      mimeType
-                  }
-              }
-              vectorLogo {
-                  uid
-                  name
-                  mimeType
-              }
-              members {
-                uid
-                name
-                email
-              }
+              name
+              email
             }
+          }
 
-            industries {
-                name
-            }
-
-            users {
-                uid
-                name
-                email
-            }
+          industries {
+              name
+          }
         }
         `,
         variables: {
           vat: route.params.vat as string,
         },
       })();
+
+      type UserQueryData = {
+        users: QUser[],
+      };
+      type UsesrQueryArgs = {
+        where: UserWhereInput,
+      };
+
+      let userSearchHead = "dino";
+
 
       const company = reactive(res?.data?.company ?? {} as QCompany);
 
@@ -250,7 +262,62 @@
       }) as Record<keyof typeof info | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
-      const memberInfo = reactive(companyMembersEdit(res?.data?.company?.members)(res?.data?.users));
+      const memberOptions = [ { label: "xyz", value: "zzz" } ];
+      const selectedMembers = reactive([]);
+      const dropdownModelTest = ref([] as string[]);
+
+      const memberInfo = reactive(companyMembersEdit()());
+      const reloadUsers = async () => {
+        const usersQuery = useQuery<UserQueryData, UsesrQueryArgs>({
+          query: gql`
+            query UserInfo($where: UserWhereInput!) {
+              users (where: $where) {
+                  uid
+                  name
+                  email
+              }
+            }
+          `,
+          variables: {
+            where: {
+              OR: [ {
+                firstName: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              }, {
+                lastName: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              }, {
+                email: {
+                  contains: userSearchHead,
+                  mode: "insensitive",
+                },
+              } ],
+            } as UserWhereInput,
+          },
+        });
+
+        const resUsers = await usersQuery();
+        Object.assign(memberInfo, companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
+      };
+
+
+      const handleFilter = async (ev: FilterEvent) => {
+        // I do not see why disabling is needed here
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (3 <= ev.value.length) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+          if (userSearchHead.substring(0, 3) === ev.value.substring(0, 3)) {
+            return;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          userSearchHead = ev.value;
+          await reloadUsers();
+        }
+      };
 
       const memberInfoErrors = reactive(mapObject(() => [] as AuthError[], {
         ...memberInfo,
@@ -263,6 +330,10 @@
         info,
         errors,
         isLoading,
+        memberOptions,
+        selectedMembers,
+        handleFilter,
+        dropdownModelTest,
         memberInfo,
         memberInfoErrors,
         async handleUpdate() {

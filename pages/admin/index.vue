@@ -107,33 +107,15 @@
     <div>
       <h2>Industrije</h2>
 
-      <ul>
-        <li
-          v-for="industry in industries"
-          :key="industry"
-        >
-          <editable-field
-            :disabled="info.industriesLoading"
-            :model-value="industry"
-            @save="handleIndustryEdit(industry, $event)"
-          />
-        </li>
-        <li>
-          <form @submit.prevent="handleIndustrySubmit">
-            <input
-              v-model="info.newIndustry"
-              :disabled="info.industriesLoading"
-              type="text"
-            >
-            <button
-              :disabled="info.industriesLoading"
-              class="ml-3"
-            >
-              Create
-            </button>
-          </form>
-        </li>
-      </ul>
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-industries' }">
+              Uredi
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
     </div>
 
     <div>
@@ -300,7 +282,6 @@
 </template>
 <script lang="ts">
   import {
-    computed,
     defineComponent,
     reactive,
     ref,
@@ -313,9 +294,6 @@
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import useTitle from "~/composables/useTitle";
   import {
-    useIndustriesStore,
-  } from "~/store/industries";
-  import {
     useQuery,
   } from "~/composables/useQuery";
   import {
@@ -323,7 +301,6 @@
     type IAdminInitialDataQueryVariables,
     type IAdminInitialDataQuery,
   } from "~/graphql/schema";
-  import EditableField from "~/components/admin/util/editable-field.vue";
   import EditSeason from "~/components/page/admin/edit-season.vue";
 
   export default defineComponent({
@@ -331,7 +308,6 @@
 
     components: {
       EditSeason,
-      EditableField,
       AppMaxWidthContainer,
       Panel,
     },
@@ -343,55 +319,15 @@
     async setup() {
       useTitle("Admin", false);
 
-      const industriesStore = useIndustriesStore();
-
-      const info = reactive({
-        newIndustry: "",
-        industriesLoading: false,
-        newTalkCategory: "",
-        talkCategoriesLoading: false,
-      });
-
-      const industriesDelta = ref([] as string[]);
-      const industries = computed({
-        get: () => industriesStore.industries,
-        set: (val) => industriesDelta.value = val,
-      });
-
       const res = await useQuery<IAdminInitialDataQuery, IAdminInitialDataQueryVariables>({
         query: AdminInitialData,
       })().then((res) => res?.data);
 
-      industriesStore.setIndustries(res?.industries);
-
       const seasons = ref((res?.seasons || []).map((x) => ({ ...x, selected: false })).map(reactive));
 
       return {
-        industries,
         seasons,
-        info,
         formatDate: (date: Date) => `${ date.getDate() }. ${ date.getMonth() + 1 }. ${ date.getFullYear() }.`,
-        async handleIndustrySubmit() {
-          info.industriesLoading = true;
-          const resp = await industriesStore.createIndustry(info.newIndustry);
-          if (!resp) {
-            alert("Something went wrong. Please try again.");
-          } else {
-            await industriesStore.fetchIndustries();
-            info.newIndustry = "";
-          }
-          info.industriesLoading = false;
-        },
-        async handleIndustryEdit(oldName: string, newName: string) {
-          info.industriesLoading = true;
-          const resp = await industriesStore.renameIndustry(oldName, newName);
-          if (!resp) {
-            alert("Something went wrong. Please try again.");
-          } else {
-            await industriesStore.fetchIndustries();
-          }
-          info.industriesLoading = false;
-        },
         async refreshSeasons() {
           const resp = await useQuery<{
             seasons: NonNullable<IAdminInitialDataQuery["seasons"]>,

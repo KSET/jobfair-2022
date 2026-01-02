@@ -28,6 +28,20 @@ const conf = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "@nuxtjs/eslint-config-typescript",
   ],
+  settings: {
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+        project: "./tsconfig.json",
+      },
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".vue"],
+      },
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx", ".vue"],
+    },
+  },
   // add your custom rules here
   rules: {
     // <Very slow>

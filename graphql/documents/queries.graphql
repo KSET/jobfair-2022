@@ -562,6 +562,7 @@ query AdminCompanyApplications($season: String!) {
         forCompany {
             uid
             brandName
+            legalName
             industry {
                 name
             }

@@ -59,86 +59,159 @@
           <data :value="statistics.panels" v-text="statistics.panels" />
         </div>
       </div>
-      <ul>
-        <li
-          v-for="application in companyApplications"
-          :key="JSON.stringify(application)"
-          class="mt-2"
-        >
-          <span
-            class="mr-2 p-1 px-2 border-round"
-            style="background-color: rgb(0 0 0 / 15%);"
-            v-text="application.forCompany.industry.name"
-          />
-          <strong v-text="application.forCompany.brandName" />
-          <NuxtLink
-            :to="{
-              name: 'admin-season-season-applications-company-edit',
-              params: {
-                season: application.forSeason.uid,
-                company: application.forCompany.uid,
-              },
-            }"
-            class="ml-2"
-          >
-            Edit
-          </NuxtLink>
-          <ul>
-            <li v-if="application.booth" class="mt-3 mb-2">
-              <strong>Booth</strong>:
-              <kbd
-                class="p-1 px-2 border-round"
-                style="background: rgb(62 13 64 / 30%);"
-                v-text="booths[application.booth]"
+      <DataTable
+        ref="dt"
+        v-model:filters="filters"
+        v-model:expandedRows="expandedRows"
+        :value="companyApplications"
+        data-key="forCompany.uid"
+        row-hover
+        responsive-layout="scroll"
+      >
+        <template #header>
+          <div :class="$style.tableHeader">
+            <div :class="$style.buttonGroup">
+              <p-button
+                v-tooltip.bottom="isMobile ? 'Export CSV' : ''"
+                icon="pi pi-external-link"
+                :label="isMobile ? '' : 'Export'"
+                @click="exportCSV"
               />
-            </li>
-            <li v-if="application.talk" class="mt-3 mb-2">
-              <strong>Talk</strong>:
-              <kbd
-                class="mr-1 p-1 px-2 border-round"
-                style="background: rgb(13 62 64 / 30%);"
-                v-text="application.talk.category.name"
+              <p-button
+                icon="pi pi-plus"
+                label="Expand All"
+                @click="expandAll"
               />
-              <em v-text="application.talk.titleEn" />
-            </li>
-            <li v-if="application.workshop">
-              <strong>Workshop</strong>: <em v-text="application.workshop.titleEn" />
-            </li>
-            <li v-if="application.wantsCocktail">
-              <strong>
-                Cocktail
-                <i class="ml-2 pi pi-check" />
-                <em v-text="application.cocktail?.name" />
-                <em v-if="application.cocktail?.name"> : </em>
-                <em v-text="application.cocktail?.type?.type" />
-              </strong>
-            </li>
-            <li v-if="application.wantsPanel">
-              <strong>
-                Panel
-                <i class="ml-2 pi pi-check" />
-              </strong>
-            </li>
-          </ul>
-        </li>
-      </ul>
+              <p-button
+                icon="pi pi-minus"
+                label="Collapse All"
+                @click="collapseAll"
+              />
+            </div>
+
+            <span :class="$style.searchWrapper">
+              <i class="pi pi-search" />
+              <InputText
+                v-model="filters['global'].value"
+                placeholder="Pretraži prijave"
+                :class="$style.searchInput"
+              />
+            </span>
+          </div>
+        </template>
+        <Column :expander="true" header-style="width: 3rem" />
+        <Column field="forCompany.brandName" header="Firma" sortable>
+          <template #body="{ data }">
+            <strong v-tooltip.top="data.forCompany.legalName" v-text="data.forCompany.brandName" />
+          </template>
+        </Column>
+        <Column field="booth" header="Štand" sortable>
+          <template #body="{ data }">
+            <kbd
+              v-if="data.booth"
+              class="p-1 px-2 border-round"
+              style="background: rgb(62 13 64 / 30%);"
+              v-text="booths[data.booth]"
+            />
+            <span v-else>-</span>
+          </template>
+        </Column>
+        <Column field="talk.titleEn" header="Talk">
+          <template #body="{ data }">
+            <i v-if="data.talk" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
+        <Column field="workshop.titleEn" header="Workshop">
+          <template #body="{ data }">
+            <i v-if="data.workshop" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
+        <Column field="wantsCocktail" header="Cocktail" sortable>
+          <template #body="{ data }">
+            <i v-if="data.wantsCocktail" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
+        <Column field="wantsPanel" header="Panel" sortable>
+          <template #body="{ data }">
+            <i v-if="data.wantsPanel" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
+        <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
+          <template #body="{ data }">
+            <NuxtLink
+              :to="{
+                name: 'admin-season-season-applications-company-edit',
+                params: {
+                  season: data.forSeason.uid,
+                  company: data.forCompany.uid,
+                },
+              }"
+            >
+              Edit
+            </NuxtLink>
+          </template>
+        </Column>
+        <template #expansion="{ data }">
+          <div :class="$style.expansion">
+            <div :class="$style.expansionRow">
+              <strong>Industrija:</strong>
+              <p-chip :label="data.forCompany.industry.name" />
+            </div>
+            <div v-if="data.talk" :class="$style.expansionRow">
+              <strong>Talk:</strong>
+              <div>
+                <p-chip :label="data.talk.category.name" class="mr-2" />
+                <em v-text="data.talk.titleEn" />
+              </div>
+            </div>
+            <div v-if="data.workshop" :class="$style.expansionRow">
+              <strong>Workshop:</strong>
+              <em v-text="data.workshop.titleEn" />
+            </div>
+            <div v-if="data.wantsCocktail" :class="$style.expansionRow">
+              <strong>Cocktail:</strong>
+              <div>
+                <em v-if="data.cocktail?.name" v-text="data.cocktail.name" />
+                <em v-if="data.cocktail?.name && data.cocktail?.type?.type"> : </em>
+                <em v-if="data.cocktail?.type?.type" v-text="data.cocktail.type.type" />
+              </div>
+            </div>
+            <div v-if="data.wantsPanel" :class="$style.expansionRow">
+              <strong>Panel:</strong>
+              <span>Yes</span>
+            </div>
+          </div>
+        </template>
+      </DataTable>
     </div>
   </app-max-width-container>
 </template>
 
 <script lang="ts">
   import {
-    ref,
-    unref,
-  } from "vue";
-  import {
     sortObject,
   } from "rambdax";
+  import Chip from "primevue/chip";
+  import Tooltip from "primevue/tooltip";
+  import DataTable from "primevue/datatable";
+  import Column from "primevue/column";
+  import {
+    FilterMatchMode,
+    FilterService,
+  } from "primevue/api";
+  import InputText from "primevue/inputtext";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
     useQuery,
     useRoute,
+    ref,
+    unref,
+    onMounted,
   } from "#imports";
   import {
     useIndustriesStore,
@@ -158,6 +231,14 @@
 
     components: {
       AppMaxWidthContainer,
+      DataTable,
+      Column,
+      InputText,
+      PChip: Chip,
+    },
+
+    directives: {
+      tooltip: Tooltip,
     },
 
     async setup() {
@@ -178,6 +259,16 @@
       talkCategoriesStore.setTalkCategories(res?.talkCategories);
 
       const booths = ref(Object.fromEntries((res?.booths || []).map((b) => [ b.key, b.name ])));
+      const companyApplications = ref(res?.companyApplications || []);
+
+      const isMobile = ref(false);
+
+      onMounted(() => {
+        isMobile.value = 768 > window.innerWidth;
+        window.addEventListener("resize", () => {
+          isMobile.value = 768 > window.innerWidth;
+        });
+      });
 
       const statistics = {
         company: {
@@ -189,7 +280,7 @@
         panels: 0,
         cocktails: 0,
       };
-      for (const application of unref(res?.companyApplications) ?? []) {
+      for (const application of unref(companyApplications) ?? []) {
         const {
           booth,
           talk,
@@ -224,10 +315,55 @@
       statistics.company.byIndustry = sortObject((_a, _b, a, b) => b - a, statistics.company.byIndustry);
       statistics.talks = sortObject((_a, _b, a, b) => b - a, statistics.talks);
 
+      const filters = ref({
+        global: { value: null as string | null, matchMode: "$global" },
+        "forCompany.brandName": { value: null, matchMode: FilterMatchMode.CONTAINS },
+        "forCompany.industry.name": { value: null, matchMode: FilterMatchMode.CONTAINS },
+      });
+
+      const dt = ref<DataTable | null>(null);
+      const expandedRows = ref<Record<string, boolean>>({});
+
+      FilterService.register("$global", (value: unknown, filter: string | null | undefined) => {
+        if (filter === undefined || null === filter || "" === filter.trim()) {
+          return true;
+        }
+
+        const lowerFilter = filter.toLocaleLowerCase().trim();
+
+        if ("string" === typeof value) {
+          return value.toLowerCase().includes(lowerFilter);
+        }
+
+        return false;
+      });
+
       return {
         statistics,
         booths,
-        companyApplications: res?.companyApplications || [],
+        companyApplications,
+        filters,
+        dt,
+        isMobile,
+        expandedRows,
+        exportCSV() {
+          const $dt = unref(dt);
+
+          if (!$dt) {
+            return;
+          }
+
+          $dt.exportCSV();
+        },
+        expandAll() {
+          expandedRows.value = unref(companyApplications).reduce((acc: Record<string, boolean>, p) => {
+            acc[p.forCompany!.uid] = true;
+            return acc;
+          }, {} as Record<string, boolean>);
+        },
+        collapseAll() {
+          expandedRows.value = {} as Record<string, boolean>;
+        },
       };
     },
   });
@@ -271,6 +407,119 @@
             }
           }
         }
+      }
+    }
+  }
+
+  .tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+  }
+
+  .buttonGroup {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      width: 100%;
+
+      > button {
+        flex: 1;
+      }
+    }
+  }
+
+  .searchWrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
+    > i {
+      position: absolute;
+      left: 0.75rem;
+      color: #6c757d;
+      z-index: 1;
+    }
+  }
+
+  .searchInput {
+    padding-left: 2.5rem;
+    min-width: min(300px, 100%);
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .textTruncate {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 768px) {
+      max-width: 150px;
+    }
+  }
+
+  .expansion {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .expansionRow {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    > strong {
+      min-width: 100px;
+      color: #666;
+    }
+  }
+
+  .hideOnMobile {
+    @media (max-width: 768px) {
+      display: none !important;
+    }
+  }
+</style>
+
+<style lang="scss">
+  // Global styles for DataTable expander button
+  .p-datatable {
+    .p-row-toggler {
+      background: #2c3e50 !important;
+      color: white !important;
+      border: none !important;
+      width: 2rem !important;
+      height: 2rem !important;
+
+      &:hover {
+        background: #34495e !important;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.5) !important;
       }
     }
   }

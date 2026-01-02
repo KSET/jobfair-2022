@@ -34,11 +34,12 @@
             @click="exportCSV"
           />
 
-          <span class="p-input-icon-left">
+          <span :class="$style.searchWrapper">
             <i class="pi pi-search" />
             <InputText
               v-model="filters['global'].value"
               placeholder="Pretraži"
+              :class="$style.searchInput"
             />
           </span>
         </div>
@@ -215,6 +216,40 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+  }
+
+  .searchWrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
+    > i {
+      position: absolute;
+      left: 0.75rem;
+      color: #6c757d;
+      z-index: 1;
+    }
+  }
+
+  .searchInput {
+    padding-left: 2.5rem;
+    min-width: min(300px, 100%);
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 }
 </style>

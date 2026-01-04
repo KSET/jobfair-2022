@@ -301,7 +301,11 @@
         });
 
         const resUsers = await usersQuery();
-        Object.assign(memberInfo, companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
+        Object.assign(
+          memberInfo, companyMembersEdit(res?.data?.company?.members)(
+            resUsers?.data?.users
+              ? res?.data?.company?.members?.concat(resUsers?.data?.users)
+              : res?.data?.company?.members));
       };
 
 

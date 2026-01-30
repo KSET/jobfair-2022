@@ -459,6 +459,7 @@ model CompanyApplication {
   workshop      ApplicationWorkshop?
   wantsPanel    Boolean
   wantsCocktail Boolean
+  wantsQuest    Boolean              @default(false)
   /// @TypeGraphQL.omit(input: true)
   createdAt     DateTime             @default(now())
   /// @TypeGraphQL.omit(input: true)
@@ -568,6 +569,7 @@ model CompanyApplicationApproval {
   workshopParticipants Int
   panel                Boolean
   cocktail             Boolean
+  quest                Boolean @default(false)
   logoHidden           Boolean @default(false)
 
   /// @TypeGraphQL.omit(output: true, input: true)

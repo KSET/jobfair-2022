@@ -162,6 +162,7 @@
     Workshop = "workshop",
     Cocktail = "cocktail",
     Panel = "panel",
+    Quest = "quest",
     Internship = "internship",
   }
 
@@ -170,6 +171,7 @@
     [FormFor.Talk]: "talkParticipants",
     [FormFor.Workshop]: "workshopParticipants",
     [FormFor.Cocktail]: "cocktail",
+    [FormFor.Quest]: "quest",
     [FormFor.Internship]: undefined,
   };
 

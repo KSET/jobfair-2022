@@ -87,6 +87,7 @@ fragment frag_CompanyApplication on CompanyApplication {
     booth
     wantsPanel
     wantsCocktail
+    wantsQuest
     contactPerson {
         name
         email
@@ -541,6 +542,7 @@ query AdminCompanyApplications($season: String!) {
     companyApplications(season: $season) {
         wantsCocktail
         wantsPanel
+        wantsQuest
         booth
         talk {
             language
@@ -694,12 +696,14 @@ query ProfileBaseData {
         booth
         wantsPanel
         wantsCocktail
+        wantsQuest
         approval {
             booth
             workshopParticipants
             talkParticipants
             panel
             cocktail
+            quest
         }
         userApplications {
             workshop

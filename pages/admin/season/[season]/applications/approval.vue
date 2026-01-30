@@ -35,6 +35,9 @@
               Cocktail
             </th>
             <th>
+              Quest
+            </th>
+            <th>
               Hide logo
             </th>
           </tr>
@@ -155,6 +158,7 @@
                 applications {
                     wantsPanel
                     wantsCocktail
+                    wantsQuest
                     booth
                     talk {
                         titleEn
@@ -175,6 +179,7 @@
                         workshopParticipants
                         panel
                         cocktail
+                        quest
                         logoHidden
                     }
                 }
@@ -292,6 +297,7 @@
               forInput("workshopParticipants", Inputs.Number, application.workshop),
               forInput("panel", Inputs.Checkbox, application.wantsPanel),
               forInput("cocktail", Inputs.Checkbox, application.wantsCocktail),
+              forInput("quest", Inputs.Checkbox, application.wantsQuest),
               forInput("logoHidden", Inputs.Checkbox, true, false),
             ]
         ,
@@ -305,6 +311,7 @@
             workshopParticipants
             panel
             cocktail
+            quest
             forApplication {
               forCompany {
                 uid

@@ -8,5 +8,6 @@ export const nameAliases: Record<keyof Omit<ICompanyApplicationApproval, "forApp
   workshopParticipants: "workshop",
   panel: "wantsPanel",
   cocktail: "wantsCocktail",
+  quest: "wantsQuest",
   booth: "booth",
 } as const;

@@ -220,6 +220,7 @@
     Workshop = "workshop",
     Cocktail = "cocktail",
     Panel = "panel",
+    Quest = "quest",
   }
 
   export default defineComponent({
@@ -336,6 +337,10 @@
               forms: null,
               selected: Boolean(application?.wantsPanel),
             },
+            [FormFor.Quest]: {
+              forms: null,
+              selected: Boolean(application?.wantsQuest),
+            },
           } as const,
         ),
       );
@@ -434,6 +439,7 @@
                 : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
+            wantsQuest: Boolean(selectedObj.quest),
           };
 
           if ("string" === typeof info.workshop?.presenter?.photo) {
@@ -457,6 +463,7 @@
                         }
                         wantsCocktail
                         wantsPanel
+                        wantsQuest
                     }
 
                     errors {

@@ -403,6 +403,7 @@ export type IApproveCompanyApplicationsInputParts = {
   cocktail: Scalars['Boolean']['input'];
   logoHidden: Scalars['Boolean']['input'];
   panel: Scalars['Boolean']['input'];
+  quest: Scalars['Boolean']['input'];
   talkParticipants: Scalars['Float']['input'];
   workshopParticipants: Scalars['Float']['input'];
 };
@@ -552,6 +553,7 @@ export type ICompanyApplication = {
   userApplications: IEventUserApplications;
   wantsCocktail: Scalars['Boolean']['output'];
   wantsPanel: Scalars['Boolean']['output'];
+  wantsQuest: Scalars['Boolean']['output'];
   workshop?: Maybe<IApplicationWorkshop>;
 };
 
@@ -561,6 +563,7 @@ export type ICompanyApplicationApproval = {
   forApplication: ICompanyApplication;
   logoHidden: Scalars['Boolean']['output'];
   panel: Scalars['Boolean']['output'];
+  quest: Scalars['Boolean']['output'];
   talkParticipants: Scalars['Int']['output'];
   workshopParticipants: Scalars['Int']['output'];
 };
@@ -622,6 +625,7 @@ export type ICompanyApplicationCreateInput = {
   vat: Scalars['String']['input'];
   wantsCocktail: Scalars['Boolean']['input'];
   wantsPanel: Scalars['Boolean']['input'];
+  wantsQuest: Scalars['Boolean']['input'];
   workshop?: InputMaybe<IWorkshopCreateInput>;
 };
 
@@ -688,6 +692,7 @@ export type ICompanyApplicationOrderByWithRelationInput = {
   talk?: InputMaybe<IApplicationTalkOrderByWithRelationInput>;
   wantsCocktail?: InputMaybe<ISortOrder>;
   wantsPanel?: InputMaybe<ISortOrder>;
+  wantsQuest?: InputMaybe<ISortOrder>;
   workshop?: InputMaybe<IApplicationWorkshopOrderByWithRelationInput>;
 };
 
@@ -702,7 +707,8 @@ export enum ICompanyApplicationScalarFieldEnum {
   PanelId = 'panelId',
   UpdatedAt = 'updatedAt',
   WantsCocktail = 'wantsCocktail',
-  WantsPanel = 'wantsPanel'
+  WantsPanel = 'wantsPanel',
+  WantsQuest = 'wantsQuest'
 }
 
 export type ICompanyApplicationWhereInput = {
@@ -720,6 +726,7 @@ export type ICompanyApplicationWhereInput = {
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<IBoolFilter>;
   wantsPanel?: InputMaybe<IBoolFilter>;
+  wantsQuest?: InputMaybe<IBoolFilter>;
   workshop?: InputMaybe<IApplicationWorkshopNullableRelationFilter>;
 };
 
@@ -739,6 +746,7 @@ export type ICompanyApplicationWhereUniqueInput = {
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<IBoolFilter>;
   wantsPanel?: InputMaybe<IBoolFilter>;
+  wantsQuest?: InputMaybe<IBoolFilter>;
   workshop?: InputMaybe<IApplicationWorkshopNullableRelationFilter>;
 };
 
@@ -4195,7 +4203,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_Company
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
-export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
@@ -4522,7 +4530,7 @@ export type IAdminCompanyApplicationQuery_booths_Booth = { name: string, key?: s
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IAdminCompanyApplicationQuery_Query = { talkCategories: Array<IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationQuery_booths_Booth>, companyApplicationFor?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication | null };
 
@@ -4557,7 +4565,7 @@ export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplicatio
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season = { uid: string };
 
-export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, booth?: string | null, talk?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_talk_ApplicationTalk | null, cocktail?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_cocktail_ApplicationCocktail | null, workshop?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_workshop_ApplicationWorkshop | null, forCompany?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company | null, forSeason?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season | null };
+export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, booth?: string | null, talk?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_talk_ApplicationTalk | null, cocktail?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_cocktail_ApplicationCocktail | null, workshop?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_workshop_ApplicationWorkshop | null, forCompany?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company | null, forSeason?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season | null };
 
 export type IAdminCompanyApplicationsQuery_Query = { industries: Array<IAdminCompanyApplicationsQuery_industries_Industry>, talkCategories: Array<IAdminCompanyApplicationsQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationsQuery_booths_Booth>, companyApplications?: Array<IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication> | null };
 
@@ -4575,7 +4583,7 @@ export type ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCo
 
 export type ICurrentCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, availableCocktailTypes: Array<ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCocktailType>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
 
@@ -4641,13 +4649,13 @@ export type IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk = { titleEn: string };
 
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, workshopParticipants: number, talkParticipants: number, panel: boolean, cocktail: boolean };
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, workshopParticipants: number, talkParticipants: number, panel: boolean, cocktail: boolean, quest: boolean };
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications = { workshop: number, talk: number };
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship = { position: string };
 
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications, internship?: IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship | null };
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications, internship?: IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship | null };
 
 export type IProfileBaseDataQuery_profile_User_resume_Resume = { uid: string };
 
@@ -4806,7 +4814,7 @@ export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_cr
 
 export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
 
-export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, talk?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
 
 export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
 
@@ -4830,9 +4838,9 @@ export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applica
 
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string };
 
-export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean, cocktail: boolean, logoHidden: boolean };
+export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean, cocktail: boolean, quest: boolean, logoHidden: boolean };
 
-export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication = { wantsPanel: boolean, wantsCocktail: boolean, booth?: string | null, talk?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_workshop_ApplicationWorkshop | null, forCompany?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_forCompany_Company | null, approval?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval | null };
+export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication = { wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, booth?: string | null, talk?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_workshop_ApplicationWorkshop | null, forCompany?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_forCompany_Company | null, approval?: IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval | null };
 
 export type IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season = { name: string, startsAt: string | Date, endsAt: string | Date, applications: Array<IPageAdminSeasonApplicationsApproval_BaseQuery_season_Season_applications_CompanyApplication> };
 
@@ -4850,7 +4858,7 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval_forApplication_CompanyApplication = { forCompany?: IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval_forApplication_CompanyApplication_forCompany_Company | null };
 
-export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean, cocktail: boolean, forApplication: IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval_forApplication_CompanyApplication };
+export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean, cocktail: boolean, quest: boolean, forApplication: IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval_forApplication_CompanyApplication };
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation = { approveCompanyApplications: Array<IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_approveCompanyApplications_CompanyApplicationApproval> };
 
@@ -5259,7 +5267,7 @@ export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyAppl
 
 export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, goal: string, notesEn: string, notesHr: string, presenters: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop_presenters_ApplicationPresenter> };
 
-export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, contactPerson?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null };
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null };
 
 export type IPageProfileMeCompanySignup_DataQuery_Query = { talkCategories: Array<IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IPageProfileMeCompanySignup_DataQuery_booths_Booth>, companyApplication?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication | null };
 
@@ -5273,7 +5281,7 @@ export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyA
 
 export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop = { uid: string };
 
-export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, talk?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
+export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, talk?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null };
 
 export type IPageProfileMeCompanySignup_CreateApplicationMutation_createCompanyApplication_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
 
@@ -6182,6 +6190,7 @@ export type ICompanyApplicationResolvers<ContextType = any, ParentType extends I
   userApplications?: Resolver<IResolversTypes['EventUserApplications'], ParentType, ContextType>;
   wantsCocktail?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   wantsPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  wantsQuest?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   workshop?: Resolver<Maybe<IResolversTypes['ApplicationWorkshop']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6192,6 +6201,7 @@ export type ICompanyApplicationApprovalResolvers<ContextType = any, ParentType e
   forApplication?: Resolver<IResolversTypes['CompanyApplication'], ParentType, ContextType>;
   logoHidden?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   panel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  quest?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   talkParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   workshopParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -7152,6 +7162,7 @@ export const Frag_CompanyApplication = gql`
   booth
   wantsPanel
   wantsCocktail
+  wantsQuest
   contactPerson {
     name
     email
@@ -8004,6 +8015,7 @@ export const AdminCompanyApplications = gql`
   companyApplications(season: $season) {
     wantsCocktail
     wantsPanel
+    wantsQuest
     booth
     talk {
       language
@@ -8164,12 +8176,14 @@ export const ProfileBaseData = gql`
     booth
     wantsPanel
     wantsCocktail
+    wantsQuest
     approval {
       booth
       workshopParticipants
       talkParticipants
       panel
       cocktail
+      quest
     }
     userApplications {
       workshop
@@ -8413,6 +8427,7 @@ export const PageAdminSeasonApplicationsCompanyEdit_UpsertApplication = gql`
       }
       wantsCocktail
       wantsPanel
+      wantsQuest
     }
     errors {
       field
@@ -8430,6 +8445,7 @@ export const PageAdminSeasonApplicationsApproval_Base = gql`
     applications {
       wantsPanel
       wantsCocktail
+      wantsQuest
       booth
       talk {
         titleEn
@@ -8450,6 +8466,7 @@ export const PageAdminSeasonApplicationsApproval_Base = gql`
         workshopParticipants
         panel
         cocktail
+        quest
         logoHidden
       }
     }
@@ -8464,6 +8481,7 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
     workshopParticipants
     panel
     cocktail
+    quest
     forApplication {
       forCompany {
         uid
@@ -8859,6 +8877,7 @@ export const PageProfileMeCompanySignup_Data = gql`
     booth
     wantsPanel
     wantsCocktail
+    wantsQuest
     contactPerson {
       name
       email
@@ -8925,6 +8944,7 @@ export const PageProfileMeCompanySignup_CreateApplication = gql`
       }
       wantsCocktail
       wantsPanel
+      wantsQuest
     }
     errors {
       field

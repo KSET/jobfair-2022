@@ -222,6 +222,7 @@
     Workshop = "workshop",
     Cocktail = "cocktail",
     Panel = "panel",
+    Quest = "quest",
   }
 
   export default defineComponent({
@@ -277,6 +278,7 @@
                   booth
                   wantsPanel
                   wantsCocktail
+                  wantsQuest
                   contactPerson {
                       name
                       email
@@ -399,6 +401,10 @@
               forms: null,
               selected: Boolean(resp?.companyApplication?.wantsPanel),
             },
+            [FormFor.Quest]: {
+              forms: null,
+              selected: Boolean(resp?.companyApplication?.wantsQuest),
+            },
           } as const,
         ),
       );
@@ -466,6 +472,7 @@
                 : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
+            wantsQuest: Boolean(selectedObj.quest),
           };
 
           if ("string" === typeof info.workshop?.presenter?.photo) {
@@ -489,6 +496,7 @@
                   }
                   wantsCocktail
                   wantsPanel
+                  wantsQuest
                 }
 
                 errors {

@@ -58,6 +58,11 @@
           <strong>Paneli</strong>
           <data :value="statistics.panels" v-text="statistics.panels" />
         </div>
+
+        <div>
+          <strong>Quest</strong>
+          <data :value="statistics.quests" v-text="statistics.quests" />
+        </div>
       </div>
       <DataTable
         ref="dt"
@@ -140,6 +145,12 @@
             <span v-else>-</span>
           </template>
         </Column>
+        <Column field="wantsQuest" header="Quest" sortable>
+          <template #body="{ data }">
+            <i v-if="data.wantsQuest" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
         <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
           <template #body="{ data }">
             <NuxtLink
@@ -182,6 +193,10 @@
             </div>
             <div v-if="data.wantsPanel" :class="$style.expansionRow">
               <strong>Panel:</strong>
+              <span>Yes</span>
+            </div>
+            <div v-if="data.wantsQuest" :class="$style.expansionRow">
+              <strong>Quest:</strong>
               <span>Yes</span>
             </div>
           </div>
@@ -279,6 +294,7 @@
         workshops: 0,
         panels: 0,
         cocktails: 0,
+        quests: 0,
       };
       for (const application of unref(companyApplications) ?? []) {
         const {
@@ -287,6 +303,7 @@
           workshop,
           wantsPanel,
           wantsCocktail,
+          wantsQuest,
           forCompany: company,
         } = application;
 
@@ -310,6 +327,10 @@
 
         if (wantsPanel) {
           statistics.panels += 1;
+        }
+
+        if (wantsQuest) {
+          statistics.quests += 1;
         }
       }
       statistics.company.byIndustry = sortObject((_a, _b, a, b) => b - a, statistics.company.byIndustry);

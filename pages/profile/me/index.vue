@@ -259,6 +259,14 @@
                   <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
                 </em>
               </li>
+              <li v-if="companyApplication.wantsQuest">
+                <strong>
+                  <translated-text trans-key="profile.company.quest" />
+                </strong>
+                <em>
+                  <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+                </em>
+              </li>
             </ul>
           </template>
           <template v-else-if="applicationsOpen">
@@ -385,6 +393,14 @@
               <li v-if="companyApplication.approval.cocktail">
                 <strong>
                   <translated-text trans-key="profile.company.cocktail" />
+                </strong>
+                <em>
+                  <i class="pi pi-check" />
+                </em>
+              </li>
+              <li v-if="companyApplication.approval.quest">
+                <strong>
+                  <translated-text trans-key="profile.company.quest" />
                 </strong>
                 <em>
                   <i class="pi pi-check" />
@@ -635,6 +651,14 @@
             <li v-if="companyApplication.wantsCocktail">
               <strong>
                 <translated-text trans-key="profile.company.cocktail" />
+              </strong>
+              <em>
+                <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />
+              </em>
+            </li>
+            <li v-if="companyApplication.wantsQuest">
+              <strong>
+                <translated-text trans-key="profile.company.quest" />
               </strong>
               <em>
                 <translated-text trans-key="profile.company.interested" />&nbsp;<i class="pi pi-check" />

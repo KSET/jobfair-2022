@@ -67,6 +67,9 @@ class ApproveCompanyApplicationsInputParts {
     panel: boolean = false;
 
   @Field()
+    quest: boolean = false;
+
+  @Field()
     talkParticipants: number = 0;
 
   @Field()

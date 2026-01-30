@@ -377,6 +377,9 @@ class CompanyApplicationCreateInput {
 
   @Field(() => Boolean)
     wantsPanel: boolean = false;
+
+  @Field(() => Boolean)
+    wantsQuest: boolean = false;
 }
 
 @InputType()
@@ -784,6 +787,7 @@ export class CompanyApplicationAdminResolver {
         talk: Boolean(info.talk),
         cocktail: info.wantsCocktail,
         panel: info.wantsPanel,
+        quest: info.wantsQuest,
       } as const;
 
       if (!oldApplication) {
@@ -795,6 +799,7 @@ export class CompanyApplicationAdminResolver {
             booth: info.booth,
             wantsPanel: info.wantsPanel,
             wantsCocktail: info.wantsCocktail,
+            wantsQuest: info.wantsQuest,
             talk: {
               create:
                 info.talk
@@ -914,6 +919,7 @@ export class CompanyApplicationAdminResolver {
           booth: info.booth,
           wantsPanel: info.wantsPanel,
           wantsCocktail: info.wantsCocktail,
+          wantsQuest: info.wantsQuest,
           talk:
             info.talk
               ? {
@@ -1395,6 +1401,7 @@ export class CompanyApplicationCreateResolver {
         talk: Boolean(info.talk),
         cocktail: info.wantsCocktail,
         panel: info.wantsPanel,
+        quest: info.wantsQuest,
       } as const;
 
       if (!oldApplication) {
@@ -1406,6 +1413,7 @@ export class CompanyApplicationCreateResolver {
             booth: info.booth,
             wantsPanel: info.wantsPanel,
             wantsCocktail: info.wantsCocktail,
+            wantsQuest: info.wantsQuest,
             talk: {
               create:
                 info.talk
@@ -1540,6 +1548,7 @@ export class CompanyApplicationCreateResolver {
           booth: info.booth,
           wantsPanel: info.wantsPanel,
           wantsCocktail: info.wantsCocktail,
+          wantsQuest: info.wantsQuest,
           talk:
             info.talk
               ? {

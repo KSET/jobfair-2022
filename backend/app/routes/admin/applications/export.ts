@@ -101,6 +101,7 @@ router.getRaw("/", async (req, res) => {
       },
       wantsPanel: true,
       wantsCocktail: true,
+      wantsQuest: true,
     },
 
     where: {
@@ -194,6 +195,7 @@ router.getRaw("/", async (req, res) => {
       ]).flat(),
       { header: "Panel", key: "panel" },
       { header: "King of Cocktails", key: "cocktail" },
+      { header: "Quest", key: "quest" },
     ];
     for (const application of applications) {
       const {
@@ -203,6 +205,7 @@ router.getRaw("/", async (req, res) => {
         workshop,
         wantsPanel,
         wantsCocktail,
+        wantsQuest,
       } = application;
       const [
         contact = {
@@ -248,6 +251,7 @@ router.getRaw("/", async (req, res) => {
         ),
         panel: "Ne",
         cocktail: "Ne",
+        quest: "Ne",
       });
 
       row.height = IMAGE_SIZE;
@@ -316,6 +320,10 @@ router.getRaw("/", async (req, res) => {
 
       if (wantsCocktail) {
         row.getCell("cocktail").value = "Da";
+      }
+
+      if (wantsQuest) {
+        row.getCell("quest").value = "Da";
       }
     }
 

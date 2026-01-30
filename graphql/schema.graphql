@@ -343,6 +343,7 @@ input ApproveCompanyApplicationsInputParts {
   cocktail: Boolean!
   logoHidden: Boolean!
   panel: Boolean!
+  quest: Boolean!
   talkParticipants: Float!
   workshopParticipants: Float!
 }
@@ -492,6 +493,7 @@ type CompanyApplication {
   userApplications: EventUserApplications!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
+  wantsQuest: Boolean!
   workshop: ApplicationWorkshop
 }
 
@@ -501,6 +503,7 @@ type CompanyApplicationApproval {
   forApplication: CompanyApplication!
   logoHidden: Boolean!
   panel: Boolean!
+  quest: Boolean!
   talkParticipants: Int!
   workshopParticipants: Int!
 }
@@ -557,6 +560,7 @@ input CompanyApplicationCreateInput {
   vat: String!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
+  wantsQuest: Boolean!
   workshop: WorkshopCreateInput
 }
 
@@ -623,6 +627,7 @@ input CompanyApplicationOrderByWithRelationInput {
   talk: ApplicationTalkOrderByWithRelationInput
   wantsCocktail: SortOrder
   wantsPanel: SortOrder
+  wantsQuest: SortOrder
   workshop: ApplicationWorkshopOrderByWithRelationInput
 }
 
@@ -638,6 +643,7 @@ enum CompanyApplicationScalarFieldEnum {
   updatedAt
   wantsCocktail
   wantsPanel
+  wantsQuest
 }
 
 input CompanyApplicationWhereInput {
@@ -655,6 +661,7 @@ input CompanyApplicationWhereInput {
   talk: ApplicationTalkNullableRelationFilter
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
+  wantsQuest: BoolFilter
   workshop: ApplicationWorkshopNullableRelationFilter
 }
 
@@ -674,6 +681,7 @@ input CompanyApplicationWhereUniqueInput {
   talk: ApplicationTalkNullableRelationFilter
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
+  wantsQuest: BoolFilter
   workshop: ApplicationWorkshopNullableRelationFilter
 }
 

@@ -85,9 +85,17 @@
           :collapsed="item.forms ? !item.selected : true"
         >
           <template #header>
-            <strong>
-              <translated-text :trans-key="`company-signup.form.${name}`" />
-            </strong>
+            <div>
+              <strong>
+                <translated-text :trans-key="`company-signup.form.${name}`" />
+              </strong>
+              <p
+                v-if="!item.forms"
+                :class="$style.itemDescription"
+              >
+                <translated-text :trans-key="`company-signup.form.${name}.description`" />
+              </p>
+            </div>
 
             <!-- <Checkbox v-model="item.selected" binary disabled /> -->
             <Checkbox
@@ -690,6 +698,13 @@
           grid-column: initial;
         }
       }
+    }
+
+    .itemDescription {
+      font-size: .875rem;
+      margin: 0;
+      padding: .5rem 1rem;
+      opacity: .8;
     }
   }
 </style>

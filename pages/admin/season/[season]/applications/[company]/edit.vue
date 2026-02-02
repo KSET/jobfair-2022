@@ -198,10 +198,12 @@
   } from "~/store/talkCategories";
   import {
     companyApplicationContactPersonCreate,
+    companyApplicationFusionCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     type ContactPerson,
+    type Fusion,
     type Presenter,
     type Talk,
     type Workshop,
@@ -218,6 +220,7 @@
   enum FormFor {
     Talk = "talk",
     Workshop = "workshop",
+    Fusion = "fusion",
     Cocktail = "cocktail",
     Panel = "panel",
     Quest = "quest",
@@ -329,6 +332,21 @@
               },
               selected: Boolean(application?.workshop),
             },
+            [FormFor.Fusion]: {
+              forms: {
+                info: companyApplicationFusionCreate(
+                  application?.fusion,
+                )({
+                  requireHr,
+                }),
+                presenter: companyApplicationPresenterCreate(
+                  application?.fusion?.presenters[0],
+                )({
+                  requireHr,
+                }),
+              },
+              selected: Boolean(application?.fusion),
+            },
             [FormFor.Cocktail]: {
               forms: null,
               selected: Boolean(application?.wantsCocktail),
@@ -437,6 +455,14 @@
                   presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),
                 }
                 : null,
+            fusion:
+              selectedObj.fusion
+                ? {
+                  // @ts-ignore
+                  ...toData<Fusion>(selectedObj.fusion.forms!.info),
+                  presenter: toData<Presenter>(selectedObj.fusion.forms!.presenter),
+                }
+                : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
             wantsQuest: Boolean(selectedObj.quest),
@@ -450,6 +476,10 @@
             delete info.talk.presenter.photo;
           }
 
+          if ("string" === typeof info.fusion?.presenter?.photo) {
+            delete info.fusion.presenter.photo;
+          }
+
           isLoading.value = true;
           const resp = await useMutation(graphql(/* GraphQL */`
             mutation PageAdminSeasonApplicationsCompanyEdit_UpsertApplication($company: String!, $season: String!, $info: CompanyApplicationCreateInput!) {
@@ -459,6 +489,9 @@
                             uid
                         }
                         workshop {
+                            uid
+                        }
+                        fusion {
                             uid
                         }
                         wantsCocktail

@@ -75,6 +75,52 @@ input ApplicationCocktailWhereInput {
   name: StringFilter
 }
 
+type ApplicationFusion {
+  _count: ApplicationFusionCount
+  category: ApplicationTalkCategory
+  createdAt: DateTimeISO!
+  descriptionEn: String!
+  descriptionHr: String!
+  event: CalendarItem
+  language: String!
+  presenters: [ApplicationPresenter!]!
+  reservation: Float!
+  titleEn: String!
+  titleHr: String!
+  uid: String!
+  updatedAt: DateTimeISO!
+}
+
+type ApplicationFusionCount {
+  presenters(where: ApplicationPresenterWhereInput): Int!
+}
+
+input ApplicationFusionNullableRelationFilter {
+  is: ApplicationFusionWhereInput
+  isNot: ApplicationFusionWhereInput
+}
+
+input ApplicationFusionOrderByWithRelationInput {
+  descriptionEn: SortOrder
+  descriptionHr: SortOrder
+  event: CalendarItemOrderByWithRelationInput
+  language: SortOrder
+  titleEn: SortOrder
+  titleHr: SortOrder
+}
+
+input ApplicationFusionWhereInput {
+  AND: [ApplicationFusionWhereInput!]
+  NOT: [ApplicationFusionWhereInput!]
+  OR: [ApplicationFusionWhereInput!]
+  descriptionEn: StringFilter
+  descriptionHr: StringFilter
+  event: CalendarItemNullableRelationFilter
+  language: StringFilter
+  titleEn: StringFilter
+  titleHr: StringFilter
+}
+
 type ApplicationInternship {
   company: Company
   competencies: String!
@@ -157,6 +203,7 @@ type ApplicationPresenter {
 }
 
 type ApplicationPresenterCount {
+  forFusions(where: ApplicationFusionWhereInput): Int!
   forPanels(where: CompanyApplicationWhereInput): Int!
   forTalks(where: ApplicationTalkWhereInput): Int!
   forWorkshops(where: ApplicationWorkshopWhereInput): Int!
@@ -206,6 +253,7 @@ type ApplicationTalkCategory {
 }
 
 type ApplicationTalkCategoryCount {
+  fusions(where: ApplicationFusionWhereInput): Int!
   talks(where: ApplicationTalkWhereInput): Int!
 }
 
@@ -381,6 +429,7 @@ type CalendarItem {
   capacity: Int!
   companies: [Company!]
   end: DateTimeISO!
+  forFusion: ApplicationFusion
   forPanel: CompanyPanel
   forTalk: ApplicationTalk
   forWorkshop: ApplicationWorkshop
@@ -486,6 +535,7 @@ type CompanyApplication {
   feedback: CompanyApplicationFeedback
   forCompany: Company
   forSeason: Season
+  fusion: ApplicationFusion
   internship: ApplicationInternship
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
@@ -501,6 +551,7 @@ type CompanyApplicationApproval {
   booth: Boolean!
   cocktail: Boolean!
   forApplication: CompanyApplication!
+  fusionParticipants: Int!
   logoHidden: Boolean!
   panel: Boolean!
   quest: Boolean!
@@ -510,6 +561,7 @@ type CompanyApplicationApproval {
 
 input CompanyApplicationApprovedEditInput {
   cocktail: CocktailChooseInput
+  fusion: FusionsCreateInput
   internship: InternshipCreateInput
   panel: [PresenterCreateInput!]!
   talk: TalksCreateInput
@@ -556,6 +608,7 @@ type CompanyApplicationCount {
 input CompanyApplicationCreateInput {
   booth: String
   contactPerson: CompanyApplicationContactPersonCreateInput!
+  fusion: FusionCreateInput
   talk: TalkCreateInput
   vat: String!
   wantsCocktail: Boolean!
@@ -621,6 +674,7 @@ input CompanyApplicationOrderByWithRelationInput {
   contactPerson: CompanyApplicationContactPersonOrderByWithRelationInput
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
+  fusion: ApplicationFusionOrderByWithRelationInput
   internship: ApplicationInternshipOrderByWithRelationInput
   panel: CompanyPanelOrderByWithRelationInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
@@ -655,6 +709,7 @@ input CompanyApplicationWhereInput {
   contactPerson: CompanyApplicationContactPersonNullableRelationFilter
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
+  fusion: ApplicationFusionNullableRelationFilter
   internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
@@ -675,6 +730,7 @@ input CompanyApplicationWhereUniqueInput {
   forCompany: CompanyRelationFilter
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
   forSeason: SeasonRelationFilter
+  fusion: ApplicationFusionNullableRelationFilter
   internship: ApplicationInternshipNullableRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
@@ -755,6 +811,7 @@ input CompanyPanelWhereInput {
 type CompanyProgram {
   booth: String
   cocktail: ApplicationCocktail
+  fusion: ApplicationFusion
   internship: ApplicationInternship
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
@@ -1002,6 +1059,7 @@ input EventReservationWhereInput {
 }
 
 enum EventType {
+  fusion
   hotTalk
   other
   panel
@@ -1010,6 +1068,7 @@ enum EventType {
 }
 
 type EventUserApplications {
+  fusion: Int!
   talk: Int!
   workshop: Int!
 }
@@ -1076,6 +1135,26 @@ input FloatFilter {
   lte: Float
   not: NestedFloatFilter
   notIn: [Float!]
+}
+
+input FusionCreateInput {
+  category: String!
+  descriptionEn: String!
+  descriptionHr: String!
+  language: String!
+  presenter: PresenterCreateInput!
+  titleEn: String!
+  titleHr: String!
+}
+
+input FusionsCreateInput {
+  category: String!
+  descriptionEn: String!
+  descriptionHr: String!
+  language: String!
+  presenter: [PresenterCreateInput!]!
+  titleEn: String!
+  titleHr: String!
 }
 
 type GalleryImage {

@@ -841,7 +841,9 @@ input EventReservationWhereInput {
 }
 
 enum EventType {
+  fusion
   hotTalk
+  other
   panel
   talk
   workshop

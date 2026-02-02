@@ -197,10 +197,12 @@
   } from "~/store/user";
   import {
     companyApplicationContactPersonCreate,
+    companyApplicationFusionCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     type ContactPerson,
+    type Fusion,
     type Presenter,
     type Talk,
     type Workshop,
@@ -228,6 +230,7 @@
   enum FormFor {
     Talk = "talk",
     Workshop = "workshop",
+    Fusion = "fusion",
     Cocktail = "cocktail",
     Panel = "panel",
     Quest = "quest",
@@ -338,6 +341,29 @@
                           }
                       }
                   }
+                  fusion {
+                      titleEn
+                      titleHr
+                      descriptionEn
+                      descriptionHr
+                      language
+                      category {
+                          name
+                      }
+                      presenters {
+                          firstName
+                          lastName
+                          bioHr
+                          bioEn
+                          photo {
+                            name
+                            uid
+                            full {
+                              mimeType
+                            }
+                          }
+                      }
+                  }
               }
           }
         `),
@@ -400,6 +426,22 @@
                 }),
               },
               selected: Boolean(resp?.companyApplication?.workshop),
+            },
+            [FormFor.Fusion]: {
+              forms: {
+                info: companyApplicationFusionCreate(
+                  resp?.companyApplication?.fusion,
+                )({
+                  requireHr,
+                  categories: talkCategoriesStore.talkCategories,
+                }),
+                presenter: companyApplicationPresenterCreate(
+                  resp?.companyApplication?.fusion?.presenters[0],
+                )({
+                  requireHr,
+                }),
+              },
+              selected: Boolean(resp?.companyApplication?.fusion),
             },
             [FormFor.Cocktail]: {
               forms: null,
@@ -478,6 +520,15 @@
                   presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),
                 }
                 : null,
+            fusion:
+              selectedObj.fusion
+                ? {
+
+                  // @ts-ignore
+                  ...toData<Fusion>(selectedObj.fusion.forms!.info),
+                  presenter: toData<Presenter>(selectedObj.fusion.forms!.presenter),
+                }
+                : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
             wantsQuest: Boolean(selectedObj.quest),
@@ -491,6 +542,10 @@
             delete info.talk.presenter.photo;
           }
 
+          if ("string" === typeof info.fusion?.presenter?.photo) {
+            delete info.fusion.presenter.photo;
+          }
+
           isLoading.value = true;
           const resp = await useMutation(graphql(`
             mutation PageProfileMeCompanySignup_CreateApplication($info: CompanyApplicationCreateInput!) {
@@ -500,6 +555,9 @@
                     uid
                   }
                   workshop {
+                    uid
+                  }
+                  fusion {
                     uid
                   }
                   wantsCocktail

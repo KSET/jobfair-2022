@@ -82,6 +82,24 @@
           type="workshop"
         />
       </fieldset>
+
+      <fieldset
+        v-if="participant.program?.fusion"
+        :class="{
+          [$style.missingItem] : !participant.program.fusion.event,
+        }"
+      >
+        <legend>
+          Fusion
+        </legend>
+
+        <EditScheduleItemFor
+          v-model:item="participant.program.fusion.event"
+          :for-uid="participant.program.fusion.uid"
+          :season="season.uid"
+          type="fusion"
+        />
+      </fieldset>
     </fieldset>
   </app-max-width-container>
 </template>
@@ -167,6 +185,7 @@
           ...unref(participants).flatMap((p) => [
             p.program?.talk?.event?.uid,
             p.program?.workshop?.event?.uid,
+            p.program?.fusion?.event?.uid,
           ]),
           resp.season?.panel?.event?.uid,
         ].filter((x) => x),

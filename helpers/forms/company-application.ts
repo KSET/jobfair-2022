@@ -6,6 +6,7 @@ import {
 } from "~/helpers/type";
 import {
   type IApplicationCocktail,
+  type IApplicationFusion,
   type IApplicationInternship,
   type IApplicationPresenter,
   type IApplicationTalk,
@@ -214,6 +215,59 @@ export const companyApplicationWorkshopCreate =
           type: "textarea" as const,
           required: false,
           placeholder: "Napomene za studente. Npr. donesite laptope s instaliranim NodeJS. Opis se koristi za promociju prema studentima te se ovim tekstom obraćate izravno studentu.",
+        },
+      })
+;
+
+export type Fusion = Omit<IApplicationFusion,
+  "_count"
+  | "forCompanyId"
+  | "presenters"
+  | "categoryId"
+  | "createdAt"
+  | "updatedAt"
+  | "event"
+  | "reservation"
+  | "uid">
+  ;
+export const companyApplicationFusionCreate =
+  <T extends Fusion>(fusion?: T | null) =>
+    (
+      {
+        requireHr = false,
+        categories = [] as string[],
+      } = {},
+    ): Record<keyof Fusion, InputEntry> =>
+      ({
+        titleEn: {
+          value: fusion?.titleEn || "",
+          type: "text" as const,
+        },
+        titleHr: {
+          value: fusion?.titleHr || "",
+          type: "text" as const,
+          required: requireHr,
+        },
+        descriptionEn: {
+          value: fusion?.descriptionEn || "",
+          type: "textarea" as const,
+          placeholder: "This description is used in promotions towards students hence You should address the student directly.",
+        },
+        descriptionHr: {
+          value: fusion?.descriptionHr || "",
+          type: "textarea" as const,
+          required: requireHr,
+          placeholder: "Opis se koristi za promociju prema studentima te se ovim tekstom obraćate izravno studentu.",
+        },
+        category: {
+          value: fusion?.category?.name || categories[0] || "",
+          type: "dropdown" as const,
+          options: categories.map((x) => ({ label: x, value: x })),
+        },
+        language: {
+          value: fusion?.language || Language.HR,
+          type: "dropdown" as const,
+          options: Object.entries(Language).map(([ label, value ]) => ({ label, value })),
         },
       })
 ;

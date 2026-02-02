@@ -110,6 +110,14 @@ export const CalendarFragment = graphql(/* GraphQL */ `
             descriptionEn
             reservation
         }
+        forFusion {
+            uid
+            titleHr
+            titleEn
+            descriptionHr
+            descriptionEn
+            reservation
+        }
         forPanel {
             uid
             name
@@ -167,6 +175,7 @@ export const useCalendarStore = defineStore("calendar", {
             type TEvent = NonNullable<
               | ICalendarItem["forWorkshop"]
               | ICalendarItem["forTalk"]
+              | ICalendarItem["forFusion"]
               | ICalendarItem["forPanel"]
             >;
             const [
@@ -183,6 +192,8 @@ export const useCalendarStore = defineStore("calendar", {
                   return EventType.Workshop;
                 case "forTalk":
                   return EventType.Talk;
+                case "forFusion":
+                  return EventType.Fusion;
                 case "forPanel":
                   return EventType.Panel;
               }

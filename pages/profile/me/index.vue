@@ -243,6 +243,12 @@
                 </strong>
                 <em v-text="companyApplication.workshop.titleEn" />
               </li>
+              <li v-if="companyApplication.fusion">
+                <strong>
+                  <translated-text trans-key="profile.company.fusion" />
+                </strong>
+                <em v-text="companyApplication.fusion.titleEn" />
+              </li>
               <li v-if="companyApplication.wantsPanel">
                 <strong>
                   <translated-text trans-key="profile.company.panel" />
@@ -379,6 +385,15 @@
                 </strong>
                 <em>
                   {{ companyApplication.approval.workshopParticipants }}
+                  <translated-text trans-key="profile.company.talk.participants" />
+                </em>
+              </li>
+              <li v-if="companyApplication.approval.fusionParticipants">
+                <strong>
+                  <translated-text trans-key="profile.company.fusion" />
+                </strong>
+                <em>
+                  {{ companyApplication.approval.fusionParticipants }}
                   <translated-text trans-key="profile.company.talk.participants" />
                 </em>
               </li>
@@ -557,6 +572,11 @@
                     <translated-text trans-key="profile.company.workshop" />
                   </strong>:&nbsp;<span v-text="companyComponentAverageRatings.workshop ?? 'N/A'" /> / 10
                 </li>
+                <li v-if="companyApplication.approval.fusionParticipants">
+                  <strong>
+                    <translated-text trans-key="profile.company.fusion" />
+                  </strong>:&nbsp;<span v-text="companyComponentAverageRatings.fusion ?? 'N/A'" /> / 10
+                </li>
               </ul>
             </div>
             <div :class="$style.itemActions">
@@ -639,6 +659,12 @@
                 <translated-text trans-key="profile.company.workshop" />
               </strong>
               <em v-text="companyApplication.workshop.titleEn" />
+            </li>
+            <li v-if="companyApplication.fusion">
+              <strong>
+                <translated-text trans-key="profile.company.fusion" />
+              </strong>
+              <em v-text="companyApplication.fusion.titleEn" />
             </li>
             <li v-if="companyApplication.wantsPanel">
               <strong>

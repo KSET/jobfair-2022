@@ -8,6 +8,7 @@ import {
 import {
   ApplicationTalk,
   ApplicationWorkshop,
+  ApplicationFusion,
   ApplicationPresenter,
   CompanyApplicationApproval,
   CompanyPanel,
@@ -27,6 +28,9 @@ import {
 import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
+import {
+  transformSelect as transformSelectFusion,
+} from "./companyApplicationFusion";
 import {
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
@@ -50,6 +54,9 @@ export class CompanyProgram {
 
   @Field(() => ApplicationWorkshop, { nullable: true })
     workshop: ApplicationWorkshop | null = null;
+
+  @Field(() => ApplicationFusion, { nullable: true })
+    fusion: ApplicationFusion | null = null;
 
   @Field(() => ApplicationCocktail, { nullable: true })
     cocktail: ApplicationCocktail | null = null;
@@ -100,6 +107,13 @@ export class CompanyProgramFieldResolver {
     @Root() program: CompanyProgram,
   ): GQLField<ApplicationWorkshop, "nullable"> {
     return approved(program?.workshop, "workshopParticipants", program);
+  }
+
+  @FieldResolver(() => ApplicationFusion, { nullable: true })
+  fusion(
+    @Root() program: CompanyProgram,
+  ): GQLField<ApplicationFusion, "nullable"> {
+    return approved(program?.fusion, "fusionParticipants" as keyof CompanyApplicationApproval, program);
   }
 
   @FieldResolver(() => ApplicationCocktail, { nullable: true })
@@ -198,6 +212,15 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
     select.applications.select.approval.select.workshopParticipants = true;
 
     delete select.workshop;
+  }),
+
+  fusion: withApplications((select) => {
+    select.applications.select.fusion = {
+      select: transformSelectFusion(select.fusion as Dict),
+    };
+    select.applications.select.approval.select.fusionParticipants = true;
+
+    delete select.fusion;
   }),
 
   cocktail: withApplications((select) => {

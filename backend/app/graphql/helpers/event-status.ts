@@ -5,6 +5,7 @@ import {
 export enum EventType {
   workshop = "workshop",
   talk = "talk",
+  fusion = "fusion",
   panel = "panel",
   hotTalk = "hot-talk",
   other = "other",
@@ -74,6 +75,7 @@ export const getParticipantCapacityFor =
       case EventType.workshop:
         return 50;
       case EventType.talk:
+      case EventType.fusion:
       case EventType.panel:
         return 50;
       default:

@@ -73,6 +73,7 @@ export const getParticipantCapacityFor =
       case EventType.Workshop:
         return 15;
       case EventType.Talk:
+      case EventType.Fusion:
       case EventType.Panel:
       case EventType.HotTalk:
         return 50;

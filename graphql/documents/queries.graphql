@@ -119,6 +119,19 @@ fragment frag_CompanyApplication on CompanyApplication {
             ...frag_ApplicationPresenter
         }
     }
+    fusion {
+        titleEn
+        titleHr
+        descriptionEn
+        descriptionHr
+        language
+        category {
+            name
+        }
+        presenters {
+            ...frag_ApplicationPresenter
+        }
+    }
     cocktail {
         name
         type{
@@ -137,6 +150,7 @@ fragment frag_CompanyApplication on CompanyApplication {
         panel
         talkParticipants
         workshopParticipants
+        fusionParticipants
         booth
     }
     feedback {
@@ -316,6 +330,33 @@ query CompanyInfo($uid: String!) {
                 language
                 notesHr
                 notesEn
+                reservation
+                presenters {
+                    firstName
+                    lastName
+                    bioHr
+                    bioEn
+                    photo {
+                        thumbUrl
+                        fullUrl
+                    }
+                }
+                event {
+                    start
+                    end
+                    location
+                }
+            }
+            fusion {
+                uid
+                titleHr
+                titleEn
+                descriptionHr
+                descriptionEn
+                language
+                category {
+                    name
+                }
                 reservation
                 presenters {
                     firstName
@@ -561,6 +602,13 @@ query AdminCompanyApplications($season: String!) {
             language
             titleEn
         }
+        fusion {
+            language
+            titleEn
+            category {
+                name
+            }
+        }
         forCompany {
             uid
             brandName
@@ -693,6 +741,12 @@ query ProfileBaseData {
         talk {
             titleEn
         }
+        fusion {
+            titleEn
+            category {
+                name
+            }
+        }
         booth
         wantsPanel
         wantsCocktail
@@ -701,6 +755,7 @@ query ProfileBaseData {
             booth
             workshopParticipants
             talkParticipants
+            fusionParticipants
             panel
             cocktail
             quest
@@ -708,6 +763,7 @@ query ProfileBaseData {
         userApplications {
             workshop
             talk
+            fusion
         }
         internship {
             position
@@ -730,6 +786,14 @@ query ProfileBaseData {
             reservation
         }
         forTalk {
+            uid
+            titleHr
+            titleEn
+            descriptionHr
+            descriptionEn
+            reservation
+        }
+        forFusion {
             uid
             titleHr
             titleEn
@@ -784,6 +848,19 @@ query PageAdminSeasonScheduleBase($seasonUid: String!) {
                 }
             }
             workshop {
+                uid
+                event {
+                    uid
+                    type
+                    title
+                    start
+                    end
+                    location
+                    text
+                    grouped
+                }
+            }
+            fusion {
                 uid
                 event {
                     uid

@@ -193,6 +193,58 @@
             </div>
           </TabPanel>
 
+          <TabPanel v-if="programItems.fusion">
+            <template #header>
+              <translated-text trans-key="company.info.program.fusion" />
+            </template>
+
+            <div v-if="programItems.fusion.event" :class="$style.itemHeader">
+              <event-info-display :event="{ ...programItems.fusion.event!, type: EventType.Fusion }" />
+              <p-button
+                v-if="loggedIn"
+                :class="{
+                  [$style.signupButton]: !programItems.fusion.reservation,
+                  [$style.signoffButton]: programItems.fusion.reservation,
+                }"
+                :loading="signupLoading"
+                @click="handleSignup('fusion')"
+              >
+                <translated-text v-if="programItems.fusion.reservation" trans-key="company.event.user.sign-off" />
+                <translated-text v-else trans-key="company.event.user.sign-up" />
+              </p-button>
+              <nuxt-link v-else :to="joinNowRoute">
+                <p-button
+                  :class="$style.signupButton"
+                >
+                  <translated-text trans-key="company.event.user.sign-up" />
+                </p-button>
+              </nuxt-link>
+            </div>
+
+            <h3 :class="$style.itemTitle" v-text="translateFor(programItems.fusion, 'title')" />
+
+            <p :class="$style.itemDescription" v-text="translateFor(programItems.fusion, 'description')" />
+
+            <h4>
+              <translated-text trans-key="company.info.program.about-presenters" />
+            </h4>
+            <div
+              v-for="presenter in programItems.fusion.presenters"
+              :key="presenter.photo.fullUrl"
+              :class="$style.presenter"
+            >
+              <h5 :class="$style.presenterName" v-text="`${presenter.firstName} ${presenter.lastName}`" />
+              <app-img
+                :alt="`${presenter.firstName} ${presenter.lastName}`"
+                :class="$style.presenterPhoto"
+                :lazy-src="presenter.photo.thumbUrl"
+                :src="presenter.photo.fullUrl"
+                cover
+              />
+              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
+            </div>
+          </TabPanel>
+
           <TabPanel v-if="programItems.panel">
             <template #header>
               <translated-text trans-key="company.info.program.panel" />
@@ -401,7 +453,7 @@
       const company = computed(() => companyStore.companyInfo!);
 
       type TCompanyProgram = NonNullable<NonNullable<typeof companyStore.companyInfo>["program"]>;
-      type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "panel");
+      type TReservableEntryName = keyof TCompanyProgram & ("talk" | "workshop" | "fusion" | "panel");
 
       const programItemsEmpty = {} as Partial<TCompanyProgram>;
       const programItems = computed(() => filterObject(Boolean, unref(company)?.program ?? programItemsEmpty) as Partial<TCompanyProgram>);
@@ -410,6 +462,7 @@
         [
           "talk",
           "workshop",
+          "fusion",
           "panel",
           "internship",
         ]
@@ -460,6 +513,15 @@
             const item = unref(programItems).workshop;
             if (item) {
               info.title = `[Workshop] ${ brandName }: ${ unref(translationsStore.translateFor(item, "title")) }`;
+              info.description = unref(translationsStore.translateFor(item, "description"));
+            }
+            break;
+          }
+
+          case "fusion": {
+            const item = unref(programItems).fusion;
+            if (item) {
+              info.title = `[Fusion] ${ brandName }: ${ unref(translationsStore.translateFor(item, "title")) }`;
               info.description = unref(translationsStore.translateFor(item, "description"));
             }
             break;
@@ -571,6 +633,8 @@
                 return EventType.Talk;
               case "workshop":
                 return EventType.Workshop;
+              case "fusion":
+                return EventType.Fusion;
               case "panel":
                 return EventType.Panel;
             }

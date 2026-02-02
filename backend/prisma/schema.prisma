@@ -457,6 +457,7 @@ model CompanyApplication {
   booth         String?
   talk          ApplicationTalk?
   workshop      ApplicationWorkshop?
+  fusion        ApplicationFusion?
   wantsPanel    Boolean
   wantsCocktail Boolean
   wantsQuest    Boolean              @default(false)
@@ -567,6 +568,7 @@ model CompanyApplicationApproval {
   booth                Boolean
   talkParticipants     Int
   workshopParticipants Int
+  fusionParticipants   Int     @default(0)
   panel                Boolean
   cocktail             Boolean
   quest                Boolean @default(false)
@@ -606,13 +608,44 @@ model ApplicationTalk {
   event CalendarItem?
 }
 
+model ApplicationFusion {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id             Int                     @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid            String                  @unique @default(cuid())
+  titleEn        String
+  titleHr        String
+  descriptionEn  String
+  descriptionHr  String
+  /// @TypeGraphQL.omit(input: true)
+  presenters     ApplicationPresenter[]
+  language       String
+  /// @TypeGraphQL.omit(input: true)
+  category       ApplicationTalkCategory @relation("FusionCategories", fields: [categoryId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  categoryId     Int
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication      @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(input: true)
+  createdAt      DateTime                @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt      DateTime                @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int @unique
+
+  event CalendarItem?
+}
+
 model ApplicationTalkCategory {
   /// @TypeGraphQL.omit(output: true, input: true)
   id   Int    @id @default(autoincrement())
   name String
 
   /// @TypeGraphQL.omit(input: true)
-  talks ApplicationTalk[]
+  talks   ApplicationTalk[]
+  /// @TypeGraphQL.omit(input: true)
+  fusions ApplicationFusion[] @relation("FusionCategories")
 
   forSeason   Season? @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
@@ -666,14 +699,14 @@ model ApplicationInternship {
   /// @TypeGraphQL.omit(input: true)
   uid String @unique @default(cuid())
 
-  position      String
-  description   String
-  competencies  String
+  position           String
+  description        String
+  competencies       String
   workingPeriodStart DateTime
-  workingPeriodEnd DateTime
-  duration      String
-  
-  url      String
+  workingPeriodEnd   DateTime
+  duration           String
+
+  url String
 
   /// @TypeGraphQL.omit(input: true)
   forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
@@ -703,6 +736,8 @@ model ApplicationPresenter {
   forTalks     ApplicationTalk[]
   /// @TypeGraphQL.omit(input: true)
   forWorkshops ApplicationWorkshop[]
+  /// @TypeGraphQL.omit(input: true)
+  forFusions   ApplicationFusion[]
   /// @TypeGraphQL.omit(output: true, input: true)
   forPanels    CompanyApplication[]
 
@@ -909,6 +944,11 @@ model CalendarItem {
   forPanel   CompanyPanel? @relation(fields: [forPanelId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forPanelId Int?          @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forFusion   ApplicationFusion? @relation(fields: [forFusionId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forFusionId Int?               @unique
 }
 
 model EventReservation {

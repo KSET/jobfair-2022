@@ -99,6 +99,29 @@ router.getRaw("/", async (req, res) => {
           },
         },
       },
+      fusion: {
+        select: {
+          titleEn: true,
+          titleHr: true,
+          descriptionEn: true,
+          descriptionHr: true,
+          language: true,
+          presenters: {
+            select: {
+              firstName: true,
+              lastName: true,
+              bioEn: true,
+              bioHr: true,
+              photo: {
+                select: {
+                  uid: true,
+                  full: true,
+                },
+              },
+            },
+          },
+        },
+      },
       wantsPanel: true,
       wantsCocktail: true,
       wantsQuest: true,
@@ -131,6 +154,10 @@ router.getRaw("/", async (req, res) => {
 
         if (app.workshop) {
           ret.push(...app.workshop.presenters.map((x) => x.photo!));
+        }
+
+        if (app.fusion) {
+          ret.push(...app.fusion.presenters.map((x) => x.photo!));
         }
 
         return ret;
@@ -167,6 +194,7 @@ router.getRaw("/", async (req, res) => {
     const IMAGE_SIZE = 80 as const;
     const MAX_PRESENTERS_TALK = Math.max(...applications.map((x) => x.talk?.presenters.length || 0));
     const MAX_PRESENTERS_WORKSHOP = Math.max(...applications.map((x) => x.workshop?.presenters.length || 0));
+    const MAX_PRESENTERS_FUSION = Math.max(...applications.map((x) => x.fusion?.presenters.length || 0));
 
     worksheet.columns = [
       { header: "Naziv poduzeća", key: "brandName" },
@@ -193,6 +221,13 @@ router.getRaw("/", async (req, res) => {
         { header: `Workshop predavać bio ${ i + 1 }`, key: `workshopPresenterBio${ i }` },
         { header: `Workshop predavać slika ${ i + 1 }`, key: `workshopPresenterImage${ i }`, width: IMAGE_SIZE / 6 },
       ]).flat(),
+      { header: "Fusion naslov", key: "fusionTitle" },
+      { header: "Fusion opis", key: "fusionDescription" },
+      ...Array.from({ length: MAX_PRESENTERS_FUSION }, (_, i) => [
+        { header: `Fusion predavać ime ${ i + 1 }`, key: `fusionPresenterName${ i }` },
+        { header: `Fusion predavać bio ${ i + 1 }`, key: `fusionPresenterBio${ i }` },
+        { header: `Fusion predavać slika ${ i + 1 }`, key: `fusionPresenterImage${ i }`, width: IMAGE_SIZE / 6 },
+      ]).flat(),
       { header: "Panel", key: "panel" },
       { header: "King of Cocktails", key: "cocktail" },
       { header: "Quest", key: "quest" },
@@ -203,6 +238,7 @@ router.getRaw("/", async (req, res) => {
         booth,
         talk,
         workshop,
+        fusion,
         wantsPanel,
         wantsCocktail,
         wantsQuest,
@@ -247,6 +283,15 @@ router.getRaw("/", async (req, res) => {
             [ `workshopPresenterName${ i }`, "" ],
             [ `workshopPresenterBio${ i }`, "" ],
             [ `workshopPresenterImage${ i }`, "" ],
+          ] as const).flat(),
+        ),
+        fusionTitle: "",
+        fusionDescription: "",
+        ...Object.fromEntries(
+          Array.from({ length: MAX_PRESENTERS_FUSION }, (_, i) => [
+            [ `fusionPresenterName${ i }`, "" ],
+            [ `fusionPresenterBio${ i }`, "" ],
+            [ `fusionPresenterImage${ i }`, "" ],
           ] as const).flat(),
         ),
         panel: "Ne",
@@ -309,6 +354,19 @@ router.getRaw("/", async (req, res) => {
           row.getCell(`workshopPresenterBio${ i }`).value = "hr_HR" === workshop.language ? presenter.bioHr : presenter.bioEn;
           addImage(
             `workshopPresenterImage${ i }`,
+            presenter.photo,
+          );
+        });
+      }
+
+      if (fusion) {
+        row.getCell("fusionTitle").value = "hr_HR" === fusion.language ? fusion.titleHr : fusion.titleEn;
+        row.getCell("fusionDescription").value = "hr_HR" === fusion.language ? fusion.descriptionHr : fusion.descriptionEn;
+        fusion.presenters.forEach((presenter, i) => {
+          row.getCell(`fusionPresenterName${ i }`).value = `${ presenter.firstName } ${ presenter.lastName }`;
+          row.getCell(`fusionPresenterBio${ i }`).value = "hr_HR" === fusion.language ? presenter.bioHr : presenter.bioEn;
+          addImage(
+            `fusionPresenterImage${ i }`,
             presenter.photo,
           );
         });

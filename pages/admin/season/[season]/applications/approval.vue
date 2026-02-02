@@ -29,6 +29,9 @@
               Workshop
             </th>
             <th>
+              Fusion
+            </th>
+            <th>
               Panel
             </th>
             <th>
@@ -168,6 +171,10 @@
                         titleEn
                         titleHr
                     }
+                    fusion {
+                        titleEn
+                        titleHr
+                    }
                     forCompany {
                         uid
                         legalName
@@ -177,6 +184,7 @@
                         booth
                         talkParticipants
                         workshopParticipants
+                        fusionParticipants
                         panel
                         cocktail
                         quest
@@ -295,6 +303,7 @@
               forInput("booth", Inputs.Checkbox, application.booth),
               forInput("talkParticipants", Inputs.Number, application.talk),
               forInput("workshopParticipants", Inputs.Number, application.workshop),
+              forInput("fusionParticipants", Inputs.Number, application.fusion),
               forInput("panel", Inputs.Checkbox, application.wantsPanel),
               forInput("cocktail", Inputs.Checkbox, application.wantsCocktail),
               forInput("quest", Inputs.Checkbox, application.wantsQuest),
@@ -309,6 +318,7 @@
             booth
             talkParticipants
             workshopParticipants
+            fusionParticipants
             panel
             cocktail
             quest

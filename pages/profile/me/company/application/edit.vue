@@ -124,10 +124,12 @@
   } from "~/store/user";
   import {
     companyApplicationCocktailCreate,
+    companyApplicationFusionCreate,
     companyApplicationInternshipCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
+    type Fusion,
     type Presenter,
     type Talk,
     type Workshop,
@@ -160,6 +162,7 @@
   enum FormFor {
     Talk = "talk",
     Workshop = "workshop",
+    Fusion = "fusion",
     Cocktail = "cocktail",
     Panel = "panel",
     Quest = "quest",
@@ -170,6 +173,7 @@
     [FormFor.Panel]: "panel",
     [FormFor.Talk]: "talkParticipants",
     [FormFor.Workshop]: "workshopParticipants",
+    [FormFor.Fusion]: "fusionParticipants",
     [FormFor.Cocktail]: "cocktail",
     [FormFor.Quest]: "quest",
     [FormFor.Internship]: undefined,
@@ -287,6 +291,29 @@
               )
           ,
         }),
+        [FormFor.Fusion]: form({
+          info: companyApplicationFusionCreate(
+            companyApplication.fusion ?? null,
+          )({
+            requireHr,
+            categories: talkCategoriesStore.talkCategories,
+          }),
+          presenter:
+            extendTo(
+              companyApplication.fusion?.presenters,
+              approval?.fusionParticipants || 1,
+            )
+              .map(
+                (p) =>
+                  companyApplicationPresenterCreate(
+                    p,
+                  )({
+                    requireHr,
+                  })
+                ,
+              )
+          ,
+        }),
         [FormFor.Cocktail]: form({
           info: companyApplicationCocktailCreate(
             companyApplication.cocktail,
@@ -377,6 +404,13 @@
                   presenter: items[FormFor.Workshop].forms.presenter?.map((p) => toData<Presenter>(p)),
                 }
                 : null,
+            fusion:
+              items[FormFor.Fusion]
+                ? {
+                  ...toData<Fusion>(items[FormFor.Fusion].forms.info),
+                  presenter: items[FormFor.Fusion].forms.presenter?.map((p) => toData<Presenter>(p)),
+                }
+                : null,
             cocktail:
               items[FormFor.Cocktail]
                 ? toData(items[FormFor.Cocktail].forms.info)
@@ -407,6 +441,12 @@
 
           for (const presenter of (info[FormFor.Workshop]?.presenter || [])) {
             if ("string" === typeof presenter.photo) {
+              delete presenter.photo;
+            }
+          }
+
+          for (const presenter of (info[FormFor.Fusion]?.presenter || [])) {
+            if ("string" === typeof presenter?.photo) {
               delete presenter.photo;
             }
           }

@@ -1,4 +1,5 @@
 import {
+  ApplicationFusion,
   ApplicationTalk,
   ApplicationWorkshop,
   CalendarItem,
@@ -61,6 +62,9 @@ import {
   transformSelect as transformSelectPanel,
 } from "./companyPanel";
 import {
+  transformSelect as transformSelectFusion,
+} from "./companyApplicationFusion";
+import {
   transformSelect as transformSelectCompany,
 } from "./company";
 
@@ -89,6 +93,7 @@ export class CalendarItemFieldResolver {
     return Boolean(
       calendarItem.forTalkId
       || calendarItem.forWorkshopId
+      || calendarItem.forFusionId
       || calendarItem.forPanelId
       ,
     );
@@ -103,6 +108,8 @@ export class CalendarItemFieldResolver {
         return EventType.talk;
       } else if (calendarItem.forWorkshopId) {
         return EventType.workshop;
+      } else if (calendarItem.forFusionId) {
+        return EventType.fusion;
       } else if (calendarItem.forPanelId) {
         return EventType.panel;
       }
@@ -131,6 +138,13 @@ export class CalendarItemFieldResolver {
     return calendarItem.forTalk;
   }
 
+  @FieldResolver(() => ApplicationFusion, { nullable: true })
+  forFusion(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<ApplicationFusion, "nullable"> {
+    return calendarItem.forFusion;
+  }
+
   @FieldResolver(() => CompanyPanel, { nullable: true })
   forPanel(
     @Root() calendarItem: CalendarItem,
@@ -145,6 +159,7 @@ export class CalendarItemFieldResolver {
     return firstDefinedAsArray([
       calendarItem.forTalk?.forApplication?.forCompany,
       calendarItem.forWorkshop?.forApplication?.forCompany,
+      calendarItem.forFusion?.forApplication?.forCompany,
       calendarItem.forPanel?.companies?.map((company) => company.forCompany).filter(Boolean),
     ]);
   }
@@ -157,6 +172,7 @@ export class CalendarItemFieldResolver {
       calendarItem.title
       || calendarItem.forTalk?.forApplication?.forCompany?.brandName
       || calendarItem.forWorkshop?.forApplication?.forCompany?.brandName
+      || calendarItem.forFusion?.forApplication?.forCompany?.brandName
       || calendarItem.forPanel?.companies?.map((company) => company.forCompany?.brandName).filter((x) => x).join(", ")
       || ""
     );
@@ -170,6 +186,7 @@ export class CalendarItemFieldResolver {
       calendarItem.title
       || calendarItem.forTalk?.titleHr
       || calendarItem.forWorkshop?.titleHr
+      || calendarItem.forFusion?.titleHr
       || calendarItem.forPanel?.name
       || ""
     );
@@ -197,6 +214,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
   capacity(select) {
     select.forTalkId = true;
     select.forWorkshopId = true;
+    select.forFusionId = true;
     select.forPanelId = true;
 
     delete select.capacity;
@@ -220,6 +238,19 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
         },
       },
       forWorkshop: {
+        select: {
+          forApplication: {
+            select: {
+              forCompany: {
+                select: {
+                  brandName: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      forFusion: {
         select: {
           forApplication: {
             select: {
@@ -264,6 +295,12 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
           titleHr: true,
         },
       },
+      forFusion: {
+        select: {
+          titleEn: true,
+          titleHr: true,
+        },
+      },
       forPanel: {
         select: {
           name: true,
@@ -277,6 +314,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
   hasEvent(select) {
     select.forTalkId = true;
     select.forWorkshopId = true;
+    select.forFusionId = true;
     select.forPanelId = true;
 
     delete select.hasEvent;
@@ -288,6 +326,8 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
 
   forTalk: forItemSelect("forTalk", () => transformSelectTalk),
 
+  forFusion: forItemSelect("forFusion", () => transformSelectFusion),
+
   forPanel: forItemSelect("forPanel", () => transformSelectPanel),
 
   companies(select) {
@@ -295,6 +335,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
 
     select = set(select, "forTalk.select.forApplication.select.forCompany.select", transformed);
     select = set(select, "forWorkshop.select.forApplication.select.forCompany.select", transformed);
+    select = set(select, "forFusion.select.forApplication.select.forCompany.select", transformed);
     select = set(select, "forPanel.select.companies.select.forCompany.select", transformed);
 
     delete select.companies;
@@ -406,6 +447,20 @@ export class CalendarItemInfoResolver {
             },
           },
         },
+
+        forFusion: {
+          select: {
+            forApplication: {
+              select: {
+                forCompany: {
+                  select: {
+                    uid: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
 
       where: {
@@ -413,7 +468,7 @@ export class CalendarItemInfoResolver {
       },
     });
 
-    return item?.forTalk?.forApplication.forCompany.uid || item?.forWorkshop?.forApplication.forCompany.uid || item?.forPanel?.companies?.find((x) => x.forCompany.uid)?.forCompany.uid;
+    return item?.forTalk?.forApplication.forCompany.uid || item?.forWorkshop?.forApplication.forCompany.uid || item?.forFusion?.forApplication.forCompany.uid || item?.forPanel?.companies?.find((x) => x.forCompany.uid)?.forCompany.uid;
   }
 
   @Query(() => [ CalendarItem ])
@@ -515,6 +570,16 @@ export class CalendarUpdateResolver {
 
       case "workshop": {
         (data as Dict).forWorkshop = {
+          connect: {
+            uid: input.forUid!,
+          },
+        };
+
+        break;
+      }
+
+      case "fusion": {
+        (data as Dict).forFusion = {
           connect: {
             uid: input.forUid!,
           },

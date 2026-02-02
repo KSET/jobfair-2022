@@ -13,6 +13,7 @@ import {
 export enum CalendarType {
   Talk = "talk",
   Workshop = "workshop",
+  Fusion = "fusion",
   HotTalk = "hot-talk",
   Panel = "panel",
   LoosenUp = "loosen-up",
@@ -22,6 +23,7 @@ export enum CalendarType {
 const calendarTypeLabels: Record<CalendarType, string> = {
   [CalendarType.HotTalk]: "Hot Talk",
   [CalendarType.Talk]: "Talk",
+  [CalendarType.Fusion]: "Fusion",
   [CalendarType.LoosenUp]: "Loosen Up",
   [CalendarType.Panel]: "Panel",
   [CalendarType.Workshop]: "Workshop",
@@ -34,6 +36,7 @@ type CalendarItem = Omit<ICalendarItem,
   | "uid"
   | "forWorkshop"
   | "forTalk"
+  | "forFusion"
   | "forPanel"
   | "hasEvent"
   | "companies"

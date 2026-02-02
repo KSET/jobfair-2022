@@ -50,6 +50,11 @@
         </div>
 
         <div>
+          <strong>Fusioni</strong>
+          <data :value="statistics.fusions" v-text="statistics.fusions" />
+        </div>
+
+        <div>
           <strong>Kokteli</strong>
           <data :value="statistics.cocktails" v-text="statistics.cocktails" />
         </div>
@@ -133,6 +138,12 @@
             <span v-else>-</span>
           </template>
         </Column>
+        <Column field="fusion.titleEn" header="Fusion">
+          <template #body="{ data }">
+            <i v-if="data.fusion" class="pi pi-check" />
+            <span v-else>-</span>
+          </template>
+        </Column>
         <Column field="wantsCocktail" header="Cocktail" sortable>
           <template #body="{ data }">
             <i v-if="data.wantsCocktail" class="pi pi-check" />
@@ -182,6 +193,10 @@
             <div v-if="data.workshop" :class="$style.expansionRow">
               <strong>Workshop:</strong>
               <em v-text="data.workshop.titleEn" />
+            </div>
+            <div v-if="data.fusion" :class="$style.expansionRow">
+              <strong>Fusion:</strong>
+              <em v-text="data.fusion.titleEn" />
             </div>
             <div v-if="data.wantsCocktail" :class="$style.expansionRow">
               <strong>Cocktail:</strong>
@@ -292,6 +307,7 @@
         booths: Object.fromEntries((res?.booths || []).filter((b) => b.key).map((b) => [ b.key, 0 ])) as Record<string, number>,
         talks: Object.fromEntries((res?.talkCategories || []).map((c) => [ c.name, 0 ])),
         workshops: 0,
+        fusions: 0,
         panels: 0,
         cocktails: 0,
         quests: 0,
@@ -301,6 +317,7 @@
           booth,
           talk,
           workshop,
+          fusion,
           wantsPanel,
           wantsCocktail,
           wantsQuest,
@@ -319,6 +336,10 @@
 
         if (workshop) {
           statistics.workshops += 1;
+        }
+
+        if (fusion) {
+          statistics.fusions += 1;
         }
 
         if (wantsCocktail) {

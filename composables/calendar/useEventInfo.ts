@@ -86,6 +86,11 @@ export const useEventInfo = (event: TCalendarEvent) => {
         break;
       }
 
+      case IEventType.Fusion: {
+        base.icon = EventIconTalk;
+        break;
+      }
+
       case IEventType.Panel: {
         base.icon = EventIconPanel;
         break;

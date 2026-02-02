@@ -6,6 +6,7 @@ import {
 export const nameAliases: Record<keyof Omit<ICompanyApplicationApproval, "forApplication" | "logoHidden">, keyof ICompanyApplication> = {
   talkParticipants: "talk",
   workshopParticipants: "workshop",
+  fusionParticipants: "fusion",
   panel: "wantsPanel",
   cocktail: "wantsCocktail",
   quest: "wantsQuest",

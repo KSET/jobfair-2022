@@ -19,6 +19,7 @@ import {
   ApplicationPresenter,
   ApplicationTalk,
   ApplicationWorkshop,
+  ApplicationFusion,
   Company,
   CompanyApplication,
   CompanyApplicationApproval,
@@ -98,6 +99,11 @@ import {
   WorkshopsCreateInput,
 } from "./companyApplicationWorkshop";
 import {
+  FusionCreateInput,
+  FusionsCreateInput,
+  transformSelect as transformSelectFusions,
+} from "./companyApplicationFusion";
+import {
   transformSelect as transformSelectCompany,
 } from "./company";
 import {
@@ -143,6 +149,9 @@ export class EventUserApplications {
 
   @Field(() => Int)
     talk?: number;
+
+  @Field(() => Int)
+    fusion?: number;
 }
 
 @Resolver(() => CompanyApplication)
@@ -166,6 +175,13 @@ export class CompanyApplicationFieldResolver {
     @Root() application: CompanyApplication,
   ): ApplicationWorkshop | null {
     return application.workshop || null;
+  }
+
+  @FieldResolver(() => ApplicationFusion, { nullable: true })
+  fusion(
+    @Root() application: CompanyApplication,
+  ): ApplicationFusion | null {
+    return application.fusion || null;
   }
 
   @FieldResolver(() => Company, { nullable: true })
@@ -232,6 +248,14 @@ export class CompanyApplicationFieldResolver {
           id: true,
         },
       }),
+      ctx.prisma.applicationFusion.findFirst({
+        where: {
+          forApplicationId: application.id,
+        },
+        select: {
+          id: true,
+        },
+      }),
     ] as const);
 
     const ids = entries.map((x) => Number(x?.id || -1));
@@ -254,6 +278,7 @@ export class CompanyApplicationFieldResolver {
     return {
       workshop: summed.workshop ?? 0,
       talk: summed.talk ?? 0,
+      fusion: summed.fusion ?? 0,
     };
   }
 
@@ -285,6 +310,14 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
   workshop(select) {
     select.workshop = {
       select: transformSelectWorkshops(select.workshop as Record<string, unknown>),
+    };
+
+    return select;
+  },
+
+  fusion(select) {
+    select.fusion = {
+      select: transformSelectFusions(select.fusion as Record<string, unknown>),
     };
 
     return select;
@@ -372,6 +405,9 @@ class CompanyApplicationCreateInput {
   @Field(() => WorkshopCreateInput, { nullable: true })
     workshop: WorkshopCreateInput | null = null;
 
+  @Field(() => FusionCreateInput, { nullable: true })
+    fusion: FusionCreateInput | null = null;
+
   @Field(() => Boolean)
     wantsCocktail: boolean = false;
 
@@ -392,6 +428,9 @@ class CompanyApplicationApprovedEditInput {
 
   @Field(() => WorkshopsCreateInput, { nullable: true })
     workshop: WorkshopsCreateInput | null = null;
+
+  @Field(() => FusionsCreateInput, { nullable: true })
+    fusion: FusionsCreateInput | null = null;
 
   @Field(() => CocktailChooseInput, { nullable: true })
     cocktail: CocktailChooseInput | null = null;
@@ -658,6 +697,22 @@ export class CompanyApplicationAdminResolver {
               },
             },
           },
+
+          fusion: {
+            select: {
+              id: true,
+              presenters: {
+                select: {
+                  id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -781,10 +836,71 @@ export class CompanyApplicationAdminResolver {
         }
       }
 
+      let fusionPresenter;
+      if (info.fusion) {
+        fusionPresenter = {
+          ...info.fusion.presenter,
+          photo: {
+            connect: {
+              id: 0,
+            },
+          },
+        };
+
+        const photoFile = await info.fusion.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype)
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "fusion.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/fusion/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "fusion.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          fusionPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.fusion?.presenters[0].photo) {
+          fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "fusion.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
+      }
+
       const chosen = {
         booth: booths.find((booth) => booth.key === info.booth)?.name,
         workshop: Boolean(info.workshop),
         talk: Boolean(info.talk),
+        fusion: Boolean(info.fusion),
         cocktail: info.wantsCocktail,
         panel: info.wantsPanel,
         quest: info.wantsQuest,
@@ -846,6 +962,33 @@ export class CompanyApplicationAdminResolver {
                   : undefined
               ,
             },
+            fusion: {
+              create:
+                info.fusion
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -868,6 +1011,16 @@ export class CompanyApplicationAdminResolver {
               },
             },
             talk: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+                category: true,
+              },
+            },
+            fusion: {
               include: {
                 presenters: {
                   include: {
@@ -1016,6 +1169,62 @@ export class CompanyApplicationAdminResolver {
                 },
               }
               : deleteIf(oldApplication.workshop),
+          fusion:
+            info.fusion
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      deleteMany: oldApplication.fusion
+                        ? {
+                          id: {
+                            in: oldApplication.fusion?.presenters?.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.fusion),
           forCompany: {
             connect: {
               vat: info.vat,
@@ -1048,6 +1257,15 @@ export class CompanyApplicationAdminResolver {
               category: true,
             },
           },
+          fusion: {
+            include: {
+              presenters: {
+                include: {
+                  photo: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -1055,6 +1273,7 @@ export class CompanyApplicationAdminResolver {
         void EventsService.logEvent(
           "admin:company-application:update",
           ctx.user!.id,
+          // @ts-ignore
           {
             vat: company.vat,
             chosen,
@@ -1126,7 +1345,7 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
-    const canPickPanelOrCocktail = Boolean(info.talk || info.workshop || info.booth);
+    const canPickPanelOrCocktail = Boolean(info.talk || info.workshop || info.fusion || info.booth);
 
     if (!canPickPanelOrCocktail && (info.wantsCocktail || info.wantsPanel)) {
       return {
@@ -1272,6 +1491,22 @@ export class CompanyApplicationCreateResolver {
               },
             },
           },
+
+          fusion: {
+            select: {
+              id: true,
+              presenters: {
+                select: {
+                  id: true,
+                  photo: {
+                    select: {
+                      id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -1395,10 +1630,71 @@ export class CompanyApplicationCreateResolver {
         }
       }
 
+      let fusionPresenter;
+      if (info.fusion) {
+        fusionPresenter = {
+          ...info.fusion.presenter,
+          photo: {
+            connect: {
+              id: 0,
+            },
+          },
+        };
+
+        const photoFile = await info.fusion.presenter.photo;
+
+        if (photoFile) {
+          if (
+            !photoMimeTypes.has(photoFile?.mimetype)
+            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
+          ) {
+            return {
+              errors: [
+                {
+                  field: "fusion.presenter.photo",
+                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                },
+              ],
+            };
+          }
+
+          const photo = await ImageService.uploadImage(
+            `company/${ info.vat }/fusion/presenters` as ImageBase,
+            photoFile,
+            ctx.user!,
+          );
+
+          if (!photo) {
+            return {
+              errors: [
+                {
+                  field: "fusion.presenter.photo",
+                  message: "Something went wrong",
+                },
+              ],
+            };
+          }
+
+          fusionPresenter.photo.connect.id = photo.id;
+        } else if (oldApplication?.fusion?.presenters[0].photo) {
+          fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
+        } else {
+          return {
+            errors: [
+              {
+                field: "fusion.presenter.photo",
+                message: "Photo is required",
+              },
+            ],
+          };
+        }
+      }
+
       const chosen = {
         booth: booths.find((booth) => booth.key === info.booth)?.name,
         workshop: Boolean(info.workshop),
         talk: Boolean(info.talk),
+        fusion: Boolean(info.fusion),
         cocktail: info.wantsCocktail,
         panel: info.wantsPanel,
         quest: info.wantsQuest,
@@ -1460,6 +1756,33 @@ export class CompanyApplicationCreateResolver {
                   : undefined
               ,
             },
+            fusion: {
+              create:
+                info.fusion
+                  ? {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -1491,6 +1814,16 @@ export class CompanyApplicationCreateResolver {
                 category: true,
               },
             },
+            fusion: {
+              include: {
+                presenters: {
+                  include: {
+                    photo: true,
+                  },
+                },
+                category: true,
+              },
+            },
           },
         });
 
@@ -1506,13 +1839,15 @@ export class CompanyApplicationCreateResolver {
                 ...chosen,
                 talk: entity.talk,
                 workshop: entity.workshop,
-              },
+                fusion: entity.fusion,
+              } as any,
             },
           );
 
           void EventsService.logEvent(
             "company-application:create",
             ctx.user!.id,
+            // @ts-ignore
             {
               vat: company.vat,
               chosen,
@@ -1645,6 +1980,62 @@ export class CompanyApplicationCreateResolver {
                 },
               }
               : deleteIf(oldApplication.workshop),
+          fusion:
+            info.fusion
+              ? {
+                upsert: {
+                  create: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  },
+                  update: {
+                    ...omit(
+                      [
+                        "presenter",
+                      ],
+                      info.fusion,
+                    ),
+                    category: {
+                      connect: {
+                        forSeasonId_name: {
+                          name: info.fusion.category,
+                          forSeasonId: currentSeason.id,
+                        },
+                      },
+                    },
+                    presenters: {
+                      deleteMany: oldApplication.fusion
+                        ? {
+                          id: {
+                            in: oldApplication.fusion?.presenters?.map((x) => x.id),
+                          },
+                        }
+                        : undefined,
+                      create: {
+                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
+                      },
+                    },
+                  },
+                },
+              }
+              : deleteIf(oldApplication.fusion),
           forCompany: {
             connect: {
               vat: info.vat,

@@ -50,6 +50,26 @@ export const companyApplicationContactPersonCreate =
     },
   });
 
+export type Signatory = {
+  fullName: string,
+  function: string,
+};
+
+export const companySignatoryCreate =
+  (signatory?: Signatory | null) =>
+  (): Record<keyof Signatory, InputEntry> => ({
+    fullName: {
+      value: signatory?.fullName || "",
+      type: "text" as const,
+      placeholder: "Marko Horvat",
+    },
+    function: {
+      value: signatory?.function || "",
+      type: "text" as const,
+      placeholder: "CEO",
+    },
+  });
+
 export type Presenter = Pick<IApplicationPresenter,
   "firstName"
   | "lastName"

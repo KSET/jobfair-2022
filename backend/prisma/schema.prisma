@@ -189,6 +189,25 @@ model Company {
   UserCompanyComponentRatings            UserCompanyComponentRating[]
   /// @TypeGraphQL.omit(output: true, input: true)
   UserCompanyComponentRatingAveragesView UserCompanyComponentRatingAveragesView[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  signatories CompanySignatory[]
+}
+
+model CompanySignatory {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id       Int      @id @default(autoincrement())
+  fullName String
+  function String
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  /// @TypeGraphQL.omit(input: true)
+  forCompany   Company @relation(fields: [forCompanyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forCompanyId Int
 }
 
 model Industry {

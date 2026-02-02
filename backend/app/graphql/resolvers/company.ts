@@ -16,6 +16,7 @@ import {
 import {
   Company,
   CompanyCreateInput,
+  CompanySignatory,
   File,
   FindManyCompanyArgs,
   Image,
@@ -89,6 +90,9 @@ import {
 import {
   UserCompanyComponentRatingComponentAverage
 } from "./userCompanyComponentRating";
+import {
+  transformSelect as transformSelectSignatory,
+} from "./companySignatory";
 
 const rasterLogoMimeTypes = new Set([
   "image/png",
@@ -164,6 +168,13 @@ export class CompanyFieldResolver {
     @Root() company: Company,
   ): GQLResponse<CompanyProgram, "nullable"> {
     return Promise.resolve(company.applications?.[0]);
+  }
+
+  @FieldResolver(() => [CompanySignatory])
+  signatories(
+    @Root() company: Company,
+  ): CompanySignatory[] {
+    return company.signatories || [];
   }
 
   @FieldResolver((_type) => Boolean)
@@ -251,6 +262,14 @@ export const transformSelect = transformSelectFor<CompanyFieldResolver>({
     delete select.program;
 
     Object.assign(select, result);
+
+    return select;
+  },
+
+  signatories(select) {
+    select.signatories = {
+      select: transformSelectSignatory(select.signatories as Dict),
+    };
 
     return select;
   },

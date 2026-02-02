@@ -518,6 +518,7 @@ type Company {
   program: CompanyProgram
   rasterLogo: Image
   ratings: [UserCompanyComponentRatingComponentAverage!]!
+  signatories: [CompanySignatory!]!
   uid: String!
   updatedAt: DateTimeISO!
   vat: String!
@@ -564,6 +565,7 @@ input CompanyApplicationApprovedEditInput {
   fusion: FusionsCreateInput
   internship: InternshipCreateInput
   panel: [PresenterCreateInput!]!
+  signatories: [CompanySignatoryCreateInput!]!
   talk: TalksCreateInput
   vat: String!
   workshop: WorkshopsCreateInput
@@ -609,6 +611,7 @@ input CompanyApplicationCreateInput {
   booth: String
   contactPerson: CompanyApplicationContactPersonCreateInput!
   fusion: FusionCreateInput
+  signatories: [CompanySignatoryCreateInput!]!
   talk: TalkCreateInput
   vat: String!
   wantsCocktail: Boolean!
@@ -749,6 +752,7 @@ type CompanyCount {
   members(where: UserWhereInput): Int!
   scannedResumes(where: ScannedResumeWhereInput): Int!
   scannedUsers(where: CompanyScannedUserWhereInput): Int!
+  signatories(where: CompanySignatoryWhereInput): Int!
 }
 
 input CompanyOrderByWithRelationInput {
@@ -881,6 +885,26 @@ input CompanyScannedUserWhereInput {
   isStarred: BoolFilter
   note: StringNullableFilter
   scannedAt: DateTimeFilter
+}
+
+type CompanySignatory {
+  createdAt: DateTimeISO!
+  fullName: String!
+  function: String!
+  updatedAt: DateTimeISO!
+}
+
+input CompanySignatoryCreateInput {
+  fullName: String!
+  function: String!
+}
+
+input CompanySignatoryWhereInput {
+  AND: [CompanySignatoryWhereInput!]
+  NOT: [CompanySignatoryWhereInput!]
+  OR: [CompanySignatoryWhereInput!]
+  fullName: StringFilter
+  function: StringFilter
 }
 
 input CompanyWhereInput {

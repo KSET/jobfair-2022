@@ -389,9 +389,21 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
 });
 
 @InputType()
+class CompanySignatoryCreateInput {
+  @Field()
+    fullName: string = "";
+
+  @Field()
+    function: string = "";
+}
+
+@InputType()
 class CompanyApplicationCreateInput {
   @Field()
     vat: string = "";
+
+  @Field(() => [CompanySignatoryCreateInput])
+    signatories: CompanySignatoryCreateInput[] = [];
 
   @Field(() => CompanyApplicationContactPersonCreateInput)
     contactPerson: CompanyApplicationContactPersonCreateInput = null as never;
@@ -422,6 +434,9 @@ class CompanyApplicationCreateInput {
 class CompanyApplicationApprovedEditInput {
   @Field()
     vat: string = "";
+
+  @Field(() => [CompanySignatoryCreateInput])
+    signatories: CompanySignatoryCreateInput[] = [];
 
   @Field(() => TalksCreateInput, { nullable: true })
     talk: TalksCreateInput | null = null;
@@ -906,6 +921,20 @@ export class CompanyApplicationAdminResolver {
         quest: info.wantsQuest,
       } as const;
 
+      // Update company signatories
+      await prisma.companySignatory.deleteMany({
+        where: {
+          forCompanyId: company.id,
+        },
+      });
+
+      await prisma.companySignatory.createMany({
+        data: info.signatories.map((sig) => ({
+          ...sig,
+          forCompanyId: company.id,
+        })),
+      });
+
       if (!oldApplication) {
         const entity = await prisma.companyApplication.create({
           data: {
@@ -1331,7 +1360,30 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
-    const fields = omit([ "vat", "contactPerson" ], info);
+    // Validate signatories count (1-5 required)
+    if (!info.signatories || info.signatories.length < 1) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "At least 1 signatory required",
+          },
+        ],
+      };
+    }
+
+    if (info.signatories.length > 5) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "Maximum 5 signatories allowed",
+          },
+        ],
+      };
+    }
+
+    const fields = omit([ "vat", "contactPerson", "signatories" ], info);
     const hasSomethingSelected = Object.values(fields).some(Boolean);
 
     if (!hasSomethingSelected) {
@@ -1699,6 +1751,20 @@ export class CompanyApplicationCreateResolver {
         panel: info.wantsPanel,
         quest: info.wantsQuest,
       } as const;
+
+      // Update company signatories
+      await prisma.companySignatory.deleteMany({
+        where: {
+          forCompanyId: company.id,
+        },
+      });
+
+      await prisma.companySignatory.createMany({
+        data: info.signatories.map((sig) => ({
+          ...sig,
+          forCompanyId: company.id,
+        })),
+      });
 
       if (!oldApplication) {
         const entity = await prisma.companyApplication.create({
@@ -2129,6 +2195,29 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
+    // Validate signatories count (1-5 required)
+    if (!info.signatories || info.signatories.length < 1) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "At least 1 signatory required",
+          },
+        ],
+      };
+    }
+
+    if (info.signatories.length > 5) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "Maximum 5 signatories allowed",
+          },
+        ],
+      };
+    }
+
     info.vat = info.vat.toUpperCase();
 
     const isInCompany = user.companies.some((company) => company.vat === info.vat);
@@ -2174,6 +2263,7 @@ export class CompanyApplicationCreateResolver {
 
     const company = await ctx.prisma.company.findFirst({
       select: {
+        id: true,
         applications: {
           select: {
             talk: {
@@ -2670,6 +2760,20 @@ export class CompanyApplicationCreateResolver {
         }
       }
     }
+
+    // Update company signatories
+    await ctx.prisma.companySignatory.deleteMany({
+      where: {
+        forCompanyId: company.id,
+      },
+    });
+
+    await ctx.prisma.companySignatory.createMany({
+      data: info.signatories.map((sig) => ({
+        ...sig,
+        forCompanyId: company.id,
+      })),
+    });
 
     const entity = await ctx.prisma.companyApplication.update({
       data,

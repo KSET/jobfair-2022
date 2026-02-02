@@ -593,6 +593,7 @@ export type ICompany = {
   program?: Maybe<ICompanyProgram>;
   rasterLogo?: Maybe<IImage>;
   ratings: Array<IUserCompanyComponentRatingComponentAverage>;
+  signatories: Array<ICompanySignatory>;
   uid: Scalars['String']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
   vat: Scalars['String']['output'];
@@ -639,6 +640,7 @@ export type ICompanyApplicationApprovedEditInput = {
   fusion?: InputMaybe<IFusionsCreateInput>;
   internship?: InputMaybe<IInternshipCreateInput>;
   panel: Array<IPresenterCreateInput>;
+  signatories: Array<ICompanySignatoryCreateInput>;
   talk?: InputMaybe<ITalksCreateInput>;
   vat: Scalars['String']['input'];
   workshop?: InputMaybe<IWorkshopsCreateInput>;
@@ -689,6 +691,7 @@ export type ICompanyApplicationCreateInput = {
   booth?: InputMaybe<Scalars['String']['input']>;
   contactPerson: ICompanyApplicationContactPersonCreateInput;
   fusion?: InputMaybe<IFusionCreateInput>;
+  signatories: Array<ICompanySignatoryCreateInput>;
   talk?: InputMaybe<ITalkCreateInput>;
   vat: Scalars['String']['input'];
   wantsCocktail: Scalars['Boolean']['input'];
@@ -829,6 +832,7 @@ export type ICompanyCount = {
   members: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
   scannedUsers: Scalars['Int']['output'];
+  signatories: Scalars['Int']['output'];
 };
 
 
@@ -864,6 +868,11 @@ export type ICompanyCountScannedResumesArgs = {
 
 export type ICompanyCountScannedUsersArgs = {
   where?: InputMaybe<ICompanyScannedUserWhereInput>;
+};
+
+
+export type ICompanyCountSignatoriesArgs = {
+  where?: InputMaybe<ICompanySignatoryWhereInput>;
 };
 
 export type ICompanyOrderByWithRelationInput = {
@@ -1001,6 +1010,26 @@ export type ICompanyScannedUserWhereInput = {
   isStarred?: InputMaybe<IBoolFilter>;
   note?: InputMaybe<IStringNullableFilter>;
   scannedAt?: InputMaybe<IDateTimeFilter>;
+};
+
+export type ICompanySignatory = {
+  createdAt: Scalars['DateTimeISO']['output'];
+  fullName: Scalars['String']['output'];
+  function: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type ICompanySignatoryCreateInput = {
+  fullName: Scalars['String']['input'];
+  function: Scalars['String']['input'];
+};
+
+export type ICompanySignatoryWhereInput = {
+  AND?: InputMaybe<Array<ICompanySignatoryWhereInput>>;
+  NOT?: InputMaybe<Array<ICompanySignatoryWhereInput>>;
+  OR?: InputMaybe<Array<ICompanySignatoryWhereInput>>;
+  fullName?: InputMaybe<IStringFilter>;
+  function?: InputMaybe<IStringFilter>;
 };
 
 export type ICompanyWhereInput = {
@@ -5405,7 +5434,11 @@ export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyAppl
 
 export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion = { titleEn: string, titleHr: string, descriptionEn: string, descriptionHr: string, language: string, category?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion_category_ApplicationTalkCategory | null, presenters: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion_presenters_ApplicationPresenter> };
 
-export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null };
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_forCompany_Company_signatories_CompanySignatory = { fullName: string, function: string };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_forCompany_Company = { signatories: Array<IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_forCompany_Company_signatories_CompanySignatory> };
+
+export type IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null, forCompany?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication_forCompany_Company | null };
 
 export type IPageProfileMeCompanySignup_DataQuery_Query = { talkCategories: Array<IPageProfileMeCompanySignup_DataQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IPageProfileMeCompanySignup_DataQuery_booths_Booth>, companyApplication?: IPageProfileMeCompanySignup_DataQuery_companyApplication_CompanyApplication | null };
 
@@ -5664,6 +5697,9 @@ export type IResolversTypes = {
   CompanyScannedUserListRelationFilter: ICompanyScannedUserListRelationFilter;
   CompanyScannedUserOrderByRelationAggregateInput: ICompanyScannedUserOrderByRelationAggregateInput;
   CompanyScannedUserWhereInput: ICompanyScannedUserWhereInput;
+  CompanySignatory: ResolverTypeWrapper<ICompanySignatory>;
+  CompanySignatoryCreateInput: ICompanySignatoryCreateInput;
+  CompanySignatoryWhereInput: ICompanySignatoryWhereInput;
   CompanyWhereInput: ICompanyWhereInput;
   CompanyWhereUniqueInput: ICompanyWhereUniqueInput;
   CreateCompanyApplicationResponse: ResolverTypeWrapper<ICreateCompanyApplicationResponse>;
@@ -5963,6 +5999,9 @@ export type IResolversParentTypes = {
   CompanyScannedUserListRelationFilter: ICompanyScannedUserListRelationFilter;
   CompanyScannedUserOrderByRelationAggregateInput: ICompanyScannedUserOrderByRelationAggregateInput;
   CompanyScannedUserWhereInput: ICompanyScannedUserWhereInput;
+  CompanySignatory: ICompanySignatory;
+  CompanySignatoryCreateInput: ICompanySignatoryCreateInput;
+  CompanySignatoryWhereInput: ICompanySignatoryWhereInput;
   CompanyWhereInput: ICompanyWhereInput;
   CompanyWhereUniqueInput: ICompanyWhereUniqueInput;
   CreateCompanyApplicationResponse: ICreateCompanyApplicationResponse;
@@ -6346,6 +6385,7 @@ export type ICompanyResolvers<ContextType = any, ParentType extends IResolversPa
   program?: Resolver<Maybe<IResolversTypes['CompanyProgram']>, ParentType, ContextType>;
   rasterLogo?: Resolver<Maybe<IResolversTypes['Image']>, ParentType, ContextType>;
   ratings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType>;
+  signatories?: Resolver<Array<IResolversTypes['CompanySignatory']>, ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   vat?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
@@ -6430,6 +6470,7 @@ export type ICompanyCountResolvers<ContextType = any, ParentType extends IResolv
   members?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountMembersArgs>>;
   scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountScannedResumesArgs>>;
   scannedUsers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountScannedUsersArgs>>;
+  signatories?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountSignatoriesArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -6475,6 +6516,14 @@ export type ICompanyScannedUserResolvers<ContextType = any, ParentType extends I
   note?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   scannedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   user?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ICompanySignatoryResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanySignatory'] = IResolversParentTypes['CompanySignatory']> = {
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  fullName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  function?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7170,6 +7219,7 @@ export type IResolvers<ContextType = any> = {
   CompanyProgram?: ICompanyProgramResolvers<ContextType>;
   CompanyScanUserQrResponse?: ICompanyScanUserQrResponseResolvers<ContextType>;
   CompanyScannedUser?: ICompanyScannedUserResolvers<ContextType>;
+  CompanySignatory?: ICompanySignatoryResolvers<ContextType>;
   CreateCompanyApplicationResponse?: ICreateCompanyApplicationResponseResolvers<ContextType>;
   CreateCompanyResponse?: ICreateCompanyResponseResolvers<ContextType>;
   CreateGalleryImageResponse?: ICreateGalleryImageResponseResolvers<ContextType>;
@@ -9231,6 +9281,12 @@ export const PageProfileMeCompanySignup_Data = gql`
             mimeType
           }
         }
+      }
+    }
+    forCompany {
+      signatories {
+        fullName
+        function
       }
     }
   }

@@ -24,7 +24,7 @@
           </span>
           <a
             :class="$style.pressKitDownload"
-            href="/Job_Fair_-_Press_kit.zip"
+            href="/Job_Fair_Press_Kit.zip"
             target="_blank"
           >
             <icon-download

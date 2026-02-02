@@ -253,21 +253,21 @@
             image: previewIcons.KSET,
             file: "/tmp/press/KSET_logo_crni.png",
           },
-          {
-            name: "press.press-kit.item.ckf-logo",
-            image: previewIcons.CKF,
-            file: "/tmp/press/CKF_bijela.jpg",
-          },
+          // {
+          //   name: "press.press-kit.item.ckf-logo",
+          //   image: previewIcons.CKF,
+          //   file: "/tmp/press/CKF_bijela.jpg",
+          // },
           {
             name: "press.press-kit.item.ssfer-logo",
             image: previewIcons.SSFER,
             file: "/tmp/press/Job-Fair-org-SSFER-color.png",
           },
-          {
-            name: "press.press-kit.item.description-logo",
-            image: previewIcons.opis,
-            file: "/tmp/press/Job_Fair_-_Opce_informacije.pdf",
-          },
+          // {
+          //   name: "press.press-kit.item.description-logo",
+          //   image: previewIcons.opis,
+          //   file: "/tmp/press/Job_Fair_-_Opce_informacije.pdf",
+          // },
         ].map((x) => ({ ...x, file: encodeURI(x.file) })),
       };
     },

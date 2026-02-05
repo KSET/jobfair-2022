@@ -131,6 +131,23 @@
     <div :class="$style.section">
       <app-img
         :class="$style.eventIcon"
+        :src="img.eventIcons.fusion"
+        alt="Fusion"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.fusion.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.fusion.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
         :src="img.eventIcons.workshops"
         alt="Workshops"
         aspect-ratio="1"
@@ -162,7 +179,24 @@
       </p>
     </div>
 
-    <div v-if="false" :class="$style.section">
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.debate"
+        alt="Debate"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.debate.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.debate.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
       <app-img
         :class="$style.eventIcon"
         :src="img.eventIcons.hotTalk"
@@ -176,6 +210,40 @@
       </h2>
       <p>
         <translated-text trans-key="about-meetup.hot-talk.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.roundTable"
+        alt="Round Table"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.round-table.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.round-table.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.quest"
+        alt="Quest"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.quest.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.quest.text" />
       </p>
     </div>
 
@@ -210,6 +278,23 @@
       </h2>
       <p>
         <translated-text trans-key="about-meetup.party.text" />
+      </p>
+    </div>
+
+    <div :class="$style.section">
+      <app-img
+        :class="$style.eventIcon"
+        :src="img.eventIcons.unwind"
+        alt="Unwind"
+        aspect-ratio="1"
+        contain
+      />
+
+      <h2 :class="$style.header">
+        <translated-text trans-key="about-meetup.unwind.header" />
+      </h2>
+      <p>
+        <translated-text trans-key="about-meetup.unwind.text" />
       </p>
     </div>
 

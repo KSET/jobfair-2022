@@ -297,7 +297,13 @@
       talkCategoriesStore.setTalkCategories(res?.talkCategories);
 
       const booths = ref(Object.fromEntries((res?.booths || []).map((b) => [ b.key, b.name ])));
-      const companyApplications = ref(res?.companyApplications || []);
+      const companyApplications = ref(
+        (res?.companyApplications || []).sort((a, b) => {
+          const dateA = new Date(a.createdAt as string).getTime();
+          const dateB = new Date(b.createdAt as string).getTime();
+          return dateA - dateB;
+        }),
+      );
 
       const isMobile = ref(false);
 

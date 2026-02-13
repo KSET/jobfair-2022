@@ -581,6 +581,7 @@ query AdminCompanyApplications($season: String!) {
         name
     }
     companyApplications(season: $season) {
+        createdAt
         wantsCocktail
         wantsPanel
         wantsQuest

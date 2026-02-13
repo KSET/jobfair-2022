@@ -4704,7 +4704,9 @@ export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplicatio
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_industry_Industry = { name: string };
 
-export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company = { uid: string, brandName: string, legalName: string, industry?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_industry_Industry | null };
+export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_signatories_CompanySignatory = { fullName: string, function: string };
+
+export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company = { uid: string, brandName: string, legalName: string, industry?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_industry_Industry | null, signatories: Array<IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_signatories_CompanySignatory> };
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season = { uid: string };
 
@@ -8333,6 +8335,10 @@ export const AdminCompanyApplications = gql`
       legalName
       industry {
         name
+      }
+      signatories {
+        fullName
+        function
       }
     }
     forSeason {

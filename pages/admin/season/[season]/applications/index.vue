@@ -214,6 +214,14 @@
               <strong>Quest:</strong>
               <span>Yes</span>
             </div>
+            <div v-if="data.forCompany.signatories && data.forCompany.signatories.length > 0" :class="$style.expansionRow">
+              <strong>Signatories:</strong>
+              <div>
+                <div v-for="(signatory, index) in data.forCompany.signatories" :key="index" style="margin-bottom: 0.25rem;">
+                  <em>{{ signatory.fullName }}</em> - <span>{{ signatory.function }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </template>
       </DataTable>

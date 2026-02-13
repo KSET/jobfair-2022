@@ -616,6 +616,10 @@ query AdminCompanyApplications($season: String!) {
             industry {
                 name
             }
+            signatories {
+                fullName
+                function
+            }
         }
         forSeason {
             uid

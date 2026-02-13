@@ -59,6 +59,9 @@ import {
   transformSelect as transformSelectWorkshop,
 } from "./companyApplicationWorkshop";
 import {
+  transformSelect as transformSelectFusion,
+} from "./companyApplicationFusion";
+import {
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
 import {
@@ -336,6 +339,7 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
     transformCompanyField("forCompany", transformSelectCompany);
     transformCompanyField("talk", transformSelectTalk);
     transformCompanyField("workshop", transformSelectWorkshop);
+    transformCompanyField("fusion", transformSelectFusion);
     transformCompanyField("forSeason", transformSelect);
     transformCompanyField("panelParticipants", transformSelectPresenter);
     transformCompanyField("approval", transformSelectApproval);

@@ -4,8 +4,8 @@
 
 <script lang="ts">
   import {
-    createError,
     defineComponent,
+    navigateTo,
   } from "#imports";
   import {
     useUserStore,
@@ -17,10 +17,8 @@
     setup() {
       const userStore = useUserStore();
 
-      // Only check if user is logged in - don't block unauthenticated users
-      // (parent profile.vue will handle login redirect)
       if (userStore.isLoggedIn && userStore.hasCompany) {
-        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+        void navigateTo({ name: "profile-me" }, { replace: true });
       }
     },
   });

@@ -1,185 +1,42 @@
 <template>
   <app-user-profile-container :not-found="!applicationsOpen" :class="$style.container">
-    <h1>
-      <translated-text trans-key="company-signup.header" /> {{ currentSeason.name }}
-    </h1>
+    <div v-if="hasCompanyData">
+      <h1>
+        <translated-text trans-key="company-signup.header" /> {{ currentSeason?.name }}
+      </h1>
 
-    <form
-      style="display: contents;"
-      @submit.prevent="handleFormSubmit"
-    >
-      <div :class="$style.panels">
-        <Panel
-          :class="[$style.panel, $style.panelBreakable]"
-          :collapsed="false"
-        >
-          <template #header>
-            <strong>
-              <translated-text trans-key="company-signup.form.contact-person" />
-            </strong>
-          </template>
-
-          <fieldset
-            :class="$style.formFieldset"
+      <form
+        style="display: contents;"
+        @submit.prevent="handleFormSubmit"
+      >
+        <div :class="$style.panels">
+          <Panel
+            :class="[$style.panel, $style.panelBreakable]"
+            :collapsed="false"
           >
-            <app-formgroup
-              :class="$style.formContainer"
-              :errors="contactPerson.errors.info"
-              :inputs="contactPerson.forms.info"
-              :loading="isLoading"
-              no-form
-            >
-              <template #after>
-                <div
-                  v-if="contactPerson.errors.info.entity.length > 0"
-                  :class="$style.errorContainer"
-                >
-                  <translated-text
-                    v-for="err in contactPerson.errors.info.entity"
-                    :key="err.message"
-                    :trans-key="err.message"
-                  />
-                </div>
-              </template>
-            </app-formgroup>
-          </fieldset>
-        </Panel>
-        <Panel
-          :class="[$style.panel, $style.panelBreakable]"
-          :collapsed="false"
-        >
-          <template #header>
-            <strong>
-              <translated-text trans-key="company-signup.form.signatories" />
-            </strong>
-          </template>
-
-          <fieldset
-            v-for="(signatory, index) in signatories"
-            :key="`signatory-${index}`"
-            :class="$style.formFieldset"
-          >
-            <legend v-if="signatories.length > 1">
-              <translated-text trans-key="form.legend.signatory" /> {{ index + 1 }}
-            </legend>
-
-            <app-formgroup
-              :class="$style.formContainer"
-              :errors="signatory.errors"
-              :inputs="signatory.forms"
-              :loading="isLoading"
-              no-form
-            >
-              <template #after>
-                <div v-if="signatories.length > 1" :class="$style.signatoryButtonContainer">
-                  <p-button
-                    class="p-button-danger p-button-sm"
-                    type="button"
-                    @click="removeSignatory(index)"
-                  >
-                    <translated-text trans-key="form.remove-signatory" />
-                  </p-button>
-                </div>
-              </template>
-            </app-formgroup>
-          </fieldset>
-
-          <div :class="$style.signatoryButtonContainer">
-            <p-button
-              v-if="signatories.length < 5"
-              class="p-button-secondary p-button-sm"
-              type="button"
-              @click="addSignatory"
-            >
-              <translated-text trans-key="form.add-signatory" />
-            </p-button>
-          </div>
-        </Panel>
-        <Panel
-          :class="[$style.panel, $style.panelBreakable]"
-          collapsed
-        >
-          <template #header>
-            <strong>
-              <translated-text trans-key="company-signup.form.booth" />
-            </strong>
-
-            <div
-              :style="{
-                gap: '1rem',
-              }"
-              class="flex flex-row"
-            >
-              <div
-                v-for="category of booths"
-                :key="category.key"
-              >
-                <label
-                  class="ml-2"
-                >
-                  <RadioButton
-                    :id="category.key"
-                    v-model="booth"
-                    :value="category"
-                    name="booth"
-                  />
-                  {{ category.name }}
-                </label>
-              </div>
-            </div>
-          </template>
-        </Panel>
-        <Panel
-          v-for="(item, name) in items"
-          :key="name"
-          :class="$style.panel"
-          :collapsed="item.forms ? !item.selected : true"
-        >
-          <template #header>
-            <div>
+            <template #header>
               <strong>
-                <translated-text :trans-key="`company-signup.form.${name}`" />
+                <translated-text trans-key="company-signup.form.contact-person" />
               </strong>
-              <p
-                v-if="!item.forms"
-                :class="$style.itemDescription"
-              >
-                <translated-text :trans-key="`company-signup.form.${name}.description`" />
-              </p>
-            </div>
+            </template>
 
-            <!-- <Checkbox v-model="item.selected" binary disabled /> -->
-            <Checkbox
-              v-model="item.selected"
-              binary
-            />
-          </template>
-          <template
-            v-if="item.selected"
-          >
             <fieldset
-              v-for="(form, formName) in item.forms"
-              :key="`${name}--${formName}`"
               :class="$style.formFieldset"
             >
-              <legend>
-                <translated-text :trans-key="`form.legend.${formName}`" />
-              </legend>
-
               <app-formgroup
                 :class="$style.formContainer"
-                :errors="item.errors[formName]"
-                :inputs="form"
+                :errors="contactPerson.errors.info"
+                :inputs="contactPerson.forms.info"
                 :loading="isLoading"
                 no-form
               >
                 <template #after>
                   <div
-                    v-if="item.errors[formName].entity.length > 0"
+                    v-if="contactPerson.errors.info.entity.length > 0"
                     :class="$style.errorContainer"
                   >
                     <translated-text
-                      v-for="err in item.errors[formName].entity"
+                      v-for="err in contactPerson.errors.info.entity"
                       :key="err.message"
                       :trans-key="err.message"
                     />
@@ -187,7 +44,151 @@
                 </template>
               </app-formgroup>
             </fieldset>
-          </template>
+          </Panel>
+          <Panel
+            :class="[$style.panel, $style.panelBreakable]"
+            :collapsed="false"
+          >
+            <template #header>
+              <strong>
+                <translated-text trans-key="company-signup.form.signatories" />
+              </strong>
+            </template>
+
+            <fieldset
+              v-for="(signatory, index) in signatories"
+              :key="`signatory-${index}`"
+              :class="$style.formFieldset"
+            >
+              <legend v-if="signatories.length > 1">
+                <translated-text trans-key="form.legend.signatory" /> {{ index + 1 }}
+              </legend>
+
+              <app-formgroup
+                :class="$style.formContainer"
+                :errors="signatory.errors"
+                :inputs="signatory.forms"
+                :loading="isLoading"
+                no-form
+              >
+                <template #after>
+                  <div v-if="signatories.length > 1" :class="$style.signatoryButtonContainer">
+                    <p-button
+                      class="p-button-danger p-button-sm"
+                      type="button"
+                      @click="removeSignatory(index)"
+                    >
+                      <translated-text trans-key="form.remove-signatory" />
+                    </p-button>
+                  </div>
+                </template>
+              </app-formgroup>
+            </fieldset>
+
+            <div :class="$style.signatoryButtonContainer">
+              <p-button
+                v-if="signatories.length < 5"
+                class="p-button-secondary p-button-sm"
+                type="button"
+                @click="addSignatory"
+              >
+                <translated-text trans-key="form.add-signatory" />
+              </p-button>
+            </div>
+          </Panel>
+          <Panel
+            :class="[$style.panel, $style.panelBreakable]"
+            collapsed
+          >
+            <template #header>
+              <strong>
+                <translated-text trans-key="company-signup.form.booth" />
+              </strong>
+
+              <div
+                :style="{
+                  gap: '1rem',
+                }"
+                class="flex flex-row"
+              >
+                <div
+                  v-for="category of booths"
+                  :key="category.key"
+                >
+                  <label
+                    class="ml-2"
+                  >
+                    <RadioButton
+                      :id="category.key"
+                      v-model="booth"
+                      :value="category"
+                      name="booth"
+                    />
+                    {{ category.name }}
+                  </label>
+                </div>
+              </div>
+            </template>
+          </Panel>
+          <Panel
+            v-for="(item, name) in items"
+            :key="name"
+            :class="$style.panel"
+            :collapsed="item.forms ? !item.selected : true"
+          >
+            <template #header>
+              <div>
+                <strong>
+                  <translated-text :trans-key="`company-signup.form.${name}`" />
+                </strong>
+                <p
+                  v-if="!item.forms"
+                  :class="$style.itemDescription"
+                >
+                  <translated-text :trans-key="`company-signup.form.${name}.description`" />
+                </p>
+              </div>
+
+              <!-- <Checkbox v-model="item.selected" binary disabled /> -->
+              <Checkbox
+                v-model="item.selected"
+                binary
+              />
+            </template>
+            <template
+              v-if="item.selected"
+            >
+              <fieldset
+                v-for="(form, formName) in item.forms"
+                :key="`${name}--${formName}`"
+                :class="$style.formFieldset"
+              >
+                <legend>
+                  <translated-text :trans-key="`form.legend.${formName}`" />
+                </legend>
+
+                <app-formgroup
+                  :class="$style.formContainer"
+                  :errors="item.errors[formName]"
+                  :inputs="form"
+                  :loading="isLoading"
+                  no-form
+                >
+                  <template #after>
+                    <div
+                      v-if="item.errors[formName].entity.length > 0"
+                      :class="$style.errorContainer"
+                    >
+                      <translated-text
+                        v-for="err in item.errors[formName].entity"
+                        :key="err.message"
+                        :trans-key="err.message"
+                      />
+                    </div>
+                  </template>
+                </app-formgroup>
+              </fieldset>
+            </template>
           <!--          <input style="display: none;" type="submit">
           <div class="ml-auto -mt-3">
             <p-button
@@ -198,21 +199,22 @@
               <translated-text trans-key="form.save" />
             </p-button>
           </div>-->
-        </Panel>
-      </div>
+          </Panel>
+        </div>
 
-      <div class="text-right mt-3">
-        <p-button
-          :loading="isLoading"
-          class="p-button-secondary font-bold"
-          type="submit"
-        >
-          <translated-text trans-key="form.save" />
-        </p-button>
-      </div>
-    </form>
+        <div class="text-right mt-3">
+          <p-button
+            :loading="isLoading"
+            class="p-button-secondary font-bold"
+            type="submit"
+          >
+            <translated-text trans-key="form.save" />
+          </p-button>
+        </div>
+      </form>
 
     <!-- <pre style="white-space: pre-wrap;" v-text="items" /> -->
+    </div>
   </app-user-profile-container>
 </template>
 
@@ -310,7 +312,24 @@
       const talkCategoriesStore = useTalkCategoriesStore();
       const seasonsStore = useSeasonsStore();
 
-      const company = userStore.company!;
+      const { company } = userStore;
+
+      if (!company) {
+        return {
+          hasCompanyData: false,
+          applicationsOpen: true,
+          currentSeason: seasonsStore.currentSeason,
+          isLoading: ref(false),
+          items: reactive({}),
+          booths: [],
+          booth: ref(null),
+          contactPerson: reactive({}),
+          signatories: ref([]),
+          addSignatory: () => {},
+          removeSignatory: () => {},
+          handleFormSubmit: async () => {},
+        };
+      }
 
       type AuthError = {
         message: string,
@@ -447,7 +466,7 @@
         : [ { fullName: "", function: "" } ];
 
       const signatories = ref(
-        initialSignatories.map((sig: { fullName: string, function: string }) => {
+        initialSignatories.map((sig: { fullName: string, function: string, }) => {
           const form = companySignatoryCreate(sig)();
           return {
             forms: form,
@@ -581,6 +600,7 @@
       const isLoading = ref(false);
 
       return {
+        hasCompanyData: true,
         applicationsOpen: computed(() => seasonsStore.applicationsOpen),
         currentSeason: computed(() => seasonsStore.currentSeason),
         isLoading,

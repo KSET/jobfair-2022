@@ -4,8 +4,9 @@
 
 <script lang="ts">
   import {
-    createError,
     defineComponent,
+    navigateTo,
+    onMounted,
   } from "#imports";
   import {
     useUserStore,
@@ -17,9 +18,11 @@
     setup() {
       const userStore = useUserStore();
 
-      if (!userStore.hasCompany) {
-        throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
-      }
+      onMounted(async () => {
+        if (userStore.isLoggedIn && !userStore.hasCompany) {
+          await navigateTo({ name: "profile-me" }, { replace: true });
+        }
+      });
     },
   });
 </script>

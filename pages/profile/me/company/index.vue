@@ -1,79 +1,81 @@
 <template>
   <app-user-profile-container :class="$style.container">
-    <h1>
-      <translated-text
-        trans-key="profile.about-company"
-      />
-    </h1>
+    <div v-if="hasData">
+      <h1>
+        <translated-text
+          trans-key="profile.about-company"
+        />
+      </h1>
 
-    <app-formgroup
-      :class="$style.form"
-      :errors="errors"
-      :inputs="info"
-      :loading="isLoading"
-      @submit="handleUpdate"
-    >
-      <template #after>
-        <div
-          v-if="errors.entity.length > 0"
-          :class="$style.errorContainer"
-        >
-          <translated-text
-            v-for="err in errors.entity"
-            :key="err.message"
-            :trans-key="err.message"
-          />
-        </div>
-
-        <div :class="$style.column2" class="text-right -mt-3">
-          <p-button
-            :loading="isLoading"
-            class="p-button-secondary font-bold"
-            type="submit"
-          >
-            <translated-text trans-key="form.save" />
-          </p-button>
-        </div>
-      </template>
-    </app-formgroup>
-
-    <h2 class="mt-6">
-      <translated-text trans-key="profile.about-company.add-members" />
-    </h2>
-    <ul class="mb-5">
-      <li v-for="member in members" :key="member.uid">
-        <div :class="$style.companyMember">
-          <strong v-text="member.name" /> - <em v-text="member.email" />
-          <template v-if="user.uid !== member.uid">
-            |
-            <p-button
-              class="p-button-text p-button-danger"
-              :loading="newMember.loading"
-              icon="pi pi-trash"
-              @click="handleRemoveMember(member.email)"
-            />
-          </template>
-        </div>
-      </li>
-    </ul>
-    <form class="flex flex-column" style="max-width: 30em;" @submit.prevent="handleAddMember">
-      <app-input
-        v-model="newMember.email"
-        :disabled="newMember.loading"
-        type="email"
-        name="new-member"
-        label-key="profile.about-company.add-member"
-        required
-        placeholder="eg. matija.horvat@kset.org"
-      />
-      <p-button
-        :loading="newMember.loading"
-        class="p-button-secondary mt-2"
-        type="submit"
+      <app-formgroup
+        :class="$style.form"
+        :errors="errors"
+        :inputs="info"
+        :loading="isLoading"
+        @submit="handleUpdate"
       >
-        <translated-text trans-key="form.save" />
-      </p-button>
-    </form>
+        <template #after>
+          <div
+            v-if="errors.entity.length > 0"
+            :class="$style.errorContainer"
+          >
+            <translated-text
+              v-for="err in errors.entity"
+              :key="err.message"
+              :trans-key="err.message"
+            />
+          </div>
+
+          <div :class="$style.column2" class="text-right -mt-3">
+            <p-button
+              :loading="isLoading"
+              class="p-button-secondary font-bold"
+              type="submit"
+            >
+              <translated-text trans-key="form.save" />
+            </p-button>
+          </div>
+        </template>
+      </app-formgroup>
+
+      <h2 class="mt-6">
+        <translated-text trans-key="profile.about-company.add-members" />
+      </h2>
+      <ul class="mb-5">
+        <li v-for="member in members" :key="member.uid">
+          <div :class="$style.companyMember">
+            <strong v-text="member.name" /> - <em v-text="member.email" />
+            <template v-if="user.uid !== member.uid">
+              |
+              <p-button
+                class="p-button-text p-button-danger"
+                :loading="newMember.loading"
+                icon="pi pi-trash"
+                @click="handleRemoveMember(member.email)"
+              />
+            </template>
+          </div>
+        </li>
+      </ul>
+      <form class="flex flex-column" style="max-width: 30em;" @submit.prevent="handleAddMember">
+        <app-input
+          v-model="newMember.email"
+          :disabled="newMember.loading"
+          type="email"
+          name="new-member"
+          label-key="profile.about-company.add-member"
+          required
+          placeholder="eg. matija.horvat@kset.org"
+        />
+        <p-button
+          :loading="newMember.loading"
+          class="p-button-secondary mt-2"
+          type="submit"
+        >
+          <translated-text trans-key="form.save" />
+        </p-button>
+      </form>
+    </div>
   </app-user-profile-container>
 </template>
 
@@ -149,7 +151,15 @@
       const isLoading = ref(false);
 
       const user = computed(() => userStore.user!);
-      const [ { vat } ] = unref(user).companies;
+      const userValue = unref(user);
+
+      if (!userValue?.companies || 0 === userValue.companies.length) {
+        return {
+          hasData: false,
+        };
+      }
+
+      const [ { vat } ] = userValue.companies;
 
       type QData = {
         industries: Pick<IIndustry, "name">[],
@@ -270,6 +280,7 @@
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
       return {
+        hasData: true,
         isLoading,
         info,
         errors,

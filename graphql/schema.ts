@@ -4702,6 +4702,8 @@ export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplicatio
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_fusion_ApplicationFusion = { language: string, titleEn: string, category?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_fusion_ApplicationFusion_category_ApplicationTalkCategory | null };
 
+export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_contactPerson_CompanyApplicationContactPerson = { name: string, email: string, phone: string };
+
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_industry_Industry = { name: string };
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company_signatories_CompanySignatory = { fullName: string, function: string };
@@ -4710,7 +4712,7 @@ export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplicatio
 
 export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season = { uid: string };
 
-export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication = { createdAt: string | Date, wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, booth?: string | null, talk?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_talk_ApplicationTalk | null, cocktail?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_cocktail_ApplicationCocktail | null, workshop?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_fusion_ApplicationFusion | null, forCompany?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company | null, forSeason?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season | null };
+export type IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication = { createdAt: string | Date, wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, booth?: string | null, talk?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_talk_ApplicationTalk | null, cocktail?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_cocktail_ApplicationCocktail | null, workshop?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_fusion_ApplicationFusion | null, contactPerson?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, forCompany?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forCompany_Company | null, forSeason?: IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication_forSeason_Season | null };
 
 export type IAdminCompanyApplicationsQuery_Query = { industries: Array<IAdminCompanyApplicationsQuery_industries_Industry>, talkCategories: Array<IAdminCompanyApplicationsQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationsQuery_booths_Booth>, companyApplications?: Array<IAdminCompanyApplicationsQuery_companyApplications_CompanyApplication> | null };
 
@@ -8329,6 +8331,11 @@ export const AdminCompanyApplications = gql`
       category {
         name
       }
+    }
+    contactPerson {
+      name
+      email
+      phone
     }
     forCompany {
       uid

@@ -180,6 +180,14 @@
         <template #expansion="{ data }">
           <div :class="$style.expansion">
             <div :class="$style.expansionRow">
+              <strong>Vrijeme:</strong>
+              <span>{{ new Date(data.createdAt).toLocaleString() }}</span>
+            </div>
+            <div v-if="data.contactPerson" :class="$style.expansionRow">
+              <strong>Kontakt:</strong>
+              <span>{{ data.contactPerson.name }} - {{ data.contactPerson.email }} - {{ data.contactPerson.phone }}</span>
+            </div>
+            <div :class="$style.expansionRow">
               <strong>Industrija:</strong>
               <p-chip :label="data.forCompany.industry.name" />
             </div>
@@ -403,13 +411,71 @@
         isMobile,
         expandedRows,
         exportCSV() {
-          const $dt = unref(dt);
-
-          if (!$dt) {
+          const apps = unref(companyApplications);
+          if (!apps?.length) {
             return;
           }
 
-          $dt.exportCSV();
+          const headers = [
+            "Firma",
+            "Legalni naziv",
+            "Vrijeme prijave",
+            "Kontakt ime",
+            "Kontakt email",
+            "Kontakt telefon",
+            "Industrija",
+            "Štand",
+            "Talk",
+            "Talk kategorija",
+            "Workshop",
+            "Fusion",
+            "Fusion kategorija",
+            "Cocktail",
+            "Cocktail naziv",
+            "Cocktail tip",
+            "Panel",
+            "Quest",
+            "Potpisnici",
+          ];
+
+          const escapeCsv = (val: string) => {
+            if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+              return `"${ val.replace(/"/g, '""') }"`;
+            }
+            return val;
+          };
+
+          type CompanyApp = NonNullable<IAdminCompanyApplicationsQuery["companyApplications"]>[number];
+          const rows = (apps as CompanyApp[]).map((app) => [
+            app.forCompany?.brandName ?? "",
+            app.forCompany?.legalName ?? "",
+            new Date(app.createdAt as string).toLocaleString(),
+            app.contactPerson?.name ?? "",
+            app.contactPerson?.email ?? "",
+            app.contactPerson?.phone ?? "",
+            app.forCompany?.industry?.name ?? "",
+            app.booth ? ((unref(booths) as Record<string, string>)[app.booth] ?? app.booth) : "",
+            app.talk?.titleEn ?? "",
+            app.talk?.category?.name ?? "",
+            app.workshop?.titleEn ?? "",
+            app.fusion?.titleEn ?? "",
+            app.fusion?.category?.name ?? "",
+            app.wantsCocktail ? "Da" : "Ne",
+            app.cocktail?.name ?? "",
+            app.cocktail?.type?.type ?? "",
+            app.wantsPanel ? "Da" : "Ne",
+            app.wantsQuest ? "Da" : "Ne",
+            (app.forCompany?.signatories ?? []).map((s: { fullName: string, function: string }) => `${ s.fullName } (${ s.function })`).join("; "),
+          ].map((v) => escapeCsv(String(v))));
+
+          const csv = [ headers.map((h) => escapeCsv(h)).join(","), ...rows.map((r) => r.join(",")) ].join("\n");
+          const blob = new Blob([ `\uFEFF${ csv }` ], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "prijave.csv";
+          link.click();
+          URL.revokeObjectURL(url);
         },
         expandAll() {
           expandedRows.value = unref(companyApplications).reduce((acc: Record<string, boolean>, p) => {

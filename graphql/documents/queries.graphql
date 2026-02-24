@@ -610,6 +610,11 @@ query AdminCompanyApplications($season: String!) {
                 name
             }
         }
+        contactPerson {
+            name
+            email
+            phone
+        }
         forCompany {
             uid
             brandName

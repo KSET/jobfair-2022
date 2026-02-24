@@ -53,6 +53,57 @@
         </Panel>
         <Panel
           :class="[$style.panel, $style.panelBreakable]"
+          :collapsed="false"
+        >
+          <template #header>
+            <strong>
+              <translated-text trans-key="company-signup.form.signatories" />
+            </strong>
+          </template>
+
+          <fieldset
+            v-for="(signatory, index) in signatories"
+            :key="`signatory-${index}`"
+            :class="$style.formFieldset"
+          >
+            <legend v-if="signatories.length > 1">
+              <translated-text trans-key="form.legend.signatory" /> {{ index + 1 }}
+            </legend>
+
+            <app-formgroup
+              :class="$style.formContainer"
+              :errors="signatory.errors"
+              :inputs="signatory.forms"
+              :loading="isLoading"
+              no-form
+            >
+              <template #after>
+                <div v-if="signatories.length > 1" :class="$style.signatoryButtonContainer">
+                  <p-button
+                    class="p-button-danger p-button-sm"
+                    type="button"
+                    @click="removeSignatory(index)"
+                  >
+                    <translated-text trans-key="form.remove-signatory" />
+                  </p-button>
+                </div>
+              </template>
+            </app-formgroup>
+          </fieldset>
+
+          <div :class="$style.signatoryButtonContainer">
+            <p-button
+              v-if="signatories.length < 5"
+              class="p-button-secondary p-button-sm"
+              type="button"
+              @click="addSignatory"
+            >
+              <translated-text trans-key="form.add-signatory" />
+            </p-button>
+          </div>
+        </Panel>
+        <Panel
+          :class="[$style.panel, $style.panelBreakable]"
           collapsed
         >
           <template #header>
@@ -202,9 +253,11 @@
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
+    companySignatoryCreate,
     type ContactPerson,
     type Fusion,
     type Presenter,
+    type Signatory,
     type Talk,
     type Workshop,
   } from "~/helpers/forms/company-application";
@@ -285,6 +338,49 @@
           info: toErrors(contactPersonCreateForm),
         },
       });
+
+      const existingSignatories = company?.signatories;
+      const initialSignatories = (existingSignatories && 0 < existingSignatories.length)
+        ? existingSignatories
+        : [ { fullName: "", function: "" } ];
+
+      const signatories = ref(
+        initialSignatories.map((sig: { fullName: string, function: string }) => {
+          const form = companySignatoryCreate(sig)();
+          return {
+            forms: form,
+            errors: toErrors(form),
+          };
+        }),
+      );
+
+      const addSignatory = () => {
+        if (5 <= signatories.value.length) {
+          toast.add({
+            severity: "warn",
+            summary: "Maximum 5 signatories allowed",
+            life: 3000,
+          });
+          return;
+        }
+        const form = companySignatoryCreate()();
+        signatories.value.push({
+          forms: form,
+          errors: toErrors(form),
+        });
+      };
+
+      const removeSignatory = (index: number) => {
+        if (1 >= signatories.value.length) {
+          toast.add({
+            severity: "warn",
+            summary: "At least 1 signatory is required",
+            life: 3000,
+          });
+          return;
+        }
+        signatories.value.splice(index, 1);
+      };
 
       const items = reactive(
         map(
@@ -386,6 +482,9 @@
         booth,
         company,
         contactPerson,
+        signatories,
+        addSignatory,
+        removeSignatory,
         async handleDelete() {
           if (!confirm("Are you sure you want to delete this application?")) {
             return;
@@ -438,6 +537,7 @@
           const info: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables["info"] = {
             vat,
             contactPerson: toData<ContactPerson>(contactPerson.forms.info),
+            signatories: signatories.value.map((sig) => toData<Signatory>(sig.forms)),
             booth: unref(booth).key,
             talk:
               selectedObj.talk
@@ -698,6 +798,12 @@
           grid-column: initial;
         }
       }
+    }
+
+    .signatoryButtonContainer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.5rem;
     }
   }
 </style>

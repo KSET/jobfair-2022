@@ -565,6 +565,10 @@ query AdminCompanyApplication($company: String!, $season: String!) {
         ...frag_CompanyApplication
         forCompany {
             ...frag_Company
+            signatories {
+                fullName
+                function
+            }
         }
     }
 }

@@ -4667,7 +4667,9 @@ export type IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory
 
 export type IAdminCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company_signatories_CompanySignatory = { fullName: string, function: string };
+
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, signatories: Array<IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company_signatories_CompanySignatory>, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
@@ -8282,6 +8284,10 @@ export const AdminCompanyApplication = gql`
     ...frag_CompanyApplication
     forCompany {
       ...frag_Company
+      signatories {
+        fullName
+        function
+      }
     }
   }
 }

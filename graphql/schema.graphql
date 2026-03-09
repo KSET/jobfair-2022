@@ -563,9 +563,7 @@ type CompanyApplicationApproval {
 input CompanyApplicationApprovedEditInput {
   cocktail: CocktailChooseInput
   fusion: FusionsCreateInput
-  internship: InternshipCreateInput
   panel: [PresenterCreateInput!]!
-  signatories: [CompanySignatoryCreateInput!]!
   talk: TalksCreateInput
   vat: String!
   workshop: WorkshopsCreateInput
@@ -1362,16 +1360,6 @@ input IntNullableFilter {
   lte: Int
   not: NestedIntNullableFilter
   notIn: [Int!]
-}
-
-input InternshipCreateInput {
-  competencies: String!
-  description: String!
-  duration: String!
-  position: String!
-  url: String!
-  workingPeriodEnd: DateTimeISO!
-  workingPeriodStart: DateTimeISO!
 }
 
 type LiveVote {

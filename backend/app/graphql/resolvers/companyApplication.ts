@@ -435,9 +435,6 @@ class CompanyApplicationApprovedEditInput {
   @Field()
     vat: string = "";
 
-  @Field(() => [CompanySignatoryCreateInput])
-    signatories: CompanySignatoryCreateInput[] = [];
-
   @Field(() => TalksCreateInput, { nullable: true })
     talk: TalksCreateInput | null = null;
 
@@ -452,9 +449,6 @@ class CompanyApplicationApprovedEditInput {
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
-
-  @Field(() => InternshipCreateInput, { nullable: true })
-    internship: InternshipCreateInput | null = null;
 }
 
 @ObjectType()
@@ -2195,29 +2189,6 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
-    // Validate signatories count (1-5 required)
-    if (!info.signatories || info.signatories.length < 1) {
-      return {
-        errors: [
-          {
-            field: "signatories",
-            message: "At least 1 signatory required",
-          },
-        ],
-      };
-    }
-
-    if (info.signatories.length > 5) {
-      return {
-        errors: [
-          {
-            field: "signatories",
-            message: "Maximum 5 signatories allowed",
-          },
-        ],
-      };
-    }
-
     info.vat = info.vat.toUpperCase();
 
     const isInCompany = user.companies.some((company) => company.vat === info.vat);
@@ -2742,38 +2713,6 @@ export class CompanyApplicationCreateResolver {
         }
       }
     }
-
-    // internship if any approved, likely to change later
-    if(Object.entries(approval).some(x => x[0] != "id" && x[1])) {
-      const id = "internship" as const;
-      const entry = info[id];
-      if(entry) {
-        data[id] = {
-          upsert: {
-            create: {
-              ...entry
-            },
-            update: {
-              ...entry
-            }
-          }
-        }
-      }
-    }
-
-    // Update company signatories
-    await ctx.prisma.companySignatory.deleteMany({
-      where: {
-        forCompanyId: company.id,
-      },
-    });
-
-    await ctx.prisma.companySignatory.createMany({
-      data: info.signatories.map((sig) => ({
-        ...sig,
-        forCompanyId: company.id,
-      })),
-    });
 
     const entity = await ctx.prisma.companyApplication.update({
       data,

@@ -125,7 +125,6 @@
   import {
     companyApplicationCocktailCreate,
     companyApplicationFusionCreate,
-    companyApplicationInternshipCreate,
     companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
@@ -166,7 +165,6 @@
     Cocktail = "cocktail",
     Panel = "panel",
     Quest = "quest",
-    Internship = "internship",
   }
 
   const FormToApproval: Partial<Record<FormFor, keyof ICompanyApplicationApproval>> = {
@@ -176,7 +174,6 @@
     [FormFor.Fusion]: "fusionParticipants",
     [FormFor.Cocktail]: "cocktail",
     [FormFor.Quest]: "quest",
-    [FormFor.Internship]: undefined,
   };
 
 
@@ -333,11 +330,6 @@
             ,
           ),
         }),
-        [FormFor.Internship]: form({
-          info: companyApplicationInternshipCreate(
-            companyApplication.internship,
-          )(),
-        }),
       };
 
       const filtered = filter(
@@ -350,7 +342,6 @@
 
       const items = reactive({
         ...filtered,
-        [FormFor.Internship]: forms[FormFor.Internship],
       });
       const booths = resp?.booths || [];
 
@@ -421,16 +412,6 @@
                   toData(items[FormFor.Panel].forms.presenter[0]),
                 ]
                 : [],
-            internship: items[FormFor.Internship]
-              ? (() => {
-                const data = toData(items[FormFor.Internship].forms.info);
-                return {
-                  ...data,
-                  workingPeriodStart: new Date(data.workingPeriodStart),
-                  workingPeriodEnd: new Date(data.workingPeriodEnd),
-                };
-              })()
-              : null,
           };
 
           for (const presenter of (info[FormFor.Talk]?.presenter || [])) {

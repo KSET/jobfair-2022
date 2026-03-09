@@ -1,30 +1,33 @@
 version: '3'
 
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: .docker/frontend/Dockerfile
-    restart: always
-    env_file:
-      - .env.example
-      - .env
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: .docker/frontend/Dockerfile
+  #   restart: always
+  #   env_file:
+  #     - .env.example
+  #     - .env
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: ../.docker/backend/Dockerfile
-    restart: always
-    env_file:
-      - ./backend/.env.example
-      - ./backend/.env
+  # backend:
+  #   build:
+      # context: ./backend
+  #     dockerfile: ../.docker/backend/Dockerfile
+  #   restart: always
+  #   env_file:
+  #     - ./backend/.env.example
+  #     - ./backend/.env
 
   minio:
     image: quay.io/minio/minio:RELEASE.2021-10-02T16-31-05Z
     command: server --console-address ":9001" /data/minio
-    expose:
-      - "9000"
-      - "9001"
+    # expose:
+    #   - "9000"
+    #   - "9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
     volumes:
       - ./.docker/minio/data:/data/minio
     env_file:
@@ -37,8 +40,10 @@ services:
       retries: 3
     restart: always
 
-  proxy:
-    image: caddy:alpine
-    restart: always
-    volumes:
-      - "./.docker/proxy/Caddyfile:/etc/caddy/Caddyfile:ro"
+  # proxy:
+  #   ports:
+  #     - 
+  #   image: caddy:alpine
+  #   restart: always
+  #   volumes:
+  #     - "./.docker/proxy/Caddyfile:/etc/caddy/Caddyfile:ro"

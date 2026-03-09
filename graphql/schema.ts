@@ -638,9 +638,7 @@ export type ICompanyApplicationApproval = {
 export type ICompanyApplicationApprovedEditInput = {
   cocktail?: InputMaybe<ICocktailChooseInput>;
   fusion?: InputMaybe<IFusionsCreateInput>;
-  internship?: InputMaybe<IInternshipCreateInput>;
   panel: Array<IPresenterCreateInput>;
-  signatories: Array<ICompanySignatoryCreateInput>;
   talk?: InputMaybe<ITalksCreateInput>;
   vat: Scalars['String']['input'];
   workshop?: InputMaybe<IWorkshopsCreateInput>;

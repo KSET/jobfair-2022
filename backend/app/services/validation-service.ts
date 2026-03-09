@@ -163,7 +163,6 @@ const companyApplicationValidation = z.object({
 export const CompanyApplicationValidation = <T>(application: T) => formatValidation(companyApplicationValidation, application);
 
 const companyApplicationApprovedValidation = z.object({
-  signatories: z.array(companySignatoryValidation).min(1).max(5),
   talk: z.nullable(companyTalkValidation),
   workshop: z.nullable(companyWorkshopValidation),
   fusion: z.nullable(companyFusionValidation),

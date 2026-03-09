@@ -126,19 +126,19 @@
             <span v-else>-</span>
           </template>
         </Column>
-        <Column field="talk.titleEn" header="Talk">
+        <Column field="hasTalk" header="Talk" sortable>
           <template #body="{ data }">
             <i v-if="data.talk" class="pi pi-check" />
             <span v-else>-</span>
           </template>
         </Column>
-        <Column field="workshop.titleEn" header="Workshop">
+        <Column field="hasWorkshop" header="Workshop" sortable>
           <template #body="{ data }">
             <i v-if="data.workshop" class="pi pi-check" />
             <span v-else>-</span>
           </template>
         </Column>
-        <Column field="fusion.titleEn" header="Fusion">
+        <Column field="hasFusion" header="Fusion" sortable>
           <template #body="{ data }">
             <i v-if="data.fusion" class="pi pi-check" />
             <span v-else>-</span>
@@ -306,11 +306,18 @@
 
       const booths = ref(Object.fromEntries((res?.booths || []).map((b) => [ b.key, b.name ])));
       const companyApplications = ref(
-        (res?.companyApplications || []).sort((a, b) => {
-          const dateA = new Date(a.createdAt as string).getTime();
-          const dateB = new Date(b.createdAt as string).getTime();
-          return dateA - dateB;
-        }),
+        (res?.companyApplications || [])
+          .sort((a, b) => {
+            const dateA = new Date(a.createdAt as string).getTime();
+            const dateB = new Date(b.createdAt as string).getTime();
+            return dateA - dateB;
+          })
+          .map((a) => ({
+            ...a,
+            hasTalk: Boolean(a.talk),
+            hasWorkshop: Boolean(a.workshop),
+            hasFusion: Boolean(a.fusion),
+          })),
       );
 
       const isMobile = ref(false);

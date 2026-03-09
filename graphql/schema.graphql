@@ -389,6 +389,7 @@ input ApproveCompanyApplicationsInput {
 input ApproveCompanyApplicationsInputParts {
   booth: Boolean!
   cocktail: Boolean!
+  fusionParticipants: Float!
   logoHidden: Boolean!
   panel: Boolean!
   quest: Boolean!

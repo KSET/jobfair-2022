@@ -207,7 +207,6 @@
 
       type QSeason = NonNullable<(typeof res)["season"]>;
       type QApplication = QSeason["applications"][number];
-      type QApproval = NonNullable<QApplication["approval"]>;
 
       const { season } = res;
 
@@ -283,7 +282,7 @@
                 .entries(application.approval)
                 .map(
                   ([ name, value ]) => {
-                    const fieldName = (nameAliases[name as keyof QApproval] || name) as keyof QApplication;
+                    const fieldName = (nameAliases[name as keyof typeof nameAliases] || name) as keyof QApplication;
                     const enabled =
                       fieldName in application
                         ? Boolean(application[fieldName])
@@ -372,6 +371,10 @@
           for (const app of (applicationInputs || [])) {
             for (const input of app.inputs) {
               if (!input.enabled) {
+                continue;
+              }
+
+              if ("logoHidden" === input.name) {
                 continue;
               }
 

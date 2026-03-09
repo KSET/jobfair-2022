@@ -76,6 +76,9 @@ class ApproveCompanyApplicationsInputParts {
     workshopParticipants: number = 0;
 
   @Field()
+    fusionParticipants: number = 0;
+
+  @Field()
     logoHidden: boolean = false;
 }
 

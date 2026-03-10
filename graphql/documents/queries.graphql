@@ -779,9 +779,7 @@ query ProfileBaseData {
             talk
             fusion
         }
-        internship {
-            position
-        }
+
     }
     profile {
         resume {

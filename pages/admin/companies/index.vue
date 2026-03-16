@@ -16,7 +16,7 @@
     >
       <template #header>
         <div :class="$style.tableHeader">
-          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV()" />
 
           <span :class="$style.searchWrapper">
             <i class="pi pi-search" />
@@ -89,7 +89,6 @@
     useQuery,
 
     ref,
-    unref,
   } from "#imports";
   import useTitle from "~/composables/useTitle";
   import {
@@ -118,7 +117,7 @@
 
       type QMember = Pick<IUser, "uid" | "name" | "email">;
       type QIndustry = Pick<IIndustry, "name">;
-      type QCompany = Pick<ICompany, "vat" | "legalName" | "brandName"> & {
+      type QCompany = Pick<ICompany, "vat" | "legalName" | "brandName" | "address"> & {
         industry: QIndustry,
         members: QMember[],
       };
@@ -133,6 +132,7 @@
                 vat
                 legalName
                 brandName
+                address
                 industry {
                     name
                 }
@@ -207,18 +207,53 @@
         );
       });
 
+      const companies = resp?.companies || [];
+
       return {
-        companies: resp?.companies || [],
+        companies,
         filters,
         dt,
         exportCSV() {
-          const $dt = unref(dt);
-
-          if (!$dt) {
+          const companies_ = companies;
+          if (!companies_?.length) {
             return;
           }
 
-          $dt.exportCSV();
+          const headers = [
+            "VAT",
+            "Brand Name",
+            "Legal Name",
+            "Address",
+            "Industry",
+            "Members",
+            "Member Emails",
+          ];
+
+          const escapeCsv = (val: string) => {
+            if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+              return `"${ val.replace(/"/g, '""') }"`;
+            }
+            return val;
+          };
+
+          const rows = companies_.map((c) => [
+            c.vat,
+            c.brandName,
+            c.legalName,
+            c.address,
+            c.industry?.name ?? "",
+            c.members.map((m) => `${ m.name } <${ m.email }>`).join("; "),
+            c.members.map((m) => m.email).join("; "),
+          ].map((v) => escapeCsv(String(v))));
+
+          const csv = [ headers.map((h) => escapeCsv(h)).join(","), ...rows.map((r) => r.join(",")) ].join("\n");
+          const blob = new Blob([ `\uFEFF${ csv }` ], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "firme.csv";
+          link.click();
+          URL.revokeObjectURL(url);
         },
       };
     },

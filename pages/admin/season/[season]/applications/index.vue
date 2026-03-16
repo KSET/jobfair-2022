@@ -424,25 +424,25 @@
           }
 
           const headers = [
-            "Firma",
-            "Legalni naziv",
-            "Vrijeme prijave",
-            "Kontakt ime",
-            "Kontakt email",
-            "Kontakt telefon",
-            "Industrija",
-            "Štand",
+            "Brand Name",
+            "Legal Name",
+            "Application Time",
+            "Contact Name",
+            "Contact Email",
+            "Contact Phone",
+            "Industry",
+            "Booth",
             "Talk",
-            "Talk kategorija",
+            "Talk Category",
             "Workshop",
             "Fusion",
-            "Fusion kategorija",
+            "Fusion Category",
             "Cocktail",
-            "Cocktail naziv",
-            "Cocktail tip",
+            "Cocktail Name",
+            "Cocktail Type",
             "Panel",
             "Quest",
-            "Potpisnici",
+            "Signatories",
           ];
 
           const escapeCsv = (val: string) => {
@@ -467,11 +467,11 @@
             app.workshop?.titleEn ?? "",
             app.fusion?.titleEn ?? "",
             app.fusion?.category?.name ?? "",
-            app.wantsCocktail ? "Da" : "Ne",
+            app.wantsCocktail ? "YES" : "",
             app.cocktail?.name ?? "",
             app.cocktail?.type?.type ?? "",
-            app.wantsPanel ? "Da" : "Ne",
-            app.wantsQuest ? "Da" : "Ne",
+            app.wantsPanel ? "YES" : "",
+            app.wantsQuest ? "YES" : "",
             (app.forCompany?.signatories ?? []).map((s: { fullName: string, function: string }) => `${ s.fullName } (${ s.function })`).join("; "),
           ].map((v) => escapeCsv(String(v))));
 

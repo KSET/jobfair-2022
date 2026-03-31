@@ -434,6 +434,7 @@
                   application?.fusion,
                 )({
                   requireHr,
+                  categories: talkCategoriesStore.talkCategories,
                 }),
                 presenter: companyApplicationPresenterCreate(
                   application?.fusion?.presenters[0],

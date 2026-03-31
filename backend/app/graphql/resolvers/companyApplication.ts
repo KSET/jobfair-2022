@@ -1385,7 +1385,7 @@ export class CompanyApplicationCreateResolver {
         errors: [
           {
             field: "entity",
-            message: "You must select at least one option (eg. booth, talk, workshop)",
+            message: "You must select at least one option (eg. booth, talk, workshop, fusion)",
           },
         ],
       };
@@ -2269,6 +2269,22 @@ export class CompanyApplicationCreateResolver {
               },
             },
 
+            fusion: {
+              select: {
+                id: true,
+                presenters: {
+                  select: {
+                    id: true,
+                    photo: {
+                      select: {
+                        id: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+
             panelParticipants: {
               select: {
                 id: true,
@@ -2611,6 +2627,83 @@ export class CompanyApplicationCreateResolver {
       }
     }
 
+    if (0 < approval.fusionParticipants) {
+      const id = "fusion" as const;
+      const minPresenters = approval.fusionParticipants;
+
+      const entry = info[id]!;
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      if (entry.presenter.length < minPresenters) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `At least ${ minPresenters } ${ id } presenters required`,
+            },
+          ],
+        };
+      }
+
+      try {
+        const presentersCreate: PresenterCreate = await createPresenters(
+          id,
+          entry.presenter,
+        );
+
+        data[id] = {
+          update: {
+            ...omit(
+              [
+                "presenter",
+                "category",
+              ],
+              entry,
+            ),
+            category: {
+              connect: {
+                forSeasonId_name: {
+                  name: entry.category,
+                  forSeasonId: currentSeason.id,
+                },
+              },
+            },
+            presenters: {
+              deleteMany: {
+                id: {
+                  in: application[id]?.presenters?.map((p) => p.id) || [],
+                },
+              },
+              create: presentersCreate,
+            },
+          },
+        };
+      } catch (e) {
+        if (e instanceof PresenterCreateError) {
+          return {
+            errors: [
+              {
+                field: e.field,
+                message: e.message,
+              },
+            ],
+          };
+        }
+
+        throw e;
+      }
+    }
+
     if (approval.panel) {
       const id = "panel" as const;
       const minPresenters = 1;
@@ -2730,6 +2823,16 @@ export class CompanyApplicationCreateResolver {
           },
         },
         talk: {
+          include: {
+            presenters: {
+              include: {
+                photo: true,
+              },
+            },
+            category: true,
+          },
+        },
+        fusion: {
           include: {
             presenters: {
               include: {

@@ -213,7 +213,7 @@
       </p>
     </div>
 
-    <div :class="$style.section">
+    <!-- <div :class="$style.section">
       <app-img
         :class="$style.eventIcon"
         :src="img.eventIcons.roundTable"
@@ -228,7 +228,7 @@
       <p>
         <translated-text trans-key="about-meetup.round-table.text" />
       </p>
-    </div>
+    </div> -->
 
     <div :class="$style.section">
       <app-img

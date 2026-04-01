@@ -778,6 +778,7 @@
       const isApprovedWithEvents = companyStore.isApplicationApproved(pick([
         "workshopParticipants",
         "talkParticipants",
+        "fusionParticipants",
         "panel",
       ], approval ?? {}));
       const resume = resp?.data?.profile?.resume;
@@ -864,6 +865,7 @@
         return pickIf(userApplications!, {
           talk: () => 0 < (approvedItems?.talkParticipants ?? 0),
           workshop: () => 0 < (approvedItems?.workshopParticipants ?? 0),
+          fusion: () => 0 < (approvedItems?.fusionParticipants ?? 0),
         })!;
       });
 

@@ -105,6 +105,20 @@
     </div>
 
     <div>
+      <h2>Ljetne prakse API</h2>
+
+      <dl>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-summer-internships-api' }">
+              Dohvati podatke
+            </nuxt-link>
+          </strong>
+        </dd>
+      </dl>
+    </div>
+
+    <div>
       <h2>Industrije</h2>
 
       <dl>

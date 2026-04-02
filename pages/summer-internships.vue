@@ -118,10 +118,9 @@
 
   const participantsShown = computed(() => seasonsStore.areParticipantsShown);
 
-  if (!participantsShown) {
-    throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
-  }
+  throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
 
+  // eslint-disable-next-line no-unreachable
   const InternshipsQuery = useQuery<
     IInternshipsQuery,
     IInternshipsQueryVariables

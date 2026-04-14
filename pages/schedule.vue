@@ -351,7 +351,7 @@
         usedDays: Array.from(usedDays).sort((a, b) => b - a),
         minHours,
         maxHours,
-        timeStepMinutes: Math.round(Math.min(...events.map((event) => (event.end.getTime() - event.start.getTime()) / 1000 / 60)) / 2),
+        timeStepMinutes: 15,
         maxOverlappingByEvent,
 
         formatEventTime: (date: Date): string =>

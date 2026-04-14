@@ -896,7 +896,7 @@ query PageAdminSeasonScheduleBase($seasonUid: String!) {
         }
     }
     season(uid: $seasonUid) {
-        panel {
+        panels {
             uid
             name
             description

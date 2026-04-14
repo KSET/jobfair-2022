@@ -464,6 +464,7 @@ export type IApproveCompanyApplicationsInput = {
 export type IApproveCompanyApplicationsInputParts = {
   booth: Scalars['Boolean']['input'];
   cocktail: Scalars['Boolean']['input'];
+  fusionParticipants: Scalars['Float']['input'];
   logoHidden: Scalars['Boolean']['input'];
   panel: Scalars['Boolean']['input'];
   quest: Scalars['Boolean']['input'];
@@ -1545,16 +1546,6 @@ export type IIntNullableFilter = {
   lte?: InputMaybe<Scalars['Int']['input']>;
   not?: InputMaybe<INestedIntNullableFilter>;
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
-};
-
-export type IInternshipCreateInput = {
-  competencies: Scalars['String']['input'];
-  description: Scalars['String']['input'];
-  duration: Scalars['String']['input'];
-  position: Scalars['String']['input'];
-  url: Scalars['String']['input'];
-  workingPeriodEnd: Scalars['DateTimeISO']['input'];
-  workingPeriodStart: Scalars['DateTimeISO']['input'];
 };
 
 export type ILiveVote = {
@@ -3100,7 +3091,7 @@ export type ISeason = {
   feedbackFrom: Scalars['DateTimeISO']['output'];
   feedbackUntil: Scalars['DateTimeISO']['output'];
   name: Scalars['String']['output'];
-  panel?: Maybe<ICompanyPanel>;
+  panels: Array<ICompanyPanel>;
   reservations: Array<IReservationItem>;
   scheduleFrom: Scalars['DateTimeISO']['output'];
   scheduleUntil: Scalars['DateTimeISO']['output'];
@@ -3125,6 +3116,7 @@ export type ISeasonCount = {
   entryLog: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   gateGuardianLog: Scalars['Int']['output'];
+  panels: Scalars['Int']['output'];
   partners: Scalars['Int']['output'];
   pressReleases: Scalars['Int']['output'];
   scannedResumes: Scalars['Int']['output'];
@@ -3181,6 +3173,11 @@ export type ISeasonCountFavouriteResumesArgs = {
 
 export type ISeasonCountGateGuardianLogArgs = {
   where?: InputMaybe<IGateGuardianLogWhereInput>;
+};
+
+
+export type ISeasonCountPanelsArgs = {
+  where?: InputMaybe<ICompanyPanelWhereInput>;
 };
 
 
@@ -4804,9 +4801,7 @@ export type IProfileBaseDataQuery_companyApplication_CompanyApplication_approval
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications = { workshop: number, talk: number, fusion: number };
 
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship = { position: string };
-
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, fusion?: IProfileBaseDataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications, internship?: IProfileBaseDataQuery_companyApplication_CompanyApplication_internship_ApplicationInternship | null };
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, fusion?: IProfileBaseDataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications };
 
 export type IProfileBaseDataQuery_profile_User_resume_Resume = { uid: string };
 
@@ -4870,15 +4865,15 @@ export type IPageAdminSeasonScheduleBaseQuery_participants_Company_program_Compa
 
 export type IPageAdminSeasonScheduleBaseQuery_participants_Company = { uid: string, brandName: string, program?: IPageAdminSeasonScheduleBaseQuery_participants_Company_program_CompanyProgram | null };
 
-export type IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel_companies_Company = { uid: string };
+export type IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel_companies_Company = { uid: string };
 
-export type IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel_event_CalendarItem = { uid: string, type?: string | null, title?: string | null, start: string | Date, end: string | Date, location?: string | null, text?: string | null, grouped: boolean };
+export type IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel_event_CalendarItem = { uid: string, type?: string | null, title?: string | null, start: string | Date, end: string | Date, location?: string | null, text?: string | null, grouped: boolean };
 
-export type IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel = { uid: string, name: string, description: string, companies: Array<IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel_companies_Company>, event?: IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel_event_CalendarItem | null };
+export type IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel = { uid: string, name: string, description: string, companies: Array<IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel_companies_Company>, event?: IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel_event_CalendarItem | null };
 
 export type IPageAdminSeasonScheduleBaseQuery_season_Season_calendar_CalendarItem = { uid: string, type?: string | null, title?: string | null, start: string | Date, end: string | Date, location?: string | null, text?: string | null, grouped: boolean };
 
-export type IPageAdminSeasonScheduleBaseQuery_season_Season = { panel?: IPageAdminSeasonScheduleBaseQuery_season_Season_panel_CompanyPanel | null, calendar: Array<IPageAdminSeasonScheduleBaseQuery_season_Season_calendar_CalendarItem> };
+export type IPageAdminSeasonScheduleBaseQuery_season_Season = { panels: Array<IPageAdminSeasonScheduleBaseQuery_season_Season_panels_CompanyPanel>, calendar: Array<IPageAdminSeasonScheduleBaseQuery_season_Season_calendar_CalendarItem> };
 
 export type IPageAdminSeasonScheduleBaseQuery_Query = { participants: Array<IPageAdminSeasonScheduleBaseQuery_participants_Company>, season?: IPageAdminSeasonScheduleBaseQuery_season_Season | null };
 
@@ -5766,7 +5761,6 @@ export type IResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
-  InternshipCreateInput: IInternshipCreateInput;
   LiveVote: ResolverTypeWrapper<ILiveVote>;
   LiveVoteComment: ResolverTypeWrapper<ILiveVoteComment>;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -6066,7 +6060,6 @@ export type IResolversParentTypes = {
   Int: Scalars['Int']['output'];
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
-  InternshipCreateInput: IInternshipCreateInput;
   LiveVote: ILiveVote;
   LiveVoteComment: ILiveVoteComment;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -7043,7 +7036,7 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
   feedbackFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   feedbackUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
-  panel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType>;
+  panels?: Resolver<Array<IResolversTypes['CompanyPanel']>, ParentType, ContextType>;
   reservations?: Resolver<Array<IResolversTypes['ReservationItem']>, ParentType, ContextType>;
   scheduleFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   scheduleUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
@@ -7069,6 +7062,7 @@ export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolve
   entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountEntryLogArgs>>;
   favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountFavouriteResumesArgs>>;
   gateGuardianLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountGateGuardianLogArgs>>;
+  panels?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPanelsArgs>>;
   partners?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPartnersArgs>>;
   pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPressReleasesArgs>>;
   scannedResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountScannedResumesArgs>>;
@@ -8508,9 +8502,6 @@ export const ProfileBaseData = gql`
       talk
       fusion
     }
-    internship {
-      position
-    }
   }
   profile {
     resume {
@@ -8632,7 +8623,7 @@ export const PageAdminSeasonScheduleBase = gql`
     }
   }
   season(uid: $seasonUid) {
-    panel {
+    panels {
       uid
       name
       description

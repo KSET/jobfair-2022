@@ -103,11 +103,11 @@ export class SeasonFieldResolver {
     return season.companies || [];
   }
 
-  @FieldResolver(() => CompanyPanel, { nullable: true })
-  panel(
+  @FieldResolver(() => [ CompanyPanel ])
+  panels(
     @Root() season: Season,
-  ): GQLField<CompanyPanel, "nullable"> {
-    return season.panel || null;
+  ): GQLField<CompanyPanel[]> {
+    return season.panels || [];
   }
 
   @FieldResolver(() => [ CalendarItem ])
@@ -349,9 +349,9 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
     return select;
   },
 
-  panel(select) {
-    select.panel = {
-      select: transformSelectPanel(select.panel as Dict),
+  panels(select) {
+    select.panels = {
+      select: transformSelectPanel(select.panels as Dict),
     };
 
     return select;

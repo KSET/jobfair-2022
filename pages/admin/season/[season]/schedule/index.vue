@@ -2,19 +2,24 @@
   <app-max-width-container :class="$style.container">
     <h1>Raspored za {{ season.name }}</h1>
 
-    <fieldset>
+    <fieldset
+      v-for="(panel, index) in panels"
+      :key="panel.value ? panel.value.uid : 'new-' + index"
+    >
       <legend>
         <strong>
           <em>
-            [Panel]
+            [Panel{{ panel.value ? `: ${panel.value.name}` : ' (new)' }}]
           </em>
         </strong>
       </legend>
 
       <EditPanel
-        v-model:item="panel"
+        v-model:item="panel.value"
         :panelists="panelists"
         :season="season.uid"
+        @delete="refreshPanels"
+        @submit="refreshPanels"
       />
     </fieldset>
 
@@ -113,7 +118,6 @@
     computed,
     defineComponent,
     reactive,
-    toRef,
     unref,
     useQuery,
     useRoute,
@@ -154,6 +158,7 @@
         },
       });
 
+      type QPanel = NonNullable<QData["season"]>["panels"][number];
       const queryCalendar = useQuery<{ season: { calendar: QEvent[], }, }, { season: string, }>({
         query: gql`
           query Calendar($season: String!) {
@@ -176,6 +181,36 @@
         },
       });
 
+      const queryPanels = useQuery<{ season: { panels: QPanel[], }, }, { season: string, }>({
+        query: gql`
+          query Panels($season: String!) {
+            season(uid: $season) {
+              panels {
+                uid
+                name
+                description
+                companies {
+                  uid
+                }
+                event {
+                  uid
+                  type
+                  title
+                  start
+                  end
+                  location
+                  text
+                  grouped
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          season: seasonUid,
+        },
+      });
+
       const resp = reactive(await queryData().then((resp) => resp?.data) ?? {} as QData);
 
       const participants = computed(() => resp.participants || []);
@@ -187,7 +222,7 @@
             p.program?.workshop?.event?.uid,
             p.program?.fusion?.event?.uid,
           ]),
-          resp.season?.panel?.event?.uid,
+          ...(resp.season?.panels || []).map((p) => p?.event?.uid),
         ].filter((x) => x),
       ));
 
@@ -205,7 +240,10 @@
         participants,
         isCalendarLoading,
         season: computed(() => seasonsStore.season as ISeason),
-        panel: toRef(resp.season!, "panel"),
+        panels: computed(() => [
+          ...(resp.season?.panels || []).map((value) => ({ value })),
+          { value: null },
+        ]),
         calendar: resp.season!.calendar,
         panelists: computed(() => unref(participants).filter((p) => 0 < (p?.program?.panelParticipants?.length ?? 0)).map((p): Panelist => ({
           firstName: p.program!.panelParticipants[0].firstName,
@@ -215,6 +253,10 @@
             brandName: p.brandName,
           },
         }))),
+        async refreshPanels() {
+          const panels = await queryPanels().then((resp) => resp?.data?.season?.panels || []);
+          resp.season!.panels = panels;
+        },
         async refreshCalendarItems() {
           isCalendarLoading.value = true;
           const calendar = await queryCalendar().then((resp) => resp?.data?.season?.calendar || []);

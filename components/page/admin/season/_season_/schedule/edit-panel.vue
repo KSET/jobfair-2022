@@ -100,6 +100,8 @@
       },
     },
 
+    emits: [ "update:item", "submit", "delete" ],
+
     setup(props, { emit }) {
       type CompanyPanel = Pick<ICompanyPanel, "uid" | "name" | "description"> & { companies: Pick<ICompany, "uid">[], };
 
@@ -182,6 +184,7 @@
           }
 
           itemInfo.value = resp;
+          emit("submit");
         },
         async handleDelete() {
           const { uid } = unref(itemInfo) || {};
@@ -205,6 +208,7 @@
           }
 
           itemInfo.value = null;
+          emit("delete");
         },
       };
     },

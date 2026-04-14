@@ -399,7 +399,7 @@ model Season {
   pressReleases PressRelease[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  panel CompanyPanel?
+  panels CompanyPanel[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedResumes ScannedResume[]
@@ -578,7 +578,7 @@ model CompanyPanel {
   /// @TypeGraphQL.omit(output: true, input: true)
   forSeason   Season @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
-  forSeasonId Int    @unique
+  forSeasonId Int
 }
 
 model CompanyApplicationApproval {

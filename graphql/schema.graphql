@@ -2152,7 +2152,7 @@ type Season {
   feedbackFrom: DateTimeISO!
   feedbackUntil: DateTimeISO!
   name: String!
-  panel: CompanyPanel
+  panels: [CompanyPanel!]!
   reservations: [ReservationItem!]!
   scheduleFrom: DateTimeISO!
   scheduleUntil: DateTimeISO!
@@ -2177,6 +2177,7 @@ type SeasonCount {
   entryLog(where: EntryResumeLogWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   gateGuardianLog(where: GateGuardianLogWhereInput): Int!
+  panels(where: CompanyPanelWhereInput): Int!
   partners(where: PartnerWhereInput): Int!
   pressReleases(where: PressReleaseWhereInput): Int!
   scannedResumes(where: ScannedResumeWhereInput): Int!

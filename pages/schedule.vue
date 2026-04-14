@@ -238,9 +238,15 @@
         events.filter((event) => event.class && !otherContent.includes(event.class) && !event.noGroup),
       );
 
+      const splitOrder = [ "talk", "fusion", "workshop" ];
       const splitDays =
         Object
           .entries(groupedEvents)
+          .sort(([ a ], [ b ]) => {
+            const ai = splitOrder.indexOf(a);
+            const bi = splitOrder.indexOf(b);
+            return (-1 === ai ? splitOrder.length : ai) - (-1 === bi ? splitOrder.length : bi);
+          })
           .map(([ rawKey, events ], i) => {
             const key = rawKey.replace(/-/g, " ");
             const id = i + 1;

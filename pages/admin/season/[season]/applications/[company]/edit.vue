@@ -184,6 +184,37 @@
             </fieldset>
           </template>
         </Panel>
+        <Panel
+          v-if="panelParticipants.length > 0"
+          :class="$style.panel"
+          :collapsed="false"
+        >
+          <template #header>
+            <strong>Panel Participants</strong>
+          </template>
+
+          <div
+            v-for="(participant, index) in panelParticipants"
+            :key="`panel-participant-${index}`"
+            :class="$style.participantCard"
+          >
+            <img
+              v-if="participant.photo"
+              :src="`/api/i/${participant.photo.uid}/full`"
+              :alt="`${participant.firstName} ${participant.lastName}`"
+              :class="$style.participantPhoto"
+            >
+            <div :class="$style.participantInfo">
+              <strong>{{ participant.firstName }} {{ participant.lastName }}</strong>
+              <p v-if="participant.bioEn">
+                <span :class="$style.participantLabel">EN:</span> {{ participant.bioEn }}
+              </p>
+              <p v-if="participant.bioHr">
+                <span :class="$style.participantLabel">HR:</span> {{ participant.bioHr }}
+              </p>
+            </div>
+          </div>
+        </Panel>
       </div>
 
       <div class="flex mt-3">
@@ -326,6 +357,7 @@
       const company = resp?.companyApplicationFor?.forCompany;
       const application = resp?.companyApplicationFor;
       const booths = resp?.booths || [];
+      const panelParticipants = application?.panelParticipants || [];
 
       const requireHr = company?.vat.startsWith("HR");
 
@@ -483,6 +515,7 @@
         booth,
         company,
         contactPerson,
+        panelParticipants,
         signatories,
         addSignatory,
         removeSignatory,
@@ -805,6 +838,43 @@
       display: flex;
       justify-content: flex-end;
       margin-top: 0.5rem;
+    }
+
+    .participantCard {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid color.adjust($fer-black, $alpha: -.9);
+      border-radius: 4px;
+      background-color: $fer-off-gray;
+
+      & + & {
+        margin-top: 0.75rem;
+      }
+    }
+
+    .participantPhoto {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .participantInfo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .participantLabel {
+      font-weight: 600;
+      opacity: 0.6;
     }
   }
 </style>

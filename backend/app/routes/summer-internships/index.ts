@@ -15,18 +15,9 @@ authRouter.get("/", async () => {
   const debug: Record<string, unknown> = {
     url: url || "(not set)",
     timestamp: new Date().toISOString(),
-    serverIp: null,
     response: null,
     error: null,
   };
-
-  // Get server's public IP
-  try {
-    const ipRes = await axios.get<{ ip: string, }>("https://api.ipify.org?format=json", { timeout: 5000 });
-    debug.serverIp = ipRes.data.ip;
-  } catch (e) {
-    debug.serverIp = `Failed to fetch IP: ${ e instanceof Error ? e.message : String(e) }`;
-  }
 
   // Call the external summer internships URL
   if (!url) {

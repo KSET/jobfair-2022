@@ -23,14 +23,6 @@
         <tbody>
           <tr>
             <td style="padding: 4px 12px 4px 0; font-weight: bold; vertical-align: top;">
-              Server IP
-            </td>
-            <td style="padding: 4px 0;">
-              {{ data.serverIp ?? 'N/A' }}
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 4px 12px 4px 0; font-weight: bold; vertical-align: top;">
               URL
             </td>
             <td style="padding: 4px 0; word-break: break-all;">

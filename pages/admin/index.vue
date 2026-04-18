@@ -206,6 +206,13 @@
               Partneri i sponzori
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-applications-export', params: { season: season.uid } }"
+            >
+              Export
+            </nuxt-link>
+          </li>
         </ul>
 
         <h2>Event</h2>

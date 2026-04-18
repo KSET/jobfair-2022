@@ -85,7 +85,14 @@
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import {
     type IUserRegisterInput,
+    type IResumeCreateInput,
+    type IUpdateResumeMutation,
+    type IMutationUpdateResumeArgs,
+    UpdateResume,
   } from "~/graphql/schema";
+  import {
+    useMutation,
+  } from "~/composables/useQuery";
   import {
     type Dict,
   } from "~/helpers/type";
@@ -105,6 +112,7 @@
       const route = useRoute();
       const router = useRouter();
       const userStore = useUserStore();
+      const updateResume = useMutation<IUpdateResumeMutation, IMutationUpdateResumeArgs>(UpdateResume);
 
       const info = reactive(userRegister()());
 
@@ -148,8 +156,10 @@
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;
+          const mapped = mapObject((x) => (x as Dict).value, info) as IUserRegisterInput & { faculty: string, };
+          const { faculty, ...registerInfo } = mapped;
           const resp = await userStore.register({
-            info: mapObject((x) => (x as Dict).value, info) as IUserRegisterInput,
+            info: registerInfo as IUserRegisterInput,
           });
           isLoading.value = false;
 
@@ -163,6 +173,21 @@
           const errorList = resp.errors as ErrorList;
 
           if (!errorList) {
+            if (faculty) {
+              await updateResume({
+                info: {
+                  city: "",
+                  faculty: { name: faculty, module: "" },
+                  technologies: [],
+                  interests: [],
+                  studyYears: [],
+                  workExperiences: [],
+                  projects: [],
+                  volunteerExperiences: [],
+                } as IResumeCreateInput,
+              });
+            }
+
             const redirectInfo = route.query?.r;
             if (redirectInfo && "string" === typeof redirectInfo) {
               await router.push(decodeRedirectParam(redirectInfo) || "/");

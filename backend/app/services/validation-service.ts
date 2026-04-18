@@ -175,7 +175,7 @@ const resumeFacultyValidation = z.union([
   z.object({
     name: z.string().min(1),
     specialization: z.optional(z.string()),
-    module: z.string().min(1),
+    module: z.string(),
   }),
   z.object({
     name: z.string().length(0),

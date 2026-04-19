@@ -890,9 +890,11 @@ export type ICompanyOrderByWithRelationInput = {
 export type ICompanyPanel = {
   _count?: Maybe<ICompanyPanelCount>;
   companies: Array<ICompany>;
+  companiesWithPanelists: Array<IPanelCompanyEntry>;
   description: Scalars['String']['output'];
   event?: Maybe<ICalendarItem>;
   name: Scalars['String']['output'];
+  panelists: Array<IApplicationPresenter>;
   reservation: Scalars['Float']['output'];
   uid: Scalars['String']['output'];
 };
@@ -2148,6 +2150,11 @@ export enum INullsOrder {
   First = 'first',
   Last = 'last'
 }
+
+export type IPanelCompanyEntry = {
+  company: ICompany;
+  panelists: Array<IApplicationPresenter>;
+};
 
 export type IPartner = {
   name: Scalars['String']['output'];
@@ -5150,6 +5157,32 @@ export type IPageCalendarEventDataQueryVariables = Exact<{
 
 export type IPageCalendarEventDataQuery = IPageCalendarEventDataQuery_Query;
 
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_company_Company_rasterLogo_Image = { fullUrl: string, thumbUrl: string };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_company_Company = { uid: string, brandName: string, rasterLogo?: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_company_Company_rasterLogo_Image | null };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_panelists_ApplicationPresenter_photo_Image = { fullUrl: string, thumbUrl: string };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_panelists_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_panelists_ApplicationPresenter_photo_Image | null };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry = { company: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_company_Company, panelists: Array<IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry_panelists_ApplicationPresenter> };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_event_CalendarItem = { start: string | Date, end: string | Date, location?: string | null };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel = { uid: string, name: string, description: string, reservation: number, companiesWithPanelists: Array<IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_companiesWithPanelists_PanelCompanyEntry>, event?: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel_event_CalendarItem | null };
+
+export type IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem = { forPanel?: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem_forPanel_CompanyPanel | null };
+
+export type IPageCalendarEventPanelDataQuery_Query = { calendarItem?: IPageCalendarEventPanelDataQuery_calendarItem_CalendarItem | null };
+
+
+export type IPageCalendarEventPanelDataQueryVariables = Exact<{
+  uid: Scalars['String']['input'];
+}>;
+
+
+export type IPageCalendarEventPanelDataQuery = IPageCalendarEventPanelDataQuery_Query;
+
 export type IPageCompanyUidRate_DataQuery_userCompanyComponentRating_UserCompanyComponentRating = { rating: number, comment?: string | null };
 
 export type IPageCompanyUidRate_DataQuery_currentSeason_Season = { eventFrom: string | Date, eventUntil: string | Date };
@@ -5781,6 +5814,7 @@ export type IResolversTypes = {
   NewsFilter: INewsFilter;
   NewsWhereInput: INewsWhereInput;
   NullsOrder: INullsOrder;
+  PanelCompanyEntry: ResolverTypeWrapper<IPanelCompanyEntry>;
   Partner: ResolverTypeWrapper<IPartner>;
   PartnerCreateInput: IPartnerCreateInput;
   PartnerListRelationFilter: IPartnerListRelationFilter;
@@ -6079,6 +6113,7 @@ export type IResolversParentTypes = {
   NewsCreateResponse: INewsCreateResponse;
   NewsFilter: INewsFilter;
   NewsWhereInput: INewsWhereInput;
+  PanelCompanyEntry: IPanelCompanyEntry;
   Partner: IPartner;
   PartnerCreateInput: IPartnerCreateInput;
   PartnerListRelationFilter: IPartnerListRelationFilter;
@@ -6474,9 +6509,11 @@ export type ICompanyCountResolvers<ContextType = any, ParentType extends IResolv
 export type ICompanyPanelResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyPanel'] = IResolversParentTypes['CompanyPanel']> = {
   _count?: Resolver<Maybe<IResolversTypes['CompanyPanelCount']>, ParentType, ContextType>;
   companies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType>;
+  companiesWithPanelists?: Resolver<Array<IResolversTypes['PanelCompanyEntry']>, ParentType, ContextType>;
   description?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   event?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  panelists?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
   reservation?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -6818,6 +6855,12 @@ export type INewsResolvers<ContextType = any, ParentType extends IResolversParen
 export type INewsCreateResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['NewsCreateResponse'] = IResolversParentTypes['NewsCreateResponse']> = {
   entity?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<IResolversTypes['FieldError']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IPanelCompanyEntryResolvers<ContextType = any, ParentType extends IResolversParentTypes['PanelCompanyEntry'] = IResolversParentTypes['PanelCompanyEntry']> = {
+  company?: Resolver<IResolversTypes['Company'], ParentType, ContextType>;
+  panelists?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7249,6 +7292,7 @@ export type IResolvers<ContextType = any> = {
   Mutation?: IMutationResolvers<ContextType>;
   News?: INewsResolvers<ContextType>;
   NewsCreateResponse?: INewsCreateResponseResolvers<ContextType>;
+  PanelCompanyEntry?: IPanelCompanyEntryResolvers<ContextType>;
   Partner?: IPartnerResolvers<ContextType>;
   PasswordResetUseResponse?: IPasswordResetUseResponseResolvers<ContextType>;
   PressRelease?: IPressReleaseResolvers<ContextType>;
@@ -8954,6 +8998,43 @@ export const PageCalendarEventData = gql`
     type
   }
   calendarItemCompanyUid(uid: $uid)
+}
+    `;
+export const PageCalendarEventPanelData = gql`
+    query PageCalendarEventPanelData($uid: String!) {
+  calendarItem(uid: $uid) {
+    forPanel {
+      uid
+      name
+      description
+      reservation
+      companiesWithPanelists {
+        company {
+          uid
+          brandName
+          rasterLogo {
+            fullUrl
+            thumbUrl
+          }
+        }
+        panelists {
+          firstName
+          lastName
+          bioHr
+          bioEn
+          photo {
+            fullUrl
+            thumbUrl
+          }
+        }
+      }
+      event {
+        start
+        end
+        location
+      }
+    }
+  }
 }
     `;
 export const PageCompanyUidRate_Data = gql`

@@ -184,6 +184,9 @@
           }
 
           itemInfo.value = resp;
+          if (resp?.companies) {
+            (formModel.companies as { value: unknown, }).value = resp.companies.map((c) => c.uid);
+          }
           emit("submit");
         },
         async handleDelete() {

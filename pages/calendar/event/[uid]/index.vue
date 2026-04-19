@@ -1,6 +1,5 @@
 <template>
   <panel-event-view v-if="'panel' === eventType && panelData" :panel="panelData" />
-  <!-- TODO: <hot-talk-event-view v-else-if="'hot-talk' === eventType && hotTalkData" :hot-talk="hotTalkData" /> -->
 </template>
 
 <script lang="ts">

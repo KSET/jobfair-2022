@@ -62,7 +62,7 @@ export const userProfileEdit =
 
 
 type UserRegister = Profile & {
-  faculty: string,
+  // faculty: string,
   password: string,
   passwordRepeat: string,
 };
@@ -71,11 +71,11 @@ export const userRegister =
     (): Record<keyof UserRegister, InputEntry> =>
       ({
         ...userProfileEdit(user),
-        faculty: {
-          value: "",
-          type: "text",
-          placeholder: "Fakultet elektrotehnike i računarstva",
-        },
+        // faculty: {
+        //   value: "",
+        //   type: "text",
+        //   placeholder: "Fakultet elektrotehnike i računarstva",
+        // },
         password: {
           value: "",
           type: "password",

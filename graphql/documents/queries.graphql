@@ -950,6 +950,10 @@ query AdminReservationsData($seasonUid: String!) {
                 uid
                 titleHr
             }
+            fusion {
+                uid
+                titleHr
+            }
             panel {
                 uid
                 name

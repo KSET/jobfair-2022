@@ -182,6 +182,7 @@
   import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?component";
   import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?component";
   import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?component";
+  import EventIconFusion from "~/assets/images/icon/event-icons/fusion.png";
   import {
     useUserStore,
   } from "~/store/user";
@@ -221,6 +222,10 @@
     {
       label: EventType.Panel,
       IconComponent: EventIconPanel,
+    },
+    {
+      label: EventType.Fusion,
+      iconImage: EventIconFusion,
     },
     {
       label: "profile.reservations.tab.reserved",

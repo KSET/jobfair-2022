@@ -146,6 +146,11 @@ export class SeasonFieldResolver {
                 gt: 0,
               },
             },
+            {
+              fusionParticipants: {
+                gt: 0,
+              },
+            },
           ],
         },
       },
@@ -168,6 +173,12 @@ export class SeasonFieldResolver {
             uid: true,
           },
         },
+        fusion: {
+          select: {
+            id: true,
+            uid: true,
+          },
+        },
       },
     });
 
@@ -177,6 +188,7 @@ export class SeasonFieldResolver {
           [ "workshop", company.workshop! ],
           [ "panel", company.panel! ],
           [ "talk", company.talk! ],
+          [ "fusion", company.fusion! ],
         ] as const)
         .filter((x) => x[1])
       ;

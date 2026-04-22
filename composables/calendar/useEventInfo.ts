@@ -5,6 +5,7 @@ import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?ur
 import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?url";
 import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?url";
 import EventIconHotTalk from "~/assets/images/icon/event-icons/hotTalk.svg?url";
+import EventIconFusion from "~/assets/images/icon/event-icons/fusion.png?url";
 
 import {
   computed,
@@ -87,7 +88,7 @@ export const useEventInfo = (event: TCalendarEvent) => {
       }
 
       case IEventType.Fusion: {
-        base.icon = EventIconTalk;
+        base.icon = EventIconFusion;
         break;
       }
 

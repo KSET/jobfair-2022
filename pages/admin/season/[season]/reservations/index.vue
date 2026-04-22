@@ -85,9 +85,6 @@
         },
       })().then((resp) => resp?.data);
 
-      console.log("[reservations] raw resp", JSON.stringify(resp?.season?.reservations));
-      console.log("[reservations] participants count", resp?.participants?.length);
-
       const participants =
         (resp?.participants ?? [])
           .flatMap(
@@ -109,13 +106,14 @@
         ),
       );
 
-      console.log("[reservations] participantsGrouped keys", Object.keys(participantsGrouped));
-
       const reservations =
         (resp?.season?.reservations ?? [])
           .map((reservation) => {
-            console.log("[reservations] lookup", reservation.type, reservation.uid, "->", participantsGrouped[reservation.type]?.[reservation.uid]);
-            const event = participantsGrouped[reservation.type][reservation.uid];
+            const event = participantsGrouped[reservation.type]?.[reservation.uid];
+
+            if (!event) {
+              return null;
+            }
 
             return {
               ...reservation,
@@ -123,6 +121,7 @@
               company: event.company,
             };
           })
+          .filter(Boolean)
           .sort((lt, gt) => lt.company.brandName.localeCompare(gt.company.brandName))
       ;
 

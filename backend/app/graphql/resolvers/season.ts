@@ -25,11 +25,8 @@ import {
 } from "graphql";
 import {
   groupBy,
-  map,
   omit,
-  piped,
   toPairs,
-  values,
 } from "rambdax";
 import {
   Prisma,
@@ -216,11 +213,7 @@ export class SeasonFieldResolver {
       }
     }
 
-    const eventIds = info?.flatMap((company) => piped(
-      company,
-      values,
-      map((x) => x?.id as number),
-    )).filter((x) => x) || [];
+    const eventIds = infoFlat.map(([ , entry ]) => entry.id);
 
     if (eventIds.length === 0) {
       return [];
@@ -233,14 +226,14 @@ export class SeasonFieldResolver {
       from
         "EventReservation"
       where
-        "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) }) 
+        "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) })
       group by
         "eventId", "eventType", "status"
     `;
 
     return items.map((row) => ({
       type: row.eventType,
-      uid: eventToUid[row.eventType][row.eventId],
+      uid: eventToUid[row.eventType]?.[row.eventId],
       count: Number(row.count),
     })).filter((x) => x.uid);
   }

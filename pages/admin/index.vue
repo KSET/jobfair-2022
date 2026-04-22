@@ -45,6 +45,13 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-users-faculty-stats' }">
+              Statistika po fakultetima
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 

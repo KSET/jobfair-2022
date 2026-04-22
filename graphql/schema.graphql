@@ -770,6 +770,7 @@ input CompanyOrderByWithRelationInput {
 type CompanyPanel {
   _count: CompanyPanelCount
   companies: [Company!]!
+  companiesWithPanelists: [PanelCompanyEntry!]!
   description: String!
   event: CalendarItem
   name: String!
@@ -1603,6 +1604,11 @@ input NewsWhereInput {
 enum NullsOrder {
   first
   last
+}
+
+type PanelCompanyEntry {
+  company: Company!
+  panelists: [ApplicationPresenter!]!
 }
 
 type Partner {

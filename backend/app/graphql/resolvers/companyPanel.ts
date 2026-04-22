@@ -2,6 +2,7 @@ import {
   CompanyPanel,
   Company,
   CalendarItem,
+  ApplicationPresenter,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -12,6 +13,7 @@ import {
   Info,
   InputType,
   Mutation,
+  ObjectType,
   Resolver,
   Root,
 } from "type-graphql";
@@ -23,7 +25,6 @@ import {
 } from "@prisma/client";
 import {
   toSelect,
-  transformSelectFor,
 } from "../helpers/resolver";
 import {
   Dict,
@@ -42,6 +43,18 @@ import {
 import {
   transformSelect as transformSelectCalendarItem,
 } from "./calendarItem";
+import {
+  transformSelect as transformSelectPresenter,
+} from "./companyPresenter";
+
+@ObjectType()
+export class PanelCompanyEntry {
+  @Field(() => Company)
+    company!: Company;
+
+  @Field(() => [ ApplicationPresenter ])
+    panelists!: ApplicationPresenter[];
+}
 
 @Resolver(() => CompanyPanel)
 export class CompanyPanelFieldResolver {
@@ -57,6 +70,18 @@ export class CompanyPanelFieldResolver {
     @Root() companyPanel: CompanyPanel,
   ): GQLField<CalendarItem, "nullable"> {
     return companyPanel.event || null;
+  }
+
+  @FieldResolver(() => [ PanelCompanyEntry ])
+  companiesWithPanelists(
+    @Root() companyPanel: CompanyPanel,
+  ): GQLField<PanelCompanyEntry[]> {
+    return (companyPanel.companies ?? [])
+      .filter((c) => c.forCompany)
+      .map((c) => ({
+        company: c.forCompany!,
+        panelists: c.panelParticipants ?? [],
+      }));
   }
 
   @FieldResolver(() => Number)
@@ -85,35 +110,40 @@ export class CompanyPanelFieldResolver {
   }
 }
 
-export const transformSelect = transformSelectFor<CompanyPanelFieldResolver>({
-  companies(select) {
-    select.companies = {
-      select: {
-        forCompany: {
-          select: transformSelectCompany(select.companies as Dict),
-        },
-      },
-    };
+export const transformSelect = (select: Dict): Dict => {
+  if (select.companies !== undefined || select.companiesWithPanelists !== undefined) {
+    const companiesInnerSelect: Dict = {};
+    const cwp = select.companiesWithPanelists as Dict | undefined;
 
-    return select;
-  },
+    if (select.companies !== undefined || cwp !== undefined) {
+      companiesInnerSelect.forCompany = {
+        select: transformSelectCompany((select.companies ?? (cwp?.company as Dict) ?? {}) as Dict),
+      };
+    }
 
-  event(select) {
+    if (cwp !== undefined) {
+      companiesInnerSelect.panelParticipants = {
+        select: transformSelectPresenter((cwp.panelists as Dict) ?? {}),
+      };
+    }
+
+    delete select.companiesWithPanelists;
+    select.companies = { select: companiesInnerSelect };
+  }
+
+  if (select.event !== undefined) {
     select.event = {
       select: transformSelectCalendarItem(select.event as Dict),
     };
+  }
 
-    return select;
-  },
-
-  reservation(select) {
+  if (select.reservation !== undefined) {
     select.id = true;
-
     delete select.reservation;
+  }
 
-    return select;
-  },
-});
+  return select;
+};
 
 
 @InputType()

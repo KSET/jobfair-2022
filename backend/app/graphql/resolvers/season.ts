@@ -222,6 +222,10 @@ export class SeasonFieldResolver {
       map((x) => x?.id as number),
     )).filter((x) => x) || [];
 
+    if (eventIds.length === 0) {
+      return [];
+    }
+
     type Row = { eventId: InfoEntryValue["id"], eventType: InfoEntryType, status: number, count: bigint | number, };
     const items = await ctx.prisma.$queryRaw<Row[]>`
       select

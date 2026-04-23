@@ -446,6 +446,32 @@
           </div>
         </div>
 
+        <div :class="[$style.item, $style.itemApproval]">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.company.internship.header" />
+            </h2>
+            <p>
+              <translated-text trans-key="profile.company.internship.text" />
+            </p>
+          </div>
+          <div :class="$style.itemActions">
+            <a
+              :href="internshipApplyUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ml-auto"
+            >
+              <p-button
+                class="p-button-secondary"
+                tabindex="-1"
+              >
+                <translated-text trans-key="profile.company.internship.apply.text" />
+              </p-button>
+            </a>
+          </div>
+        </div>
+
         <div
           v-if="isApprovedWithEvents"
           :class="[$style.item, $style.itemApproval]"
@@ -909,6 +935,7 @@
         }),
         isSignUpPossible: computed(() => seasonsStore.isSignUpPossible),
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
+        internshipApplyUrl: computed(() => translationsStore.translation("profile.company.internship.apply.url")),
         isScanner: computed(() => userStore.isScanner),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),

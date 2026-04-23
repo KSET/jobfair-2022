@@ -1,4 +1,7 @@
 import {
+  markRaw,
+} from "vue";
+import {
   type ConditionalPick,
   type Primitive,
 } from "type-fest";
@@ -19,6 +22,9 @@ import {
   today,
   yesterday,
 } from "~/helpers/date";
+import {
+  FACULTIES,
+} from "~/helpers/faculties";
 
 type Maybe<T> = T | null | undefined;
 
@@ -84,9 +90,19 @@ export const resumeFacultyCreate =
   <T extends ResumeFaculty>(resume: Maybe<T>): Record<keyof Omit<ResumeFaculty, "specialization">, InputEntry> =>
     ({
       name: {
-        value: resume?.name || "",
-        type: "text",
-        placeholder: "Fakultet elektrotehnike i računarstva",
+        value: resume?.name?.trim() || "",
+        type: "dropdown",
+        options: markRaw([
+          ...(resume?.name && !FACULTIES.includes(resume.name.trim())
+            ? [ {
+                label: resume.name.trim(),
+                value: resume.name.trim(),
+              } ]
+            : []
+          ),
+          ...FACULTIES.map((f) => ({ label: f, value: f })),
+        ]),
+        placeholder: "Odaberi fakultet",
         required: false,
       },
       module: {

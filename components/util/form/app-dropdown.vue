@@ -89,6 +89,11 @@
           :required="required"
         >
           <option
+            value=""
+            disabled
+            v-text="placeholder || ''"
+          />
+          <option
             v-for="option in options"
             :key="`${option.value}$${option.label}`"
             :selected="orNone(option.value === input)"

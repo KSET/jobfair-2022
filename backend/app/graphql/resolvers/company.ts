@@ -886,6 +886,11 @@ export class CompanyListResolver {
                   gt: 0,
                 },
               },
+              {
+                fusionParticipants: {
+                  gt: 0,
+                },
+              },
             ],
           },
         },

@@ -894,7 +894,6 @@ export type ICompanyPanel = {
   description: Scalars['String']['output'];
   event?: Maybe<ICalendarItem>;
   name: Scalars['String']['output'];
-  panelists: Array<IApplicationPresenter>;
   reservation: Scalars['Float']['output'];
   uid: Scalars['String']['output'];
 };
@@ -4900,9 +4899,11 @@ export type IAdminReservationsDataQuery_participants_Company_program_CompanyProg
 
 export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_talk_ApplicationTalk = { uid: string, titleHr: string };
 
+export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_fusion_ApplicationFusion = { uid: string, titleHr: string };
+
 export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_panel_CompanyPanel = { uid: string, name: string };
 
-export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram = { workshop?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, talk?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_talk_ApplicationTalk | null, panel?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_panel_CompanyPanel | null };
+export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram = { workshop?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, talk?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_talk_ApplicationTalk | null, fusion?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_fusion_ApplicationFusion | null, panel?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_panel_CompanyPanel | null };
 
 export type IAdminReservationsDataQuery_participants_Company = { uid: string, vat: string, brandName: string, program?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram | null };
 
@@ -6513,7 +6514,6 @@ export type ICompanyPanelResolvers<ContextType = any, ParentType extends IResolv
   description?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   event?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
-  panelists?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
   reservation?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -8717,6 +8717,10 @@ export const AdminReservationsData = gql`
         titleHr
       }
       talk {
+        uid
+        titleHr
+      }
+      fusion {
         uid
         titleHr
       }

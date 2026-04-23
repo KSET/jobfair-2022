@@ -105,10 +105,15 @@
           participants,
         ),
       );
+
       const reservations =
         (resp?.season?.reservations ?? [])
           .map((reservation) => {
-            const event = participantsGrouped[reservation.type][reservation.uid];
+            const event = participantsGrouped[reservation.type]?.[reservation.uid];
+
+            if (!event) {
+              return null;
+            }
 
             return {
               ...reservation,
@@ -116,6 +121,7 @@
               company: event.company,
             };
           })
+          .filter(Boolean)
           .sort((lt, gt) => lt.company.brandName.localeCompare(gt.company.brandName))
       ;
 

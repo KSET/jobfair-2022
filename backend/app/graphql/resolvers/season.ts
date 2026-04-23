@@ -25,11 +25,8 @@ import {
 } from "graphql";
 import {
   groupBy,
-  map,
   omit,
-  piped,
   toPairs,
-  values,
 } from "rambdax";
 import {
   Prisma,
@@ -146,6 +143,11 @@ export class SeasonFieldResolver {
                 gt: 0,
               },
             },
+            {
+              fusionParticipants: {
+                gt: 0,
+              },
+            },
           ],
         },
       },
@@ -168,6 +170,12 @@ export class SeasonFieldResolver {
             uid: true,
           },
         },
+        fusion: {
+          select: {
+            id: true,
+            uid: true,
+          },
+        },
       },
     });
 
@@ -177,6 +185,7 @@ export class SeasonFieldResolver {
           [ "workshop", company.workshop! ],
           [ "panel", company.panel! ],
           [ "talk", company.talk! ],
+          [ "fusion", company.fusion! ],
         ] as const)
         .filter((x) => x[1])
       ;
@@ -204,11 +213,11 @@ export class SeasonFieldResolver {
       }
     }
 
-    const eventIds = info?.flatMap((company) => piped(
-      company,
-      values,
-      map((x) => x?.id as number),
-    )).filter((x) => x) || [];
+    const eventIds = infoFlat.map(([ , entry ]) => entry.id);
+
+    if (eventIds.length === 0) {
+      return [];
+    }
 
     type Row = { eventId: InfoEntryValue["id"], eventType: InfoEntryType, status: number, count: bigint | number, };
     const items = await ctx.prisma.$queryRaw<Row[]>`
@@ -217,14 +226,14 @@ export class SeasonFieldResolver {
       from
         "EventReservation"
       where
-        "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) }) 
+        "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) })
       group by
         "eventId", "eventType", "status"
     `;
 
     return items.map((row) => ({
       type: row.eventType,
-      uid: eventToUid[row.eventType][row.eventId],
+      uid: eventToUid[row.eventType]?.[row.eventId],
       count: Number(row.count),
     })).filter((x) => x.uid);
   }

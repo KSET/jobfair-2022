@@ -28,6 +28,7 @@ $event-icons: (
   "loosen-up": url("@/assets/images/icon/event-icons/party.svg?url"),
   "talk": url("@/assets/images/icon/event-icons/talks.svg?url"),
   "workshop": url("@/assets/images/icon/event-icons/workshops.svg?url"),
+  "fusion": url("/fusion-icon.png"),
 );
 $input-colors: (
   "border": #{color.adjust($fer-black, $alpha: -.6)},

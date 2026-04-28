@@ -158,29 +158,46 @@ export type IApplicationFusionWhereInput = {
 
 export type IApplicationInternship = {
   company?: Maybe<ICompany>;
-  competencies: Scalars['String']['output'];
-  createdAt: Scalars['DateTimeISO']['output'];
+  competencies?: Maybe<Scalars['String']['output']>;
   description: Scalars['String']['output'];
-  duration: Scalars['String']['output'];
+  duration?: Maybe<Scalars['String']['output']>;
+  externalCompany?: Maybe<Scalars['String']['output']>;
+  places?: Maybe<Scalars['Int']['output']>;
   position: Scalars['String']['output'];
+  signed?: Maybe<Scalars['Boolean']['output']>;
   uid: Scalars['String']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
-  url: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
   workingPeriodEnd: Scalars['DateTimeISO']['output'];
   workingPeriodStart: Scalars['DateTimeISO']['output'];
 };
 
-export type IApplicationInternshipNullableRelationFilter = {
-  is?: InputMaybe<IApplicationInternshipWhereInput>;
-  isNot?: InputMaybe<IApplicationInternshipWhereInput>;
+export type IApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput = {
+  forApplicationId: Scalars['Int']['input'];
+  position: Scalars['String']['input'];
+  workingPeriodEnd: Scalars['DateTimeISO']['input'];
+  workingPeriodStart: Scalars['DateTimeISO']['input'];
+};
+
+export type IApplicationInternshipListRelationFilter = {
+  every?: InputMaybe<IApplicationInternshipWhereInput>;
+  none?: InputMaybe<IApplicationInternshipWhereInput>;
+  some?: InputMaybe<IApplicationInternshipWhereInput>;
+};
+
+export type IApplicationInternshipOrderByRelationAggregateInput = {
+  _count?: InputMaybe<ISortOrder>;
 };
 
 export type IApplicationInternshipOrderByWithRelationInput = {
-  competencies?: InputMaybe<ISortOrder>;
+  competencies?: InputMaybe<ISortOrderInput>;
   description?: InputMaybe<ISortOrder>;
-  duration?: InputMaybe<ISortOrder>;
+  duration?: InputMaybe<ISortOrderInput>;
+  externalCompany?: InputMaybe<ISortOrderInput>;
+  places?: InputMaybe<ISortOrderInput>;
   position?: InputMaybe<ISortOrder>;
-  url?: InputMaybe<ISortOrder>;
+  signed?: InputMaybe<ISortOrderInput>;
+  url?: InputMaybe<ISortOrderInput>;
   workingPeriodEnd?: InputMaybe<ISortOrder>;
   workingPeriodStart?: InputMaybe<ISortOrder>;
 };
@@ -190,9 +207,12 @@ export enum IApplicationInternshipScalarFieldEnum {
   CreatedAt = 'createdAt',
   Description = 'description',
   Duration = 'duration',
+  ExternalCompany = 'externalCompany',
   ForApplicationId = 'forApplicationId',
   Id = 'id',
+  Places = 'places',
   Position = 'position',
+  Signed = 'signed',
   Uid = 'uid',
   UpdatedAt = 'updatedAt',
   Url = 'url',
@@ -204,11 +224,14 @@ export type IApplicationInternshipWhereInput = {
   AND?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
   OR?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
-  competencies?: InputMaybe<IStringFilter>;
+  competencies?: InputMaybe<IStringNullableFilter>;
   description?: InputMaybe<IStringFilter>;
-  duration?: InputMaybe<IStringFilter>;
+  duration?: InputMaybe<IStringNullableFilter>;
+  externalCompany?: InputMaybe<IStringNullableFilter>;
+  places?: InputMaybe<IIntNullableFilter>;
   position?: InputMaybe<IStringFilter>;
-  url?: InputMaybe<IStringFilter>;
+  signed?: InputMaybe<IBoolNullableFilter>;
+  url?: InputMaybe<IStringNullableFilter>;
   workingPeriodEnd?: InputMaybe<IDateTimeFilter>;
   workingPeriodStart?: InputMaybe<IDateTimeFilter>;
 };
@@ -217,11 +240,15 @@ export type IApplicationInternshipWhereUniqueInput = {
   AND?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
   NOT?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
   OR?: InputMaybe<Array<IApplicationInternshipWhereInput>>;
-  competencies?: InputMaybe<IStringFilter>;
+  competencies?: InputMaybe<IStringNullableFilter>;
   description?: InputMaybe<IStringFilter>;
-  duration?: InputMaybe<IStringFilter>;
+  duration?: InputMaybe<IStringNullableFilter>;
+  externalCompany?: InputMaybe<IStringNullableFilter>;
+  forApplicationId_position_workingPeriodStart_workingPeriodEnd?: InputMaybe<IApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput>;
+  places?: InputMaybe<IIntNullableFilter>;
   position?: InputMaybe<IStringFilter>;
-  url?: InputMaybe<IStringFilter>;
+  signed?: InputMaybe<IBoolNullableFilter>;
+  url?: InputMaybe<IStringNullableFilter>;
   workingPeriodEnd?: InputMaybe<IDateTimeFilter>;
   workingPeriodStart?: InputMaybe<IDateTimeFilter>;
 };
@@ -482,6 +509,11 @@ export type IBoolFilter = {
   not?: InputMaybe<INestedBoolFilter>;
 };
 
+export type IBoolNullableFilter = {
+  equals?: InputMaybe<Scalars['Boolean']['input']>;
+  not?: InputMaybe<INestedBoolNullableFilter>;
+};
+
 export type IBooth = {
   key?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -613,7 +645,7 @@ export type ICompanyApplication = {
   forCompany?: Maybe<ICompany>;
   forSeason?: Maybe<ISeason>;
   fusion?: Maybe<IApplicationFusion>;
-  internship?: Maybe<IApplicationInternship>;
+  internships: Array<IApplicationInternship>;
   panelParticipants: Array<IApplicationPresenter>;
   talk?: Maybe<IApplicationTalk>;
   updatedAt: Scalars['DateTimeISO']['output'];
@@ -678,7 +710,13 @@ export type ICompanyApplicationContactPersonWhereInput = {
 };
 
 export type ICompanyApplicationCount = {
+  internships: Scalars['Int']['output'];
   panelParticipants: Scalars['Int']['output'];
+};
+
+
+export type ICompanyApplicationCountInternshipsArgs = {
+  where?: InputMaybe<IApplicationInternshipWhereInput>;
 };
 
 
@@ -757,7 +795,7 @@ export type ICompanyApplicationOrderByWithRelationInput = {
   forCompany?: InputMaybe<ICompanyOrderByWithRelationInput>;
   forSeason?: InputMaybe<ISeasonOrderByWithRelationInput>;
   fusion?: InputMaybe<IApplicationFusionOrderByWithRelationInput>;
-  internship?: InputMaybe<IApplicationInternshipOrderByWithRelationInput>;
+  internships?: InputMaybe<IApplicationInternshipOrderByRelationAggregateInput>;
   panel?: InputMaybe<ICompanyPanelOrderByWithRelationInput>;
   panelParticipants?: InputMaybe<IApplicationPresenterOrderByRelationAggregateInput>;
   talk?: InputMaybe<IApplicationTalkOrderByWithRelationInput>;
@@ -792,7 +830,7 @@ export type ICompanyApplicationWhereInput = {
   forCompany?: InputMaybe<ICompanyRelationFilter>;
   forSeason?: InputMaybe<ISeasonRelationFilter>;
   fusion?: InputMaybe<IApplicationFusionNullableRelationFilter>;
-  internship?: InputMaybe<IApplicationInternshipNullableRelationFilter>;
+  internships?: InputMaybe<IApplicationInternshipListRelationFilter>;
   panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
@@ -813,7 +851,7 @@ export type ICompanyApplicationWhereUniqueInput = {
   forCompanyId_forSeasonId?: InputMaybe<ICompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput>;
   forSeason?: InputMaybe<ISeasonRelationFilter>;
   fusion?: InputMaybe<IApplicationFusionNullableRelationFilter>;
-  internship?: InputMaybe<IApplicationInternshipNullableRelationFilter>;
+  internships?: InputMaybe<IApplicationInternshipListRelationFilter>;
   panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
@@ -941,7 +979,7 @@ export type ICompanyProgram = {
   booth?: Maybe<Scalars['String']['output']>;
   cocktail?: Maybe<IApplicationCocktail>;
   fusion?: Maybe<IApplicationFusion>;
-  internship?: Maybe<IApplicationInternship>;
+  internships: Array<IApplicationInternship>;
   panel?: Maybe<ICompanyPanel>;
   panelParticipants: Array<IApplicationPresenter>;
   talk?: Maybe<IApplicationTalk>;
@@ -1636,6 +1674,7 @@ export type IMutation = {
   swapGalleryImageOrder: Scalars['Boolean']['output'];
   swapPartnerOrder: Scalars['Boolean']['output'];
   swapSponsorOrder: Scalars['Boolean']['output'];
+  syncSummerInternships: ISyncResult;
   updateCalendarItem?: Maybe<ICalendarItem>;
   updateCompanyApplicationFeedback?: Maybe<ICompanyApplicationFeedback>;
   updateCompanyInfo?: Maybe<ICreateCompanyResponse>;
@@ -1920,6 +1959,11 @@ export type IMutationSwapSponsorOrderArgs = {
 };
 
 
+export type IMutationSyncSummerInternshipsArgs = {
+  season: Scalars['String']['input'];
+};
+
+
 export type IMutationUpdateCalendarItemArgs = {
   input: ICalendarUpdateInput;
 };
@@ -2017,6 +2061,11 @@ export type IMutationValidateVatArgs = {
 export type INestedBoolFilter = {
   equals?: InputMaybe<Scalars['Boolean']['input']>;
   not?: InputMaybe<INestedBoolFilter>;
+};
+
+export type INestedBoolNullableFilter = {
+  equals?: InputMaybe<Scalars['Boolean']['input']>;
+  not?: InputMaybe<INestedBoolNullableFilter>;
 };
 
 export type INestedDateTimeFilter = {
@@ -3474,6 +3523,13 @@ export type IStringNullableFilter = {
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ISyncResult = {
+  createdCompanies: Array<Scalars['String']['output']>;
+  deletedCompanies: Array<Scalars['String']['output']>;
+  unmatched: Array<Scalars['String']['output']>;
+  updatedCompanies: Array<Scalars['String']['output']>;
+};
+
 export type ITalkCreateInput = {
   category: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
@@ -4321,11 +4377,11 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_Applica
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail = { name: string, type: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail_type_ApplicationCocktailType };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company_rasterLogo_Image = { fullUrl: string, thumbUrl: string };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image = { fullUrl: string, thumbUrl: string };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company = { uid: string, brandName: string, rasterLogo?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company_rasterLogo_Image | null };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company = { uid: string, brandName: string, rasterLogo?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image | null };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship = { uid: string, position: string, competencies: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url: string, duration: string, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company | null };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
@@ -4333,7 +4389,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_Company
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
-export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
@@ -4343,7 +4399,7 @@ export type IFrag_NewsFragment = { lang: string, slug: string, date: string | Da
 
 export type IFrag_GalleryImageFragment = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
 
-export type IFrag_InternshipFragment = { uid: string, position: string, competencies: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url: string, duration: string, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company | null };
+export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -4457,9 +4513,9 @@ export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_C
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel = { uid: string, name: string, description: string, reservation: number, companies: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_companies_Company>, event?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_event_CalendarItem | null };
 
-export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internship_ApplicationInternship = { uid: string, position: string, competencies: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url: string, duration: string, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company | null };
+export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
-export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, fusion?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_fusion_ApplicationFusion | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null, internship?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internship_ApplicationInternship | null };
+export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, fusion?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_fusion_ApplicationFusion | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null, internships: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship> };
 
 export type ICompanyInfoQuery_companyInfo_Company = { uid: string, brandName: string, descriptionEn: string, descriptionHr: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, rasterLogo?: ICompanyInfoQuery_companyInfo_Company_rasterLogo_Image | null, program?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram | null };
 
@@ -4630,7 +4686,7 @@ export type IAllGalleryImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type IAllGalleryImagesQuery = IAllGalleryImagesQuery_Query;
 
-export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url: string, duration: string, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship_company_Company | null };
+export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IInternshipsQuery_Query = { internships: Array<IInternshipsQuery_internships_ApplicationInternship> };
 
@@ -4672,7 +4728,7 @@ export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplicati
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, signatories: Array<IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company_signatories_CompanySignatory>, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IAdminCompanyApplicationQuery_Query = { talkCategories: Array<IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationQuery_booths_Booth>, companyApplicationFor?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication | null };
 
@@ -4733,7 +4789,7 @@ export type ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCo
 
 export type ICurrentCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internship?: IFrag_CompanyApplicationFragment_CompanyApplication_internship_ApplicationInternship | null, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, availableCocktailTypes: Array<ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCocktailType>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
 
@@ -5034,6 +5090,28 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
+
+export type IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship = { uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null };
+
+export type IPageAdminSummerInternshipsApi_DataQuery_Query = { internships: Array<IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship> };
+
+
+export type IPageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IPageAdminSummerInternshipsApi_DataQuery = IPageAdminSummerInternshipsApi_DataQuery_Query;
+
+export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult = { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<string> };
+
+export type ISyncSummerInternshipsMutation_Mutation = { syncSummerInternships: ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult };
+
+
+export type ISyncSummerInternshipsMutationVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type ISyncSummerInternshipsMutation = ISyncSummerInternshipsMutation_Mutation;
 
 export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteResults_LiveVoteResult = { option: string, voteCount: number };
 
@@ -5649,7 +5727,9 @@ export type IResolversTypes = {
   ApplicationFusionOrderByWithRelationInput: IApplicationFusionOrderByWithRelationInput;
   ApplicationFusionWhereInput: IApplicationFusionWhereInput;
   ApplicationInternship: ResolverTypeWrapper<IApplicationInternship>;
-  ApplicationInternshipNullableRelationFilter: IApplicationInternshipNullableRelationFilter;
+  ApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput: IApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput;
+  ApplicationInternshipListRelationFilter: IApplicationInternshipListRelationFilter;
+  ApplicationInternshipOrderByRelationAggregateInput: IApplicationInternshipOrderByRelationAggregateInput;
   ApplicationInternshipOrderByWithRelationInput: IApplicationInternshipOrderByWithRelationInput;
   ApplicationInternshipScalarFieldEnum: IApplicationInternshipScalarFieldEnum;
   ApplicationInternshipWhereInput: IApplicationInternshipWhereInput;
@@ -5681,6 +5761,7 @@ export type IResolversTypes = {
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
   AuthResponse: ResolverTypeWrapper<IAuthResponse>;
   BoolFilter: IBoolFilter;
+  BoolNullableFilter: IBoolNullableFilter;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Booth: ResolverTypeWrapper<IBooth>;
   CalendarEvent: ResolverTypeWrapper<ICalendarEvent>;
@@ -5802,6 +5883,7 @@ export type IResolversTypes = {
   LiveVoteWhereInput: ILiveVoteWhereInput;
   Mutation: ResolverTypeWrapper<{}>;
   NestedBoolFilter: INestedBoolFilter;
+  NestedBoolNullableFilter: INestedBoolNullableFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
   NestedFloatFilter: INestedFloatFilter;
@@ -5903,6 +5985,7 @@ export type IResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   StringFilter: IStringFilter;
   StringNullableFilter: IStringNullableFilter;
+  SyncResult: ResolverTypeWrapper<ISyncResult>;
   TalkCreateInput: ITalkCreateInput;
   TalksCreateInput: ITalksCreateInput;
   Translation: ResolverTypeWrapper<ITranslation>;
@@ -5955,7 +6038,9 @@ export type IResolversParentTypes = {
   ApplicationFusionOrderByWithRelationInput: IApplicationFusionOrderByWithRelationInput;
   ApplicationFusionWhereInput: IApplicationFusionWhereInput;
   ApplicationInternship: IApplicationInternship;
-  ApplicationInternshipNullableRelationFilter: IApplicationInternshipNullableRelationFilter;
+  ApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput: IApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput;
+  ApplicationInternshipListRelationFilter: IApplicationInternshipListRelationFilter;
+  ApplicationInternshipOrderByRelationAggregateInput: IApplicationInternshipOrderByRelationAggregateInput;
   ApplicationInternshipOrderByWithRelationInput: IApplicationInternshipOrderByWithRelationInput;
   ApplicationInternshipWhereInput: IApplicationInternshipWhereInput;
   ApplicationInternshipWhereUniqueInput: IApplicationInternshipWhereUniqueInput;
@@ -5985,6 +6070,7 @@ export type IResolversParentTypes = {
   ApproveCompanyApplicationsInputParts: IApproveCompanyApplicationsInputParts;
   AuthResponse: IAuthResponse;
   BoolFilter: IBoolFilter;
+  BoolNullableFilter: IBoolNullableFilter;
   Boolean: Scalars['Boolean']['output'];
   Booth: IBooth;
   CalendarEvent: ICalendarEvent;
@@ -6102,6 +6188,7 @@ export type IResolversParentTypes = {
   LiveVoteWhereInput: ILiveVoteWhereInput;
   Mutation: {};
   NestedBoolFilter: INestedBoolFilter;
+  NestedBoolNullableFilter: INestedBoolNullableFilter;
   NestedDateTimeFilter: INestedDateTimeFilter;
   NestedDateTimeNullableFilter: INestedDateTimeNullableFilter;
   NestedFloatFilter: INestedFloatFilter;
@@ -6197,6 +6284,7 @@ export type IResolversParentTypes = {
   String: Scalars['String']['output'];
   StringFilter: IStringFilter;
   StringNullableFilter: IStringNullableFilter;
+  SyncResult: ISyncResult;
   TalkCreateInput: ITalkCreateInput;
   TalksCreateInput: ITalksCreateInput;
   Translation: ITranslation;
@@ -6267,14 +6355,16 @@ export type IApplicationFusionCountResolvers<ContextType = any, ParentType exten
 
 export type IApplicationInternshipResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationInternship'] = IResolversParentTypes['ApplicationInternship']> = {
   company?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType>;
-  competencies?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  competencies?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
-  duration?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  duration?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  externalCompany?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  places?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
   position?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  signed?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
-  url?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   workingPeriodEnd?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   workingPeriodStart?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -6438,7 +6528,7 @@ export type ICompanyApplicationResolvers<ContextType = any, ParentType extends I
   forCompany?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType>;
   forSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
   fusion?: Resolver<Maybe<IResolversTypes['ApplicationFusion']>, ParentType, ContextType>;
-  internship?: Resolver<Maybe<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
+  internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
   panelParticipants?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
   talk?: Resolver<Maybe<IResolversTypes['ApplicationTalk']>, ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
@@ -6471,6 +6561,7 @@ export type ICompanyApplicationContactPersonResolvers<ContextType = any, ParentT
 };
 
 export type ICompanyApplicationCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyApplicationCount'] = IResolversParentTypes['CompanyApplicationCount']> = {
+  internships?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyApplicationCountInternshipsArgs>>;
   panelParticipants?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyApplicationCountPanelParticipantsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -6528,7 +6619,7 @@ export type ICompanyProgramResolvers<ContextType = any, ParentType extends IReso
   booth?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   cocktail?: Resolver<Maybe<IResolversTypes['ApplicationCocktail']>, ParentType, ContextType>;
   fusion?: Resolver<Maybe<IResolversTypes['ApplicationFusion']>, ParentType, ContextType>;
-  internship?: Resolver<Maybe<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
+  internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
   panel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType>;
   panelParticipants?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
   talk?: Resolver<Maybe<IResolversTypes['ApplicationTalk']>, ParentType, ContextType>;
@@ -6818,6 +6909,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   swapGalleryImageOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapGalleryImageOrderArgs, 'orderA' | 'orderB'>>;
   swapPartnerOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapPartnerOrderArgs, 'orderA' | 'orderB' | 'season'>>;
   swapSponsorOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapSponsorOrderArgs, 'orderA' | 'orderB' | 'season'>>;
+  syncSummerInternships?: Resolver<IResolversTypes['SyncResult'], ParentType, ContextType, RequireFields<IMutationSyncSummerInternshipsArgs, 'season'>>;
   updateCalendarItem?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType, RequireFields<IMutationUpdateCalendarItemArgs, 'input'>>;
   updateCompanyApplicationFeedback?: Resolver<Maybe<IResolversTypes['CompanyApplicationFeedback']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyApplicationFeedbackArgs, 'input'>>;
   updateCompanyInfo?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyInfoArgs, 'info'>>;
@@ -7133,6 +7225,14 @@ export type ISponsorResolvers<ContextType = any, ParentType extends IResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ISyncResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['SyncResult'] = IResolversParentTypes['SyncResult']> = {
+  createdCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  deletedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  unmatched?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  updatedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ITranslationResolvers<ContextType = any, ParentType extends IResolversParentTypes['Translation'] = IResolversParentTypes['Translation']> = {
   createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   key?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
@@ -7314,6 +7414,7 @@ export type IResolvers<ContextType = any> = {
   SeasonCount?: ISeasonCountResolvers<ContextType>;
   Session?: ISessionResolvers<ContextType>;
   Sponsor?: ISponsorResolvers<ContextType>;
+  SyncResult?: ISyncResultResolvers<ContextType>;
   Translation?: ITranslationResolvers<ContextType>;
   UpdatePasswordResponse?: IUpdatePasswordResponseResolvers<ContextType>;
   UpdateProfileResponse?: IUpdateProfileResponseResolvers<ContextType>;
@@ -7492,7 +7593,7 @@ export const Frag_CompanyApplication = gql`
       type
     }
   }
-  internship {
+  internships {
     ...frag_Internship
   }
   panelParticipants {
@@ -8142,7 +8243,7 @@ export const CompanyInfo = gql`
           location
         }
       }
-      internship {
+      internships {
         ...frag_Internship
       }
     }
@@ -8875,6 +8976,30 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
         uid
       }
     }
+  }
+}
+    `;
+export const PageAdminSummerInternshipsApi_Data = gql`
+    query PageAdminSummerInternshipsApi_Data {
+  internships {
+    uid
+    position
+    description
+    workingPeriodStart
+    workingPeriodEnd
+    places
+    signed
+    externalCompany
+  }
+}
+    `;
+export const SyncSummerInternships = gql`
+    mutation SyncSummerInternships($season: String!) {
+  syncSummerInternships(season: $season) {
+    createdCompanies
+    updatedCompanies
+    deletedCompanies
+    unmatched
   }
 }
     `;

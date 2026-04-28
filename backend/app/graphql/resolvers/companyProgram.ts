@@ -67,8 +67,8 @@ export class CompanyProgram {
   @Field(() => CompanyPanel, { nullable: true })
     panel: CompanyPanel | null = null;
 
-  @Field(() => ApplicationInternship, { nullable: true })
-    internship: ApplicationInternship | null = null;
+  @Field(() => [ ApplicationInternship ])
+    internships: ApplicationInternship[] = [];
 
   approval: CompanyApplicationApproval | null = null;
 }
@@ -137,11 +137,11 @@ export class CompanyProgramFieldResolver {
     return approved(program?.panel, "panel", program);
   }
 
-  @FieldResolver(() => ApplicationInternship, { nullable: true })
-  internship(
+  @FieldResolver(() => [ ApplicationInternship ])
+  internships(
     @Root() program: CompanyProgram,
-  ): GQLField<ApplicationInternship, "nullable"> {
-    return program?.internship ?? null;
+  ): ApplicationInternship[] {
+    return program?.internships ?? [];
   }
 
 }
@@ -250,12 +250,12 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
     delete select.panel;
   }),
 
-  internship: withApplications((select) => {
-    select.applications.select.internship = {
-      select: transformSelectInternship(select.internship as Dict),
+  internships: withApplications((select) => {
+    select.applications.select.internships = {
+      select: transformSelectInternship(select.internships as Dict),
     };
-    
-    delete select.internship;
+
+    delete select.internships;
   }),
   
 });

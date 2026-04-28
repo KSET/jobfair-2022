@@ -138,9 +138,8 @@ fragment frag_CompanyApplication on CompanyApplication {
             type
         }
     }
-    internship {
+    internships {
         ...frag_Internship
- 
     }
     panelParticipants {
         ...frag_ApplicationPresenter
@@ -403,7 +402,7 @@ query CompanyInfo($uid: String!) {
                     location
                 }
             }
-            internship {
+            internships {
                 ...frag_Internship
             }
         }

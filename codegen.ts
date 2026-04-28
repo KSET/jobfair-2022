@@ -36,6 +36,7 @@ export default {
     "./pages/participants.vue",
     "./pages/gate-guardian/**/*.vue",
     "./pages/admin/users/scanners.vue",
+    "./pages/admin/season/[season]/applications/summer-internships-api.vue",
     "./pages/profile/me/company/scan-user-qr.vue",
     "./pages/profile/me/company/scans/**/*.vue",
     "./store/**/*.ts",

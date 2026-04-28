@@ -496,7 +496,7 @@ model CompanyApplication {
   /// @TypeGraphQL.omit(output: true, input: true)
   approval CompanyApplicationApproval?
 
-  internship ApplicationInternship?
+  internships ApplicationInternship[]
 
   /// @TypeGraphQL.omit(input: true)
   feedbackForm   Form? @relation(fields: [feedbackFormId], references: [id], onDelete: Cascade)
@@ -720,22 +720,27 @@ model ApplicationInternship {
 
   position           String
   description        String
-  competencies       String
+  competencies       String?
   workingPeriodStart DateTime
   workingPeriodEnd   DateTime
-  duration           String
-
-  url String
-
-  /// @TypeGraphQL.omit(input: true)
-  forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
-  /// @TypeGraphQL.omit(input: true)
-  createdAt      DateTime           @default(now())
-  /// @TypeGraphQL.omit(input: true)
-  updatedAt      DateTime           @updatedAt
+  duration           String?
+  url                String?
+  places             Int?
+  signed             Boolean?
+  externalCompany    String?
 
   /// @TypeGraphQL.omit(output: true, input: true)
-  forApplicationId Int @unique
+  forApplication   CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  createdAt DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+
+  @@unique([forApplicationId, position, workingPeriodStart, workingPeriodEnd])
+  @@index([forApplicationId])
 }
 
 model ApplicationPresenter {

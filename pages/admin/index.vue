@@ -112,20 +112,6 @@
     </div>
 
     <div>
-      <h2>Ljetne prakse API</h2>
-
-      <dl>
-        <dd>
-          <strong>
-            <nuxt-link :to="{ name: 'admin-summer-internships-api' }">
-              Dohvati podatke
-            </nuxt-link>
-          </strong>
-        </dd>
-      </dl>
-    </div>
-
-    <div>
       <h2>Industrije</h2>
 
       <dl>
@@ -218,6 +204,13 @@
               :to="{ name: 'admin-season-season-applications-export', params: { season: season.uid } }"
             >
               Export
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-applications-summer-internships-api', params: { season: season.uid } }"
+            >
+              Ljetne prakse API
             </nuxt-link>
           </li>
         </ul>

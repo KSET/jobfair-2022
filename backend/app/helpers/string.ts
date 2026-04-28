@@ -1,3 +1,13 @@
+export const normalizeCompanyName = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/\./g, "")
+    .replace(/,/g, "")
+    .replace(/\s+/g, " ")
+    .replace(/\b(doo|d o o|inc|ltd|gmbh|dd|d d)\b/g, "")
+    .trim();
+
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent#encoding_for_content-disposition_and_link_headers
 export const encodeRFC5987ValueChars =
   (str: string) =>

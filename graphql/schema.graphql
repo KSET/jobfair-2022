@@ -123,29 +123,46 @@ input ApplicationFusionWhereInput {
 
 type ApplicationInternship {
   company: Company
-  competencies: String!
-  createdAt: DateTimeISO!
+  competencies: String
   description: String!
-  duration: String!
+  duration: String
+  externalCompany: String
+  places: Int
   position: String!
+  signed: Boolean
   uid: String!
   updatedAt: DateTimeISO!
-  url: String!
+  url: String
   workingPeriodEnd: DateTimeISO!
   workingPeriodStart: DateTimeISO!
 }
 
-input ApplicationInternshipNullableRelationFilter {
-  is: ApplicationInternshipWhereInput
-  isNot: ApplicationInternshipWhereInput
+input ApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput {
+  forApplicationId: Int!
+  position: String!
+  workingPeriodEnd: DateTimeISO!
+  workingPeriodStart: DateTimeISO!
+}
+
+input ApplicationInternshipListRelationFilter {
+  every: ApplicationInternshipWhereInput
+  none: ApplicationInternshipWhereInput
+  some: ApplicationInternshipWhereInput
+}
+
+input ApplicationInternshipOrderByRelationAggregateInput {
+  _count: SortOrder
 }
 
 input ApplicationInternshipOrderByWithRelationInput {
-  competencies: SortOrder
+  competencies: SortOrderInput
   description: SortOrder
-  duration: SortOrder
+  duration: SortOrderInput
+  externalCompany: SortOrderInput
+  places: SortOrderInput
   position: SortOrder
-  url: SortOrder
+  signed: SortOrderInput
+  url: SortOrderInput
   workingPeriodEnd: SortOrder
   workingPeriodStart: SortOrder
 }
@@ -155,9 +172,12 @@ enum ApplicationInternshipScalarFieldEnum {
   createdAt
   description
   duration
+  externalCompany
   forApplicationId
   id
+  places
   position
+  signed
   uid
   updatedAt
   url
@@ -169,11 +189,14 @@ input ApplicationInternshipWhereInput {
   AND: [ApplicationInternshipWhereInput!]
   NOT: [ApplicationInternshipWhereInput!]
   OR: [ApplicationInternshipWhereInput!]
-  competencies: StringFilter
+  competencies: StringNullableFilter
   description: StringFilter
-  duration: StringFilter
+  duration: StringNullableFilter
+  externalCompany: StringNullableFilter
+  places: IntNullableFilter
   position: StringFilter
-  url: StringFilter
+  signed: BoolNullableFilter
+  url: StringNullableFilter
   workingPeriodEnd: DateTimeFilter
   workingPeriodStart: DateTimeFilter
 }
@@ -182,11 +205,15 @@ input ApplicationInternshipWhereUniqueInput {
   AND: [ApplicationInternshipWhereInput!]
   NOT: [ApplicationInternshipWhereInput!]
   OR: [ApplicationInternshipWhereInput!]
-  competencies: StringFilter
+  competencies: StringNullableFilter
   description: StringFilter
-  duration: StringFilter
+  duration: StringNullableFilter
+  externalCompany: StringNullableFilter
+  forApplicationId_position_workingPeriodStart_workingPeriodEnd: ApplicationInternshipForApplicationIdPositionWorkingPeriodStartWorkingPeriodEndCompoundUniqueInput
+  places: IntNullableFilter
   position: StringFilter
-  url: StringFilter
+  signed: BoolNullableFilter
+  url: StringNullableFilter
   workingPeriodEnd: DateTimeFilter
   workingPeriodStart: DateTimeFilter
 }
@@ -407,6 +434,11 @@ input BoolFilter {
   not: NestedBoolFilter
 }
 
+input BoolNullableFilter {
+  equals: Boolean
+  not: NestedBoolNullableFilter
+}
+
 type Booth {
   key: String
   name: String!
@@ -538,7 +570,7 @@ type CompanyApplication {
   forCompany: Company
   forSeason: Season
   fusion: ApplicationFusion
-  internship: ApplicationInternship
+  internships: [ApplicationInternship!]!
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
   updatedAt: DateTimeISO!
@@ -603,6 +635,7 @@ input CompanyApplicationContactPersonWhereInput {
 }
 
 type CompanyApplicationCount {
+  internships(where: ApplicationInternshipWhereInput): Int!
   panelParticipants(where: ApplicationPresenterWhereInput): Int!
 }
 
@@ -677,7 +710,7 @@ input CompanyApplicationOrderByWithRelationInput {
   forCompany: CompanyOrderByWithRelationInput
   forSeason: SeasonOrderByWithRelationInput
   fusion: ApplicationFusionOrderByWithRelationInput
-  internship: ApplicationInternshipOrderByWithRelationInput
+  internships: ApplicationInternshipOrderByRelationAggregateInput
   panel: CompanyPanelOrderByWithRelationInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
   talk: ApplicationTalkOrderByWithRelationInput
@@ -712,7 +745,7 @@ input CompanyApplicationWhereInput {
   forCompany: CompanyRelationFilter
   forSeason: SeasonRelationFilter
   fusion: ApplicationFusionNullableRelationFilter
-  internship: ApplicationInternshipNullableRelationFilter
+  internships: ApplicationInternshipListRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -733,7 +766,7 @@ input CompanyApplicationWhereUniqueInput {
   forCompanyId_forSeasonId: CompanyApplicationForCompanyIdForSeasonIdCompoundUniqueInput
   forSeason: SeasonRelationFilter
   fusion: ApplicationFusionNullableRelationFilter
-  internship: ApplicationInternshipNullableRelationFilter
+  internships: ApplicationInternshipListRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
   talk: ApplicationTalkNullableRelationFilter
@@ -816,7 +849,7 @@ type CompanyProgram {
   booth: String
   cocktail: ApplicationCocktail
   fusion: ApplicationFusion
-  internship: ApplicationInternship
+  internships: [ApplicationInternship!]!
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
   talk: ApplicationTalk
@@ -1451,6 +1484,7 @@ type Mutation {
   swapGalleryImageOrder(orderA: Int!, orderB: Int!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
+  syncSummerInternships(season: String!): SyncResult!
   updateCalendarItem(input: CalendarUpdateInput!): CalendarItem
   updateCompanyApplicationFeedback(input: CompanyApplicationFeedbackCreateInput!): CompanyApplicationFeedback
   updateCompanyInfo(info: CreateCompanyInput!): CreateCompanyResponse
@@ -1473,6 +1507,11 @@ type Mutation {
 input NestedBoolFilter {
   equals: Boolean
   not: NestedBoolFilter
+}
+
+input NestedBoolNullableFilter {
+  equals: Boolean
+  not: NestedBoolNullableFilter
 }
 
 input NestedDateTimeFilter {
@@ -2448,6 +2487,13 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
+}
+
+type SyncResult {
+  createdCompanies: [String!]!
+  deletedCompanies: [String!]!
+  unmatched: [String!]!
+  updatedCompanies: [String!]!
 }
 
 input TalkCreateInput {

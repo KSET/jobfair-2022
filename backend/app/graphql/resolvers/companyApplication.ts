@@ -117,7 +117,6 @@ import {
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
 import {
-  InternshipCreateInput,
   transformSelect as transformSelectInternship
 } from "./companyApplicationInternship"
 import {
@@ -212,11 +211,11 @@ export class CompanyApplicationFieldResolver {
     return application.cocktail || null;
   }
   
-  @FieldResolver(() => ApplicationInternship, { nullable: true })
-  internship(
+  @FieldResolver(() => [ ApplicationInternship ])
+  internships(
     @Root() application: CompanyApplication,
-  ): ApplicationInternship | null {
-    return application.internship || null;
+  ): ApplicationInternship[] {
+    return application.internships ?? [];
   }
 
   @FieldResolver(() => [ ApplicationPresenter ])
@@ -355,9 +354,9 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     return select;
   },
 
-  internship(select) {
-    select.internship = {
-      select: transformSelectInternship(select.internship as Dict),
+  internships(select) {
+    select.internships = {
+      select: transformSelectInternship(select.internships as Dict),
     };
 
     return select;
@@ -2852,7 +2851,7 @@ export class CompanyApplicationCreateResolver {
             type: true
           }
         },
-        internship: true,
+        internships: true,
       },
     });
 

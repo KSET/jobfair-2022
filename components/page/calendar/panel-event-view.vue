@@ -8,7 +8,7 @@
       >
         <strong>
           <i class="pi pi-chevron-left" />
-          <span :class="$style.backButtonText">Back</span>
+          <span :class="$style.backButtonText"><translated-text trans-key="back" /></span>
         </strong>
       </nuxt-link>
 
@@ -36,12 +36,12 @@
           :loading="signupLoading"
           @click="handleSignup"
         >
-          <span v-if="reservation">Sign off</span>
-          <span v-else>Sign up</span>
+          <translated-text v-if="reservation" trans-key="company.event.user.sign-off" />
+          <translated-text v-else trans-key="company.event.user.sign-up" />
         </p-button>
         <nuxt-link v-else :to="joinNowRoute">
           <p-button :class="$style.signupButton">
-            <span>Sign up</span>
+            <translated-text trans-key="company.event.user.sign-up" />
           </p-button>
         </nuxt-link>
       </div>
@@ -189,6 +189,7 @@
 
   .container {
     display: grid;
+    width: 100%;
     padding-top: 4rem;
     grid-template-columns: minmax(0, 3fr) minmax(0, 5fr);
     gap: $gap-size;

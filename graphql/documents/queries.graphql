@@ -778,6 +778,11 @@ query ProfileBaseData {
             talk
             fusion
         }
+        internships {
+            uid
+            position
+            signed
+        }
 
     }
     profile {

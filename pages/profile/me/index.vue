@@ -466,9 +466,21 @@
                   $style[`status${internshipStatus === 'signed' ? 'Green' : internshipStatus === 'unsigned' ? 'Yellow' : 'Red'}`],
                 ]"
               />
-              <translated-text v-if="internshipStatus === 'signed'" trans-key="profile.company.internship.status.signed" />
-              <translated-text v-else-if="internshipStatus === 'unsigned'" trans-key="profile.company.internship.status.unsigned" />
-              <translated-text v-else trans-key="profile.company.internship.status.none" />
+              <translated-text
+                v-if="internshipStatus === 'signed'"
+                :class="$style.statusGreen"
+                trans-key="profile.company.internship.status.signed"
+              />
+              <translated-text
+                v-else-if="internshipStatus === 'unsigned'"
+                :class="$style.statusYellow"
+                trans-key="profile.company.internship.status.unsigned"
+              />
+              <translated-text
+                v-else
+                :class="$style.statusRed"
+                trans-key="profile.company.internship.status.none"
+              />
             </div>
 
             <ul v-if="internships.length" :class="$style.applicationItems">
@@ -1110,9 +1122,9 @@
     flex-shrink: 0;
   }
 
-  .statusRed    { background: $fer-error; }
-  .statusYellow { background: $fer-yellow; }
-  .statusGreen  { background: $fer-success; }
+  .statusRed    { background: $fer-error;   color: $fer-error; }
+  .statusYellow { background: $fer-yellow;  color: $fer-yellow; }
+  .statusGreen  { background: $fer-success; color: $fer-success; }
 
   .applicationItems {
     font-size: 1em;

@@ -1293,6 +1293,7 @@ type ImageCount {
   Company(where: CompanyWhereInput): Int!
   GalleryImage(where: GalleryImageWhereInput): Int!
   News(where: NewsWhereInput): Int!
+  OtherContentPresenter(where: OtherContentPresenterWhereInput): Int!
   Partner(where: PartnerWhereInput): Int!
   Sponsor(where: SponsorWhereInput): Int!
 }
@@ -1643,6 +1644,45 @@ input NewsWhereInput {
 enum NullsOrder {
   first
   last
+}
+
+input OtherContentPresenterListRelationFilter {
+  every: OtherContentPresenterWhereInput
+  none: OtherContentPresenterWhereInput
+  some: OtherContentPresenterWhereInput
+}
+
+input OtherContentPresenterWhereInput {
+  AND: [OtherContentPresenterWhereInput!]
+  NOT: [OtherContentPresenterWhereInput!]
+  OR: [OtherContentPresenterWhereInput!]
+  bioEn: StringFilter
+  bioHr: StringFilter
+  firstName: StringFilter
+  forContent: OtherContentRelationFilter
+  forContentId: IntFilter
+  id: IntFilter
+  lastName: StringFilter
+  photo: ImageNullableRelationFilter
+  photoId: IntNullableFilter
+}
+
+input OtherContentRelationFilter {
+  is: OtherContentWhereInput
+  isNot: OtherContentWhereInput
+}
+
+input OtherContentWhereInput {
+  AND: [OtherContentWhereInput!]
+  NOT: [OtherContentWhereInput!]
+  OR: [OtherContentWhereInput!]
+  descriptionEn: StringFilter
+  descriptionHr: StringFilter
+  event: CalendarItemNullableRelationFilter
+  nameEn: StringFilter
+  nameHr: StringFilter
+  participants: OtherContentPresenterListRelationFilter
+  subtype: StringFilter
 }
 
 type PanelCompanyEntry {
@@ -2222,6 +2262,7 @@ type SeasonCount {
   entryLog(where: EntryResumeLogWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   gateGuardianLog(where: GateGuardianLogWhereInput): Int!
+  otherContents(where: OtherContentWhereInput): Int!
   panels(where: CompanyPanelWhereInput): Int!
   partners(where: PartnerWhereInput): Int!
   pressReleases(where: PressReleaseWhereInput): Int!

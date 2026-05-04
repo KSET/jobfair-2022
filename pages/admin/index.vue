@@ -219,6 +219,13 @@
         <ul>
           <li>
             <nuxt-link
+              :to="{ name: 'admin-season-season-other-content', params: { season: season.uid } }"
+            >
+              Other Content
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
               :to="{ name: 'admin-season-season-schedule', params: { season: season.uid } }"
             >
               Raspored

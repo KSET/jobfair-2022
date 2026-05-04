@@ -23,10 +23,33 @@
       />
     </fieldset>
 
+    <fieldset
+      v-for="otherContent in otherContents"
+      :key="otherContent.uid"
+      :class="{
+        [$style.missingItem]: !otherContent.event,
+      }"
+    >
+      <legend>
+        <strong>
+          <em>[{{ otherContent.nameHr }}]</em>
+        </strong>
+      </legend>
+
+      <EditScheduleItemFor
+        v-model:item="otherContent.event"
+        :for-uid="otherContent.uid"
+        :season="season.uid"
+        :type="otherContent.subtype"
+        @delete="refreshOtherContents"
+        @submit="refreshOtherContents"
+      />
+    </fieldset>
+
     <fieldset>
       <legend>
         <strong>
-          <em>[Other]</em>
+          <em>[Schedule Only]</em>
         </strong>
       </legend>
 
@@ -181,6 +204,32 @@
         },
       });
 
+      type QOtherContent = { uid: string, nameHr: string, subtype: string, event: QEvent | null, };
+      const queryOtherContents = useQuery<{ otherContents: QOtherContent[], }, { season: string, }>({
+        query: gql`
+          query OtherContents($season: String) {
+            otherContents(season: $season) {
+              uid
+              nameHr
+              subtype
+              event {
+                uid
+                type
+                title
+                start
+                end
+                location
+                text
+                grouped
+              }
+            }
+          }
+        `,
+        variables: {
+          season: seasonUid,
+        },
+      });
+
       const queryPanels = useQuery<{ season: { panels: QPanel[], }, }, { season: string, }>({
         query: gql`
           query Panels($season: String!) {
@@ -212,6 +261,7 @@
       });
 
       const resp = reactive(await queryData().then((resp) => resp?.data) ?? {} as QData);
+      const otherContents = ref<QOtherContent[]>(await queryOtherContents().then((r) => r?.data?.otherContents ?? []));
 
       const participants = computed(() => resp.participants || []);
 
@@ -223,6 +273,7 @@
             p.program?.fusion?.event?.uid,
           ]),
           ...(resp.season?.panels || []).map((p) => p?.event?.uid),
+          ...unref(otherContents).map((oc) => oc.event?.uid),
         ].filter((x) => x),
       ));
 
@@ -237,6 +288,7 @@
 
       return {
         otherCalendarItems,
+        otherContents,
         participants,
         isCalendarLoading,
         season: computed(() => seasonsStore.season as ISeason),
@@ -253,6 +305,9 @@
             brandName: p.brandName,
           },
         }))),
+        async refreshOtherContents() {
+          otherContents.value = await queryOtherContents().then((r) => r?.data?.otherContents ?? []);
+        },
         async refreshPanels() {
           const panels = await queryPanels().then((resp) => resp?.data?.season?.panels || []);
           resp.season!.panels = panels;

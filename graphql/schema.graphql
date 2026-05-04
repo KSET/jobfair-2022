@@ -463,6 +463,7 @@ type CalendarItem {
   companies: [Company!]
   end: DateTimeISO!
   forFusion: ApplicationFusion
+  forOtherContent: OtherContent
   forPanel: CompanyPanel
   forTalk: ApplicationTalk
   forWorkshop: ApplicationWorkshop
@@ -1116,8 +1117,10 @@ input EventReservationWhereInput {
 }
 
 enum EventType {
+  debate
   fusion
   hotTalk
+  loosenUp
   other
   panel
   talk
@@ -1293,6 +1296,7 @@ type ImageCount {
   Company(where: CompanyWhereInput): Int!
   GalleryImage(where: GalleryImageWhereInput): Int!
   News(where: NewsWhereInput): Int!
+  OtherContentPresenter(where: OtherContentPresenterWhereInput): Int!
   Partner(where: PartnerWhereInput): Int!
   Sponsor(where: SponsorWhereInput): Int!
 }
@@ -1457,6 +1461,7 @@ type Mutation {
   deleteGalleryImage(uid: String!): Boolean!
   deleteLiveVoteComment(commentId: Int!): Boolean!
   deleteNews(uid: String!): Boolean
+  deleteOtherContent(uid: String!): Boolean!
   deletePartner(partner: String!): Boolean!
   deleteResume: Boolean!
   deleteSeason(uid: String!): Season
@@ -1491,6 +1496,7 @@ type Mutation {
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updateCompanyPanel(input: CompanyPanelUpdateInput!): CompanyPanel
   updateEventReservation(input: EventReservationUpdateInput!): EventReservationResponse
+  updateOtherContent(input: OtherContentUpdateInput!): OtherContent
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
   updateProfile(info: UserCreateInput!): UpdateProfileResponse
@@ -1643,6 +1649,93 @@ input NewsWhereInput {
 enum NullsOrder {
   first
   last
+}
+
+type OtherContent {
+  _count: OtherContentCount
+  descriptionEn: String!
+  descriptionHr: String!
+  event: CalendarItem
+  nameEn: String!
+  nameHr: String!
+  participants: [OtherContentPresenter!]!
+  reservation: Float!
+  subtype: String!
+  uid: String!
+}
+
+type OtherContentCount {
+  participants(where: OtherContentPresenterWhereInput): Int!
+}
+
+type OtherContentPresenter {
+  bioEn: String!
+  bioHr: String!
+  firstName: String!
+  forContentId: Int!
+  id: Int!
+  lastName: String!
+  photo: Image
+  photoId: Int
+}
+
+input OtherContentPresenterInput {
+  bioEn: String!
+  bioHr: String!
+  existingPhotoUid: String
+  firstName: String!
+  lastName: String!
+  photo: Upload
+}
+
+input OtherContentPresenterListRelationFilter {
+  every: OtherContentPresenterWhereInput
+  none: OtherContentPresenterWhereInput
+  some: OtherContentPresenterWhereInput
+}
+
+input OtherContentPresenterWhereInput {
+  AND: [OtherContentPresenterWhereInput!]
+  NOT: [OtherContentPresenterWhereInput!]
+  OR: [OtherContentPresenterWhereInput!]
+  bioEn: StringFilter
+  bioHr: StringFilter
+  firstName: StringFilter
+  forContent: OtherContentRelationFilter
+  forContentId: IntFilter
+  id: IntFilter
+  lastName: StringFilter
+  photo: ImageNullableRelationFilter
+  photoId: IntNullableFilter
+}
+
+input OtherContentRelationFilter {
+  is: OtherContentWhereInput
+  isNot: OtherContentWhereInput
+}
+
+input OtherContentUpdateInput {
+  descriptionEn: String!
+  descriptionHr: String!
+  nameEn: String!
+  nameHr: String!
+  participants: [OtherContentPresenterInput!]
+  season: String!
+  subtype: String!
+  uid: String
+}
+
+input OtherContentWhereInput {
+  AND: [OtherContentWhereInput!]
+  NOT: [OtherContentWhereInput!]
+  OR: [OtherContentWhereInput!]
+  descriptionEn: StringFilter
+  descriptionHr: StringFilter
+  event: CalendarItemNullableRelationFilter
+  nameEn: StringFilter
+  nameHr: StringFilter
+  participants: OtherContentPresenterListRelationFilter
+  subtype: StringFilter
 }
 
 type PanelCompanyEntry {
@@ -1804,6 +1897,7 @@ type Query {
   news(filter: NewsFilter, lang: String!): [News!]!
   newsItem(slug: String!): News
   newsItemByUid(uid: String!): News
+  otherContents(season: String): [OtherContent!]!
   participants(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   partners(season: String): [Partner!]!
   pressRelease(uid: String!): PressRelease
@@ -2222,6 +2316,7 @@ type SeasonCount {
   entryLog(where: EntryResumeLogWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   gateGuardianLog(where: GateGuardianLogWhereInput): Int!
+  otherContents(where: OtherContentWhereInput): Int!
   panels(where: CompanyPanelWhereInput): Int!
   partners(where: PartnerWhereInput): Int!
   pressReleases(where: PressReleaseWhereInput): Int!

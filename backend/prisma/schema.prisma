@@ -339,6 +339,9 @@ model Image {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   GalleryImage GalleryImage[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  OtherContentPresenter OtherContentPresenter[]
 }
 
 model ImageVariation {
@@ -400,6 +403,9 @@ model Season {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   panels CompanyPanel[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  otherContents OtherContent[]
 
   /// @TypeGraphQL.omit(output: true, input: true)
   scannedResumes ScannedResume[]
@@ -579,6 +585,40 @@ model CompanyPanel {
   forSeason   Season @relation(fields: [forSeasonId], references: [id])
   /// @TypeGraphQL.omit(output: true, input: true)
   forSeasonId Int
+}
+
+model OtherContent {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  nameHr        String
+  nameEn        String
+  descriptionHr String @default("")
+  descriptionEn String @default("")
+  subtype       String @default("other")
+
+  event CalendarItem?
+
+  participants OtherContentPresenter[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeason   Season @relation(fields: [forSeasonId], references: [id])
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forSeasonId Int
+}
+
+model OtherContentPresenter {
+  id           Int          @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  bioEn        String       @default("")
+  bioHr        String       @default("")
+  photo        Image?       @relation(fields: [photoId], references: [id])
+  photoId      Int?
+  forContent   OtherContent @relation(fields: [forContentId], references: [id], onDelete: Cascade)
+  forContentId Int
 }
 
 model CompanyApplicationApproval {
@@ -973,6 +1013,11 @@ model CalendarItem {
   forFusion   ApplicationFusion? @relation(fields: [forFusionId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
   forFusionId Int?               @unique
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forOtherContent   OtherContent? @relation(fields: [forOtherContentId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forOtherContentId Int?          @unique
 }
 
 model EventReservation {

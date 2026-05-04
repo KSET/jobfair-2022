@@ -5,6 +5,8 @@ import EventIconWorkshop from "~/assets/images/icon/event-icons/workshops.svg?ur
 import EventIconTalk from "~/assets/images/icon/event-icons/talks.svg?url";
 import EventIconPanel from "~/assets/images/icon/event-icons/panel.svg?url";
 import EventIconHotTalk from "~/assets/images/icon/event-icons/hotTalk.svg?url";
+import EventIconDebate from "~/assets/images/icon/event-icons/debate.svg?url";
+import EventIconParty from "~/assets/images/icon/event-icons/party.svg?url";
 import EventIconFusion from "~/assets/images/icon/event-icons/fusion.png?url";
 
 import {
@@ -99,6 +101,16 @@ export const useEventInfo = (event: TCalendarEvent) => {
 
       case IEventType.HotTalk: {
         base.icon = EventIconHotTalk;
+        break;
+      }
+
+      case IEventType.Debate: {
+        base.icon = EventIconDebate;
+        break;
+      }
+
+      case IEventType.LoosenUp: {
+        base.icon = EventIconParty;
         break;
       }
     }

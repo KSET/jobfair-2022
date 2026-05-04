@@ -267,6 +267,7 @@ type CalendarItem {
   capacity: Int!
   companies: [Company!]
   end: DateTimeISO!
+  forOtherContent: OtherContent
   forPanel: CompanyPanel
   forTalk: ApplicationTalk
   forWorkshop: ApplicationWorkshop
@@ -277,6 +278,18 @@ type CalendarItem {
   text: String
   title: String
   type: String
+  uid: String!
+}
+
+type OtherContent {
+  descriptionEn: String!
+  descriptionHr: String!
+  event: CalendarItem
+  nameEn: String!
+  nameHr: String!
+  participants: [OtherContentPresenter!]!
+  reservation: Float!
+  subtype: String!
   uid: String!
 }
 

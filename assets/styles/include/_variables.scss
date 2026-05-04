@@ -19,6 +19,8 @@ $event-colors: (
   "workshop": #57cc99,
   "fusion": #ecb000,
   "hot-talk": #fe7f2d,
+  "loosen-up": #ecb000,
+  "debate": #9b5de5,
   "other": #33658a,
 );
 $event-icons: (
@@ -26,6 +28,7 @@ $event-icons: (
   "networking": url("@/assets/images/icon/event-icons/networking.svg?url"),
   "panel": url("@/assets/images/icon/event-icons/panel.svg?url"),
   "loosen-up": url("@/assets/images/icon/event-icons/party.svg?url"),
+  "debate": url("@/assets/images/icon/event-icons/debate.svg?url"),
   "talk": url("@/assets/images/icon/event-icons/talks.svg?url"),
   "workshop": url("@/assets/images/icon/event-icons/workshops.svg?url"),
   "fusion": url("/fusion-icon.png"),

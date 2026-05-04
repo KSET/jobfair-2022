@@ -5,6 +5,7 @@ import {
   CalendarItem,
   Company,
   CompanyPanel,
+  OtherContent,
 } from "@generated/type-graphql";
 import {
   Arg,
@@ -62,6 +63,9 @@ import {
   transformSelect as transformSelectPanel,
 } from "./companyPanel";
 import {
+  transformSelect as transformSelectOtherContent,
+} from "./otherContent";
+import {
   transformSelect as transformSelectFusion,
 } from "./companyApplicationFusion";
 import {
@@ -95,6 +99,7 @@ export class CalendarItemFieldResolver {
       || calendarItem.forWorkshopId
       || calendarItem.forFusionId
       || calendarItem.forPanelId
+      || calendarItem.forOtherContentId
       ,
     );
   }
@@ -112,6 +117,8 @@ export class CalendarItemFieldResolver {
         return EventType.fusion;
       } else if (calendarItem.forPanelId) {
         return EventType.panel;
+      } else if (calendarItem.forOtherContentId) {
+        return EventType.hotTalk;
       }
 
       return null;
@@ -152,6 +159,13 @@ export class CalendarItemFieldResolver {
     return calendarItem.forPanel;
   }
 
+  @FieldResolver(() => OtherContent, { nullable: true })
+  forOtherContent(
+    @Root() calendarItem: CalendarItem,
+  ): GQLField<OtherContent, "nullable"> {
+    return calendarItem.forOtherContent;
+  }
+
   @FieldResolver(() => [ Company ], { nullable: true })
   companies(
     @Root() calendarItem: CalendarItem,
@@ -174,6 +188,7 @@ export class CalendarItemFieldResolver {
       || calendarItem.forWorkshop?.forApplication?.forCompany?.brandName
       || calendarItem.forFusion?.forApplication?.forCompany?.brandName
       || calendarItem.forPanel?.companies?.map((company) => company.forCompany?.brandName).filter((x) => x).join(", ")
+      || calendarItem.forOtherContent?.nameHr
       || ""
     );
   }
@@ -188,6 +203,7 @@ export class CalendarItemFieldResolver {
       || calendarItem.forWorkshop?.titleHr
       || calendarItem.forFusion?.titleHr
       || calendarItem.forPanel?.name
+      || calendarItem.forOtherContent?.descriptionHr
       || ""
     );
   }
@@ -216,6 +232,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
     select.forWorkshopId = true;
     select.forFusionId = true;
     select.forPanelId = true;
+    select.forOtherContentId = true;
 
     delete select.capacity;
 
@@ -223,7 +240,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
   },
 
   title(select) {
-    const data: Prisma.CalendarItemSelect = {
+    const data = {
       forTalk: {
         select: {
           forApplication: {
@@ -276,13 +293,19 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
           },
         },
       },
-    };
+      forOtherContent: {
+        select: {
+          nameHr: true,
+          nameEn: true,
+        },
+      },
+    } as unknown as Prisma.CalendarItemSelect;
 
     return mergeDeepRight(select, data);
   },
 
   text(select) {
-    const data: Prisma.CalendarItemSelect = {
+    const data = {
       forTalk: {
         select: {
           titleEn: true,
@@ -306,7 +329,13 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
           name: true,
         },
       },
-    };
+      forOtherContent: {
+        select: {
+          descriptionHr: true,
+          descriptionEn: true,
+        },
+      },
+    } as unknown as Prisma.CalendarItemSelect;
 
     return mergeDeepRight(select, data);
   },
@@ -316,6 +345,7 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
     select.forWorkshopId = true;
     select.forFusionId = true;
     select.forPanelId = true;
+    select.forOtherContentId = true;
 
     delete select.hasEvent;
 
@@ -329,6 +359,8 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
   forFusion: forItemSelect("forFusion", () => transformSelectFusion),
 
   forPanel: forItemSelect("forPanel", () => transformSelectPanel),
+
+  forOtherContent: forItemSelect("forOtherContent", () => transformSelectOtherContent),
 
   companies(select) {
     const transformed = transformSelectCompany(select.companies as Dict);
@@ -590,6 +622,19 @@ export class CalendarUpdateResolver {
 
       case "panel": {
         (data as Dict).forPanel = {
+          connect: {
+            uid: input.forUid!,
+          },
+        };
+
+        break;
+      }
+
+      case "other":
+      case "hot-talk":
+      case "loosen-up":
+      case "debate": {
+        (data as Dict).forOtherContent = {
           connect: {
             uid: input.forUid!,
           },

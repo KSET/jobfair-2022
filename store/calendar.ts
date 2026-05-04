@@ -10,6 +10,7 @@ import {
 import {
   EventType,
   statusFromEventList,
+  subtypeToEventType,
 } from "~/helpers/event-status";
 import {
   type Assign,
@@ -128,6 +129,15 @@ export const CalendarFragment = graphql(/* GraphQL */ `
                 brandName
             }
         }
+        forOtherContent {
+            uid
+            nameHr
+            nameEn
+            descriptionHr
+            descriptionEn
+            subtype
+            reservation
+        }
         companies {
             uid
             brandName
@@ -177,6 +187,7 @@ export const useCalendarStore = defineStore("calendar", {
               | ICalendarItem["forTalk"]
               | ICalendarItem["forFusion"]
               | ICalendarItem["forPanel"]
+              | ICalendarItem["forOtherContent"]
             >;
             const [
               key,
@@ -196,6 +207,8 @@ export const useCalendarStore = defineStore("calendar", {
                   return EventType.Fusion;
                 case "forPanel":
                   return EventType.Panel;
+                case "forOtherContent":
+                  return subtypeToEventType((event as NonNullable<ICalendarItem["forOtherContent"]>).subtype);
               }
             })()!;
 
@@ -223,6 +236,9 @@ export const useCalendarStore = defineStore("calendar", {
             if ("name" in event) {
               base.title = event.name;
               base.description = event.description;
+            } else if ("nameHr" in event || "nameEn" in event) {
+              base.title = translationsStore.translateFor(event, "name");
+              base.description = translationsStore.translateFor(event, "description");
             } else {
               base.title = translationsStore.translateFor(event, "title");
               base.description = translationsStore.translateFor(

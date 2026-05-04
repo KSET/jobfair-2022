@@ -13,21 +13,21 @@
           </strong>
         </nuxt-link>
 
-        <div :class="$style.companyDescriptionContainer">
+        <div v-if="localizedDescription" :class="$style.companyDescriptionContainer">
           <h4 :class="$style.companyDescriptionHeader">
-            <translated-text trans-key="panel.about" />
+            <translated-text trans-key="event.about" />
           </h4>
-          <p :class="$style.companyDescriptionText" v-text="panel.description" />
+          <p :class="$style.companyDescriptionText" v-text="localizedDescription" />
         </div>
       </div>
 
       <!-- Right column -->
       <div :class="$style.eventContainer">
-        <h2 :class="$style.companyName" v-text="panel.name" />
+        <h2 :class="$style.companyName" v-text="localizedName" />
 
-        <!-- Event info + sign-up -->
-        <div v-if="panel.event" :class="$style.itemHeader">
-          <event-info-display :event="{ ...panel.event, start: new Date(panel.event.start), end: new Date(panel.event.end), type: EventType.Panel }" />
+        <!-- Event info -->
+        <div v-if="otherContent.event" :class="$style.itemHeader">
+          <event-info-display :event="{ ...otherContent.event, start: new Date(otherContent.event.start), end: new Date(otherContent.event.end), type: eventTypeAsIEventType }" />
           <p-button
             v-if="loggedIn"
             :class="{
@@ -47,43 +47,22 @@
           </nuxt-link>
         </div>
 
-        <!-- Companies with panelists -->
-        <template v-if="panel.companiesWithPanelists && panel.companiesWithPanelists.length > 0">
-          <h4><translated-text trans-key="panel.panelists" /></h4>
+        <!-- Participants -->
+        <template v-if="otherContent.participants && otherContent.participants.length > 0">
+          <h4><translated-text trans-key="event.participants" /></h4>
           <div
-            v-for="entry in panel.companiesWithPanelists"
-            :key="entry.company.uid"
-            :class="$style.companySection"
+            v-for="(participant, idx) in otherContent.participants"
+            :key="idx"
+            :class="$style.presenter"
           >
-            <nuxt-link :to="{ name: 'company-uid', params: { uid: entry.company.uid } }">
-              <div :class="$style.companyChip">
-                <app-img
-                  v-if="entry.company.rasterLogo"
-                  :alt="`${entry.company.brandName} logo`"
-                  :class="$style.companyChipImage"
-                  :lazy-src="entry.company.rasterLogo.thumbUrl"
-                  :src="entry.company.rasterLogo.fullUrl"
-                  contain
-                />
-                <div class="p-chip-text" v-text="entry.company.brandName" />
-              </div>
-            </nuxt-link>
-            <div
-              v-for="(presenter, idx) in entry.panelists"
-              :key="idx"
-              :class="$style.presenter"
+            <h5 :class="$style.presenterName" v-text="`${ participant.firstName } ${ participant.lastName }`" />
+            <img
+              v-if="participant.photo"
+              :alt="`${ participant.firstName } ${ participant.lastName }`"
+              :class="$style.presenterPhoto"
+              :src="participant.photo.fullUrl"
             >
-              <h5 :class="$style.presenterName" v-text="`${presenter.firstName} ${presenter.lastName}`" />
-              <app-img
-                v-if="presenter.photo"
-                :alt="`${presenter.firstName} ${presenter.lastName}`"
-                :class="$style.presenterPhoto"
-                :lazy-src="presenter.photo.thumbUrl"
-                :src="presenter.photo.fullUrl"
-                cover
-              />
-              <p :class="$style.presenterDescription" v-text="translateFor(presenter, 'bio')" />
-            </div>
+            <p :class="$style.presenterDescription" v-text="localizeParticipantBio(participant)" />
           </div>
         </template>
       </div>
@@ -102,11 +81,13 @@
     ref,
   } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
-  import AppImg from "~/components/util/app-img.vue";
   import EventInfoDisplay from "~/components/page/schedule/event-info-display.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
-    type IPageCalendarEventPanelDataQuery,
+    useTranslationsStore,
+  } from "~/store/translations";
+  import {
+    type IEventType,
   } from "~/graphql/schema";
   import {
     useCalendarStore,
@@ -115,41 +96,66 @@
     useUserStore,
   } from "~/store/user";
   import {
-    useTranslationsStore,
-  } from "~/store/translations";
-  import {
     useJoinNowRoute,
   } from "~/composables/useJoinNowRoute";
   import {
     EventType,
+    subtypeToEventType,
   } from "~/helpers/event-status";
 
-  type PanelData = NonNullable<NonNullable<IPageCalendarEventPanelDataQuery["calendarItem"]>["forPanel"]>;
+  type OtherContentEvent = {
+    start: string | Date,
+    end: string | Date,
+    location?: string | null,
+  };
+
+  type OtherContentPresenter = {
+    firstName: string,
+    lastName: string,
+    bioEn: string,
+    bioHr: string,
+    photo?: { fullUrl: string, } | null,
+  };
+
+  type OtherContentData = {
+    uid: string,
+    nameHr: string,
+    nameEn: string,
+    descriptionHr: string,
+    descriptionEn: string,
+    subtype: string,
+    reservation: number,
+    event?: OtherContentEvent | null,
+    participants?: OtherContentPresenter[] | null,
+  };
 
   export default defineComponent({
-    name: "PanelEventView",
+    name: "OtherContentEventView",
 
     components: {
       AppMaxWidthContainer,
-      AppImg,
       EventInfoDisplay,
       TranslatedText,
       PButton: Button,
     },
 
     props: {
-      panel: {
-        type: Object as PropType<PanelData>,
+      otherContent: {
+        type: Object as PropType<OtherContentData>,
+        required: true,
+      },
+      eventType: {
+        type: String,
         required: true,
       },
     },
 
     setup(props) {
+      const translationsStore = useTranslationsStore();
       const calendarStore = useCalendarStore();
       const userStore = useUserStore();
-      const translationsStore = useTranslationsStore();
 
-      const reservation = ref(props.panel.reservation);
+      const reservation = ref(props.otherContent.reservation);
       const signupLoading = ref(false);
 
       const handleSignup = async () => {
@@ -159,8 +165,8 @@
 
         signupLoading.value = true;
         const resp = await calendarStore.toggleEventReservation({
-          uid: props.panel.uid,
-          type: EventType.Panel,
+          uid: props.otherContent.uid,
+          type: subtypeToEventType(props.otherContent.subtype),
           reservation: reservation.value,
         });
         signupLoading.value = false;
@@ -171,12 +177,16 @@
       };
 
       return {
+        localizedName: computed(() => translationsStore.translateFor(props.otherContent, "name")),
+        localizedDescription: computed(() => translationsStore.translateFor(props.otherContent, "description")),
+        eventTypeAsIEventType: computed(() => subtypeToEventType(props.eventType) as IEventType),
+        localizeParticipantBio(participant: OtherContentPresenter) {
+          return translationsStore.translateFor(participant, "bio");
+        },
         reservation,
         signupLoading,
         loggedIn: computed(() => userStore.isLoggedIn),
-        translateFor: computed(() => translationsStore.translateFor),
         joinNowRoute: useJoinNowRoute(),
-        EventType,
         handleSignup,
       };
     },
@@ -270,6 +280,11 @@
     align-items: center;
     gap: 1rem;
     margin-top: 1.5rem;
+
+    img {
+      width: 1.3125rem;
+      height: 1.3125rem;
+    }
   }
 
   .signupButton,
@@ -297,6 +312,7 @@
 
   .presenter {
     display: inline-block;
+    width: 100%;
     margin-top: .5rem;
     padding-top: .5rem;
 
@@ -320,42 +336,11 @@
     border-radius: 100%;
     clip-path: circle();
     shape-outside: circle();
+    object-fit: cover;
   }
 
   .presenterDescription {
     margin-top: .5rem;
     white-space: break-spaces;
-  }
-
-  .companySection {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #{$fer-gray};
-
-    &:first-child {
-      border-top: none;
-      margin-top: 1rem;
-      padding-top: 0;
-    }
-  }
-
-  .companyChip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0 .75rem;
-    transition-property: background-color;
-    color: $fer-black;
-    border-radius: 16px;
-    background-color: transparent;
-
-    &:hover {
-      background-color: #{color.adjust($fer-dark-blue, $alpha: -.9)};
-    }
-  }
-
-  .companyChipImage {
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-right: .5rem;
   }
 </style>

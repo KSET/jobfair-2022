@@ -538,6 +538,7 @@ export type ICalendarItem = {
   companies?: Maybe<Array<ICompany>>;
   end: Scalars['DateTimeISO']['output'];
   forFusion?: Maybe<IApplicationFusion>;
+  forOtherContent?: Maybe<IOtherContent>;
   forPanel?: Maybe<ICompanyPanel>;
   forTalk?: Maybe<IApplicationTalk>;
   forWorkshop?: Maybe<IApplicationWorkshop>;
@@ -1241,8 +1242,10 @@ export type IEventReservationWhereInput = {
 };
 
 export enum IEventType {
+  Debate = 'debate',
   Fusion = 'fusion',
   HotTalk = 'hotTalk',
+  LoosenUp = 'loosenUp',
   Other = 'other',
   Panel = 'panel',
   Talk = 'talk',
@@ -1433,6 +1436,7 @@ export type IImageCount = {
   Company: Scalars['Int']['output'];
   GalleryImage: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
+  OtherContentPresenter: Scalars['Int']['output'];
   Partner: Scalars['Int']['output'];
   Sponsor: Scalars['Int']['output'];
 };
@@ -1455,6 +1459,11 @@ export type IImageCountGalleryImageArgs = {
 
 export type IImageCountNewsArgs = {
   where?: InputMaybe<INewsWhereInput>;
+};
+
+
+export type IImageCountOtherContentPresenterArgs = {
+  where?: InputMaybe<IOtherContentPresenterWhereInput>;
 };
 
 
@@ -1647,6 +1656,7 @@ export type IMutation = {
   deleteGalleryImage: Scalars['Boolean']['output'];
   deleteLiveVoteComment: Scalars['Boolean']['output'];
   deleteNews?: Maybe<Scalars['Boolean']['output']>;
+  deleteOtherContent: Scalars['Boolean']['output'];
   deletePartner: Scalars['Boolean']['output'];
   deleteResume: Scalars['Boolean']['output'];
   deleteSeason?: Maybe<ISeason>;
@@ -1681,6 +1691,7 @@ export type IMutation = {
   updateCompanyMembersFor?: Maybe<ICreateCompanyResponse>;
   updateCompanyPanel?: Maybe<ICompanyPanel>;
   updateEventReservation?: Maybe<IEventReservationResponse>;
+  updateOtherContent?: Maybe<IOtherContent>;
   updatePassword?: Maybe<IUpdatePasswordResponse>;
   updatePressRelease?: Maybe<ICreatePressReleaseResponse>;
   updateProfile?: Maybe<IUpdateProfileResponse>;
@@ -1811,6 +1822,11 @@ export type IMutationDeleteLiveVoteCommentArgs = {
 
 
 export type IMutationDeleteNewsArgs = {
+  uid: Scalars['String']['input'];
+};
+
+
+export type IMutationDeleteOtherContentArgs = {
   uid: Scalars['String']['input'];
 };
 
@@ -1992,6 +2008,11 @@ export type IMutationUpdateCompanyPanelArgs = {
 
 export type IMutationUpdateEventReservationArgs = {
   input: IEventReservationUpdateInput;
+};
+
+
+export type IMutationUpdateOtherContentArgs = {
+  input: IOtherContentUpdateInput;
 };
 
 
@@ -2199,6 +2220,98 @@ export enum INullsOrder {
   Last = 'last'
 }
 
+export type IOtherContent = {
+  _count?: Maybe<IOtherContentCount>;
+  descriptionEn: Scalars['String']['output'];
+  descriptionHr: Scalars['String']['output'];
+  event?: Maybe<ICalendarItem>;
+  nameEn: Scalars['String']['output'];
+  nameHr: Scalars['String']['output'];
+  participants: Array<IOtherContentPresenter>;
+  reservation: Scalars['Float']['output'];
+  subtype: Scalars['String']['output'];
+  uid: Scalars['String']['output'];
+};
+
+export type IOtherContentCount = {
+  participants: Scalars['Int']['output'];
+};
+
+
+export type IOtherContentCountParticipantsArgs = {
+  where?: InputMaybe<IOtherContentPresenterWhereInput>;
+};
+
+export type IOtherContentPresenter = {
+  bioEn: Scalars['String']['output'];
+  bioHr: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  forContentId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  lastName: Scalars['String']['output'];
+  photo?: Maybe<IImage>;
+  photoId?: Maybe<Scalars['Int']['output']>;
+};
+
+export type IOtherContentPresenterInput = {
+  bioEn: Scalars['String']['input'];
+  bioHr: Scalars['String']['input'];
+  existingPhotoUid?: InputMaybe<Scalars['String']['input']>;
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  photo?: InputMaybe<Scalars['Upload']['input']>;
+};
+
+export type IOtherContentPresenterListRelationFilter = {
+  every?: InputMaybe<IOtherContentPresenterWhereInput>;
+  none?: InputMaybe<IOtherContentPresenterWhereInput>;
+  some?: InputMaybe<IOtherContentPresenterWhereInput>;
+};
+
+export type IOtherContentPresenterWhereInput = {
+  AND?: InputMaybe<Array<IOtherContentPresenterWhereInput>>;
+  NOT?: InputMaybe<Array<IOtherContentPresenterWhereInput>>;
+  OR?: InputMaybe<Array<IOtherContentPresenterWhereInput>>;
+  bioEn?: InputMaybe<IStringFilter>;
+  bioHr?: InputMaybe<IStringFilter>;
+  firstName?: InputMaybe<IStringFilter>;
+  forContent?: InputMaybe<IOtherContentRelationFilter>;
+  forContentId?: InputMaybe<IIntFilter>;
+  id?: InputMaybe<IIntFilter>;
+  lastName?: InputMaybe<IStringFilter>;
+  photo?: InputMaybe<IImageNullableRelationFilter>;
+  photoId?: InputMaybe<IIntNullableFilter>;
+};
+
+export type IOtherContentRelationFilter = {
+  is?: InputMaybe<IOtherContentWhereInput>;
+  isNot?: InputMaybe<IOtherContentWhereInput>;
+};
+
+export type IOtherContentUpdateInput = {
+  descriptionEn: Scalars['String']['input'];
+  descriptionHr: Scalars['String']['input'];
+  nameEn: Scalars['String']['input'];
+  nameHr: Scalars['String']['input'];
+  participants?: InputMaybe<Array<IOtherContentPresenterInput>>;
+  season: Scalars['String']['input'];
+  subtype: Scalars['String']['input'];
+  uid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type IOtherContentWhereInput = {
+  AND?: InputMaybe<Array<IOtherContentWhereInput>>;
+  NOT?: InputMaybe<Array<IOtherContentWhereInput>>;
+  OR?: InputMaybe<Array<IOtherContentWhereInput>>;
+  descriptionEn?: InputMaybe<IStringFilter>;
+  descriptionHr?: InputMaybe<IStringFilter>;
+  event?: InputMaybe<ICalendarItemNullableRelationFilter>;
+  nameEn?: InputMaybe<IStringFilter>;
+  nameHr?: InputMaybe<IStringFilter>;
+  participants?: InputMaybe<IOtherContentPresenterListRelationFilter>;
+  subtype?: InputMaybe<IStringFilter>;
+};
+
 export type IPanelCompanyEntry = {
   company: ICompany;
   panelists: Array<IApplicationPresenter>;
@@ -2358,6 +2471,7 @@ export type IQuery = {
   news: Array<INews>;
   newsItem?: Maybe<INews>;
   newsItemByUid?: Maybe<INews>;
+  otherContents: Array<IOtherContent>;
   participants: Array<ICompany>;
   partners: Array<IPartner>;
   pressRelease?: Maybe<IPressRelease>;
@@ -2568,6 +2682,11 @@ export type IQueryNewsItemArgs = {
 
 export type IQueryNewsItemByUidArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IQueryOtherContentsArgs = {
+  season?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3171,6 +3290,7 @@ export type ISeasonCount = {
   entryLog: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   gateGuardianLog: Scalars['Int']['output'];
+  otherContents: Scalars['Int']['output'];
   panels: Scalars['Int']['output'];
   partners: Scalars['Int']['output'];
   pressReleases: Scalars['Int']['output'];
@@ -3228,6 +3348,11 @@ export type ISeasonCountFavouriteResumesArgs = {
 
 export type ISeasonCountGateGuardianLogArgs = {
   where?: InputMaybe<IGateGuardianLogWhereInput>;
+};
+
+
+export type ISeasonCountOtherContentsArgs = {
+  where?: InputMaybe<IOtherContentWhereInput>;
 };
 
 
@@ -4951,6 +5076,10 @@ export type IAdminReservationsDataQuery_season_Season_reservations_ReservationIt
 
 export type IAdminReservationsDataQuery_season_Season = { reservations: Array<IAdminReservationsDataQuery_season_Season_reservations_ReservationItem> };
 
+export type IAdminReservationsDataQuery_otherContents_OtherContent_event_CalendarItem = { uid: string };
+
+export type IAdminReservationsDataQuery_otherContents_OtherContent = { uid: string, nameHr: string, nameEn: string, subtype: string, event?: IAdminReservationsDataQuery_otherContents_OtherContent_event_CalendarItem | null };
+
 export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_workshop_ApplicationWorkshop = { uid: string, titleHr: string };
 
 export type IAdminReservationsDataQuery_participants_Company_program_CompanyProgram_talk_ApplicationTalk = { uid: string, titleHr: string };
@@ -4963,7 +5092,7 @@ export type IAdminReservationsDataQuery_participants_Company_program_CompanyProg
 
 export type IAdminReservationsDataQuery_participants_Company = { uid: string, vat: string, brandName: string, program?: IAdminReservationsDataQuery_participants_Company_program_CompanyProgram | null };
 
-export type IAdminReservationsDataQuery_Query = { season?: IAdminReservationsDataQuery_season_Season | null, participants: Array<IAdminReservationsDataQuery_participants_Company> };
+export type IAdminReservationsDataQuery_Query = { season?: IAdminReservationsDataQuery_season_Season | null, otherContents: Array<IAdminReservationsDataQuery_otherContents_OtherContent>, participants: Array<IAdminReservationsDataQuery_participants_Company> };
 
 
 export type IAdminReservationsDataQueryVariables = Exact<{
@@ -5261,6 +5390,26 @@ export type IPageCalendarEventPanelDataQueryVariables = Exact<{
 
 
 export type IPageCalendarEventPanelDataQuery = IPageCalendarEventPanelDataQuery_Query;
+
+export type IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_event_CalendarItem = { start: string | Date, end: string | Date, location?: string | null };
+
+export type IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_participants_OtherContentPresenter_photo_Image = { fullUrl: string };
+
+export type IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_participants_OtherContentPresenter = { firstName: string, lastName: string, bioEn: string, bioHr: string, photo?: IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_participants_OtherContentPresenter_photo_Image | null };
+
+export type IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent = { uid: string, nameHr: string, nameEn: string, descriptionHr: string, descriptionEn: string, subtype: string, reservation: number, event?: IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_event_CalendarItem | null, participants: Array<IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent_participants_OtherContentPresenter> };
+
+export type IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem = { forOtherContent?: IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem_forOtherContent_OtherContent | null };
+
+export type IPageCalendarEventOtherContentDataQuery_Query = { calendarItem?: IPageCalendarEventOtherContentDataQuery_calendarItem_CalendarItem | null };
+
+
+export type IPageCalendarEventOtherContentDataQueryVariables = Exact<{
+  uid: Scalars['String']['input'];
+}>;
+
+
+export type IPageCalendarEventOtherContentDataQuery = IPageCalendarEventOtherContentDataQuery_Query;
 
 export type IPageCompanyUidRate_DataQuery_userCompanyComponentRating_UserCompanyComponentRating = { rating: number, comment?: string | null };
 
@@ -5607,13 +5756,15 @@ export type IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPane
 
 export type IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel = { uid: string, name: string, description: string, reservation: number, companies: Array<IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel_companies_Company> };
 
+export type IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forOtherContent_OtherContent = { uid: string, nameHr: string, nameEn: string, descriptionHr: string, descriptionEn: string, subtype: string, reservation: number };
+
 export type IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company_rasterLogo_Image = { fullUrl: string, thumbUrl: string };
 
 export type IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company = { uid: string, brandName: string, rasterLogo?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company_rasterLogo_Image | null };
 
-export type IStoreCalendarEventsAllCalendarFragmentFragment = { uid: string, location?: string | null, start: string | Date, end: string | Date, capacity: number, forWorkshop?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forWorkshop_ApplicationWorkshop | null, forTalk?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forTalk_ApplicationTalk | null, forFusion?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forFusion_ApplicationFusion | null, forPanel?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel | null, companies?: Array<IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company> | null };
+export type IStoreCalendarEventsAllCalendarFragmentFragment = { uid: string, location?: string | null, start: string | Date, end: string | Date, capacity: number, forWorkshop?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forWorkshop_ApplicationWorkshop | null, forTalk?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forTalk_ApplicationTalk | null, forFusion?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forFusion_ApplicationFusion | null, forPanel?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel | null, forOtherContent?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forOtherContent_OtherContent | null, companies?: Array<IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company> | null };
 
-export type IStoreCalendarEventsAllQuery_calendar_CalendarItem = { uid: string, location?: string | null, start: string | Date, end: string | Date, capacity: number, forWorkshop?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forWorkshop_ApplicationWorkshop | null, forTalk?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forTalk_ApplicationTalk | null, forFusion?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forFusion_ApplicationFusion | null, forPanel?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel | null, companies?: Array<IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company> | null };
+export type IStoreCalendarEventsAllQuery_calendar_CalendarItem = { uid: string, location?: string | null, start: string | Date, end: string | Date, capacity: number, forWorkshop?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forWorkshop_ApplicationWorkshop | null, forTalk?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forTalk_ApplicationTalk | null, forFusion?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forFusion_ApplicationFusion | null, forPanel?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forPanel_CompanyPanel | null, forOtherContent?: IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_forOtherContent_OtherContent | null, companies?: Array<IStoreCalendarEventsAllCalendarFragmentFragment_CalendarItem_companies_Company> | null };
 
 export type IStoreCalendarEventsAllQuery_currentSeason_Season_reservations_ReservationItem = { uid: string, type: string, count: number };
 
@@ -5897,6 +6048,15 @@ export type IResolversTypes = {
   NewsFilter: INewsFilter;
   NewsWhereInput: INewsWhereInput;
   NullsOrder: INullsOrder;
+  OtherContent: ResolverTypeWrapper<IOtherContent>;
+  OtherContentCount: ResolverTypeWrapper<IOtherContentCount>;
+  OtherContentPresenter: ResolverTypeWrapper<IOtherContentPresenter>;
+  OtherContentPresenterInput: IOtherContentPresenterInput;
+  OtherContentPresenterListRelationFilter: IOtherContentPresenterListRelationFilter;
+  OtherContentPresenterWhereInput: IOtherContentPresenterWhereInput;
+  OtherContentRelationFilter: IOtherContentRelationFilter;
+  OtherContentUpdateInput: IOtherContentUpdateInput;
+  OtherContentWhereInput: IOtherContentWhereInput;
   PanelCompanyEntry: ResolverTypeWrapper<IPanelCompanyEntry>;
   Partner: ResolverTypeWrapper<IPartner>;
   PartnerCreateInput: IPartnerCreateInput;
@@ -6201,6 +6361,15 @@ export type IResolversParentTypes = {
   NewsCreateResponse: INewsCreateResponse;
   NewsFilter: INewsFilter;
   NewsWhereInput: INewsWhereInput;
+  OtherContent: IOtherContent;
+  OtherContentCount: IOtherContentCount;
+  OtherContentPresenter: IOtherContentPresenter;
+  OtherContentPresenterInput: IOtherContentPresenterInput;
+  OtherContentPresenterListRelationFilter: IOtherContentPresenterListRelationFilter;
+  OtherContentPresenterWhereInput: IOtherContentPresenterWhereInput;
+  OtherContentRelationFilter: IOtherContentRelationFilter;
+  OtherContentUpdateInput: IOtherContentUpdateInput;
+  OtherContentWhereInput: IOtherContentWhereInput;
   PanelCompanyEntry: IPanelCompanyEntry;
   Partner: IPartner;
   PartnerCreateInput: IPartnerCreateInput;
@@ -6477,6 +6646,7 @@ export type ICalendarItemResolvers<ContextType = any, ParentType extends IResolv
   companies?: Resolver<Maybe<Array<IResolversTypes['Company']>>, ParentType, ContextType>;
   end?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   forFusion?: Resolver<Maybe<IResolversTypes['ApplicationFusion']>, ParentType, ContextType>;
+  forOtherContent?: Resolver<Maybe<IResolversTypes['OtherContent']>, ParentType, ContextType>;
   forPanel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType>;
   forTalk?: Resolver<Maybe<IResolversTypes['ApplicationTalk']>, ParentType, ContextType>;
   forWorkshop?: Resolver<Maybe<IResolversTypes['ApplicationWorkshop']>, ParentType, ContextType>;
@@ -6804,6 +6974,7 @@ export type IImageCountResolvers<ContextType = any, ParentType extends IResolver
   Company?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountCompanyArgs>>;
   GalleryImage?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountGalleryImageArgs>>;
   News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountNewsArgs>>;
+  OtherContentPresenter?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountOtherContentPresenterArgs>>;
   Partner?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountPartnerArgs>>;
   Sponsor?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IImageCountSponsorArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -6882,6 +7053,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   deleteGalleryImage?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteGalleryImageArgs, 'uid'>>;
   deleteLiveVoteComment?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteLiveVoteCommentArgs, 'commentId'>>;
   deleteNews?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<IMutationDeleteNewsArgs, 'uid'>>;
+  deleteOtherContent?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteOtherContentArgs, 'uid'>>;
   deletePartner?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeletePartnerArgs, 'partner'>>;
   deleteResume?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   deleteSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType, RequireFields<IMutationDeleteSeasonArgs, 'uid'>>;
@@ -6916,6 +7088,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   updateCompanyMembersFor?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyMembersForArgs, 'company' | 'members'>>;
   updateCompanyPanel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyPanelArgs, 'input'>>;
   updateEventReservation?: Resolver<Maybe<IResolversTypes['EventReservationResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateEventReservationArgs, 'input'>>;
+  updateOtherContent?: Resolver<Maybe<IResolversTypes['OtherContent']>, ParentType, ContextType, RequireFields<IMutationUpdateOtherContentArgs, 'input'>>;
   updatePassword?: Resolver<Maybe<IResolversTypes['UpdatePasswordResponse']>, ParentType, ContextType, RequireFields<IMutationUpdatePasswordArgs, 'currentPassword' | 'newPassword' | 'newPasswordRepeat'>>;
   updatePressRelease?: Resolver<Maybe<IResolversTypes['CreatePressReleaseResponse']>, ParentType, ContextType, RequireFields<IMutationUpdatePressReleaseArgs, 'info' | 'uid'>>;
   updateProfile?: Resolver<Maybe<IResolversTypes['UpdateProfileResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateProfileArgs, 'info'>>;
@@ -6947,6 +7120,37 @@ export type INewsResolvers<ContextType = any, ParentType extends IResolversParen
 export type INewsCreateResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['NewsCreateResponse'] = IResolversParentTypes['NewsCreateResponse']> = {
   entity?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType>;
   errors?: Resolver<Maybe<Array<IResolversTypes['FieldError']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IOtherContentResolvers<ContextType = any, ParentType extends IResolversParentTypes['OtherContent'] = IResolversParentTypes['OtherContent']> = {
+  _count?: Resolver<Maybe<IResolversTypes['OtherContentCount']>, ParentType, ContextType>;
+  descriptionEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  descriptionHr?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  event?: Resolver<Maybe<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
+  nameEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  nameHr?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  participants?: Resolver<Array<IResolversTypes['OtherContentPresenter']>, ParentType, ContextType>;
+  reservation?: Resolver<IResolversTypes['Float'], ParentType, ContextType>;
+  subtype?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IOtherContentCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['OtherContentCount'] = IResolversParentTypes['OtherContentCount']> = {
+  participants?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IOtherContentCountParticipantsArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IOtherContentPresenterResolvers<ContextType = any, ParentType extends IResolversParentTypes['OtherContentPresenter'] = IResolversParentTypes['OtherContentPresenter']> = {
+  bioEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  bioHr?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  firstName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  forContentId?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  lastName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  photo?: Resolver<Maybe<IResolversTypes['Image']>, ParentType, ContextType>;
+  photoId?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7017,6 +7221,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   news?: Resolver<Array<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsArgs, 'lang'>>;
   newsItem?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsItemArgs, 'slug'>>;
   newsItemByUid?: Resolver<Maybe<IResolversTypes['News']>, ParentType, ContextType, RequireFields<IQueryNewsItemByUidArgs, 'uid'>>;
+  otherContents?: Resolver<Array<IResolversTypes['OtherContent']>, ParentType, ContextType, Partial<IQueryOtherContentsArgs>>;
   participants?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType, Partial<IQueryParticipantsArgs>>;
   partners?: Resolver<Array<IResolversTypes['Partner']>, ParentType, ContextType, Partial<IQueryPartnersArgs>>;
   pressRelease?: Resolver<Maybe<IResolversTypes['PressRelease']>, ParentType, ContextType, RequireFields<IQueryPressReleaseArgs, 'uid'>>;
@@ -7197,6 +7402,7 @@ export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolve
   entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountEntryLogArgs>>;
   favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountFavouriteResumesArgs>>;
   gateGuardianLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountGateGuardianLogArgs>>;
+  otherContents?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountOtherContentsArgs>>;
   panels?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPanelsArgs>>;
   partners?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPartnersArgs>>;
   pressReleases?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountPressReleasesArgs>>;
@@ -7392,6 +7598,9 @@ export type IResolvers<ContextType = any> = {
   Mutation?: IMutationResolvers<ContextType>;
   News?: INewsResolvers<ContextType>;
   NewsCreateResponse?: INewsCreateResponseResolvers<ContextType>;
+  OtherContent?: IOtherContentResolvers<ContextType>;
+  OtherContentCount?: IOtherContentCountResolvers<ContextType>;
+  OtherContentPresenter?: IOtherContentPresenterResolvers<ContextType>;
   PanelCompanyEntry?: IPanelCompanyEntryResolvers<ContextType>;
   Partner?: IPartnerResolvers<ContextType>;
   PasswordResetUseResponse?: IPasswordResetUseResponseResolvers<ContextType>;
@@ -7696,6 +7905,15 @@ export const StoreCalendarEventsAllCalendarFragment = gql`
       uid
       brandName
     }
+  }
+  forOtherContent {
+    uid
+    nameHr
+    nameEn
+    descriptionHr
+    descriptionEn
+    subtype
+    reservation
   }
   companies {
     uid
@@ -8808,6 +9026,15 @@ export const AdminReservationsData = gql`
       count
     }
   }
+  otherContents(season: $seasonUid) {
+    uid
+    nameHr
+    nameEn
+    subtype
+    event {
+      uid
+    }
+  }
   participants(season: $seasonUid) {
     uid
     vat
@@ -9161,6 +9388,35 @@ export const PageCalendarEventPanelData = gql`
         start
         end
         location
+      }
+    }
+  }
+}
+    `;
+export const PageCalendarEventOtherContentData = gql`
+    query PageCalendarEventOtherContentData($uid: String!) {
+  calendarItem(uid: $uid) {
+    forOtherContent {
+      uid
+      nameHr
+      nameEn
+      descriptionHr
+      descriptionEn
+      subtype
+      reservation
+      event {
+        start
+        end
+        location
+      }
+      participants {
+        firstName
+        lastName
+        bioEn
+        bioHr
+        photo {
+          fullUrl
+        }
       }
     }
   }

@@ -215,12 +215,8 @@ export class SeasonFieldResolver {
 
     const eventIds = infoFlat.map(([ , entry ]) => entry.id);
 
-    if (eventIds.length === 0) {
-      return [];
-    }
-
     type Row = { eventId: InfoEntryValue["id"], eventType: InfoEntryType, status: number, count: bigint | number, };
-    const items = await ctx.prisma.$queryRaw<Row[]>`
+    const items: ReservationItem[] = eventIds.length === 0 ? [] : (await ctx.prisma.$queryRaw<Row[]>`
       select
         "eventId", "eventType", "status", count("status")
       from
@@ -229,13 +225,36 @@ export class SeasonFieldResolver {
         "status" <> 0 and "eventId" in (${ Prisma.join(eventIds) })
       group by
         "eventId", "eventType", "status"
-    `;
-
-    return items.map((row) => ({
+    `).map((row) => ({
       type: row.eventType,
       uid: eventToUid[row.eventType]?.[row.eventId],
       count: Number(row.count),
     })).filter((x) => x.uid);
+
+    const otherContents = await ctx.prisma.otherContent.findMany({
+      where: { forSeasonId: season.id },
+      select: { id: true, uid: true },
+    });
+
+    if (otherContents.length > 0) {
+      const otherContentIds = otherContents.map((x) => x.id);
+      const otherItems = await ctx.prisma.$queryRaw<Row[]>`
+        select "eventId", "eventType", "status", count("status")
+        from "EventReservation"
+        where "status" <> 0
+          and "eventId" in (${Prisma.join(otherContentIds)})
+          and "eventType" in ('hot-talk', 'loosen-up', 'debate', 'other')
+        group by "eventId", "eventType", "status"
+      `;
+      const otherContentById = Object.fromEntries(otherContents.map((x) => [x.id, x.uid]));
+      items.push(...otherItems.map((row) => ({
+        type: row.eventType,
+        uid: otherContentById[row.eventId],
+        count: Number(row.count),
+      })).filter((x) => x.uid));
+    }
+
+    return items;
   }
 
   @FieldResolver(() => Int)

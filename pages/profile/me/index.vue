@@ -454,6 +454,40 @@
             <p>
               <translated-text trans-key="profile.company.internship.text" />
             </p>
+
+            <h3 :class="$style.itemSubHeader">
+              <translated-text trans-key="profile.company.internship.status.header" />
+            </h3>
+
+            <div :class="$style.internshipStatus">
+              <span
+                :class="[
+                  $style.statusDot,
+                  $style[`status${internshipStatus === 'signed' ? 'Green' : internshipStatus === 'unsigned' ? 'Yellow' : 'Red'}`],
+                ]"
+              />
+              <translated-text
+                v-if="internshipStatus === 'signed'"
+                :class="$style.statusGreen"
+                trans-key="profile.company.internship.status.signed"
+              />
+              <translated-text
+                v-else-if="internshipStatus === 'unsigned'"
+                :class="$style.statusYellow"
+                trans-key="profile.company.internship.status.unsigned"
+              />
+              <translated-text
+                v-else
+                :class="$style.statusRed"
+                trans-key="profile.company.internship.status.none"
+              />
+            </div>
+
+            <ul v-if="internships.length" :class="$style.applicationItems">
+              <li v-for="internship in internships" :key="internship.uid">
+                <em v-text="internship.position" />
+              </li>
+            </ul>
           </div>
           <div :class="$style.itemActions">
             <a
@@ -939,6 +973,14 @@
         isScanner: computed(() => userStore.isScanner),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
+        internships: computed(() => resp?.data?.companyApplication?.internships ?? []),
+        internshipStatus: computed(() => {
+          const list = resp?.data?.companyApplication?.internships ?? [];
+          if (!list.length) {
+            return "none";
+          }
+          return list.some((i) => i.signed) ? "signed" : "unsigned";
+        }),
         isApproved,
         isApprovedWithoutBooth,
         isApprovedWithEvents,
@@ -1033,6 +1075,12 @@
     color: $fer-dark-blue;
   }
 
+  .itemSubHeader {
+    margin: 1.5rem 0 .75rem;
+    font-size: 1rem;
+    color: $fer-black;
+  }
+
   .itemActions {
     display: flex;
     margin-top: auto;
@@ -1059,6 +1107,24 @@
       }
     }
   }
+
+  .internshipStatus {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .75rem;
+  }
+
+  .statusDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .statusRed    { background: $fer-error;   color: $fer-error; }
+  .statusYellow { background: $fer-yellow;  color: $fer-yellow; }
+  .statusGreen  { background: $fer-success; color: $fer-success; }
 
   .applicationItems {
     font-size: 1em;

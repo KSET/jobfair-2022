@@ -4988,7 +4988,9 @@ export type IProfileBaseDataQuery_companyApplication_CompanyApplication_approval
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications = { workshop: number, talk: number, fusion: number };
 
-export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, fusion?: IProfileBaseDataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications };
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, signed?: boolean | null };
+
+export type IProfileBaseDataQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, workshop?: IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop | null, talk?: IProfileBaseDataQuery_companyApplication_CompanyApplication_talk_ApplicationTalk | null, fusion?: IProfileBaseDataQuery_companyApplication_CompanyApplication_fusion_ApplicationFusion | null, approval?: IProfileBaseDataQuery_companyApplication_CompanyApplication_approval_CompanyApplicationApproval | null, userApplications: IProfileBaseDataQuery_companyApplication_CompanyApplication_userApplications_EventUserApplications, internships: Array<IProfileBaseDataQuery_companyApplication_CompanyApplication_internships_ApplicationInternship> };
 
 export type IProfileBaseDataQuery_profile_User_resume_Resume = { uid: string };
 
@@ -8864,6 +8866,11 @@ export const ProfileBaseData = gql`
       workshop
       talk
       fusion
+    }
+    internships {
+      uid
+      position
+      signed
     }
   }
   profile {

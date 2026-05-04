@@ -116,8 +116,9 @@
             <div
               v-for="presenter in programItems.talk.presenters"
               :key="presenter.photo.fullUrl"
+              :class="$style.presenter"
             >
-              <div class="mt-2">
+              <div>
                 <h5 :class="$style.presenterName" v-text="`${presenter.firstName} ${presenter.lastName}`" />
                 <app-img
                   :alt="`${presenter.firstName} ${presenter.lastName}`"
@@ -536,14 +537,14 @@
             break;
           }
 
-          case "internship": {
-            const item = unref(programItems).internship;
-            if (item) {
-              info.title = `[Summer Internship] ${ brandName }: ${ item.position }`;
-              info.description = item.description;
-            }
-            break;
-          }
+          // case "internship": {
+          //   const item = unref(programItems).internship as { position: string; description: string } | undefined;
+          //   if (item) {
+          //     info.title = `[Summer Internship] ${ brandName }: ${ item.position }`;
+          //     info.description = item.description;
+          //   }
+          //   break;
+          // }
         }
 
         return info;

@@ -941,6 +941,14 @@ query AdminReservationsData($seasonUid: String!) {
         }
     }
 
+    otherContents(season: $seasonUid) {
+        uid
+        nameHr
+        nameEn
+        subtype
+        event { uid }
+    }
+
     participants(season: $seasonUid) {
         uid
         vat

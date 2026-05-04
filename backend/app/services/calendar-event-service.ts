@@ -1,5 +1,5 @@
 import {
-  prisma,
+  type prisma,
 } from "../providers/prisma";
 import {
   EventType,
@@ -10,7 +10,7 @@ type PrismaClient = typeof prisma;
 
 export class CalendarEventService {
   public static async getItemIdForEvent(
-    prisma: Pick<PrismaClient, "applicationWorkshop" | "applicationTalk" | "companyPanel" | "applicationFusion">,
+    prisma: Pick<PrismaClient, "applicationWorkshop" | "applicationTalk" | "companyPanel" | "applicationFusion" | "otherContent">,
     type: EventType,
     uid: string,
   ) {
@@ -47,6 +47,19 @@ export class CalendarEventService {
       }
       case EventType.fusion: {
         return await prisma.applicationFusion.findFirst({
+          where: {
+            uid,
+          },
+          select: {
+            id: true,
+          },
+        });
+      }
+      case EventType.hotTalk:
+      case EventType.loosenUp:
+      case EventType.debate:
+      case EventType.other: {
+        return await prisma.otherContent.findFirst({
           where: {
             uid,
           },

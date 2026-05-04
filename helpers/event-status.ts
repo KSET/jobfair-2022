@@ -76,9 +76,23 @@ export const getParticipantCapacityFor =
       case EventType.Fusion:
       case EventType.Panel:
       case EventType.HotTalk:
+      case EventType.LoosenUp:
+      case EventType.Debate:
+      case EventType.Other:
         return 50;
       default:
         return 0;
+    }
+  }
+;
+
+export const subtypeToEventType =
+  (subtype: string): EventType => {
+    switch (subtype) {
+      case "hot-talk": return EventType.HotTalk;
+      case "loosen-up": return EventType.LoosenUp;
+      case "debate": return EventType.Debate;
+      default: return EventType.Other;
     }
   }
 ;

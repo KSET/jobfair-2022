@@ -1,5 +1,10 @@
 <template>
   <panel-event-view v-if="'panel' === eventType && panelData" :panel="panelData" />
+  <other-content-event-view
+    v-else-if="isOtherContentType && otherContentData"
+    :other-content="otherContentData"
+    :event-type="eventType"
+  />
 </template>
 
 <script lang="ts">
@@ -15,17 +20,20 @@
   import {
     type IPageCalendarEventDataQuery,
     type IPageCalendarEventPanelDataQuery,
+    type IPageCalendarEventOtherContentDataQuery,
   } from "~/graphql/schema";
   import {
     graphql,
   } from "~/graphql/client";
   import PanelEventView from "~/components/page/calendar/panel-event-view.vue";
+  import OtherContentEventView from "~/components/page/calendar/other-content-event-view.vue";
 
   export default defineComponent({
     name: "PageCalendarEventDispatcher",
 
     components: {
       PanelEventView,
+      OtherContentEventView,
     },
 
     setup() {
@@ -36,10 +44,12 @@
             const uid = route.params.uid as string;
             const routeState = useState<IPageCalendarEventDataQuery | null>(JSON.stringify([ "calendar-item", uid ]));
             const panelState = useState<IPageCalendarEventPanelDataQuery | null>(JSON.stringify([ "calendar-item-panel", uid ]));
+            const otherContentState = useState<IPageCalendarEventOtherContentDataQuery | null>(JSON.stringify([ "calendar-item-other-content", uid ]));
 
             const [
               routeResp,
               panelResp,
+              otherContentResp,
             ] = await Promise.all([
               useQuery({
                 query: graphql(/* GraphQL */`
@@ -83,6 +93,32 @@
                 `),
                 variables: { uid },
               })().then((r) => r?.data),
+              useQuery({
+                query: graphql(/* GraphQL */`
+                  query PageCalendarEventOtherContentData($uid: String!) {
+                    calendarItem(uid: $uid) {
+                      forOtherContent {
+                        uid
+                        nameHr
+                        nameEn
+                        descriptionHr
+                        descriptionEn
+                        subtype
+                        reservation
+                        event { start end location }
+                        participants {
+                          firstName
+                          lastName
+                          bioEn
+                          bioHr
+                          photo { fullUrl }
+                        }
+                      }
+                    }
+                  }
+                `),
+                variables: { uid },
+              })().then((r) => r?.data),
             ]);
 
             if (routeResp) {
@@ -90,6 +126,9 @@
             }
             if (panelResp) {
               panelState.value = panelResp;
+            }
+            if (otherContentResp) {
+              otherContentState.value = otherContentResp;
             }
           },
           (route) => {
@@ -100,14 +139,20 @@
               return navigateTo({ name: "schedule" });
             }
 
-            if ("panel" === data.calendarItem.type) {
+            const { type } = data.calendarItem;
+
+            if ("panel" === type) {
+              return;
+            }
+
+            if ("hot-talk" === type || "loosen-up" === type || "debate" === type || "other" === type) {
               return;
             }
 
             return navigateTo({
               name: "company-uid",
               params: { uid: data.calendarItemCompanyUid },
-              query: { tab: data.calendarItem.type },
+              query: { tab: type },
             });
           },
         ],
@@ -117,10 +162,18 @@
 
       const routeState = useState<IPageCalendarEventDataQuery | null>(JSON.stringify([ "calendar-item", route.params.uid ]), () => null);
       const panelState = useState<IPageCalendarEventPanelDataQuery | null>(JSON.stringify([ "calendar-item-panel", route.params.uid ]), () => null);
+      const otherContentState = useState<IPageCalendarEventOtherContentDataQuery | null>(JSON.stringify([ "calendar-item-other-content", route.params.uid ]), () => null);
+
+      const OTHER_CONTENT_TYPES = [ "hot-talk", "loosen-up", "debate", "other" ];
 
       return {
         eventType: computed(() => routeState.value?.calendarItem?.type ?? null),
         panelData: computed(() => panelState.value?.calendarItem?.forPanel ?? null),
+        otherContentData: computed(() => otherContentState.value?.calendarItem?.forOtherContent ?? null),
+        isOtherContentType: computed(() => {
+          const type = routeState.value?.calendarItem?.type;
+          return null !== type && undefined !== type && OTHER_CONTENT_TYPES.includes(type);
+        }),
       };
     },
   });

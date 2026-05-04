@@ -8,6 +8,8 @@ export enum EventType {
   fusion = "fusion",
   panel = "panel",
   hotTalk = "hot-talk",
+  loosenUp = "loosen-up",
+  debate = "debate",
   other = "other",
 }
 
@@ -77,6 +79,10 @@ export const getParticipantCapacityFor =
       case EventType.talk:
       case EventType.fusion:
       case EventType.panel:
+      case EventType.hotTalk:
+      case EventType.loosenUp:
+      case EventType.debate:
+      case EventType.other:
         return 50;
       default:
         return 0;

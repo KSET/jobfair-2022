@@ -21,17 +21,24 @@
       </template>
       <Column field="companyName" header="Firma" sortable>
         <template #body="{ data }">
-          <nuxt-link :to="{ name: 'admin-companies-vat-edit', params: { vat: data.company.vat } }">
-            <strong v-text="data.company.brandName" />
-          </nuxt-link>
+          <template v-if="data.company">
+            <nuxt-link :to="{ name: 'admin-companies-vat-edit', params: { vat: data.company.vat } }">
+              <strong v-text="data.company.brandName" />
+            </nuxt-link>
+          </template>
+          <span v-else>—</span>
         </template>
       </Column>
       <Column field="type" header="Event" sortable />
       <Column field="title" header="Naslov" sortable>
         <template #body="{ data }">
-          <nuxt-link :to="{ name: 'company-uid', params: { uid: data.company.uid }, query: { tab: data.type } }">
+          <nuxt-link v-if="data.company" :to="{ name: 'company-uid', params: { uid: data.company.uid }, query: { tab: data.type } }">
             <strong v-text="data.title" />
           </nuxt-link>
+          <nuxt-link v-else-if="data.eventUid" :to="{ name: 'calendar-event-uid', params: { uid: data.eventUid } }">
+            <strong v-text="data.title" />
+          </nuxt-link>
+          <strong v-else v-text="data.title" />
         </template>
       </Column>
       <Column field="count" header="Broj prijava" sortable />
@@ -40,12 +47,6 @@
 </template>
 
 <script lang="ts">
-  import {
-    fromPairs,
-    groupBy,
-    map,
-    toPairs,
-  } from "rambdax";
   import DataTable from "primevue/datatable";
   import Column from "primevue/column";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
@@ -85,26 +86,30 @@
         },
       })().then((resp) => resp?.data);
 
-      const participants =
+      type ProgramEntry = { uid: string, } & ({ titleHr: string, } | { name: string, });
+      type Company = { uid: string, vat: string, brandName: string, };
+      type ParticipantEntry = ProgramEntry & { type: string, company: Company, };
+
+      const participants: ParticipantEntry[] =
         (resp?.participants ?? [])
-          .flatMap(
-            ({ program, ...participant }) =>
-              toPairs(program!)
-                .map(([ type, rest ]) => ({ type, ...rest!, company: participant }))
-            ,
-          )
+          .flatMap(({ program, ...participant }) => {
+            if (!program) {
+              return [];
+            }
+            const entries = Object.entries(program) as [ string, ProgramEntry | null | undefined ][];
+            return entries
+              .filter((entry): entry is [ string, ProgramEntry ] => null !== entry[1])
+              .map(([ type, rest ]) => ({ type, ...rest, company: participant as Company }));
+          })
       ;
-      const participantsGrouped = map(
-        (items: (typeof participants)) =>
-          fromPairs(items.map((item) => [ item.uid, item ]))
-        ,
-        groupBy(
-          (participant) =>
-            participant.type
-          ,
-          participants,
-        ),
-      );
+
+      const participantsGrouped: Record<string, Record<string, ParticipantEntry>> = {};
+      for (const participant of participants) {
+        if (!participantsGrouped[participant.type]) {
+          participantsGrouped[participant.type] = {};
+        }
+        participantsGrouped[participant.type][participant.uid] = participant;
+      }
 
       const reservations =
         (resp?.season?.reservations ?? [])
@@ -121,14 +126,27 @@
               company: event.company,
             };
           })
-          .filter(Boolean)
+          .filter((x): x is NonNullable<typeof x> => null !== x)
           .sort((lt, gt) => lt.company.brandName.localeCompare(gt.company.brandName))
       ;
+
+      const otherContentById = Object.fromEntries((resp?.otherContents ?? []).map((oc) => [ oc.uid, oc ]));
+      const otherContentRows = (resp?.season?.reservations ?? [])
+        .filter((r) => [ "hot-talk", "loosen-up", "debate", "other" ].includes(r.type))
+        .map((r) => {
+          const oc = otherContentById[r.uid];
+          if (!oc) { return null; }
+          return { ...r, title: oc.nameHr, company: null, eventUid: oc.event?.uid ?? null };
+        })
+        .filter(Boolean)
+      ;
+
+      const allReservations = [ ...reservations, ...otherContentRows ];
 
       const dt = ref<DataTable | null>(null);
 
       return {
-        reservations,
+        reservations: allReservations,
         dt,
         exportCSV() {
           const $dt = unref(dt);

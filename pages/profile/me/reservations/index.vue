@@ -144,7 +144,7 @@
     </div>
 
     <div class="text-right my-2 text-xl">
-      <a :href="`/api/user/calendar/event/${userUid}.ics`">
+      <a :href="`/api/user/calendar/event/${userUid}.ics`" target="_blank" rel="noopener">
         <translated-text trans-key="schedule.as-ical.user-reservations" />
       </a>
     </div>
@@ -228,6 +228,10 @@
       iconImage: EventIconFusion,
     },
     {
+      label: "profile.reservations.tab.otherContent",
+      icon: "pi-star",
+    },
+    {
       label: "profile.reservations.tab.reserved",
       icon: "pi-bookmark",
     },
@@ -248,6 +252,10 @@
     switch (type.label) {
       case "profile.reservations.tab.reserved":
         return events.filter((event) => event.reservation);
+      case "profile.reservations.tab.otherContent":
+        return events.filter((event) =>
+          [ EventType.HotTalk, EventType.LoosenUp, EventType.Debate, EventType.Other ].includes(event.type),
+        );
       case "all":
         return events;
       default:

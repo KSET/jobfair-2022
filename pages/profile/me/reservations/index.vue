@@ -430,7 +430,7 @@
   .item .itemImage {
 
     img {
-      object-position: right;
+      object-position: center;
     }
   }
 

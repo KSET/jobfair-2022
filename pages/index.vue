@@ -110,38 +110,28 @@
       </div>
     </div>
 
-    <div
-      v-if="sponsorsShown && projectFriends.length > 0"
-      :class="$style.sectionContainer"
-    >
+    <div :class="$style.sectionContainer">
       <div class="grid">
         <div class="col-12">
           <h2 :class="$style.header">
-            <translated-text trans-key="index.projectFriends.header" />
+            <translated-text trans-key="index.generalPartner.header" />
           </h2>
           <h3 :class="$style.subHeader">
-            <translated-text trans-key="index.projectFriends.subheader" />
+            <translated-text trans-key="index.generalPartner.subheader" />
           </h3>
         </div>
 
         <div class="col-12">
-          <div :class="$style.companyGrid">
-            <div
-              v-for="projectFriend in projectFriends"
-              :key="projectFriend.uid"
-              :class="$style.companyGridCell"
-            >
+          <div :class="[$style.companyGrid, $style.companyGridCenter]">
+            <div :class="$style.companyGridCell">
               <a
-                :href="projectFriend.url"
-                :title="projectFriend.name"
+                href="https://www.koncar.hr/hr/karijere"
                 target="_blank"
               >
-                <app-img
-                  :alt="`${projectFriend.name} logo`"
-                  :lazy-src="projectFriend.photo.thumbUrl"
-                  :src="projectFriend.photo.fullUrl"
-                  aspect-ratio="1.78"
-                  contain
+                <img
+                  :src="'/gp.png'"
+                  alt="Koncar logo"
+                  style="width: 100%; display: block;"
                 />
               </a>
             </div>
@@ -180,6 +170,46 @@
                   :alt="`${mediaPartner.name} logo`"
                   :lazy-src="mediaPartner.photo.thumbUrl"
                   :src="mediaPartner.photo.fullUrl"
+                  aspect-ratio="1.78"
+                  contain
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      v-if="sponsorsShown && projectFriends.length > 0"
+      :class="$style.sectionContainer"
+    >
+      <div class="grid">
+        <div class="col-12">
+          <h2 :class="$style.header">
+            <translated-text trans-key="index.projectFriends.header" />
+          </h2>
+          <h3 :class="$style.subHeader">
+            <translated-text trans-key="index.projectFriends.subheader" />
+          </h3>
+        </div>
+
+        <div class="col-12">
+          <div :class="$style.companyGrid">
+            <div
+              v-for="projectFriend in projectFriends"
+              :key="projectFriend.uid"
+              :class="$style.companyGridCell"
+            >
+              <a
+                :href="projectFriend.url"
+                :title="projectFriend.name"
+                target="_blank"
+              >
+                <app-img
+                  :alt="`${projectFriend.name} logo`"
+                  :lazy-src="projectFriend.photo.thumbUrl"
+                  :src="projectFriend.photo.fullUrl"
                   aspect-ratio="1.78"
                   contain
                 />
@@ -494,6 +524,15 @@
       @include media(sm) {
         grid-column-gap: 1.5rem;
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      &.companyGridCenter {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        justify-content: center;
+
+        > * {
+          grid-column: 3;
+        }
       }
 
       .companyGridCell {

@@ -170,9 +170,13 @@
   import {
     computed,
     definePageMeta,
+    onMounted,
     reactive,
     ref,
     unref,
+    useRoute,
+    useRouter,
+    watch,
   } from "#imports";
   import EventInfoDisplay from "~/components/page/schedule/event-info-display.vue";
   import {
@@ -210,29 +214,36 @@
   const tabs = [
     {
       label: "all",
+      hash: "all",
     },
     {
       label: EventType.Talk,
+      hash: "talk",
       IconComponent: EventIconTalk,
     },
     {
       label: EventType.Workshop,
+      hash: "workshop",
       IconComponent: EventIconWorkshop,
     },
     {
       label: EventType.Panel,
+      hash: "panel",
       IconComponent: EventIconPanel,
     },
     {
       label: EventType.Fusion,
+      hash: "fusion",
       iconImage: EventIconFusion,
     },
     {
       label: "profile.reservations.tab.otherContent",
+      hash: "other",
       icon: "pi-star",
     },
     {
       label: "profile.reservations.tab.reserved",
+      hash: "reserved",
       icon: "pi-bookmark",
     },
   ];
@@ -309,7 +320,26 @@
     );
   };
 
+  const route = useRoute();
+  const router = useRouter();
+
+  const hashToIndex = Object.fromEntries(tabs.map((t, i) => [ t.hash, i ]));
   const activeTabIndex = ref(0);
+
+  const syncHashToIndex = (hash: string) => {
+    const index = hashToIndex[hash.replace("#", "")];
+    if (index !== undefined) {
+      activeTabIndex.value = index;
+    }
+  };
+
+  onMounted(() => syncHashToIndex(route.hash));
+
+  watch(() => route.hash, syncHashToIndex);
+
+  watch(activeTabIndex, (index) => {
+    void router.replace({ hash: `#${ tabs[index].hash }` });
+  });
 
   const handleSignup = async (e: Event, event: CalendarEvent) => {
     e.preventDefault();

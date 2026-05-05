@@ -169,7 +169,6 @@
   import useTitle from "~/composables/useTitle";
   import {
     computed,
-    definePageMeta,
     onMounted,
     reactive,
     ref,
@@ -197,17 +196,9 @@
 
   useTitle("profile.reservations");
 
-  definePageMeta({
-    middleware: [
-      async () => {
-        const calendarStore = useCalendarStore();
+  await calendarStore.fetchEvents();
 
-        await calendarStore.fetchEvents();
-      },
-    ],
-  });
-
-  const userUid = computed(() => userStore.user!.uid);
+  const userUid = computed(() => userStore.user?.uid);
 
   const Fuse = await import("fuse.js").then((x) => x.default);
 

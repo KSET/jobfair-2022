@@ -15,6 +15,7 @@ type Route = {
   name?: RouteRecordName | null,
   query: LocationQuery,
   params: RouteParams,
+  hash?: string,
 };
 
 export const joinNowRoute = ($route: Route) => {
@@ -30,6 +31,7 @@ export const joinNowRoute = ($route: Route) => {
         name: "login" !== routeName ? routeName : fallbackRouteName,
         params: $route.params,
         query: $route.query,
+        hash: $route.hash || undefined,
       }),
     },
   };

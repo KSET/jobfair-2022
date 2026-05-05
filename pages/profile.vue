@@ -1,10 +1,12 @@
 <template>
-  <NuxtPage />
+  <NuxtPage v-if="isLoggedIn" />
 </template>
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
+    onMounted,
     unref,
     navigateTo,
   } from "#imports";
@@ -18,15 +20,21 @@
   export default defineComponent({
     name: "PageProfileHandler",
 
-    async setup() {
+    setup() {
       const userStore = useUserStore();
       const joinNowRoute = useJoinNowRoute();
 
-      if (userStore.isLoggedIn) {
-        return;
-      }
+      onMounted(async () => {
+        if (userStore.isLoggedIn) {
+          return;
+        }
 
-      await navigateTo(unref(joinNowRoute));
+        await navigateTo(unref(joinNowRoute));
+      });
+
+      return {
+        isLoggedIn: computed(() => userStore.isLoggedIn),
+      };
     },
   });
 </script>

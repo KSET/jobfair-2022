@@ -156,11 +156,10 @@
         async handleSubmit() {
           resetErrors();
           isLoading.value = true;
-          // const mapped = mapObject((x) => (x as Dict).value, info) as IUserRegisterInput & { faculty: string, };
-          // const { faculty, ...registerInfo } = mapped;
-          const mapped = mapObject((x) => (x as Dict).value, info) as IUserRegisterInput;
+          const mapped = mapObject((x) => (x as Dict).value, info) as IUserRegisterInput & { faculty: string, };
+          const { faculty, ...registerInfo } = mapped;
           const resp = await userStore.register({
-            info: mapped,
+            info: registerInfo,
           });
           isLoading.value = false;
 
@@ -174,20 +173,20 @@
           const errorList = resp.errors as ErrorList;
 
           if (!errorList) {
-            // if (faculty) {
-            //   await updateResume({
-            //     info: {
-            //       city: "",
-            //       faculty: { name: faculty, module: "" },
-            //       technologies: [],
-            //       interests: [],
-            //       studyYears: [],
-            //       workExperiences: [],
-            //       projects: [],
-            //       volunteerExperiences: [],
-            //     } as IResumeCreateInput,
-            //   });
-            // }
+            if (faculty) {
+              await updateResume({
+                info: {
+                  city: "",
+                  faculty: { name: faculty, module: "" },
+                  technologies: [],
+                  interests: [],
+                  studyYears: [],
+                  workExperiences: [],
+                  projects: [],
+                  volunteerExperiences: [],
+                } as IResumeCreateInput,
+              });
+            }
 
             const redirectInfo = route.query?.r;
             if (redirectInfo && "string" === typeof redirectInfo) {

@@ -72,6 +72,9 @@
 
 <script lang="ts">
   import Button from "primevue/button";
+  import {
+    useToast,
+  } from "primevue/usetoast";
   import type {
     PropType,
   } from "vue";
@@ -154,6 +157,7 @@
       const translationsStore = useTranslationsStore();
       const calendarStore = useCalendarStore();
       const userStore = useUserStore();
+      const toast = useToast();
 
       const reservation = ref(props.otherContent.reservation);
       const signupLoading = ref(false);
@@ -168,6 +172,8 @@
           uid: props.otherContent.uid,
           type: subtypeToEventType(props.otherContent.subtype),
           reservation: reservation.value,
+        }, {
+          toastErrors: toast,
         });
         signupLoading.value = false;
 

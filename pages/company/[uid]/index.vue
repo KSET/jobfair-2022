@@ -375,7 +375,7 @@
                   role="button"
                 >
                   <translated-text
-                    trans-key="company.event.program.internship.apply.see-more"
+                    trans-key="company.event.program.internship.more-info"
                   />
                 </a>
               </div>
@@ -395,10 +395,10 @@
                 <h4 :class="$style.internshipSubtitle">
                   <translated-text trans-key="company.event.program.internship.competencies" />
                 </h4>
-                <p :class="$style.itemDescription" v-text="internship.competencies" />
+                <p :class="$style.itemDescription" v-html="internship.competencies" />
               </template>
 
-              <p :class="$style.itemDescription" v-text="internship.description" />
+              <p :class="$style.itemDescription" v-html="internship.description" />
             </div>
           </TabPanel>
         </TabView>

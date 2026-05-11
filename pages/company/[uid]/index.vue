@@ -847,12 +847,12 @@
       .itemDescription {
         white-space: break-spaces;
 
-        :deep(p) {
+        p {
           margin: 0;
+        }
 
-          & + p {
-            margin-top: .5rem;
-          }
+        p + p {
+          margin-top: .5rem;
         }
       }
 

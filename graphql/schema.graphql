@@ -1401,6 +1401,18 @@ input IntNullableFilter {
   notIn: [Int!]
 }
 
+input LinkUnmatchedInternshipInput {
+  companyUid: String!
+  description: String!
+  externalCompany: String!
+  places: Int
+  position: String!
+  seasonUid: String!
+  signed: Boolean
+  workingPeriodEnd: DateTimeISO!
+  workingPeriodStart: DateTimeISO!
+}
+
 type LiveVote {
   createdAt: DateTimeISO!
   forSeason: Season!
@@ -1471,6 +1483,7 @@ type Mutation {
   editGalleryImage(info: GalleryImageCreateInput!, uid: String!): CreateGalleryImageResponse
   editNews(info: NewsCreateInput!, uid: String!): NewsCreateResponse
   gateGuardianScan(eventType: String!, eventUid: String!, userUid: String!): GateGuardianScanResponse
+  linkUnmatchedInternship(input: LinkUnmatchedInternshipInput!): ApplicationInternship!
   login(identifier: String!, password: String!): AuthResponse!
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
@@ -2587,7 +2600,7 @@ input StringNullableFilter {
 type SyncResult {
   createdCompanies: [String!]!
   deletedCompanies: [String!]!
-  unmatched: [String!]!
+  unmatched: [UnmatchedInternship!]!
   updatedCompanies: [String!]!
 }
 
@@ -2661,6 +2674,16 @@ input TranslationWhereUniqueInput {
   key_language: TranslationKeyLanguageCompoundUniqueInput
   language: StringFilter
   value: StringFilter
+}
+
+type UnmatchedInternship {
+  description: String!
+  externalCompany: String!
+  places: Int
+  position: String!
+  signed: Boolean
+  workingPeriodEnd: DateTimeISO!
+  workingPeriodStart: DateTimeISO!
 }
 
 type UpdatePasswordResponse {

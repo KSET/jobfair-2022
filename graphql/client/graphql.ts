@@ -1594,6 +1594,18 @@ export type IntNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type LinkUnmatchedInternshipInput = {
+  companyUid: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  externalCompany: Scalars['String']['input'];
+  places?: InputMaybe<Scalars['Int']['input']>;
+  position: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+  signed?: InputMaybe<Scalars['Boolean']['input']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['input'];
+  workingPeriodStart: Scalars['DateTimeISO']['input'];
+};
+
 export type LiveVote = {
   createdAt: Scalars['DateTimeISO']['output'];
   forSeason: Season;
@@ -1664,6 +1676,7 @@ export type Mutation = {
   editGalleryImage?: Maybe<CreateGalleryImageResponse>;
   editNews?: Maybe<NewsCreateResponse>;
   gateGuardianScan?: Maybe<GateGuardianScanResponse>;
+  linkUnmatchedInternship: ApplicationInternship;
   login: AuthResponse;
   logout: Scalars['Boolean']['output'];
   register: AuthResponse;
@@ -1872,6 +1885,11 @@ export type MutationGateGuardianScanArgs = {
   eventType: Scalars['String']['input'];
   eventUid: Scalars['String']['input'];
   userUid: Scalars['String']['input'];
+};
+
+
+export type MutationLinkUnmatchedInternshipArgs = {
+  input: LinkUnmatchedInternshipInput;
 };
 
 
@@ -3649,7 +3667,7 @@ export type StringNullableFilter = {
 export type SyncResult = {
   createdCompanies: Array<Scalars['String']['output']>;
   deletedCompanies: Array<Scalars['String']['output']>;
-  unmatched: Array<Scalars['String']['output']>;
+  unmatched: Array<UnmatchedInternship>;
   updatedCompanies: Array<Scalars['String']['output']>;
 };
 
@@ -3723,6 +3741,16 @@ export type TranslationWhereUniqueInput = {
   key_language?: InputMaybe<TranslationKeyLanguageCompoundUniqueInput>;
   language?: InputMaybe<StringFilter>;
   value?: InputMaybe<StringFilter>;
+};
+
+export type UnmatchedInternship = {
+  description: Scalars['String']['output'];
+  externalCompany: Scalars['String']['output'];
+  places?: Maybe<Scalars['Int']['output']>;
+  position: Scalars['String']['output'];
+  signed?: Maybe<Scalars['Boolean']['output']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['output'];
+  workingPeriodStart: Scalars['DateTimeISO']['output'];
 };
 
 export type UpdatePasswordResponse = {
@@ -4538,12 +4566,26 @@ export type PageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: str
 
 export type PageAdminSummerInternshipsApi_DataQuery = { internships: Array<{ uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null }> };
 
+export type PageAdminSummerInternshipsApi_AppsQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type PageAdminSummerInternshipsApi_AppsQuery = { companyApplications?: Array<{ forCompany?: { uid: string, brandName: string, legalName: string } | null }> | null };
+
 export type SyncSummerInternshipsMutationVariables = Exact<{
   season: Scalars['String']['input'];
 }>;
 
 
-export type SyncSummerInternshipsMutation = { syncSummerInternships: { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<string> } };
+export type SyncSummerInternshipsMutation = { syncSummerInternships: { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<{ externalCompany: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null }> } };
+
+export type LinkUnmatchedInternshipMutationVariables = Exact<{
+  input: LinkUnmatchedInternshipInput;
+}>;
+
+
+export type LinkUnmatchedInternshipMutation = { linkUnmatchedInternship: { uid: string, externalCompany?: string | null, position: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, description: string } };
 
 export type PageAdminSeasonLiveVoteResults_DataQueryVariables = Exact<{
   seasonUid: Scalars['String']['input'];
@@ -4855,7 +4897,9 @@ export const PageAdminSeasonApplicationsCompanyEdit_UpsertApplicationDocument = 
 export const PageAdminSeasonApplicationsApproval_BaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonApplicationsApproval_Base"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"wantsPanel"}},{"kind":"Field","name":{"kind":"Name","value":"wantsCocktail"}},{"kind":"Field","name":{"kind":"Name","value":"wantsQuest"}},{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talk"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"titleEn"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workshop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"titleEn"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fusion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"titleEn"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"approval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"fusionParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}},{"kind":"Field","name":{"kind":"Name","value":"cocktail"}},{"kind":"Field","name":{"kind":"Name","value":"quest"}},{"kind":"Field","name":{"kind":"Name","value":"logoHidden"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonApplicationsApproval_BaseQuery, PageAdminSeasonApplicationsApproval_BaseQueryVariables>;
 export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminSeasonApplicationsApproval_ApproveCompanyApplications"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companies"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ApproveCompanyApplicationsInput"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"approveCompanyApplications"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"companies"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companies"}}},{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"fusionParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}},{"kind":"Field","name":{"kind":"Name","value":"cocktail"}},{"kind":"Field","name":{"kind":"Name","value":"quest"}},{"kind":"Field","name":{"kind":"Name","value":"forApplication"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation, PageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutationVariables>;
 export const PageAdminSummerInternshipsApi_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSummerInternshipsApi_Data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"internships"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodStart"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodEnd"}},{"kind":"Field","name":{"kind":"Name","value":"places"}},{"kind":"Field","name":{"kind":"Name","value":"signed"}},{"kind":"Field","name":{"kind":"Name","value":"externalCompany"}}]}}]}}]} as unknown as DocumentNode<PageAdminSummerInternshipsApi_DataQuery, PageAdminSummerInternshipsApi_DataQueryVariables>;
-export const SyncSummerInternshipsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SyncSummerInternships"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"syncSummerInternships"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"updatedCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"deletedCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"unmatched"}}]}}]}}]} as unknown as DocumentNode<SyncSummerInternshipsMutation, SyncSummerInternshipsMutationVariables>;
+export const PageAdminSummerInternshipsApi_AppsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSummerInternshipsApi_Apps"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"companyApplications"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSummerInternshipsApi_AppsQuery, PageAdminSummerInternshipsApi_AppsQueryVariables>;
+export const SyncSummerInternshipsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SyncSummerInternships"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"syncSummerInternships"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"updatedCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"deletedCompanies"}},{"kind":"Field","name":{"kind":"Name","value":"unmatched"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"externalCompany"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodStart"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodEnd"}},{"kind":"Field","name":{"kind":"Name","value":"places"}},{"kind":"Field","name":{"kind":"Name","value":"signed"}}]}}]}}]}}]} as unknown as DocumentNode<SyncSummerInternshipsMutation, SyncSummerInternshipsMutationVariables>;
+export const LinkUnmatchedInternshipDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LinkUnmatchedInternship"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LinkUnmatchedInternshipInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"linkUnmatchedInternship"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"externalCompany"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodStart"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodEnd"}},{"kind":"Field","name":{"kind":"Name","value":"places"}},{"kind":"Field","name":{"kind":"Name","value":"signed"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<LinkUnmatchedInternshipMutation, LinkUnmatchedInternshipMutationVariables>;
 export const PageAdminSeasonLiveVoteResults_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonLiveVoteResults_Data"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"liveVoteResults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"option"}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"liveVoteComments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"forUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonLiveVoteResults_DataQuery, PageAdminSeasonLiveVoteResults_DataQueryVariables>;
 export const PageAdminSeasonLiveVoteResults_DeleteCommentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminSeasonLiveVoteResults_DeleteComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteLiveVoteComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"commentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}}}]}]}}]} as unknown as DocumentNode<PageAdminSeasonLiveVoteResults_DeleteCommentMutation, PageAdminSeasonLiveVoteResults_DeleteCommentMutationVariables>;
 export const PageAdminSeasonRatingsCompanies_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonRatingsCompanies_Data"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"averageRating"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonRatingsCompanies_DataQuery, PageAdminSeasonRatingsCompanies_DataQueryVariables>;

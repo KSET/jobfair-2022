@@ -1596,6 +1596,18 @@ export type IIntNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type ILinkUnmatchedInternshipInput = {
+  companyUid: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  externalCompany: Scalars['String']['input'];
+  places?: InputMaybe<Scalars['Int']['input']>;
+  position: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+  signed?: InputMaybe<Scalars['Boolean']['input']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['input'];
+  workingPeriodStart: Scalars['DateTimeISO']['input'];
+};
+
 export type ILiveVote = {
   createdAt: Scalars['DateTimeISO']['output'];
   forSeason: ISeason;
@@ -1666,6 +1678,7 @@ export type IMutation = {
   editGalleryImage?: Maybe<ICreateGalleryImageResponse>;
   editNews?: Maybe<INewsCreateResponse>;
   gateGuardianScan?: Maybe<IGateGuardianScanResponse>;
+  linkUnmatchedInternship: IApplicationInternship;
   login: IAuthResponse;
   logout: Scalars['Boolean']['output'];
   register: IAuthResponse;
@@ -1874,6 +1887,11 @@ export type IMutationGateGuardianScanArgs = {
   eventType: Scalars['String']['input'];
   eventUid: Scalars['String']['input'];
   userUid: Scalars['String']['input'];
+};
+
+
+export type IMutationLinkUnmatchedInternshipArgs = {
+  input: ILinkUnmatchedInternshipInput;
 };
 
 
@@ -3651,7 +3669,7 @@ export type IStringNullableFilter = {
 export type ISyncResult = {
   createdCompanies: Array<Scalars['String']['output']>;
   deletedCompanies: Array<Scalars['String']['output']>;
-  unmatched: Array<Scalars['String']['output']>;
+  unmatched: Array<IUnmatchedInternship>;
   updatedCompanies: Array<Scalars['String']['output']>;
 };
 
@@ -3725,6 +3743,16 @@ export type ITranslationWhereUniqueInput = {
   key_language?: InputMaybe<ITranslationKeyLanguageCompoundUniqueInput>;
   language?: InputMaybe<IStringFilter>;
   value?: InputMaybe<IStringFilter>;
+};
+
+export type IUnmatchedInternship = {
+  description: Scalars['String']['output'];
+  externalCompany: Scalars['String']['output'];
+  places?: Maybe<Scalars['Int']['output']>;
+  position: Scalars['String']['output'];
+  signed?: Maybe<Scalars['Boolean']['output']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['output'];
+  workingPeriodStart: Scalars['DateTimeISO']['output'];
 };
 
 export type IUpdatePasswordResponse = {
@@ -5232,7 +5260,23 @@ export type IPageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: st
 
 export type IPageAdminSummerInternshipsApi_DataQuery = IPageAdminSummerInternshipsApi_DataQuery_Query;
 
-export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult = { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<string> };
+export type IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication_forCompany_Company = { uid: string, brandName: string, legalName: string };
+
+export type IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication = { forCompany?: IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication_forCompany_Company | null };
+
+export type IPageAdminSummerInternshipsApi_AppsQuery_Query = { companyApplications?: Array<IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication> | null };
+
+
+export type IPageAdminSummerInternshipsApi_AppsQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSummerInternshipsApi_AppsQuery = IPageAdminSummerInternshipsApi_AppsQuery_Query;
+
+export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult_unmatched_UnmatchedInternship = { externalCompany: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null };
+
+export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult = { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult_unmatched_UnmatchedInternship> };
 
 export type ISyncSummerInternshipsMutation_Mutation = { syncSummerInternships: ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult };
 
@@ -5243,6 +5287,18 @@ export type ISyncSummerInternshipsMutationVariables = Exact<{
 
 
 export type ISyncSummerInternshipsMutation = ISyncSummerInternshipsMutation_Mutation;
+
+export type ILinkUnmatchedInternshipMutation_linkUnmatchedInternship_ApplicationInternship = { uid: string, externalCompany?: string | null, position: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, description: string };
+
+export type ILinkUnmatchedInternshipMutation_Mutation = { linkUnmatchedInternship: ILinkUnmatchedInternshipMutation_linkUnmatchedInternship_ApplicationInternship };
+
+
+export type ILinkUnmatchedInternshipMutationVariables = Exact<{
+  input: ILinkUnmatchedInternshipInput;
+}>;
+
+
+export type ILinkUnmatchedInternshipMutation = ILinkUnmatchedInternshipMutation_Mutation;
 
 export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteResults_LiveVoteResult = { option: string, voteCount: number };
 
@@ -6029,6 +6085,7 @@ export type IResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LinkUnmatchedInternshipInput: ILinkUnmatchedInternshipInput;
   LiveVote: ResolverTypeWrapper<ILiveVote>;
   LiveVoteComment: ResolverTypeWrapper<ILiveVoteComment>;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -6157,6 +6214,7 @@ export type IResolversTypes = {
   TranslationScalarFieldEnum: ITranslationScalarFieldEnum;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmatchedInternship: ResolverTypeWrapper<IUnmatchedInternship>;
   UpdatePasswordResponse: ResolverTypeWrapper<IUpdatePasswordResponse>;
   UpdateProfileResponse: ResolverTypeWrapper<IUpdateProfileResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
@@ -6343,6 +6401,7 @@ export type IResolversParentTypes = {
   Int: Scalars['Int']['output'];
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LinkUnmatchedInternshipInput: ILinkUnmatchedInternshipInput;
   LiveVote: ILiveVote;
   LiveVoteComment: ILiveVoteComment;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -6464,6 +6523,7 @@ export type IResolversParentTypes = {
   TranslationOrderByWithRelationInput: ITranslationOrderByWithRelationInput;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmatchedInternship: IUnmatchedInternship;
   UpdatePasswordResponse: IUpdatePasswordResponse;
   UpdateProfileResponse: IUpdateProfileResponse;
   Upload: Scalars['Upload']['output'];
@@ -7065,6 +7125,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   editGalleryImage?: Resolver<Maybe<IResolversTypes['CreateGalleryImageResponse']>, ParentType, ContextType, RequireFields<IMutationEditGalleryImageArgs, 'info' | 'uid'>>;
   editNews?: Resolver<Maybe<IResolversTypes['NewsCreateResponse']>, ParentType, ContextType, RequireFields<IMutationEditNewsArgs, 'info' | 'uid'>>;
   gateGuardianScan?: Resolver<Maybe<IResolversTypes['GateGuardianScanResponse']>, ParentType, ContextType, RequireFields<IMutationGateGuardianScanArgs, 'eventType' | 'eventUid' | 'userUid'>>;
+  linkUnmatchedInternship?: Resolver<IResolversTypes['ApplicationInternship'], ParentType, ContextType, RequireFields<IMutationLinkUnmatchedInternshipArgs, 'input'>>;
   login?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationLoginArgs, 'identifier' | 'password'>>;
   logout?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   register?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationRegisterArgs, 'info'>>;
@@ -7436,7 +7497,7 @@ export type ISponsorResolvers<ContextType = any, ParentType extends IResolversPa
 export type ISyncResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['SyncResult'] = IResolversParentTypes['SyncResult']> = {
   createdCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   deletedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
-  unmatched?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  unmatched?: Resolver<Array<IResolversTypes['UnmatchedInternship']>, ParentType, ContextType>;
   updatedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7447,6 +7508,17 @@ export type ITranslationResolvers<ContextType = any, ParentType extends IResolve
   language?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   value?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IUnmatchedInternshipResolvers<ContextType = any, ParentType extends IResolversParentTypes['UnmatchedInternship'] = IResolversParentTypes['UnmatchedInternship']> = {
+  description?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  externalCompany?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  places?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
+  position?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  signed?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType>;
+  workingPeriodEnd?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  workingPeriodStart?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7627,6 +7699,7 @@ export type IResolvers<ContextType = any> = {
   Sponsor?: ISponsorResolvers<ContextType>;
   SyncResult?: ISyncResultResolvers<ContextType>;
   Translation?: ITranslationResolvers<ContextType>;
+  UnmatchedInternship?: IUnmatchedInternshipResolvers<ContextType>;
   UpdatePasswordResponse?: IUpdatePasswordResponseResolvers<ContextType>;
   UpdateProfileResponse?: IUpdateProfileResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
@@ -9227,13 +9300,46 @@ export const PageAdminSummerInternshipsApi_Data = gql`
   }
 }
     `;
+export const PageAdminSummerInternshipsApi_Apps = gql`
+    query PageAdminSummerInternshipsApi_Apps($season: String!) {
+  companyApplications(season: $season) {
+    forCompany {
+      uid
+      brandName
+      legalName
+    }
+  }
+}
+    `;
 export const SyncSummerInternships = gql`
     mutation SyncSummerInternships($season: String!) {
   syncSummerInternships(season: $season) {
     createdCompanies
     updatedCompanies
     deletedCompanies
-    unmatched
+    unmatched {
+      externalCompany
+      position
+      description
+      workingPeriodStart
+      workingPeriodEnd
+      places
+      signed
+    }
+  }
+}
+    `;
+export const LinkUnmatchedInternship = gql`
+    mutation LinkUnmatchedInternship($input: LinkUnmatchedInternshipInput!) {
+  linkUnmatchedInternship(input: $input) {
+    uid
+    externalCompany
+    position
+    workingPeriodStart
+    workingPeriodEnd
+    places
+    signed
+    description
   }
 }
     `;

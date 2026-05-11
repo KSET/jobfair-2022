@@ -848,15 +848,19 @@
         p,
         ul,
         ol {
-          margin: 0;
+          margin: .5rem 0;
         }
 
         li {
           margin: 0;
         }
 
-        > * + * {
-          margin-top: .5rem;
+        > :first-child {
+          margin-top: 0;
+        }
+
+        > :last-child {
+          margin-bottom: 0;
         }
       }
 

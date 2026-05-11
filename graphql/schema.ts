@@ -1596,6 +1596,18 @@ export type IIntNullableFilter = {
   notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
+export type ILinkUnmatchedInternshipInput = {
+  companyUid: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  externalCompany: Scalars['String']['input'];
+  places?: InputMaybe<Scalars['Int']['input']>;
+  position: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+  signed?: InputMaybe<Scalars['Boolean']['input']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['input'];
+  workingPeriodStart: Scalars['DateTimeISO']['input'];
+};
+
 export type ILiveVote = {
   createdAt: Scalars['DateTimeISO']['output'];
   forSeason: ISeason;
@@ -1666,6 +1678,7 @@ export type IMutation = {
   editGalleryImage?: Maybe<ICreateGalleryImageResponse>;
   editNews?: Maybe<INewsCreateResponse>;
   gateGuardianScan?: Maybe<IGateGuardianScanResponse>;
+  linkUnmatchedInternship: IApplicationInternship;
   login: IAuthResponse;
   logout: Scalars['Boolean']['output'];
   register: IAuthResponse;
@@ -1874,6 +1887,11 @@ export type IMutationGateGuardianScanArgs = {
   eventType: Scalars['String']['input'];
   eventUid: Scalars['String']['input'];
   userUid: Scalars['String']['input'];
+};
+
+
+export type IMutationLinkUnmatchedInternshipArgs = {
+  input: ILinkUnmatchedInternshipInput;
 };
 
 
@@ -2463,6 +2481,7 @@ export type IQuery = {
   gateGuardianScanList?: Maybe<Array<IGateGuardianLog>>;
   industries: Array<IIndustry>;
   internships: Array<IApplicationInternship>;
+  internshipsForAdmin: Array<IApplicationInternship>;
   liveVoteComments: Array<ILiveVoteComment>;
   liveVoteResults: Array<ILiveVoteResult>;
   liveVotes: Array<ILiveVote>;
@@ -2635,6 +2654,16 @@ export type IQueryIndustriesArgs = {
 
 
 export type IQueryInternshipsArgs = {
+  cursor?: InputMaybe<IApplicationInternshipWhereUniqueInput>;
+  distinct?: InputMaybe<Array<IApplicationInternshipScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<IApplicationInternshipOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<IApplicationInternshipWhereInput>;
+};
+
+
+export type IQueryInternshipsForAdminArgs = {
   cursor?: InputMaybe<IApplicationInternshipWhereUniqueInput>;
   distinct?: InputMaybe<Array<IApplicationInternshipScalarFieldEnum>>;
   orderBy?: InputMaybe<Array<IApplicationInternshipOrderByWithRelationInput>>;
@@ -3651,7 +3680,7 @@ export type IStringNullableFilter = {
 export type ISyncResult = {
   createdCompanies: Array<Scalars['String']['output']>;
   deletedCompanies: Array<Scalars['String']['output']>;
-  unmatched: Array<Scalars['String']['output']>;
+  unmatched: Array<IUnmatchedInternship>;
   updatedCompanies: Array<Scalars['String']['output']>;
 };
 
@@ -3725,6 +3754,16 @@ export type ITranslationWhereUniqueInput = {
   key_language?: InputMaybe<ITranslationKeyLanguageCompoundUniqueInput>;
   language?: InputMaybe<IStringFilter>;
   value?: InputMaybe<IStringFilter>;
+};
+
+export type IUnmatchedInternship = {
+  description: Scalars['String']['output'];
+  externalCompany: Scalars['String']['output'];
+  places?: Maybe<Scalars['Int']['output']>;
+  position: Scalars['String']['output'];
+  signed?: Maybe<Scalars['Boolean']['output']>;
+  workingPeriodEnd: Scalars['DateTimeISO']['output'];
+  workingPeriodStart: Scalars['DateTimeISO']['output'];
 };
 
 export type IUpdatePasswordResponse = {
@@ -4506,7 +4545,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_Appl
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company = { uid: string, brandName: string, rasterLogo?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image | null };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
@@ -4524,7 +4563,7 @@ export type IFrag_NewsFragment = { lang: string, slug: string, date: string | Da
 
 export type IFrag_GalleryImageFragment = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
 
-export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -4638,7 +4677,7 @@ export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_C
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel = { uid: string, name: string, description: string, reservation: number, companies: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_companies_Company>, event?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_event_CalendarItem | null };
 
-export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, fusion?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_fusion_ApplicationFusion | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null, internships: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship> };
 
@@ -4811,7 +4850,7 @@ export type IAllGalleryImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type IAllGalleryImagesQuery = IAllGalleryImagesQuery_Query;
 
-export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IInternshipsQuery_Query = { internships: Array<IInternshipsQuery_internships_ApplicationInternship> };
 
@@ -5222,9 +5261,9 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
 
-export type IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship = { uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null };
+export type IPageAdminSummerInternshipsApi_DataQuery_internshipsForAdmin_ApplicationInternship = { uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null };
 
-export type IPageAdminSummerInternshipsApi_DataQuery_Query = { internships: Array<IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship> };
+export type IPageAdminSummerInternshipsApi_DataQuery_Query = { internshipsForAdmin: Array<IPageAdminSummerInternshipsApi_DataQuery_internshipsForAdmin_ApplicationInternship> };
 
 
 export type IPageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5232,7 +5271,23 @@ export type IPageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: st
 
 export type IPageAdminSummerInternshipsApi_DataQuery = IPageAdminSummerInternshipsApi_DataQuery_Query;
 
-export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult = { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<string> };
+export type IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication_forCompany_Company = { uid: string, brandName: string, legalName: string };
+
+export type IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication = { forCompany?: IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication_forCompany_Company | null };
+
+export type IPageAdminSummerInternshipsApi_AppsQuery_Query = { companyApplications?: Array<IPageAdminSummerInternshipsApi_AppsQuery_companyApplications_CompanyApplication> | null };
+
+
+export type IPageAdminSummerInternshipsApi_AppsQueryVariables = Exact<{
+  season: Scalars['String']['input'];
+}>;
+
+
+export type IPageAdminSummerInternshipsApi_AppsQuery = IPageAdminSummerInternshipsApi_AppsQuery_Query;
+
+export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult_unmatched_UnmatchedInternship = { externalCompany: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null };
+
+export type ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult = { createdCompanies: Array<string>, updatedCompanies: Array<string>, deletedCompanies: Array<string>, unmatched: Array<ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult_unmatched_UnmatchedInternship> };
 
 export type ISyncSummerInternshipsMutation_Mutation = { syncSummerInternships: ISyncSummerInternshipsMutation_syncSummerInternships_SyncResult };
 
@@ -5243,6 +5298,18 @@ export type ISyncSummerInternshipsMutationVariables = Exact<{
 
 
 export type ISyncSummerInternshipsMutation = ISyncSummerInternshipsMutation_Mutation;
+
+export type ILinkUnmatchedInternshipMutation_linkUnmatchedInternship_ApplicationInternship = { uid: string, externalCompany?: string | null, position: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, description: string };
+
+export type ILinkUnmatchedInternshipMutation_Mutation = { linkUnmatchedInternship: ILinkUnmatchedInternshipMutation_linkUnmatchedInternship_ApplicationInternship };
+
+
+export type ILinkUnmatchedInternshipMutationVariables = Exact<{
+  input: ILinkUnmatchedInternshipInput;
+}>;
+
+
+export type ILinkUnmatchedInternshipMutation = ILinkUnmatchedInternshipMutation_Mutation;
 
 export type IPageAdminSeasonLiveVoteResults_DataQuery_liveVoteResults_LiveVoteResult = { option: string, voteCount: number };
 
@@ -5290,7 +5357,7 @@ export type IPageAdminSeasonRatingsCompanies_DataQuery = IPageAdminSeasonRatings
 
 export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string };
 
-export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean };
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, fusionParticipants: number, panel: boolean };
 
 export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication = { forCompany?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company | null, approval?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval | null };
 
@@ -6029,6 +6096,7 @@ export type IResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LinkUnmatchedInternshipInput: ILinkUnmatchedInternshipInput;
   LiveVote: ResolverTypeWrapper<ILiveVote>;
   LiveVoteComment: ResolverTypeWrapper<ILiveVoteComment>;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -6157,6 +6225,7 @@ export type IResolversTypes = {
   TranslationScalarFieldEnum: ITranslationScalarFieldEnum;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmatchedInternship: ResolverTypeWrapper<IUnmatchedInternship>;
   UpdatePasswordResponse: ResolverTypeWrapper<IUpdatePasswordResponse>;
   UpdateProfileResponse: ResolverTypeWrapper<IUpdateProfileResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
@@ -6343,6 +6412,7 @@ export type IResolversParentTypes = {
   Int: Scalars['Int']['output'];
   IntFilter: IIntFilter;
   IntNullableFilter: IIntNullableFilter;
+  LinkUnmatchedInternshipInput: ILinkUnmatchedInternshipInput;
   LiveVote: ILiveVote;
   LiveVoteComment: ILiveVoteComment;
   LiveVoteCommentWhereInput: ILiveVoteCommentWhereInput;
@@ -6464,6 +6534,7 @@ export type IResolversParentTypes = {
   TranslationOrderByWithRelationInput: ITranslationOrderByWithRelationInput;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmatchedInternship: IUnmatchedInternship;
   UpdatePasswordResponse: IUpdatePasswordResponse;
   UpdateProfileResponse: IUpdateProfileResponse;
   Upload: Scalars['Upload']['output'];
@@ -7065,6 +7136,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   editGalleryImage?: Resolver<Maybe<IResolversTypes['CreateGalleryImageResponse']>, ParentType, ContextType, RequireFields<IMutationEditGalleryImageArgs, 'info' | 'uid'>>;
   editNews?: Resolver<Maybe<IResolversTypes['NewsCreateResponse']>, ParentType, ContextType, RequireFields<IMutationEditNewsArgs, 'info' | 'uid'>>;
   gateGuardianScan?: Resolver<Maybe<IResolversTypes['GateGuardianScanResponse']>, ParentType, ContextType, RequireFields<IMutationGateGuardianScanArgs, 'eventType' | 'eventUid' | 'userUid'>>;
+  linkUnmatchedInternship?: Resolver<IResolversTypes['ApplicationInternship'], ParentType, ContextType, RequireFields<IMutationLinkUnmatchedInternshipArgs, 'input'>>;
   login?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationLoginArgs, 'identifier' | 'password'>>;
   logout?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   register?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationRegisterArgs, 'info'>>;
@@ -7215,6 +7287,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   gateGuardianScanList?: Resolver<Maybe<Array<IResolversTypes['GateGuardianLog']>>, ParentType, ContextType, RequireFields<IQueryGateGuardianScanListArgs, 'season'>>;
   industries?: Resolver<Array<IResolversTypes['Industry']>, ParentType, ContextType, Partial<IQueryIndustriesArgs>>;
   internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType, Partial<IQueryInternshipsArgs>>;
+  internshipsForAdmin?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType, Partial<IQueryInternshipsForAdminArgs>>;
   liveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryLiveVoteCommentsArgs, 'seasonUid'>>;
   liveVoteResults?: Resolver<Array<IResolversTypes['LiveVoteResult']>, ParentType, ContextType, RequireFields<IQueryLiveVoteResultsArgs, 'seasonUid'>>;
   liveVotes?: Resolver<Array<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IQueryLiveVotesArgs, 'seasonUid'>>;
@@ -7436,7 +7509,7 @@ export type ISponsorResolvers<ContextType = any, ParentType extends IResolversPa
 export type ISyncResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['SyncResult'] = IResolversParentTypes['SyncResult']> = {
   createdCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   deletedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
-  unmatched?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
+  unmatched?: Resolver<Array<IResolversTypes['UnmatchedInternship']>, ParentType, ContextType>;
   updatedCompanies?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -7447,6 +7520,17 @@ export type ITranslationResolvers<ContextType = any, ParentType extends IResolve
   language?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   value?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IUnmatchedInternshipResolvers<ContextType = any, ParentType extends IResolversParentTypes['UnmatchedInternship'] = IResolversParentTypes['UnmatchedInternship']> = {
+  description?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  externalCompany?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  places?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
+  position?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  signed?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType>;
+  workingPeriodEnd?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  workingPeriodStart?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7627,6 +7711,7 @@ export type IResolvers<ContextType = any> = {
   Sponsor?: ISponsorResolvers<ContextType>;
   SyncResult?: ISyncResultResolvers<ContextType>;
   Translation?: ITranslationResolvers<ContextType>;
+  UnmatchedInternship?: IUnmatchedInternshipResolvers<ContextType>;
   UpdatePasswordResponse?: IUpdatePasswordResponseResolvers<ContextType>;
   UpdateProfileResponse?: IUpdateProfileResponseResolvers<ContextType>;
   Upload?: GraphQLScalarType;
@@ -7718,6 +7803,8 @@ export const Frag_Internship = gql`
   workingPeriodEnd
   url
   duration
+  places
+  signed
   company {
     uid
     brandName
@@ -9215,7 +9302,7 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
     `;
 export const PageAdminSummerInternshipsApi_Data = gql`
     query PageAdminSummerInternshipsApi_Data {
-  internships {
+  internshipsForAdmin {
     uid
     position
     description
@@ -9227,13 +9314,46 @@ export const PageAdminSummerInternshipsApi_Data = gql`
   }
 }
     `;
+export const PageAdminSummerInternshipsApi_Apps = gql`
+    query PageAdminSummerInternshipsApi_Apps($season: String!) {
+  companyApplications(season: $season) {
+    forCompany {
+      uid
+      brandName
+      legalName
+    }
+  }
+}
+    `;
 export const SyncSummerInternships = gql`
     mutation SyncSummerInternships($season: String!) {
   syncSummerInternships(season: $season) {
     createdCompanies
     updatedCompanies
     deletedCompanies
-    unmatched
+    unmatched {
+      externalCompany
+      position
+      description
+      workingPeriodStart
+      workingPeriodEnd
+      places
+      signed
+    }
+  }
+}
+    `;
+export const LinkUnmatchedInternship = gql`
+    mutation LinkUnmatchedInternship($input: LinkUnmatchedInternshipInput!) {
+  linkUnmatchedInternship(input: $input) {
+    uid
+    externalCompany
+    position
+    workingPeriodStart
+    workingPeriodEnd
+    places
+    signed
+    description
   }
 }
     `;
@@ -9291,6 +9411,7 @@ export const PageAdminSeasonRatingsQrCodesData = gql`
         booth
         talkParticipants
         workshopParticipants
+        fusionParticipants
         panel
       }
     }

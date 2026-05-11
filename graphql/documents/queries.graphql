@@ -211,6 +211,8 @@ fragment frag_Internship on ApplicationInternship {
     workingPeriodEnd
     url
     duration
+    places
+    signed
     company {
         uid
         brandName

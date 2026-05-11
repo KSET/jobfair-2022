@@ -88,7 +88,7 @@
     useJoinNowRoute,
   } from "~/composables/useJoinNowRoute";
 
-  const ALLOWED_TYPES = [ "booth", "talk", "workshop" ] as const;
+  const ALLOWED_TYPES = [ "booth", "talk", "workshop", "fusion" ] as const;
   const MAX_RATING = 10 as const;
 
   const route = useRoute();

@@ -9,6 +9,10 @@
       </NuxtLink>
     </div>
 
+    <div class="mb-4">
+      <p-button label="Preuzmi QR kodove" @click="downloadQrCodes" />
+    </div>
+
     <div :class="$style.applications">
       <div v-for="application in applications" :key="application.forCompany!.uid" :class="$style.application">
         <h2>{{ application.forCompany!.brandName }} / {{ application.forCompany!.legalName }}</h2>
@@ -43,6 +47,13 @@
   const season = computed(() => seasonsStore.season!);
   const seasonUid = season.value.uid!;
 
+  const config = useRuntimeConfig();
+  const apiBase = config.public.API_BASE;
+
+  const downloadQrCodes = () => {
+    window.open(`${ apiBase }/admin/qr-codes/${ seasonUid }/export/qr-codes.zip`);
+  };
+
   const title = computed(() => `Admin - ${ season.value.name } - Ocjenjivanje - QR kodovi`);
   useTitle(title, false);
 
@@ -63,6 +74,7 @@
             booth
             talkParticipants
             workshopParticipants
+            fusionParticipants
             panel
           }
         }
@@ -112,6 +124,13 @@
       links.push({
         text: "Workshop",
         type: "workshop",
+      });
+    }
+
+    if (approval.fusionParticipants) {
+      links.push({
+        text: "Fusion",
+        type: "fusion",
       });
     }
 

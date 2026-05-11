@@ -2481,6 +2481,7 @@ export type IQuery = {
   gateGuardianScanList?: Maybe<Array<IGateGuardianLog>>;
   industries: Array<IIndustry>;
   internships: Array<IApplicationInternship>;
+  internshipsForAdmin: Array<IApplicationInternship>;
   liveVoteComments: Array<ILiveVoteComment>;
   liveVoteResults: Array<ILiveVoteResult>;
   liveVotes: Array<ILiveVote>;
@@ -2653,6 +2654,16 @@ export type IQueryIndustriesArgs = {
 
 
 export type IQueryInternshipsArgs = {
+  cursor?: InputMaybe<IApplicationInternshipWhereUniqueInput>;
+  distinct?: InputMaybe<Array<IApplicationInternshipScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<IApplicationInternshipOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<IApplicationInternshipWhereInput>;
+};
+
+
+export type IQueryInternshipsForAdminArgs = {
   cursor?: InputMaybe<IApplicationInternshipWhereUniqueInput>;
   distinct?: InputMaybe<Array<IApplicationInternshipScalarFieldEnum>>;
   orderBy?: InputMaybe<Array<IApplicationInternshipOrderByWithRelationInput>>;
@@ -5250,9 +5261,9 @@ export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutat
 
 export type IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation = IPageAdminSeasonApplicationsApproval_ApproveCompanyApplicationsMutation_Mutation;
 
-export type IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship = { uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null };
+export type IPageAdminSummerInternshipsApi_DataQuery_internshipsForAdmin_ApplicationInternship = { uid: string, position: string, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, places?: number | null, signed?: boolean | null, externalCompany?: string | null };
 
-export type IPageAdminSummerInternshipsApi_DataQuery_Query = { internships: Array<IPageAdminSummerInternshipsApi_DataQuery_internships_ApplicationInternship> };
+export type IPageAdminSummerInternshipsApi_DataQuery_Query = { internshipsForAdmin: Array<IPageAdminSummerInternshipsApi_DataQuery_internshipsForAdmin_ApplicationInternship> };
 
 
 export type IPageAdminSummerInternshipsApi_DataQueryVariables = Exact<{ [key: string]: never; }>;
@@ -7276,6 +7287,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   gateGuardianScanList?: Resolver<Maybe<Array<IResolversTypes['GateGuardianLog']>>, ParentType, ContextType, RequireFields<IQueryGateGuardianScanListArgs, 'season'>>;
   industries?: Resolver<Array<IResolversTypes['Industry']>, ParentType, ContextType, Partial<IQueryIndustriesArgs>>;
   internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType, Partial<IQueryInternshipsArgs>>;
+  internshipsForAdmin?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType, Partial<IQueryInternshipsForAdminArgs>>;
   liveVoteComments?: Resolver<Array<IResolversTypes['LiveVoteComment']>, ParentType, ContextType, RequireFields<IQueryLiveVoteCommentsArgs, 'seasonUid'>>;
   liveVoteResults?: Resolver<Array<IResolversTypes['LiveVoteResult']>, ParentType, ContextType, RequireFields<IQueryLiveVoteResultsArgs, 'seasonUid'>>;
   liveVotes?: Resolver<Array<IResolversTypes['LiveVote']>, ParentType, ContextType, RequireFields<IQueryLiveVotesArgs, 'seasonUid'>>;
@@ -9290,7 +9302,7 @@ export const PageAdminSeasonApplicationsApproval_ApproveCompanyApplications = gq
     `;
 export const PageAdminSummerInternshipsApi_Data = gql`
     query PageAdminSummerInternshipsApi_Data {
-  internships {
+  internshipsForAdmin {
     uid
     position
     description

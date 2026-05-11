@@ -1902,6 +1902,7 @@ type Query {
   gateGuardianScanList(season: String!): [GateGuardianLog!]
   industries(cursor: IndustryWhereUniqueInput, distinct: [IndustryScalarFieldEnum!], orderBy: [IndustryOrderByWithRelationInput!], skip: Int, take: Int, where: IndustryWhereInput): [Industry!]!
   internships(cursor: ApplicationInternshipWhereUniqueInput, distinct: [ApplicationInternshipScalarFieldEnum!], orderBy: [ApplicationInternshipOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationInternshipWhereInput): [ApplicationInternship!]!
+  internshipsForAdmin(cursor: ApplicationInternshipWhereUniqueInput, distinct: [ApplicationInternshipScalarFieldEnum!], orderBy: [ApplicationInternshipOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationInternshipWhereInput): [ApplicationInternship!]!
   liveVoteComments(seasonUid: String!): [LiveVoteComment!]!
   liveVoteResults(seasonUid: String!): [LiveVoteResult!]!
   liveVotes(seasonUid: String!): [LiveVote!]!

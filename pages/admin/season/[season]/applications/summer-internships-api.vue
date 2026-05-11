@@ -290,7 +290,7 @@
   const internshipsQuery = useQuery({
     query: graphql(/* GraphQL */`
       query PageAdminSummerInternshipsApi_Data {
-        internships {
+        internshipsForAdmin {
           uid
           position
           description
@@ -305,7 +305,7 @@
   });
 
   const internshipsRes = await internshipsQuery();
-  const internships = ref(internshipsRes?.data?.internships ?? []);
+  const internships = ref(internshipsRes?.data?.internshipsForAdmin ?? []);
   const internshipsError = ref(internshipsRes?.error?.message ?? null);
   const expandedRows = ref<Record<string, boolean>>({});
 

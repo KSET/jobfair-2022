@@ -141,7 +141,7 @@ export class CompanyProgramFieldResolver {
   internships(
     @Root() program: CompanyProgram,
   ): ApplicationInternship[] {
-    return program?.internships ?? [];
+    return (program?.internships ?? []).filter((i) => true === i.signed);
   }
 
 }
@@ -251,8 +251,11 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
   }),
 
   internships: withApplications((select) => {
+    const internshipSelect = transformSelectInternship(select.internships as Dict);
+    internshipSelect.signed = true;
+
     select.applications.select.internships = {
-      select: transformSelectInternship(select.internships as Dict),
+      select: internshipSelect,
     };
 
     delete select.internships;

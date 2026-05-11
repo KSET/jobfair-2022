@@ -162,6 +162,7 @@ export class CompanyApplicationInternshipResolver {
           ...args,
           cursor: undefined,
           where: {
+            signed: true,
             ...(
               args.where
                 ? args.where
@@ -178,6 +179,37 @@ export class CompanyApplicationInternshipResolver {
                 }
               }
             )
+          },
+          select: toSelect(info, transformSelect),
+          orderBy: {
+            forApplication: {
+              forCompany: {
+                brandName: "asc",
+              },
+            },
+          },
+    })
+  }
+
+  @Query(() => [ ApplicationInternship ])
+  @Authorized(Role.Admin)
+  internshipsForAdmin(
+  @Ctx() ctx: Context,
+    @Info() info: GraphQLResolveInfo,
+    @Args() args: FindManyApplicationInternshipArgs,
+  ) {
+    const now = new Date();
+
+    return ctx.prisma.applicationInternship.findMany({
+          ...args,
+          cursor: undefined,
+          where: args.where ?? {
+            forApplication: {
+              forSeason: {
+                startsAt: { lte: now },
+                endsAt: { gte: now },
+              },
+            },
           },
           select: toSelect(info, transformSelect),
           orderBy: {

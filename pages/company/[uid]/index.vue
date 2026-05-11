@@ -395,10 +395,10 @@
                 <h4 :class="$style.internshipSubtitle">
                   <translated-text trans-key="company.event.program.internship.competencies" />
                 </h4>
-                <p :class="$style.itemDescription" v-html="internship.competencies" />
+                <div :class="$style.itemDescription" v-html="internship.competencies" />
               </template>
 
-              <p :class="$style.itemDescription" v-html="internship.description" />
+              <div :class="$style.itemDescription" v-html="internship.description" />
             </div>
           </TabPanel>
         </TabView>
@@ -846,6 +846,14 @@
 
       .itemDescription {
         white-space: break-spaces;
+
+        :deep(p) {
+          margin: 0;
+
+          & + p {
+            margin-top: .5rem;
+          }
+        }
       }
 
       h4 {

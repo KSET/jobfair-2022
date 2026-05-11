@@ -5290,7 +5290,7 @@ export type IPageAdminSeasonRatingsCompanies_DataQuery = IPageAdminSeasonRatings
 
 export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string };
 
-export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, panel: boolean };
+export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval = { booth: boolean, talkParticipants: number, workshopParticipants: number, fusionParticipants: number, panel: boolean };
 
 export type IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication = { forCompany?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_forCompany_Company | null, approval?: IPageAdminSeasonRatingsQrCodesDataQuery_season_Season_applications_CompanyApplication_approval_CompanyApplicationApproval | null };
 
@@ -9291,6 +9291,7 @@ export const PageAdminSeasonRatingsQrCodesData = gql`
         booth
         talkParticipants
         workshopParticipants
+        fusionParticipants
         panel
       }
     }

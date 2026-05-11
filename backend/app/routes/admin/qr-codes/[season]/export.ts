@@ -39,6 +39,7 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
             booth: true,
             talkParticipants: true,
             workshopParticipants: true,
+            fusionParticipants: true,
           },
         },
       },
@@ -52,6 +53,7 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
     booth: zip.folder("booth")!,
     talk: zip.folder("talk")!,
     workshop: zip.folder("workshop")!,
+    fusion: zip.folder("fusion")!,
   };
 
   for (const app of applications) {
@@ -62,7 +64,7 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
       continue;
     }
 
-    const enabled: ("booth" | "talk" | "workshop")[] = [];
+    const enabled: ("booth" | "talk" | "workshop" | "fusion")[] = [];
 
     if (approval.booth) {
       enabled.push("booth");
@@ -72,6 +74,9 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
     }
     if (approval.workshopParticipants) {
       enabled.push("workshop");
+    }
+    if (approval.fusionParticipants) {
+      enabled.push("fusion");
     }
 
     for (const type of enabled) {

@@ -74,6 +74,7 @@
             booth
             talkParticipants
             workshopParticipants
+            fusionParticipants
             panel
           }
         }
@@ -123,6 +124,13 @@
       links.push({
         text: "Workshop",
         type: "workshop",
+      });
+    }
+
+    if (approval.fusionParticipants) {
+      links.push({
+        text: "Fusion",
+        type: "fusion",
       });
     }
 

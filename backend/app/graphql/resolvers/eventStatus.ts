@@ -147,9 +147,7 @@ export class EventReservationUpdateResolver {
       const statusAdded = ((userEntryStatus?.status ?? 0) ^ input.status) & input.status;
       const newProps = eventListFromStatus(statusAdded);
 
-      // TODO: Add setting or toggle to ignore capacity
-      const ignoreCapacityRequirements = true;
-      if (!ignoreCapacityRequirements) {
+      if (eventType === EventType.other) {
         for (const prop of newProps) {
           if (!hasParticipantCapacityFor(eventType, participants[prop])) {
             throw new Error("errors.event-reservation.capacity-full");

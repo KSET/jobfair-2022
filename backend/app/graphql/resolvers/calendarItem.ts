@@ -118,7 +118,12 @@ export class CalendarItemFieldResolver {
       } else if (calendarItem.forPanelId) {
         return EventType.panel;
       } else if (calendarItem.forOtherContentId) {
-        return EventType.hotTalk;
+        switch (calendarItem.forOtherContent?.subtype) {
+          case "hot-talk": return EventType.hotTalk;
+          case "loosen-up": return EventType.loosenUp;
+          case "debate": return EventType.debate;
+          default: return EventType.other;
+        }
       }
 
       return null;
@@ -233,6 +238,10 @@ export const transformSelect = transformSelectFor<CalendarItemFieldResolver, Pri
     select.forFusionId = true;
     select.forPanelId = true;
     select.forOtherContentId = true;
+    select.forOtherContent = mergeDeepRight(
+      (select.forOtherContent as Dict) ?? {},
+      { select: { subtype: true } },
+    );
 
     delete select.capacity;
 

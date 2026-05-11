@@ -845,13 +845,17 @@
       }
 
       .itemDescription {
-        white-space: break-spaces;
-
-        p {
+        p,
+        ul,
+        ol {
           margin: 0;
         }
 
-        p + p {
+        li {
+          margin: 0;
+        }
+
+        > * + * {
           margin-top: .5rem;
         }
       }

@@ -1,5 +1,7 @@
 import JSZip from "jszip";
 import contentDisposition from "content-disposition";
+import PDFDocument from "pdfkit";
+import SVGtoPDF from "svg-to-pdfkit";
 import {
   AuthRouter,
 } from "../../../../helpers/route";
@@ -12,6 +14,23 @@ import {
 import {
   QrCodeService,
 } from "../../../../services/qr-service";
+
+const svgToPdfBuffer = (svg: string): Promise<Buffer> =>
+  new Promise((resolve, reject) => {
+    const doc = new PDFDocument({ size: "A4", margin: 20 });
+    const chunks: Uint8Array[] = [];
+    doc.on("data", (c: Buffer) => chunks.push(new Uint8Array(c)));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+    SVGtoPDF(doc, svg, doc.page.margins.left, doc.page.margins.top, {
+      width: pageWidth,
+      preserveAspectRatio: "xMidYMid meet",
+    });
+    doc.end();
+  })
+;
 
 const router = new AuthRouter({
   role: Role.Admin,
@@ -49,11 +68,20 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
   const seasonName = seasonRecord?.name ?? season;
   const zip = new JSZip();
 
-  const folders = {
-    booth: zip.folder("booth")!,
-    talk: zip.folder("talk")!,
-    workshop: zip.folder("workshop")!,
-    fusion: zip.folder("fusion")!,
+  const svgRoot = zip.folder("svg")!;
+  const pdfRoot = zip.folder("pdf")!;
+
+  const svgFolders = {
+    booth: svgRoot.folder("booth")!,
+    talk: svgRoot.folder("talk")!,
+    workshop: svgRoot.folder("workshop")!,
+    fusion: svgRoot.folder("fusion")!,
+  };
+  const pdfFolders = {
+    booth: pdfRoot.folder("booth")!,
+    talk: pdfRoot.folder("talk")!,
+    workshop: pdfRoot.folder("workshop")!,
+    fusion: pdfRoot.folder("fusion")!,
   };
 
   for (const app of applications) {
@@ -86,7 +114,12 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
         "color.logo": "#fff",
         text: company.brandName,
       });
-      folders[type].file(`${ company.brandName } - ${ type } - ${ seasonName }.svg`, svg);
+
+      const baseName = `${ company.brandName } - ${ type } - ${ seasonName }`;
+      svgFolders[type].file(`${ baseName }.svg`, svg);
+
+      const pdf = await svgToPdfBuffer(svg);
+      pdfFolders[type].file(`${ baseName }.pdf`, new Uint8Array(pdf));
     }
   }
 

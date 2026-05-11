@@ -138,6 +138,9 @@ fragment frag_CompanyApplication on CompanyApplication {
             type
         }
     }
+    quest {
+        name
+    }
     internships {
         ...frag_Internship
     }
@@ -146,6 +149,7 @@ fragment frag_CompanyApplication on CompanyApplication {
     }
     approval {
         cocktail
+        quest
         panel
         talkParticipants
         workshopParticipants

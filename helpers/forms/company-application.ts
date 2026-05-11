@@ -5,6 +5,7 @@ import {
   type IApplicationCocktail,
   type IApplicationFusion,
   type IApplicationPresenter,
+  type IApplicationQuest,
   type IApplicationTalk,
   type IApplicationWorkshop,
   type ICompanyApplicationContactPerson,
@@ -311,6 +312,18 @@ export type Cocktail = Omit<IApplicationCocktail,
           value: cocktail?.type?.type || cocktailTypes[0] || "",
           type: "dropdown" as const,
           options: cocktailTypes.map((x) => ({ label: x, value: x })),
+        },
+      });
+
+export type Quest = Pick<IApplicationQuest, "name">;
+export const companyApplicationQuestCreate =
+  <T extends Quest>(quest?: T | null) =>
+    (): Record<keyof Quest, InputEntry> =>
+      ({
+        name: {
+          value: quest?.name || "",
+          type: "text" as const,
+          placeholder: "",
         },
       });
 

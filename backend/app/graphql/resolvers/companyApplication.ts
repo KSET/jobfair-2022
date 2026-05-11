@@ -29,6 +29,7 @@ import {
   Season,
   CompanyApplicationFeedback,
   ApplicationCocktail,
+  ApplicationQuest,
   ApplicationInternship,
 } from "@generated/type-graphql";
 import {
@@ -116,6 +117,9 @@ import {
   CocktailChooseInput,
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
+import {
+  transformSelect as transformSelectQuest,
+} from "./companyApplicationQuest";
 import {
   transformSelect as transformSelectInternship
 } from "./companyApplicationInternship"
@@ -210,7 +214,14 @@ export class CompanyApplicationFieldResolver {
   ): ApplicationCocktail | null {
     return application.cocktail || null;
   }
-  
+
+  @FieldResolver(() => ApplicationQuest, { nullable: true })
+  quest(
+    @Root() application: CompanyApplication,
+  ): ApplicationQuest | null {
+    return application.quest || null;
+  }
+
   @FieldResolver(() => [ ApplicationInternship ])
   internships(
     @Root() application: CompanyApplication,
@@ -354,6 +365,13 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     return select;
   },
 
+  quest(select) {
+    select.quest = {
+      select: transformSelectQuest(select.quest as Dict),
+    };
+    return select;
+  },
+
   internships(select) {
     select.internships = {
       select: transformSelectInternship(select.internships as Dict),
@@ -430,6 +448,12 @@ class CompanyApplicationCreateInput {
 }
 
 @InputType()
+class QuestChooseInput {
+  @Field()
+    name: string = "";
+}
+
+@InputType()
 class CompanyApplicationApprovedEditInput {
   @Field()
     vat: string = "";
@@ -445,6 +469,9 @@ class CompanyApplicationApprovedEditInput {
 
   @Field(() => CocktailChooseInput, { nullable: true })
     cocktail: CocktailChooseInput | null = null;
+
+  @Field(() => QuestChooseInput, { nullable: true })
+    quest: QuestChooseInput | null = null;
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
@@ -2806,6 +2833,34 @@ export class CompanyApplicationCreateResolver {
       }
     }
 
+    if (approval.quest) {
+      const id = "quest" as const;
+
+      const entry = info[id];
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      data[id] = {
+        upsert: {
+          create: {
+            name: entry.name,
+          },
+          update: {
+            name: entry.name,
+          },
+        },
+      };
+    }
+
     const entity = await ctx.prisma.companyApplication.update({
       data,
       where: {
@@ -2851,6 +2906,7 @@ export class CompanyApplicationCreateResolver {
             type: true
           }
         },
+        quest: true,
         internships: true,
       },
     });

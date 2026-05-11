@@ -326,46 +326,80 @@
             </template>
           </TabPanel>
 
-          <TabPanel v-if="programItems.internship">
+          <TabPanel v-if="programItems.internships && programItems.internships.length">
             <template #header>
               <translated-text trans-key="company.info.program.internship" />
             </template>
 
-            <div v-if="programItems.internship" :class="$style.itemHeader">
-              <span
-                :class="$style.text"
-                v-text="toDateString(programItems.internship.workingPeriodStart)"
-              />
-              <span
-                :class="$style.text"
-              >-</span>
-              <span
-                :class="$style.text"
-                v-text="toDateString(programItems.internship.workingPeriodEnd)"
-              />
-              <span
-                :class="$style.text"
-              >|</span>
-              <span
-                :class="$style.text"
-                v-text="programItems.internship.duration"
-              />
-              <a
-                :href="programItems.internship.url"
-                rel="noopener noreferrer"
-                target="_blank"
-                :class="$style.signupButton"
-                role="button"
-              >
-                <translated-text
-                  trans-key="company.event.program.internship.more-info"
+            <div
+              v-for="(internship, index) in programItems.internships"
+              :key="internship.uid"
+              :class="$style.internshipItem"
+            >
+              <hr v-if="index > 0" :class="$style.internshipSeparator">
+
+              <div :class="$style.itemHeader">
+                <span
+                  :class="$style.text"
+                  v-text="toDateString(internship.workingPeriodStart)"
                 />
-              </a>
+                <span :class="$style.text">-</span>
+                <span
+                  :class="$style.text"
+                  v-text="toDateString(internship.workingPeriodEnd)"
+                />
+                <template v-if="internship.duration">
+                  <span :class="$style.text">|</span>
+                  <span
+                    :class="$style.text"
+                    v-text="internship.duration"
+                  />
+                </template>
+                <a
+                  v-if="internship.url"
+                  :href="internship.url"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  :class="$style.signupButton"
+                  role="button"
+                >
+                  <translated-text
+                    trans-key="company.event.program.internship.more-info"
+                  />
+                </a>
+                <a
+                  :href="internshipApplyUrl"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  :class="$style.signupButton"
+                  role="button"
+                >
+                  <translated-text
+                    trans-key="company.event.program.internship.apply.see-more"
+                  />
+                </a>
+              </div>
+
+              <h3 :class="$style.itemTitle" v-text="internship.position" />
+
+              <div v-if="internship.places != null" :class="$style.internshipMeta">
+                <span :class="$style.internshipMetaItem">
+                  <strong>
+                    <translated-text trans-key="company.event.program.internship.places" />:
+                  </strong>
+                  {{ internship.places }}
+                </span>
+              </div>
+
+              <template v-if="internship.competencies">
+                <h4 :class="$style.internshipSubtitle">
+                  <translated-text trans-key="company.event.program.internship.competencies" />
+                </h4>
+                <p :class="$style.itemDescription" v-text="internship.competencies" />
+              </template>
+
+              <p :class="$style.itemDescription" v-text="internship.description" />
             </div>
-
-            <h3 :class="$style.itemTitle" v-text="programItems.internship.position" />
-
-            <p :class="$style.itemDescription" v-text="programItems.internship.description" />
           </TabPanel>
         </TabView>
       </template>
@@ -465,14 +499,20 @@
           "workshop",
           "fusion",
           "panel",
-          "internship",
+          "internships",
         ]
-          .filter((x) => (unref(programItems) as Dict | null)?.[x])
+          .filter((x) => {
+            const v = (unref(programItems) as Dict | null)?.[x];
+            if (Array.isArray(v)) {
+              return 0 < v.length;
+            }
+            return Boolean(v);
+          })
           .map((x, i) => [ x, i ] as const),
       );
 
       const preselectedTab = String(route.query.tab) || "talk";
-      const activeIndex = ref(tabs[preselectedTab] ?? 0);
+      const activeIndex = ref(tabs[preselectedTab] ?? tabs[`${ preselectedTab }s`] ?? 0);
       const activeTab = computed(() => Object.keys(tabs)[activeIndex.value]);
 
       watch(
@@ -537,14 +577,14 @@
             break;
           }
 
-          // case "internship": {
-          //   const item = unref(programItems).internship as { position: string; description: string } | undefined;
-          //   if (item) {
-          //     info.title = `[Summer Internship] ${ brandName }: ${ item.position }`;
-          //     info.description = item.description;
-          //   }
-          //   break;
-          // }
+          case "internships": {
+            const items = unref(programItems).internships ?? [];
+            if (items.length) {
+              info.title = `[Summer Internships] ${ brandName }: ${ items.map((i) => i.position).join(", ") }`;
+              info.description = items[0].description;
+            }
+            break;
+          }
         }
 
         return info;
@@ -599,6 +639,7 @@
         activeIndex,
         company,
         translateFor: computed(() => translationsStore.translateFor),
+        internshipApplyUrl: computed(() => translationsStore.translation("company.event.program.internship.apply.url")),
         programItems,
         EventType,
         panelCompanies: computed(() => (unref(programItems)?.panel?.companies || []).filter((x) => x.uid !== unref(company).uid)),
@@ -949,4 +990,32 @@
         }
       }
     }
+
+  .internshipItem {
+    & + .internshipItem {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .internshipSeparator {
+    border: 0;
+    border-top: 1px solid rgba($fer-black, .12);
+    margin: 0 0 1.5rem;
+  }
+
+  .internshipMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin: .5rem 0 1rem;
+  }
+
+  .internshipMetaItem {
+    font-size: 1rem;
+  }
+
+  .internshipSubtitle {
+    margin: 1rem 0 .25rem;
+    font-size: 1.0625rem;
+  }
 </style>

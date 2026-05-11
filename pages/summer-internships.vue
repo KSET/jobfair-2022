@@ -61,8 +61,6 @@
               <span :class="$style.text" v-text="toDateString(internship.workingPeriodStart)" />
               <span :class="$style.text">-</span>
               <span :class="$style.text" v-text="toDateString(internship.workingPeriodEnd)" />
-              <span :class="$style.text">|</span>
-              <span :class="$style.text" v-text="internship.duration" />
             </dd>
           </dl>
         </div>
@@ -98,12 +96,8 @@
   import {
     computed,
     useQuery,
-    createError,
   } from "#imports";
   import AppImg from "~/components/util/app-img.vue";
-  import {
-    graphql,
-  } from "~/graphql/client";
   import {
     Internships,
     type IInternshipsQuery,
@@ -118,9 +112,6 @@
 
   const participantsShown = computed(() => seasonsStore.areParticipantsShown);
 
-  throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
-
-  // eslint-disable-next-line no-unreachable
   const InternshipsQuery = useQuery<
     IInternshipsQuery,
     IInternshipsQueryVariables
@@ -255,7 +246,7 @@
 .item .itemImage {
 
   img {
-    object-position: right;
+    object-position: center;
   }
 }
 

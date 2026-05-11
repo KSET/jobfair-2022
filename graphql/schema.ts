@@ -4534,7 +4534,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_Appl
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company = { uid: string, brandName: string, rasterLogo?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image | null };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
@@ -4552,7 +4552,7 @@ export type IFrag_NewsFragment = { lang: string, slug: string, date: string | Da
 
 export type IFrag_GalleryImageFragment = { uid: string, name: string, order: number, visible: boolean, photo?: IEditGalleryImageMutation_editGalleryImage_CreateGalleryImageResponse_entity_GalleryImage_photo_Image | null };
 
-export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
 
@@ -4666,7 +4666,7 @@ export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_C
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel = { uid: string, name: string, description: string, reservation: number, companies: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_companies_Company>, event?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel_event_CalendarItem | null };
 
-export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram = { booth?: string | null, talk?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_talk_ApplicationTalk | null, workshop?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_workshop_ApplicationWorkshop | null, fusion?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_fusion_ApplicationFusion | null, panelParticipants: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panelParticipants_ApplicationPresenter>, panel?: ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_panel_CompanyPanel | null, internships: Array<ICompanyInfoQuery_companyInfo_Company_program_CompanyProgram_internships_ApplicationInternship> };
 
@@ -4839,7 +4839,7 @@ export type IAllGalleryImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type IAllGalleryImagesQuery = IAllGalleryImagesQuery_Query;
 
-export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
+export type IInternshipsQuery_internships_ApplicationInternship = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
 export type IInternshipsQuery_Query = { internships: Array<IInternshipsQuery_internships_ApplicationInternship> };
 
@@ -7791,6 +7791,8 @@ export const Frag_Internship = gql`
   workingPeriodEnd
   url
   duration
+  places
+  signed
   company {
     uid
     brandName

@@ -91,7 +91,7 @@ export class QrCodeService {
       .map((line, i) => {
         const dy = 0 === i ? "" : 'dy="1em"';
 
-        return `<tspan x="0" ${ dy }>${ escapeHtml(line) }</tspan>`;
+        return `<tspan x="${ x / 2 }" ${ dy }>${ escapeHtml(line) }</tspan>`;
       })
       .join("")
       .trim();
@@ -99,10 +99,10 @@ export class QrCodeService {
       ? `
         <defs>
             <style type="text/css">
-            @import url("https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Raleway&amp;display=swap");
             </style>
         </defs>
-        <text text-anchor="middle" xmlns="http://www.w3.org/2000/svg" y="58" x="100%" style="font-size: 6px; white-space: wrap; font-family: Roboto; transform: translateX(50%);">
+        <text text-anchor="middle" xmlns="http://www.w3.org/2000/svg" y="${ y + 5 }" x="${ x / 2 }" style="font-size: 6px; font-family: Raleway, Arial, sans-serif;">
             ${ textContent }
         </text>
         `

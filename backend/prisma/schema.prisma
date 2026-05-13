@@ -1089,7 +1089,7 @@ model CompanyScannedUser {
 
   scannedAt DateTime @default(now())
 
-  @@unique([userId, companyId])
+  @@unique([userId, companyId, seasonId])
 }
 
 model ScannedResume {

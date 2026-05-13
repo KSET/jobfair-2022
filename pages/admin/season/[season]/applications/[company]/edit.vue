@@ -282,12 +282,14 @@
     companyApplicationContactPersonCreate,
     companyApplicationFusionCreate,
     companyApplicationPresenterCreate,
+    companyApplicationQuestCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     companySignatoryCreate,
     type ContactPerson,
     type Fusion,
     type Presenter,
+    type Quest,
     type Signatory,
     type Talk,
     type Workshop,
@@ -485,7 +487,11 @@
               selected: Boolean(application?.wantsPanel),
             },
             [FormFor.Quest]: {
-              forms: null,
+              forms: {
+                info: companyApplicationQuestCreate(
+                  application?.quest,
+                )(),
+              },
               selected: Boolean(application?.wantsQuest),
             },
           } as const,
@@ -597,6 +603,10 @@
                   presenter: toData<Presenter>(selectedObj.fusion.forms!.presenter),
                 }
                 : null,
+            quest:
+              selectedObj.quest
+                ? toData<Quest>(selectedObj.quest.forms!.info)
+                : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
             wantsQuest: Boolean(selectedObj.quest),
@@ -631,6 +641,9 @@
                         wantsCocktail
                         wantsPanel
                         wantsQuest
+                        quest {
+                            prize
+                        }
                     }
 
                     errors {

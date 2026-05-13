@@ -10,6 +10,7 @@ import {
   ApplicationWorkshop,
   ApplicationFusion,
   ApplicationPresenter,
+  ApplicationQuest,
   CompanyApplicationApproval,
   CompanyPanel,
   ApplicationCocktail,
@@ -69,6 +70,9 @@ export class CompanyProgram {
 
   @Field(() => [ ApplicationInternship ])
     internships: ApplicationInternship[] = [];
+
+  @Field(() => ApplicationQuest, { nullable: true })
+    quest: ApplicationQuest | null = null;
 
   approval: CompanyApplicationApproval | null = null;
 }
@@ -142,6 +146,13 @@ export class CompanyProgramFieldResolver {
     @Root() program: CompanyProgram,
   ): ApplicationInternship[] {
     return (program?.internships ?? []).filter((i) => true === i.signed);
+  }
+
+  @FieldResolver(() => ApplicationQuest, { nullable: true })
+  quest(
+    @Root() program: CompanyProgram,
+  ): GQLField<ApplicationQuest, "nullable"> {
+    return approved(program?.quest, "quest", program);
   }
 
 }
@@ -260,5 +271,14 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
 
     delete select.internships;
   }),
-  
+
+  quest: withApplications((select) => {
+    select.applications.select.quest = {
+      select: select.quest as Dict,
+    };
+    select.applications.select.approval.select.quest = true;
+
+    delete select.quest;
+  }),
+
 });

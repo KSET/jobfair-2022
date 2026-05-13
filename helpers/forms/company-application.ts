@@ -315,13 +315,13 @@ export type Cocktail = Omit<IApplicationCocktail,
         },
       });
 
-export type Quest = Pick<IApplicationQuest, "name">;
+export type Quest = Pick<IApplicationQuest, "prize">;
 export const companyApplicationQuestCreate =
   <T extends Quest>(quest?: T | null) =>
     (): Record<keyof Quest, InputEntry> =>
       ({
-        name: {
-          value: quest?.name || "",
+        prize: {
+          value: quest?.prize || "",
           type: "text" as const,
           placeholder: "",
         },

@@ -415,6 +415,12 @@ class CompanySignatoryCreateInput {
 }
 
 @InputType()
+class QuestChooseInput {
+  @Field()
+    prize: string = "";
+}
+
+@InputType()
 class CompanyApplicationCreateInput {
   @Field()
     vat: string = "";
@@ -437,6 +443,9 @@ class CompanyApplicationCreateInput {
   @Field(() => FusionCreateInput, { nullable: true })
     fusion: FusionCreateInput | null = null;
 
+  @Field(() => QuestChooseInput, { nullable: true })
+    quest: QuestChooseInput | null = null;
+
   @Field(() => Boolean)
     wantsCocktail: boolean = false;
 
@@ -445,12 +454,6 @@ class CompanyApplicationCreateInput {
 
   @Field(() => Boolean)
     wantsQuest: boolean = false;
-}
-
-@InputType()
-class QuestChooseInput {
-  @Field()
-    name: string = "";
 }
 
 @InputType()
@@ -748,6 +751,12 @@ export class CompanyApplicationAdminResolver {
               },
             },
           },
+
+          quest: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -1038,6 +1047,15 @@ export class CompanyApplicationAdminResolver {
                   : undefined
               ,
             },
+            quest: {
+              create:
+                info.wantsQuest && info.quest
+                  ? {
+                    prize: info.quest.prize,
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -1274,6 +1292,19 @@ export class CompanyApplicationAdminResolver {
                 },
               }
               : deleteIf(oldApplication.fusion),
+          quest:
+            info.wantsQuest && info.quest
+              ? {
+                upsert: {
+                  create: {
+                    prize: info.quest.prize,
+                  },
+                  update: {
+                    prize: info.quest.prize,
+                  },
+                },
+              }
+              : deleteIf(oldApplication.quest),
           forCompany: {
             connect: {
               vat: info.vat,
@@ -1579,6 +1610,12 @@ export class CompanyApplicationCreateResolver {
               },
             },
           },
+
+          quest: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -1869,6 +1906,15 @@ export class CompanyApplicationCreateResolver {
                   : undefined
               ,
             },
+            quest: {
+              create:
+                info.wantsQuest && info.quest
+                  ? {
+                    prize: info.quest.prize,
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -2122,6 +2168,19 @@ export class CompanyApplicationCreateResolver {
                 },
               }
               : deleteIf(oldApplication.fusion),
+          quest:
+            info.wantsQuest && info.quest
+              ? {
+                upsert: {
+                  create: {
+                    prize: info.quest.prize,
+                  },
+                  update: {
+                    prize: info.quest.prize,
+                  },
+                },
+              }
+              : deleteIf(oldApplication.quest),
           forCompany: {
             connect: {
               vat: info.vat,
@@ -2852,10 +2911,10 @@ export class CompanyApplicationCreateResolver {
       data[id] = {
         upsert: {
           create: {
-            name: entry.name,
+            prize: entry.prize,
           },
           update: {
-            name: entry.name,
+            prize: entry.prize,
           },
         },
       };

@@ -25,6 +25,9 @@ type Profile = Omit<IUser,
   | "roles"
   | "resume"
   | "eventLog"
+  | "questPoints"
+  | "questScans"
+  | "questAppliedCompanies"
   | "_count">;
 export const userProfileEdit =
   <T extends Profile>(user?: T | null): Record<keyof Profile, InputEntry> =>

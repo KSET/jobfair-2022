@@ -312,6 +312,29 @@ export type IApplicationPresenterWhereInput = {
   photo?: InputMaybe<IImageNullableRelationFilter>;
 };
 
+export type IApplicationQuest = {
+  createdAt: Scalars['DateTimeISO']['output'];
+  prize: Scalars['String']['output'];
+  uid: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type IApplicationQuestNullableRelationFilter = {
+  is?: InputMaybe<IApplicationQuestWhereInput>;
+  isNot?: InputMaybe<IApplicationQuestWhereInput>;
+};
+
+export type IApplicationQuestOrderByWithRelationInput = {
+  prize?: InputMaybe<ISortOrder>;
+};
+
+export type IApplicationQuestWhereInput = {
+  AND?: InputMaybe<Array<IApplicationQuestWhereInput>>;
+  NOT?: InputMaybe<Array<IApplicationQuestWhereInput>>;
+  OR?: InputMaybe<Array<IApplicationQuestWhereInput>>;
+  prize?: InputMaybe<IStringFilter>;
+};
+
 export type IApplicationTalk = {
   _count?: Maybe<IApplicationTalkCount>;
   category: IApplicationTalkCategory;
@@ -648,6 +671,7 @@ export type ICompanyApplication = {
   fusion?: Maybe<IApplicationFusion>;
   internships: Array<IApplicationInternship>;
   panelParticipants: Array<IApplicationPresenter>;
+  quest?: Maybe<IApplicationQuest>;
   talk?: Maybe<IApplicationTalk>;
   updatedAt: Scalars['DateTimeISO']['output'];
   userApplications: IEventUserApplications;
@@ -673,6 +697,7 @@ export type ICompanyApplicationApprovedEditInput = {
   cocktail?: InputMaybe<ICocktailChooseInput>;
   fusion?: InputMaybe<IFusionsCreateInput>;
   panel: Array<IPresenterCreateInput>;
+  quest?: InputMaybe<IQuestChooseInput>;
   talk?: InputMaybe<ITalksCreateInput>;
   vat: Scalars['String']['input'];
   workshop?: InputMaybe<IWorkshopsCreateInput>;
@@ -729,6 +754,7 @@ export type ICompanyApplicationCreateInput = {
   booth?: InputMaybe<Scalars['String']['input']>;
   contactPerson: ICompanyApplicationContactPersonCreateInput;
   fusion?: InputMaybe<IFusionCreateInput>;
+  quest?: InputMaybe<IQuestChooseInput>;
   signatories: Array<ICompanySignatoryCreateInput>;
   talk?: InputMaybe<ITalkCreateInput>;
   vat: Scalars['String']['input'];
@@ -799,6 +825,7 @@ export type ICompanyApplicationOrderByWithRelationInput = {
   internships?: InputMaybe<IApplicationInternshipOrderByRelationAggregateInput>;
   panel?: InputMaybe<ICompanyPanelOrderByWithRelationInput>;
   panelParticipants?: InputMaybe<IApplicationPresenterOrderByRelationAggregateInput>;
+  quest?: InputMaybe<IApplicationQuestOrderByWithRelationInput>;
   talk?: InputMaybe<IApplicationTalkOrderByWithRelationInput>;
   wantsCocktail?: InputMaybe<ISortOrder>;
   wantsPanel?: InputMaybe<ISortOrder>;
@@ -834,6 +861,7 @@ export type ICompanyApplicationWhereInput = {
   internships?: InputMaybe<IApplicationInternshipListRelationFilter>;
   panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
+  quest?: InputMaybe<IApplicationQuestNullableRelationFilter>;
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<IBoolFilter>;
   wantsPanel?: InputMaybe<IBoolFilter>;
@@ -855,6 +883,7 @@ export type ICompanyApplicationWhereUniqueInput = {
   internships?: InputMaybe<IApplicationInternshipListRelationFilter>;
   panel?: InputMaybe<ICompanyPanelNullableRelationFilter>;
   panelParticipants?: InputMaybe<IApplicationPresenterListRelationFilter>;
+  quest?: InputMaybe<IApplicationQuestNullableRelationFilter>;
   talk?: InputMaybe<IApplicationTalkNullableRelationFilter>;
   wantsCocktail?: InputMaybe<IBoolFilter>;
   wantsPanel?: InputMaybe<IBoolFilter>;
@@ -983,6 +1012,7 @@ export type ICompanyProgram = {
   internships: Array<IApplicationInternship>;
   panel?: Maybe<ICompanyPanel>;
   panelParticipants: Array<IApplicationPresenter>;
+  quest?: Maybe<IApplicationQuest>;
   talk?: Maybe<IApplicationTalk>;
   workshop?: Maybe<IApplicationWorkshop>;
 };
@@ -1013,21 +1043,29 @@ export enum ICompanyScalarFieldEnum {
 }
 
 export type ICompanyScanUserQrRefineData = {
+  cvSaved?: InputMaybe<Scalars['Boolean']['input']>;
   isStarred?: InputMaybe<Scalars['Boolean']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
+  questEntered?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type ICompanyScanUserQrResponse = {
   alreadyScanned: Scalars['Boolean']['output'];
+  companyWantsQuest: Scalars['Boolean']['output'];
+  cvSaved: Scalars['Boolean']['output'];
+  deleted: Scalars['Boolean']['output'];
   error?: Maybe<Scalars['String']['output']>;
   isStarred?: Maybe<Scalars['Boolean']['output']>;
   note?: Maybe<Scalars['String']['output']>;
+  questEntered: Scalars['Boolean']['output'];
   user?: Maybe<IUser>;
 };
 
 export type ICompanyScannedUser = {
+  cvSaved: Scalars['Boolean']['output'];
   isStarred: Scalars['Boolean']['output'];
   note?: Maybe<Scalars['String']['output']>;
+  questEntered: Scalars['Boolean']['output'];
   scannedAt: Scalars['DateTimeISO']['output'];
   user?: Maybe<IUser>;
 };
@@ -1046,8 +1084,10 @@ export type ICompanyScannedUserWhereInput = {
   AND?: InputMaybe<Array<ICompanyScannedUserWhereInput>>;
   NOT?: InputMaybe<Array<ICompanyScannedUserWhereInput>>;
   OR?: InputMaybe<Array<ICompanyScannedUserWhereInput>>;
+  cvSaved?: InputMaybe<IBoolFilter>;
   isStarred?: InputMaybe<IBoolFilter>;
   note?: InputMaybe<IStringNullableFilter>;
+  questEntered?: InputMaybe<IBoolFilter>;
   scannedAt?: InputMaybe<IDateTimeFilter>;
 };
 
@@ -2473,6 +2513,7 @@ export type IQuery = {
   companyApplications?: Maybe<Array<ICompanyApplication>>;
   companyComponentAverageRatings: Array<IUserCompanyComponentRatingComponentAverage>;
   companyInfo?: Maybe<ICompany>;
+  companyWantsQuest: Scalars['Boolean']['output'];
   currentSeason?: Maybe<ISeason>;
   eventLog: IEventLogPaginationResult;
   findFirstTranslation?: Maybe<ITranslation>;
@@ -2496,6 +2537,7 @@ export type IQuery = {
   pressRelease?: Maybe<IPressRelease>;
   pressReleases: Array<IPressRelease>;
   profile?: Maybe<IUser>;
+  questCompanies: Array<ICompany>;
   resume?: Maybe<IResume>;
   resumeFavourites: Array<Scalars['String']['output']>;
   resumeInterests: ISearchResponseStringArray;
@@ -2607,6 +2649,12 @@ export type IQueryCompanyComponentAverageRatingsArgs = {
 
 export type IQueryCompanyInfoArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IQueryCompanyWantsQuestArgs = {
+  companyUid?: InputMaybe<Scalars['String']['input']>;
+  seasonUid?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2799,6 +2847,7 @@ export type IQueryRolesArgs = {
 
 export type IQueryScannedUsersArgs = {
   companyUid?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<IScanFilter>;
   seasonUid?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2884,6 +2933,18 @@ export enum IQueryMode {
   Default = 'default',
   Insensitive = 'insensitive'
 }
+
+export type IQuestChooseInput = {
+  prize: Scalars['String']['input'];
+};
+
+export type IQuestScan = {
+  eventId: Scalars['Int']['output'];
+  eventName: Scalars['String']['output'];
+  eventType: Scalars['String']['output'];
+  firstScannedAt: Scalars['DateTimeISO']['output'];
+  points: Scalars['Int']['output'];
+};
 
 export type IReservationItem = {
   count: Scalars['Float']['output'];
@@ -3264,6 +3325,11 @@ export type IRoleWhereUniqueInput = {
   OR?: InputMaybe<Array<IRoleWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum IScanFilter {
+  Cv = 'Cv',
+  Quest = 'Quest'
+}
 
 export type IScannedResumeWhereInput = {
   AND?: InputMaybe<Array<IScannedResumeWhereInput>>;
@@ -3787,6 +3853,9 @@ export type IUser = {
   lastName: Scalars['String']['output'];
   name: Scalars['String']['output'];
   phone: Scalars['String']['output'];
+  questAppliedCompanies: Array<ICompany>;
+  questPoints: Scalars['Int']['output'];
+  questScans: Array<IQuestScan>;
   resume?: Maybe<IResume>;
   roles: Array<IRole>;
   uid: Scalars['String']['output'];
@@ -4071,7 +4140,15 @@ export type ILoginMutation_login_AuthResponse_entity_User_companies_Company_indu
 
 export type ILoginMutation_login_AuthResponse_entity_User_companies_Company = { uid: string, vat: string, legalName: string, brandName: string, address: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, descriptionEn: string, descriptionHr: string, industry?: ILoginMutation_login_AuthResponse_entity_User_companies_Company_industry_Industry | null };
 
-export type ILoginMutation_login_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan = { eventType: string, eventId: number, eventName: string, points: number, firstScannedAt: string | Date };
+
+export type ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company_program_CompanyProgram_quest_ApplicationQuest = { prize: string };
+
+export type ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company_program_CompanyProgram = { quest?: ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company_program_CompanyProgram_quest_ApplicationQuest | null };
+
+export type ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company = { uid: string, brandName: string, program?: ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company_program_CompanyProgram | null };
+
+export type ILoginMutation_login_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type ILoginMutation_login_AuthResponse = { errors?: Array<ILoginMutation_login_AuthResponse_errors_FieldError> | null, entity?: ILoginMutation_login_AuthResponse_entity_User | null };
 
@@ -4088,7 +4165,7 @@ export type ILoginMutation = ILoginMutation_Mutation;
 
 export type IRegisterMutation_register_AuthResponse_errors_FieldError = { field: string, message: string };
 
-export type IRegisterMutation_register_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IRegisterMutation_register_AuthResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IRegisterMutation_register_AuthResponse = { errors?: Array<IRegisterMutation_register_AuthResponse_errors_FieldError> | null, entity?: IRegisterMutation_register_AuthResponse_entity_User | null };
 
@@ -4170,7 +4247,7 @@ export type IUpdateTranslationMutation = IUpdateTranslationMutation_Mutation;
 
 export type IUpdateProfileMutation_updateProfile_UpdateProfileResponse_errors_FieldError = { field: string, message: string };
 
-export type IUpdateProfileMutation_updateProfile_UpdateProfileResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IUpdateProfileMutation_updateProfile_UpdateProfileResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IUpdateProfileMutation_updateProfile_UpdateProfileResponse = { errors?: Array<IUpdateProfileMutation_updateProfile_UpdateProfileResponse_errors_FieldError> | null, entity?: IUpdateProfileMutation_updateProfile_UpdateProfileResponse_entity_User | null };
 
@@ -4203,7 +4280,7 @@ export type IUpdateUserMutation = IUpdateUserMutation_Mutation;
 
 export type IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse_errors_FieldError = { field: string, message: string };
 
-export type IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse_entity_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse = { errors?: Array<IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse_errors_FieldError> | null, entity?: IUpdatePasswordMutation_updatePassword_UpdatePasswordResponse_entity_User | null };
 
@@ -4509,7 +4586,7 @@ export type IDeleteGalleryImageMutation = IDeleteGalleryImageMutation_Mutation;
 
 export type IFrag_SeasonFragment = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
-export type IFrag_UserProfileFragment = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IFrag_UserProfileFragment = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image_full_ImageVariation = { mimeType: string };
 
@@ -4541,6 +4618,8 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_Applica
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail = { name: string, type: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail_type_ApplicationCocktailType };
 
+export type IFrag_CompanyApplicationFragment_CompanyApplication_quest_ApplicationQuest = { prize: string };
+
 export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image = { fullUrl: string, thumbUrl: string };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company = { uid: string, brandName: string, rasterLogo?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company_rasterLogo_Image | null };
@@ -4549,11 +4628,11 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_internships_Appl
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval = { cocktail: boolean, panel: boolean, talkParticipants: number, workshopParticipants: number, fusionParticipants: number, booth: boolean };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval = { cocktail: boolean, quest: boolean, panel: boolean, talkParticipants: number, workshopParticipants: number, fusionParticipants: number, booth: boolean };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
-export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, quest?: IFrag_CompanyApplicationFragment_CompanyApplication_quest_ApplicationQuest | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IFrag_CompanyFragment_Company_industry_Industry = { name: string };
 
@@ -4565,7 +4644,7 @@ export type IFrag_GalleryImageFragment = { uid: string, name: string, order: num
 
 export type IFrag_InternshipFragment = { uid: string, position: string, competencies?: string | null, description: string, workingPeriodStart: string | Date, workingPeriodEnd: string | Date, url?: string | null, duration?: string | null, places?: number | null, signed?: boolean | null, company?: IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship_company_Company | null };
 
-export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IProfileQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IProfileQuery_Query = { profile?: IProfileQuery_profile_User | null };
 
@@ -4587,7 +4666,7 @@ export type ITranslationsForQueryVariables = Exact<{
 
 export type ITranslationsForQuery = ITranslationsForQuery_Query;
 
-export type IInitialDataQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company> };
+export type IInitialDataQuery_profile_User = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
 export type IInitialDataQuery_allTranslationsFor_Translation = { key: string, value: string };
 
@@ -4892,7 +4971,7 @@ export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplicati
 
 export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, descriptionEn: string, descriptionHr: string, address: string, vat: string, website: string, instagram?: string | null, facebook?: string | null, linkedIn?: string | null, signatories: Array<IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company_signatories_CompanySignatory>, industry?: IFrag_CompanyFragment_Company_industry_Industry | null };
 
-export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, forCompany?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication_forCompany_Company | null, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, quest?: IFrag_CompanyApplicationFragment_CompanyApplication_quest_ApplicationQuest | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type IAdminCompanyApplicationQuery_Query = { talkCategories: Array<IAdminCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, booths: Array<IAdminCompanyApplicationQuery_booths_Booth>, companyApplicationFor?: IAdminCompanyApplicationQuery_companyApplicationFor_CompanyApplication | null };
 
@@ -4953,7 +5032,7 @@ export type ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCo
 
 export type ICurrentCompanyApplicationQuery_booths_Booth = { name: string, key?: string | null };
 
-export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
+export type ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, quest?: IFrag_CompanyApplicationFragment_CompanyApplication_quest_ApplicationQuest | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
 export type ICurrentCompanyApplicationQuery_Query = { talkCategories: Array<ICurrentCompanyApplicationQuery_talkCategories_ApplicationTalkCategory>, availableCocktailTypes: Array<ICurrentCompanyApplicationQuery_availableCocktailTypes_ApplicationCocktailType>, booths: Array<ICurrentCompanyApplicationQuery_booths_Booth>, companyApplication?: ICurrentCompanyApplicationQuery_companyApplication_CompanyApplication | null };
 
@@ -5013,6 +5092,12 @@ export type IResumeQueryVariables = Exact<{
 
 export type IResumeQuery = IResumeQuery_Query;
 
+export type IProfileBaseDataQuery_questCompanies_Company_program_CompanyProgram_quest_ApplicationQuest = { prize: string };
+
+export type IProfileBaseDataQuery_questCompanies_Company_program_CompanyProgram = { quest?: IProfileBaseDataQuery_questCompanies_Company_program_CompanyProgram_quest_ApplicationQuest | null };
+
+export type IProfileBaseDataQuery_questCompanies_Company = { uid: string, brandName: string, program?: IProfileBaseDataQuery_questCompanies_Company_program_CompanyProgram | null };
+
 export type IProfileBaseDataQuery_booths_Booth = { key?: string | null, name: string };
 
 export type IProfileBaseDataQuery_companyApplication_CompanyApplication_workshop_ApplicationWorkshop = { titleEn: string };
@@ -5049,7 +5134,7 @@ export type IProfileBaseDataQuery_currentSeason_Season_companyComponentAverageRa
 
 export type IProfileBaseDataQuery_currentSeason_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date, companyComponentAverageRatings: Array<IProfileBaseDataQuery_currentSeason_Season_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage> };
 
-export type IProfileBaseDataQuery_Query = { booths: Array<IProfileBaseDataQuery_booths_Booth>, companyApplication?: IProfileBaseDataQuery_companyApplication_CompanyApplication | null, profile?: IProfileBaseDataQuery_profile_User | null, calendar: Array<IProfileBaseDataQuery_calendar_CalendarItem>, currentSeason?: IProfileBaseDataQuery_currentSeason_Season | null };
+export type IProfileBaseDataQuery_Query = { questCompanies: Array<IProfileBaseDataQuery_questCompanies_Company>, booths: Array<IProfileBaseDataQuery_booths_Booth>, companyApplication?: IProfileBaseDataQuery_companyApplication_CompanyApplication | null, profile?: IProfileBaseDataQuery_profile_User | null, calendar: Array<IProfileBaseDataQuery_calendar_CalendarItem>, currentSeason?: IProfileBaseDataQuery_currentSeason_Season | null };
 
 
 export type IProfileBaseDataQueryVariables = Exact<{ [key: string]: never; }>;
@@ -5202,7 +5287,9 @@ export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_cr
 
 export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_fusion_ApplicationFusion = { uid: string };
 
-export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, talk?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_fusion_ApplicationFusion | null };
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_quest_ApplicationQuest = { prize: string };
+
+export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication = { wantsCocktail: boolean, wantsPanel: boolean, wantsQuest: boolean, talk?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_talk_ApplicationTalk | null, workshop?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_fusion_ApplicationFusion | null, quest?: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_entity_CompanyApplication_quest_ApplicationQuest | null };
 
 export type IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutation_createCompanyApplicationFor_CreateCompanyApplicationResponse_errors_FieldError = { field: string, message: string };
 
@@ -5656,7 +5743,7 @@ export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUs
 
 export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string, resume?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User_resume_Resume | null };
 
-export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse = { isStarred?: boolean | null, alreadyScanned: boolean, note?: string | null, error?: string | null, user?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User | null };
+export type IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse = { isStarred?: boolean | null, alreadyScanned: boolean, note?: string | null, cvSaved: boolean, questEntered: boolean, companyWantsQuest: boolean, deleted: boolean, error?: string | null, user?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse_user_User | null };
 
 export type IPageProfileMeCompanyScanUserQrScanMutation_Mutation = { scanUserQr?: IPageProfileMeCompanyScanUserQrScanMutation_scanUserQr_CompanyScanUserQrResponse | null };
 
@@ -5674,7 +5761,7 @@ export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine
 
 export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string, resume?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume | null };
 
-export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse = { isStarred?: boolean | null, note?: string | null, error?: string | null, user?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User | null };
+export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse = { isStarred?: boolean | null, alreadyScanned: boolean, note?: string | null, cvSaved: boolean, questEntered: boolean, companyWantsQuest: boolean, deleted: boolean, error?: string | null, user?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User | null };
 
 export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation_Mutation = { scanUserQrRefine?: IPageProfileMeCompanyScanUserQrRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse | null };
 
@@ -5687,19 +5774,23 @@ export type IPageProfileMeCompanyScanUserQrRefineQrScanMutationVariables = Exact
 
 export type IPageProfileMeCompanyScanUserQrRefineQrScanMutation = IPageProfileMeCompanyScanUserQrRefineQrScanMutation_Mutation;
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_cv_File = { url: string };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_cv_File = { url: string };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty = { name: string, module: string };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty = { name: string, module: string };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear = { studyType: string, studyYear: number };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear = { studyType: string, studyYear: number };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_cv_File | null, faculty?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty | null, studyYears: Array<IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear> };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume = { cv?: IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_cv_File | null, faculty?: IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_faculty_ResumeFaculty | null, studyYears: Array<IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume_studyYears_ResumeStudyYear> };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User = { uid: string, name: string, email: string, phone: string, resume?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User_resume_Resume | null };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User = { uid: string, name: string, email: string, phone: string, resume?: IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User_resume_Resume | null };
 
-export type IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser = { note?: string | null, isStarred: boolean, scannedAt: string | Date, user?: IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser_user_User | null };
+export type IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser = { note?: string | null, isStarred: boolean, scannedAt: string | Date, user?: IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser_user_User | null };
 
-export type IPageProfileMeCompanyScansListDataQuery_Query = { scannedUsers: Array<IPageProfileMeCompanyScansListDataQuery_scannedUsers_CompanyScannedUser> };
+export type IPageProfileMeCompanyScansListDataQuery_questApplicants_CompanyScannedUser_user_User = { uid: string, name: string, email: string };
+
+export type IPageProfileMeCompanyScansListDataQuery_questApplicants_CompanyScannedUser = { scannedAt: string | Date, user?: IPageProfileMeCompanyScansListDataQuery_questApplicants_CompanyScannedUser_user_User | null };
+
+export type IPageProfileMeCompanyScansListDataQuery_Query = { companyWantsQuest: boolean, scanned: Array<IPageProfileMeCompanyScansListDataQuery_scanned_CompanyScannedUser>, questApplicants: Array<IPageProfileMeCompanyScansListDataQuery_questApplicants_CompanyScannedUser> };
 
 
 export type IPageProfileMeCompanyScansListDataQueryVariables = Exact<{
@@ -5716,7 +5807,7 @@ export type IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_
 
 export type IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User = { uid: string, name: string, email: string, phone: string, resume?: IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User_resume_Resume | null };
 
-export type IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse = { isStarred?: boolean | null, note?: string | null, error?: string | null, user?: IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User | null };
+export type IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse = { isStarred?: boolean | null, note?: string | null, deleted: boolean, error?: string | null, user?: IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse_user_User | null };
 
 export type IPageProfileMeCompanyScansListRefineQrScanMutation_Mutation = { scanUserQrRefine?: IPageProfileMeCompanyScansListRefineQrScanMutation_scanUserQrRefine_CompanyScanUserQrResponse | null };
 
@@ -5959,6 +6050,10 @@ export type IResolversTypes = {
   ApplicationPresenterListRelationFilter: IApplicationPresenterListRelationFilter;
   ApplicationPresenterOrderByRelationAggregateInput: IApplicationPresenterOrderByRelationAggregateInput;
   ApplicationPresenterWhereInput: IApplicationPresenterWhereInput;
+  ApplicationQuest: ResolverTypeWrapper<IApplicationQuest>;
+  ApplicationQuestNullableRelationFilter: IApplicationQuestNullableRelationFilter;
+  ApplicationQuestOrderByWithRelationInput: IApplicationQuestOrderByWithRelationInput;
+  ApplicationQuestWhereInput: IApplicationQuestWhereInput;
   ApplicationTalk: ResolverTypeWrapper<IApplicationTalk>;
   ApplicationTalkCategory: ResolverTypeWrapper<IApplicationTalkCategory>;
   ApplicationTalkCategoryCount: ResolverTypeWrapper<IApplicationTalkCategoryCount>;
@@ -6145,6 +6240,8 @@ export type IResolversTypes = {
   PressReleaseWithFilesCreateInput: IPressReleaseWithFilesCreateInput;
   Query: ResolverTypeWrapper<{}>;
   QueryMode: IQueryMode;
+  QuestChooseInput: IQuestChooseInput;
+  QuestScan: ResolverTypeWrapper<IQuestScan>;
   ReservationItem: ResolverTypeWrapper<IReservationItem>;
   Resume: ResolverTypeWrapper<IResume>;
   ResumeCount: ResolverTypeWrapper<IResumeCount>;
@@ -6192,6 +6289,7 @@ export type IResolversTypes = {
   RoleScalarFieldEnum: IRoleScalarFieldEnum;
   RoleWhereInput: IRoleWhereInput;
   RoleWhereUniqueInput: IRoleWhereUniqueInput;
+  ScanFilter: IScanFilter;
   ScannedResumeWhereInput: IScannedResumeWhereInput;
   SearchResponseStringArray: ResolverTypeWrapper<ISearchResponseStringArray>;
   Season: ResolverTypeWrapper<ISeason>;
@@ -6280,6 +6378,10 @@ export type IResolversParentTypes = {
   ApplicationPresenterListRelationFilter: IApplicationPresenterListRelationFilter;
   ApplicationPresenterOrderByRelationAggregateInput: IApplicationPresenterOrderByRelationAggregateInput;
   ApplicationPresenterWhereInput: IApplicationPresenterWhereInput;
+  ApplicationQuest: IApplicationQuest;
+  ApplicationQuestNullableRelationFilter: IApplicationQuestNullableRelationFilter;
+  ApplicationQuestOrderByWithRelationInput: IApplicationQuestOrderByWithRelationInput;
+  ApplicationQuestWhereInput: IApplicationQuestWhereInput;
   ApplicationTalk: IApplicationTalk;
   ApplicationTalkCategory: IApplicationTalkCategory;
   ApplicationTalkCategoryCount: IApplicationTalkCategoryCount;
@@ -6458,6 +6560,8 @@ export type IResolversParentTypes = {
   PressReleaseWhereUniqueInput: IPressReleaseWhereUniqueInput;
   PressReleaseWithFilesCreateInput: IPressReleaseWithFilesCreateInput;
   Query: {};
+  QuestChooseInput: IQuestChooseInput;
+  QuestScan: IQuestScan;
   ReservationItem: IReservationItem;
   Resume: IResume;
   ResumeCount: IResumeCount;
@@ -6632,6 +6736,14 @@ export type IApplicationPresenterCountResolvers<ContextType = any, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IApplicationQuestResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationQuest'] = IResolversParentTypes['ApplicationQuest']> = {
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  prize?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type IApplicationTalkResolvers<ContextType = any, ParentType extends IResolversParentTypes['ApplicationTalk'] = IResolversParentTypes['ApplicationTalk']> = {
   _count?: Resolver<Maybe<IResolversTypes['ApplicationTalkCount']>, ParentType, ContextType>;
   category?: Resolver<IResolversTypes['ApplicationTalkCategory'], ParentType, ContextType>;
@@ -6773,6 +6885,7 @@ export type ICompanyApplicationResolvers<ContextType = any, ParentType extends I
   fusion?: Resolver<Maybe<IResolversTypes['ApplicationFusion']>, ParentType, ContextType>;
   internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
   panelParticipants?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
+  quest?: Resolver<Maybe<IResolversTypes['ApplicationQuest']>, ParentType, ContextType>;
   talk?: Resolver<Maybe<IResolversTypes['ApplicationTalk']>, ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   userApplications?: Resolver<IResolversTypes['EventUserApplications'], ParentType, ContextType>;
@@ -6865,6 +6978,7 @@ export type ICompanyProgramResolvers<ContextType = any, ParentType extends IReso
   internships?: Resolver<Array<IResolversTypes['ApplicationInternship']>, ParentType, ContextType>;
   panel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType>;
   panelParticipants?: Resolver<Array<IResolversTypes['ApplicationPresenter']>, ParentType, ContextType>;
+  quest?: Resolver<Maybe<IResolversTypes['ApplicationQuest']>, ParentType, ContextType>;
   talk?: Resolver<Maybe<IResolversTypes['ApplicationTalk']>, ParentType, ContextType>;
   workshop?: Resolver<Maybe<IResolversTypes['ApplicationWorkshop']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -6872,16 +6986,22 @@ export type ICompanyProgramResolvers<ContextType = any, ParentType extends IReso
 
 export type ICompanyScanUserQrResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyScanUserQrResponse'] = IResolversParentTypes['CompanyScanUserQrResponse']> = {
   alreadyScanned?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  companyWantsQuest?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  cvSaved?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  deleted?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   error?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
   isStarred?: Resolver<Maybe<IResolversTypes['Boolean']>, ParentType, ContextType>;
   note?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  questEntered?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   user?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ICompanyScannedUserResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyScannedUser'] = IResolversParentTypes['CompanyScannedUser']> = {
+  cvSaved?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   isStarred?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   note?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  questEntered?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   scannedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   user?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -7279,6 +7399,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   companyApplications?: Resolver<Maybe<Array<IResolversTypes['CompanyApplication']>>, ParentType, ContextType, Partial<IQueryCompanyApplicationsArgs>>;
   companyComponentAverageRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType, RequireFields<IQueryCompanyComponentAverageRatingsArgs, 'seasonUid'>>;
   companyInfo?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType, RequireFields<IQueryCompanyInfoArgs, 'uid'>>;
+  companyWantsQuest?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, Partial<IQueryCompanyWantsQuestArgs>>;
   currentSeason?: Resolver<Maybe<IResolversTypes['Season']>, ParentType, ContextType>;
   eventLog?: Resolver<IResolversTypes['EventLogPaginationResult'], ParentType, ContextType, RequireFields<IQueryEventLogArgs, 'page' | 'perPage'>>;
   findFirstTranslation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryFindFirstTranslationArgs>>;
@@ -7302,6 +7423,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   pressRelease?: Resolver<Maybe<IResolversTypes['PressRelease']>, ParentType, ContextType, RequireFields<IQueryPressReleaseArgs, 'uid'>>;
   pressReleases?: Resolver<Array<IResolversTypes['PressRelease']>, ParentType, ContextType, Partial<IQueryPressReleasesArgs>>;
   profile?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType>;
+  questCompanies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType>;
   resume?: Resolver<Maybe<IResolversTypes['Resume']>, ParentType, ContextType, RequireFields<IQueryResumeArgs, 'uid'>>;
   resumeFavourites?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   resumeInterests?: Resolver<IResolversTypes['SearchResponseStringArray'], ParentType, ContextType, RequireFields<IQueryResumeInterestsArgs, 'query'>>;
@@ -7324,6 +7446,15 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   userCompanyComponentRating?: Resolver<Maybe<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
   userCompanyComponentRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingsArgs, 'companyUid' | 'seasonUid'>>;
   users?: Resolver<Array<IResolversTypes['User']>, ParentType, ContextType, Partial<IQueryUsersArgs>>;
+};
+
+export type IQuestScanResolvers<ContextType = any, ParentType extends IResolversParentTypes['QuestScan'] = IResolversParentTypes['QuestScan']> = {
+  eventId?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  eventName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  eventType?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  firstScannedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  points?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type IReservationItemResolvers<ContextType = any, ParentType extends IResolversParentTypes['ReservationItem'] = IResolversParentTypes['ReservationItem']> = {
@@ -7561,6 +7692,9 @@ export type IUserResolvers<ContextType = any, ParentType extends IResolversParen
   lastName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   phone?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  questAppliedCompanies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType>;
+  questPoints?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  questScans?: Resolver<Array<IResolversTypes['QuestScan']>, ParentType, ContextType>;
   resume?: Resolver<Maybe<IResolversTypes['Resume']>, ParentType, ContextType>;
   roles?: Resolver<Array<IResolversTypes['Role']>, ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
@@ -7630,6 +7764,7 @@ export type IResolvers<ContextType = any> = {
   ApplicationInternship?: IApplicationInternshipResolvers<ContextType>;
   ApplicationPresenter?: IApplicationPresenterResolvers<ContextType>;
   ApplicationPresenterCount?: IApplicationPresenterCountResolvers<ContextType>;
+  ApplicationQuest?: IApplicationQuestResolvers<ContextType>;
   ApplicationTalk?: IApplicationTalkResolvers<ContextType>;
   ApplicationTalkCategory?: IApplicationTalkCategoryResolvers<ContextType>;
   ApplicationTalkCategoryCount?: IApplicationTalkCategoryCountResolvers<ContextType>;
@@ -7692,6 +7827,7 @@ export type IResolvers<ContextType = any> = {
   PasswordResetUseResponse?: IPasswordResetUseResponseResolvers<ContextType>;
   PressRelease?: IPressReleaseResolvers<ContextType>;
   Query?: IQueryResolvers<ContextType>;
+  QuestScan?: IQuestScanResolvers<ContextType>;
   ReservationItem?: IReservationItemResolvers<ContextType>;
   Resume?: IResumeResolvers<ContextType>;
   ResumeCount?: IResumeCountResolvers<ContextType>;
@@ -7774,6 +7910,23 @@ export const Frag_UserProfile = gql`
     descriptionHr
     industry {
       name
+    }
+  }
+  questPoints
+  questScans {
+    eventType
+    eventId
+    eventName
+    points
+    firstScannedAt
+  }
+  questAppliedCompanies {
+    uid
+    brandName
+    program {
+      quest {
+        prize
+      }
     }
   }
 }
@@ -7891,6 +8044,9 @@ export const Frag_CompanyApplication = gql`
       type
     }
   }
+  quest {
+    prize
+  }
   internships {
     ...frag_Internship
   }
@@ -7899,6 +8055,7 @@ export const Frag_CompanyApplication = gql`
   }
   approval {
     cocktail
+    quest
     panel
     talkParticipants
     workshopParticipants
@@ -8919,6 +9076,15 @@ export const Resume = gql`
     `;
 export const ProfileBaseData = gql`
     query ProfileBaseData {
+  questCompanies {
+    uid
+    brandName
+    program {
+      quest {
+        prize
+      }
+    }
+  }
   booths {
     key
     name
@@ -9232,6 +9398,9 @@ export const PageAdminSeasonApplicationsCompanyEdit_UpsertApplication = gql`
       wantsCocktail
       wantsPanel
       wantsQuest
+      quest {
+        prize
+      }
     }
     errors {
       field
@@ -9727,6 +9896,10 @@ export const PageProfileMeCompanyScanUserQrScan = gql`
     isStarred
     alreadyScanned
     note
+    cvSaved
+    questEntered
+    companyWantsQuest
+    deleted
     error
   }
 }
@@ -9745,14 +9918,23 @@ export const PageProfileMeCompanyScanUserQrRefineQrScan = gql`
       }
     }
     isStarred
+    alreadyScanned
     note
+    cvSaved
+    questEntered
+    companyWantsQuest
+    deleted
     error
   }
 }
     `;
 export const PageProfileMeCompanyScansListData = gql`
     query PageProfileMeCompanyScansListData($companyUid: String, $seasonUid: String) {
-  scannedUsers(companyUid: $companyUid, seasonUid: $seasonUid) {
+  scanned: scannedUsers(
+    companyUid: $companyUid
+    seasonUid: $seasonUid
+    filter: Cv
+  ) {
     user {
       uid
       name
@@ -9776,6 +9958,19 @@ export const PageProfileMeCompanyScansListData = gql`
     isStarred
     scannedAt
   }
+  questApplicants: scannedUsers(
+    companyUid: $companyUid
+    seasonUid: $seasonUid
+    filter: Quest
+  ) {
+    user {
+      uid
+      name
+      email
+    }
+    scannedAt
+  }
+  companyWantsQuest(companyUid: $companyUid, seasonUid: $seasonUid)
 }
     `;
 export const PageProfileMeCompanyScansListRefineQrScan = gql`
@@ -9794,6 +9989,7 @@ export const PageProfileMeCompanyScansListRefineQrScan = gql`
     }
     isStarred
     note
+    deleted
     error
   }
 }

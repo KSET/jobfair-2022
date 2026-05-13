@@ -3349,6 +3349,7 @@ export type ISeason = {
   applicationsEditableUntil: Scalars['DateTimeISO']['output'];
   applicationsFrom: Scalars['DateTimeISO']['output'];
   applicationsUntil: Scalars['DateTimeISO']['output'];
+  busCount: Scalars['Int']['output'];
   calendar: Array<ICalendarItem>;
   companyComponentAverageRatings: Array<IUserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];
@@ -7571,6 +7572,7 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
   applicationsEditableUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   applicationsFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   applicationsUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  busCount?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   calendar?: Resolver<Array<IResolversTypes['CalendarItem']>, ParentType, ContextType>;
   companyComponentAverageRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRatingComponentAverage']>, ParentType, ContextType>;
   companyScannedCvs?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;

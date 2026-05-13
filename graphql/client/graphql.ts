@@ -3347,6 +3347,7 @@ export type Season = {
   applicationsEditableUntil: Scalars['DateTimeISO']['output'];
   applicationsFrom: Scalars['DateTimeISO']['output'];
   applicationsUntil: Scalars['DateTimeISO']['output'];
+  busCount: Scalars['Int']['output'];
   calendar: Array<CalendarItem>;
   companyComponentAverageRatings: Array<UserCompanyComponentRatingComponentAverage>;
   companyScannedCvs: Scalars['Int']['output'];

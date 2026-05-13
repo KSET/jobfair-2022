@@ -5,7 +5,7 @@
     </h1>
 
     <div v-if="user" :class="$style.items">
-      <template v-if="!hasCompany">
+      <template v-if="!hasCompany || isAdmin">
         <div :class="$style.item">
           <div :class="$style.itemContent">
             <h2 :class="$style.itemHeader">
@@ -854,7 +854,7 @@
 
   // Keep in sync with QUEST_POINTS_PER_EVENT_TYPE in backend/app/services/quest-service.ts.
   const QUEST_EVENT_TYPES = [
-    "workshop", "talk", "panel", "fusion", "hot-talk", "debate",
+    "workshop", "talk", "panel", "fusion", "hot-talk", "debate", "linkedin-photoshoot",
   ] as const;
 
   const POINTS_PER_TYPE: Record<typeof QUEST_EVENT_TYPES[number], number> = {
@@ -864,6 +864,7 @@
     fusion: 400,
     "hot-talk": 400,
     debate: 400,
+    "linkedin-photoshoot": 100,
   };
 
   export default defineComponent({
@@ -1032,6 +1033,7 @@
         isFeedbackOpen: computed(() => seasonsStore.isFeedbackOpen),
         internshipApplyUrl: computed(() => translationsStore.translation("profile.company.internship.apply.url")),
         isScanner: computed(() => userStore.isScanner),
+        isAdmin: computed(() => userStore.isAdmin),
         hasCompany: computed(() => userStore.hasCompany),
         companyApplication: computed(() => resp?.data?.companyApplication),
         internships: computed(() => resp?.data?.companyApplication?.internships ?? []),

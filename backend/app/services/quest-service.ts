@@ -17,6 +17,9 @@ export const QUEST_POINTS_PER_EVENT_TYPE: Record<string, number> = {
   debate: 400,
 };
 
+export const LINKEDIN_PHOTOSHOOT_BRAND_NAME = "FOTO STUDIO";
+export const LINKEDIN_PHOTOSHOOT_POINTS = 100;
+
 const OTHER_CONTENT_SUBTYPES = [ "hot-talk", "debate", "loosen-up", "other" ] as const;
 
 export type QuestScanRow = {
@@ -177,36 +180,68 @@ const resolveEventNames = async (
   return nameMap;
 };
 
+const getLinkedinPhotoshootPoints = async (
+  prisma: Pick<PrismaClient, "companyScannedUser">,
+  userId: number,
+  seasonId: number,
+): Promise<number> => {
+  const scan = await prisma.companyScannedUser.findFirst({
+    where: {
+      userId,
+      seasonId,
+      company: { brandName: LINKEDIN_PHOTOSHOOT_BRAND_NAME },
+    },
+    select: { id: true },
+  });
+  return scan ? LINKEDIN_PHOTOSHOOT_POINTS : 0;
+};
+
 export const computeQuestPoints = async (
-  prisma: Pick<PrismaClient, "gateGuardianLog">,
+  prisma: Pick<PrismaClient, "gateGuardianLog" | "companyScannedUser">,
   userId: number,
   seasonId: number,
 ): Promise<number> => {
   const aggregates = await aggregateLogs(prisma, userId, seasonId);
-
-  return aggregates.reduce((sum, a) => sum + pointsFor(a.eventType), 0);
+  const eventPoints = aggregates.reduce((sum, a) => sum + pointsFor(a.eventType), 0);
+  const linkedinPoints = await getLinkedinPhotoshootPoints(prisma, userId, seasonId);
+  return eventPoints + linkedinPoints;
 };
 
 export const listQuestScans = async (
-  prisma: Pick<PrismaClient, "gateGuardianLog"> & EventNameModels,
+  prisma: Pick<PrismaClient, "gateGuardianLog" | "companyScannedUser"> & EventNameModels,
   userId: number,
   seasonId: number,
 ): Promise<QuestScanRow[]> => {
   const aggregates = await aggregateLogs(prisma, userId, seasonId);
 
-  if (0 === aggregates.length) {
+  const linkedinScan = await prisma.companyScannedUser.findFirst({
+    where: { userId, seasonId, company: { brandName: LINKEDIN_PHOTOSHOOT_BRAND_NAME } },
+    select: { scannedAt: true },
+  });
+
+  if (0 === aggregates.length && !linkedinScan) {
     return [];
   }
 
   const nameMap = await resolveEventNames(prisma, aggregates);
 
-  const result = aggregates.map((a) => ({
+  const result: QuestScanRow[] = aggregates.map((a) => ({
     eventType: a.eventType,
     eventId: a.eventId,
     eventName: nameMap.get(`${ a.eventType }|${ a.eventId }`) ?? "",
     points: pointsFor(a.eventType),
     firstScannedAt: a.firstScannedAt,
   }));
+
+  if (linkedinScan) {
+    result.push({
+      eventType: "linkedin-photoshoot",
+      eventId: 0,
+      eventName: "LinkedIn Photoshoot",
+      points: LINKEDIN_PHOTOSHOOT_POINTS,
+      firstScannedAt: linkedinScan.scannedAt,
+    });
+  }
 
   result.sort((a, b) => a.firstScannedAt.getTime() - b.firstScannedAt.getTime());
 

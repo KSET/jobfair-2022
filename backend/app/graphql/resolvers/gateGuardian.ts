@@ -236,6 +236,7 @@ export class GateGuardianResolver {
         forTalkId: true,
         forWorkshopId: true,
         forPanelId: true,
+        forFusionId: true,
         forSeasonId: true,
       },
     });
@@ -253,6 +254,7 @@ export class GateGuardianResolver {
       calendarItem.forTalkId
       ?? calendarItem.forWorkshopId
       ?? calendarItem.forPanelId
+      ?? calendarItem.forFusionId
       ?? 0
       ;
 
@@ -264,6 +266,7 @@ export class GateGuardianResolver {
             calendarItem?.forTalkId,
             calendarItem?.forWorkshopId,
             calendarItem?.forPanelId,
+            calendarItem?.forFusionId,
             0,
           ].filter(Boolean),
         },
@@ -371,11 +374,12 @@ export class GateGuardianResolver {
           forTalkId: true,
           forWorkshopId: true,
           forPanelId: true,
+          forFusionId: true,
         },
       });
 
       const calendarItems = calendarItemsRaw.map((x) => {
-        const eventId = x.forTalkId ?? x.forWorkshopId ?? x.forPanelId ?? 0;
+        const eventId = x.forTalkId ?? x.forWorkshopId ?? x.forPanelId ?? x.forFusionId ?? 0;
         const eventType = (() => {
           if (x.forTalkId) {
             return "talk";
@@ -385,6 +389,9 @@ export class GateGuardianResolver {
           }
           if (x.forPanelId) {
             return "panel";
+          }
+          if (x.forFusionId) {
+            return "fusion";
           }
           return null;
         })();

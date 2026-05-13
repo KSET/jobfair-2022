@@ -126,6 +126,7 @@
     companyApplicationCocktailCreate,
     companyApplicationFusionCreate,
     companyApplicationPresenterCreate,
+    companyApplicationQuestCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     type Fusion,
@@ -318,6 +319,11 @@
             cocktailTypes: cocktailTypesStore.cocktailTypes,
           }),
         }),
+        [FormFor.Quest]: form({
+          info: companyApplicationQuestCreate(
+            companyApplication.quest,
+          )(),
+        }),
         [FormFor.Panel]: form({
           presenter: extendTo<NonNullable<ICurrentCompanyApplicationQuery["companyApplication"]>["panelParticipants"][0]>(
             companyApplication.panelParticipants,
@@ -405,6 +411,10 @@
             cocktail:
               items[FormFor.Cocktail]
                 ? toData(items[FormFor.Cocktail].forms.info)
+                : null,
+            quest:
+              items[FormFor.Quest]
+                ? toData(items[FormFor.Quest].forms.info)
                 : null,
             panel:
               items[FormFor.Panel]

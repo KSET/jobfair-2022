@@ -16,6 +16,7 @@ import {
   FieldResolver,
   Info,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -61,6 +62,15 @@ import {
   GQLResponse,
 } from "../../types/helpers";
 import {
+  computeQuestPoints,
+  listQuestAppliedCompanies,
+  listQuestScans,
+} from "../../services/quest-service";
+import {
+  getCurrentSeasonId,
+  scopeCompanyApplicationsToSeason,
+} from "../../services/season-service";
+import {
   transformSelect as transformSelectCompanies,
 } from "./company";
 import {
@@ -72,6 +82,28 @@ import {
 import {
   transformSelect as transformSelectEventLog,
 } from "./eventLog";
+
+@ObjectType()
+export class QuestScan {
+  @Field()
+    eventType: string = "";
+
+  @Field(() => Int)
+    eventId: number = 0;
+
+  @Field()
+    eventName: string = "";
+
+  @Field(() => Int)
+    points: number = 0;
+
+  @Field()
+    firstScannedAt: Date = new Date(0);
+}
+
+const canViewQuest = (ctx: Context, user: User): boolean =>
+  ctx.user?.id === user.id || hasAtLeastRole(Role.Admin, ctx.user)
+;
 
 @Resolver((_of) => User)
 export class UserFieldResolver {
@@ -114,6 +146,67 @@ export class UserFieldResolver {
 
     return user.events ?? [];
   }
+
+  @FieldResolver(() => Int)
+  async questPoints(
+    @Root() user: User,
+      @Ctx() ctx: Context,
+  ): Promise<number> {
+    if (undefined === user.id || !canViewQuest(ctx, user)) {
+      return 0;
+    }
+
+    const seasonId = await getCurrentSeasonId(ctx.prisma);
+
+    if (null === seasonId) {
+      return 0;
+    }
+
+    return computeQuestPoints(ctx.prisma, user.id, seasonId);
+  }
+
+  @FieldResolver(() => [ QuestScan ])
+  async questScans(
+    @Root() user: User,
+      @Ctx() ctx: Context,
+  ): Promise<QuestScan[]> {
+    if (undefined === user.id || !canViewQuest(ctx, user)) {
+      return [];
+    }
+
+    const seasonId = await getCurrentSeasonId(ctx.prisma);
+
+    if (null === seasonId) {
+      return [];
+    }
+
+    return listQuestScans(ctx.prisma, user.id, seasonId);
+  }
+
+  @FieldResolver(() => [ Company ])
+  async questAppliedCompanies(
+    @Root() user: User,
+      @Ctx() ctx: Context,
+      @Info() info: GraphQLResolveInfo,
+  ): Promise<Company[]> {
+    if (undefined === user.id || !canViewQuest(ctx, user)) {
+      return [];
+    }
+
+    const seasonId = await getCurrentSeasonId(ctx.prisma);
+
+    if (null === seasonId) {
+      return [];
+    }
+
+    const select = toSelect<Prisma.CompanySelect>(info, transformSelectCompanies);
+
+    select.id = true;
+
+    scopeCompanyApplicationsToSeason(select, seasonId);
+
+    return listQuestAppliedCompanies(ctx.prisma, user.id, seasonId, select) as unknown as Promise<Company[]>;
+  }
 }
 
 export const transformSelect = transformSelectFor<UserFieldResolver>({
@@ -153,6 +246,27 @@ export const transformSelect = transformSelectFor<UserFieldResolver>({
       select: transformSelectEventLog(select.eventLog as Dict),
     };
     delete select.eventLog;
+
+    return select;
+  },
+
+  questPoints(select) {
+    select.id = true;
+    delete select.questPoints;
+
+    return select;
+  },
+
+  questScans(select) {
+    select.id = true;
+    delete select.questScans;
+
+    return select;
+  },
+
+  questAppliedCompanies(select) {
+    select.id = true;
+    delete select.questAppliedCompanies;
 
     return select;
   },

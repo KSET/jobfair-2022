@@ -12,7 +12,27 @@
       </NuxtLink>
     </div>
 
-    <div style="overflow-x: auto;">
+    <div :class="$style.tabSwitcher">
+      <Button
+        type="button"
+        :severity="0 === activeTab ? undefined : 'secondary'"
+        :outlined="0 !== activeTab"
+        @click="activeTab = 0"
+      >
+        <TranslatedText trans-key="profile.me.company.scans.tab.cv" />
+      </Button>
+      <Button
+        v-if="companyWantsQuest"
+        type="button"
+        :severity="1 === activeTab ? undefined : 'secondary'"
+        :outlined="1 !== activeTab"
+        @click="activeTab = 1"
+      >
+        <TranslatedText trans-key="profile.me.company.scans.tab.quest-applicants" />
+      </Button>
+    </div>
+
+    <div v-show="0 === activeTab" style="overflow-x: auto;">
       <DataTable
         ref="dt"
         v-model:filters="filters"
@@ -130,6 +150,38 @@
       </DataTable>
     </div>
 
+    <div v-show="1 === activeTab" style="overflow-x: auto;">
+      <DataTable
+        :value="questApplicants"
+        data-key="user.uid"
+        paginator
+        :rows="20"
+        striped-rows
+        responsive-layout="scroll"
+        sort-field="scannedAt"
+        :sort-order="-1"
+      >
+        <Column field="user.name" sortable>
+          <template #header>
+            <TranslatedText trans-key="resume.user.name" />
+          </template>
+        </Column>
+        <Column field="user.email" sortable>
+          <template #header>
+            <TranslatedText trans-key="resume.user.email" />
+          </template>
+        </Column>
+        <Column field="scannedAt" sortable>
+          <template #header>
+            <TranslatedText trans-key="resume.user.scannedAt" />
+          </template>
+          <template #body="{ data }">
+            {{ new Date(data.scannedAt).toLocaleString() }}
+          </template>
+        </Column>
+      </DataTable>
+    </div>
+
     <div class="flex mt-3">
       <a class="ml-auto" href="/api/user/resume/export/all.xlsx" target="_blank">
         <p-button class="p-button-text">
@@ -174,10 +226,12 @@
   const translate = computed(() => translationsStore.translation);
 
   const dt = ref<DataTable | null>(null);
+  const activeTab = ref(0);
 
   useTitle("profile.company.scanUsers.scanned");
 
-  type QEntry = PageProfileMeCompanyScansListDataQuery["scannedUsers"][number];
+  type QEntry = PageProfileMeCompanyScansListDataQuery["scanned"][number];
+  type QQuestEntry = PageProfileMeCompanyScansListDataQuery["questApplicants"][number];
 
   const transformScanned =
     (entry: QEntry) =>
@@ -194,13 +248,13 @@
         : null
   ;
 
-  const scanned = await useQuery({
+  const queryResult = await useQuery({
     query: graphql(/* GraphQL */ `
       query PageProfileMeCompanyScansListData(
         $companyUid: String
         $seasonUid: String
       ) {
-        scannedUsers(companyUid: $companyUid, seasonUid: $seasonUid) {
+        scanned: scannedUsers(companyUid: $companyUid, seasonUid: $seasonUid, filter: Cv) {
           user {
             uid
             name
@@ -224,13 +278,29 @@
           isStarred
           scannedAt
         }
+        questApplicants: scannedUsers(companyUid: $companyUid, seasonUid: $seasonUid, filter: Quest) {
+          user {
+            uid
+            name
+            email
+          }
+          scannedAt
+        }
+        companyWantsQuest(companyUid: $companyUid, seasonUid: $seasonUid)
       }
     `),
-  })()
-    .then((res) => res?.data?.scannedUsers ?? [])
-    .then((res) => res.map(transformScanned))
-    .then((res) => res.filter(Boolean))
+  })().then((res) => res?.data);
+
+  const scanned = (queryResult?.scanned ?? [])
+    .map(transformScanned)
+    .filter(Boolean)
   ;
+
+  const questApplicants = (queryResult?.questApplicants ?? [])
+    .filter((q: QQuestEntry) => q.user)
+  ;
+
+  const companyWantsQuest = computed(() => Boolean(queryResult?.companyWantsQuest));
 
   type DEntry = (typeof scanned)[number];
 
@@ -250,6 +320,7 @@
             }
             isStarred
             note
+            deleted
             error
         }
     }
@@ -290,7 +361,7 @@
     item.meta.isLoading = true;
     try {
       const resp = await refineUserScanMutation({
-        userUid: user.value.uid,
+        userUid: item.user.uid,
         refineData: {
           isStarred: !item.isStarred,
         },
@@ -322,7 +393,7 @@
     item.meta.isLoading = true;
     try {
       const resp = await refineUserScanMutation({
-        userUid: user.value.uid,
+        userUid: item.user.uid,
         refineData: {
           note: item.note,
         },
@@ -358,5 +429,11 @@
       justify-content: space-between;
       align-items: center;
     }
+  }
+
+  .tabSwitcher {
+    display: flex;
+    gap: .5rem;
+    margin: 1rem 0;
   }
 </style>

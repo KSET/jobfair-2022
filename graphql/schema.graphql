@@ -257,6 +257,29 @@ input ApplicationPresenterWhereInput {
   photo: ImageNullableRelationFilter
 }
 
+type ApplicationQuest {
+  createdAt: DateTimeISO!
+  prize: String!
+  uid: String!
+  updatedAt: DateTimeISO!
+}
+
+input ApplicationQuestNullableRelationFilter {
+  is: ApplicationQuestWhereInput
+  isNot: ApplicationQuestWhereInput
+}
+
+input ApplicationQuestOrderByWithRelationInput {
+  prize: SortOrder
+}
+
+input ApplicationQuestWhereInput {
+  AND: [ApplicationQuestWhereInput!]
+  NOT: [ApplicationQuestWhereInput!]
+  OR: [ApplicationQuestWhereInput!]
+  prize: StringFilter
+}
+
 type ApplicationTalk {
   _count: ApplicationTalkCount
   category: ApplicationTalkCategory!
@@ -573,6 +596,7 @@ type CompanyApplication {
   fusion: ApplicationFusion
   internships: [ApplicationInternship!]!
   panelParticipants: [ApplicationPresenter!]!
+  quest: ApplicationQuest
   talk: ApplicationTalk
   updatedAt: DateTimeISO!
   userApplications: EventUserApplications!
@@ -598,6 +622,7 @@ input CompanyApplicationApprovedEditInput {
   cocktail: CocktailChooseInput
   fusion: FusionsCreateInput
   panel: [PresenterCreateInput!]!
+  quest: QuestChooseInput
   talk: TalksCreateInput
   vat: String!
   workshop: WorkshopsCreateInput
@@ -644,6 +669,7 @@ input CompanyApplicationCreateInput {
   booth: String
   contactPerson: CompanyApplicationContactPersonCreateInput!
   fusion: FusionCreateInput
+  quest: QuestChooseInput
   signatories: [CompanySignatoryCreateInput!]!
   talk: TalkCreateInput
   vat: String!
@@ -714,6 +740,7 @@ input CompanyApplicationOrderByWithRelationInput {
   internships: ApplicationInternshipOrderByRelationAggregateInput
   panel: CompanyPanelOrderByWithRelationInput
   panelParticipants: ApplicationPresenterOrderByRelationAggregateInput
+  quest: ApplicationQuestOrderByWithRelationInput
   talk: ApplicationTalkOrderByWithRelationInput
   wantsCocktail: SortOrder
   wantsPanel: SortOrder
@@ -749,6 +776,7 @@ input CompanyApplicationWhereInput {
   internships: ApplicationInternshipListRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
+  quest: ApplicationQuestNullableRelationFilter
   talk: ApplicationTalkNullableRelationFilter
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
@@ -770,6 +798,7 @@ input CompanyApplicationWhereUniqueInput {
   internships: ApplicationInternshipListRelationFilter
   panel: CompanyPanelNullableRelationFilter
   panelParticipants: ApplicationPresenterListRelationFilter
+  quest: ApplicationQuestNullableRelationFilter
   talk: ApplicationTalkNullableRelationFilter
   wantsCocktail: BoolFilter
   wantsPanel: BoolFilter
@@ -853,6 +882,7 @@ type CompanyProgram {
   internships: [ApplicationInternship!]!
   panel: CompanyPanel
   panelParticipants: [ApplicationPresenter!]!
+  quest: ApplicationQuest
   talk: ApplicationTalk
   workshop: ApplicationWorkshop
 }
@@ -883,21 +913,29 @@ enum CompanyScalarFieldEnum {
 }
 
 input CompanyScanUserQrRefineData {
+  cvSaved: Boolean
   isStarred: Boolean
   note: String
+  questEntered: Boolean
 }
 
 type CompanyScanUserQrResponse {
   alreadyScanned: Boolean!
+  companyWantsQuest: Boolean!
+  cvSaved: Boolean!
+  deleted: Boolean!
   error: String
   isStarred: Boolean
   note: String
+  questEntered: Boolean!
   user: User
 }
 
 type CompanyScannedUser {
+  cvSaved: Boolean!
   isStarred: Boolean!
   note: String
+  questEntered: Boolean!
   scannedAt: DateTimeISO!
   user: User
 }
@@ -916,8 +954,10 @@ input CompanyScannedUserWhereInput {
   AND: [CompanyScannedUserWhereInput!]
   NOT: [CompanyScannedUserWhereInput!]
   OR: [CompanyScannedUserWhereInput!]
+  cvSaved: BoolFilter
   isStarred: BoolFilter
   note: StringNullableFilter
+  questEntered: BoolFilter
   scannedAt: DateTimeFilter
 }
 
@@ -1894,6 +1934,7 @@ type Query {
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
   companyComponentAverageRatings(companyUid: String, seasonUid: String!): [UserCompanyComponentRatingComponentAverage!]!
   companyInfo(uid: String!): Company
+  companyWantsQuest(companyUid: String, seasonUid: String): Boolean!
   currentSeason: Season
   eventLog(orderBy: [EventLogOrderByWithRelationInput!], page: Int!, perPage: Int!, where: String): EventLogPaginationResult!
   findFirstTranslation(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): Translation
@@ -1917,6 +1958,7 @@ type Query {
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
+  questCompanies: [Company!]!
   resume(uid: String!): Resume
   resumeFavourites: [String!]!
   resumeInterests(index: Int, query: String!): SearchResponseStringArray!
@@ -1926,7 +1968,7 @@ type Query {
   resumesFavourites(filter: ResumeFindManyInput): ResumeList!
   resumesScanned(filter: ResumeFindManyInput): ResumeList!
   roles(cursor: RoleWhereUniqueInput, distinct: [RoleScalarFieldEnum!], orderBy: [RoleOrderByWithRelationInput!], skip: Int, take: Int, where: RoleWhereInput): [Role!]!
-  scannedUsers(companyUid: String, seasonUid: String): [CompanyScannedUser!]!
+  scannedUsers(companyUid: String, filter: ScanFilter, seasonUid: String): [CompanyScannedUser!]!
   season(uid: String!): Season
   seasons(cursor: SeasonWhereUniqueInput, distinct: [SeasonScalarFieldEnum!], orderBy: [SeasonOrderByWithRelationInput!], skip: Int, take: Int, where: SeasonWhereInput): [Season!]!
   sessions: [Session!]!
@@ -1944,6 +1986,18 @@ type Query {
 enum QueryMode {
   default
   insensitive
+}
+
+input QuestChooseInput {
+  prize: String!
+}
+
+type QuestScan {
+  eventId: Int!
+  eventName: String!
+  eventType: String!
+  firstScannedAt: DateTimeISO!
+  points: Int!
 }
 
 type ReservationItem {
@@ -2274,6 +2328,11 @@ input RoleWhereUniqueInput {
   NOT: [RoleWhereInput!]
   OR: [RoleWhereInput!]
   name: String
+}
+
+enum ScanFilter {
+  Cv
+  Quest
 }
 
 input ScannedResumeWhereInput {
@@ -2711,6 +2770,9 @@ type User {
   lastName: String!
   name: String!
   phone: String!
+  questAppliedCompanies: [Company!]!
+  questPoints: Int!
+  questScans: [QuestScan!]!
   resume: Resume
   roles: [Role!]!
   uid: String!

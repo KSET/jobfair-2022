@@ -48,6 +48,23 @@ fragment frag_UserProfile on User {
             name
         }
     }
+    questPoints
+    questScans {
+        eventType
+        eventId
+        eventName
+        points
+        firstScannedAt
+    }
+    questAppliedCompanies {
+        uid
+        brandName
+        program {
+            quest {
+                prize
+            }
+        }
+    }
 }
 
 fragment frag_ApplicationPresenter on ApplicationPresenter {
@@ -138,6 +155,9 @@ fragment frag_CompanyApplication on CompanyApplication {
             type
         }
     }
+    quest {
+        prize
+    }
     internships {
         ...frag_Internship
     }
@@ -146,6 +166,7 @@ fragment frag_CompanyApplication on CompanyApplication {
     }
     approval {
         cocktail
+        quest
         panel
         talkParticipants
         workshopParticipants
@@ -745,6 +766,15 @@ query Resume($uid: String!) {
 }
 
 query ProfileBaseData {
+    questCompanies {
+        uid
+        brandName
+        program {
+            quest {
+                prize
+            }
+        }
+    }
     booths {
         key
         name

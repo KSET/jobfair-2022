@@ -29,6 +29,7 @@ import {
   Season,
   CompanyApplicationFeedback,
   ApplicationCocktail,
+  ApplicationQuest,
   ApplicationInternship,
 } from "@generated/type-graphql";
 import {
@@ -116,6 +117,9 @@ import {
   CocktailChooseInput,
   transformSelect as transformSelectCocktail,
 } from "./companyApplicationCocktail";
+import {
+  transformSelect as transformSelectQuest,
+} from "./companyApplicationQuest";
 import {
   transformSelect as transformSelectInternship
 } from "./companyApplicationInternship"
@@ -210,7 +214,14 @@ export class CompanyApplicationFieldResolver {
   ): ApplicationCocktail | null {
     return application.cocktail || null;
   }
-  
+
+  @FieldResolver(() => ApplicationQuest, { nullable: true })
+  quest(
+    @Root() application: CompanyApplication,
+  ): ApplicationQuest | null {
+    return application.quest || null;
+  }
+
   @FieldResolver(() => [ ApplicationInternship ])
   internships(
     @Root() application: CompanyApplication,
@@ -354,6 +365,13 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
     return select;
   },
 
+  quest(select) {
+    select.quest = {
+      select: transformSelectQuest(select.quest as Dict),
+    };
+    return select;
+  },
+
   internships(select) {
     select.internships = {
       select: transformSelectInternship(select.internships as Dict),
@@ -397,6 +415,12 @@ class CompanySignatoryCreateInput {
 }
 
 @InputType()
+class QuestChooseInput {
+  @Field()
+    prize: string = "";
+}
+
+@InputType()
 class CompanyApplicationCreateInput {
   @Field()
     vat: string = "";
@@ -418,6 +442,9 @@ class CompanyApplicationCreateInput {
 
   @Field(() => FusionCreateInput, { nullable: true })
     fusion: FusionCreateInput | null = null;
+
+  @Field(() => QuestChooseInput, { nullable: true })
+    quest: QuestChooseInput | null = null;
 
   @Field(() => Boolean)
     wantsCocktail: boolean = false;
@@ -445,6 +472,9 @@ class CompanyApplicationApprovedEditInput {
 
   @Field(() => CocktailChooseInput, { nullable: true })
     cocktail: CocktailChooseInput | null = null;
+
+  @Field(() => QuestChooseInput, { nullable: true })
+    quest: QuestChooseInput | null = null;
 
   @Field(() => [ PresenterCreateInput ])
     panel: PresenterCreateInput[] = [];
@@ -719,6 +749,12 @@ export class CompanyApplicationAdminResolver {
                   },
                 },
               },
+            },
+          },
+
+          quest: {
+            select: {
+              id: true,
             },
           },
         },
@@ -1011,6 +1047,15 @@ export class CompanyApplicationAdminResolver {
                   : undefined
               ,
             },
+            quest: {
+              create:
+                info.wantsQuest && info.quest
+                  ? {
+                    prize: info.quest.prize,
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -1247,6 +1292,19 @@ export class CompanyApplicationAdminResolver {
                 },
               }
               : deleteIf(oldApplication.fusion),
+          quest:
+            info.wantsQuest && info.quest
+              ? {
+                upsert: {
+                  create: {
+                    prize: info.quest.prize,
+                  },
+                  update: {
+                    prize: info.quest.prize,
+                  },
+                },
+              }
+              : deleteIf(oldApplication.quest),
           forCompany: {
             connect: {
               vat: info.vat,
@@ -1552,6 +1610,12 @@ export class CompanyApplicationCreateResolver {
               },
             },
           },
+
+          quest: {
+            select: {
+              id: true,
+            },
+          },
         },
       });
 
@@ -1842,6 +1906,15 @@ export class CompanyApplicationCreateResolver {
                   : undefined
               ,
             },
+            quest: {
+              create:
+                info.wantsQuest && info.quest
+                  ? {
+                    prize: info.quest.prize,
+                  }
+                  : undefined
+              ,
+            },
             forCompany: {
               connect: {
                 vat: info.vat,
@@ -2095,6 +2168,19 @@ export class CompanyApplicationCreateResolver {
                 },
               }
               : deleteIf(oldApplication.fusion),
+          quest:
+            info.wantsQuest && info.quest
+              ? {
+                upsert: {
+                  create: {
+                    prize: info.quest.prize,
+                  },
+                  update: {
+                    prize: info.quest.prize,
+                  },
+                },
+              }
+              : deleteIf(oldApplication.quest),
           forCompany: {
             connect: {
               vat: info.vat,
@@ -2806,6 +2892,34 @@ export class CompanyApplicationCreateResolver {
       }
     }
 
+    if (approval.quest) {
+      const id = "quest" as const;
+
+      const entry = info[id];
+
+      if (!entry) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: `${ upperFirst(id) } required`,
+            },
+          ],
+        };
+      }
+
+      data[id] = {
+        upsert: {
+          create: {
+            prize: entry.prize,
+          },
+          update: {
+            prize: entry.prize,
+          },
+        },
+      };
+    }
+
     const entity = await ctx.prisma.companyApplication.update({
       data,
       where: {
@@ -2851,6 +2965,7 @@ export class CompanyApplicationCreateResolver {
             type: true
           }
         },
+        quest: true,
         internships: true,
       },
     });

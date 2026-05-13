@@ -44,6 +44,25 @@
           ✅ <TranslatedText v-if="scanResult?.alreadyScanned" trans-key="profile.me.company.scan-user-qr.already-scanned" /><TranslatedText v-else trans-key="profile.me.company.scan-user-qr.scan-ok" />
         </p>
 
+        <div v-if="scanResult?.companyWantsQuest" :class="$style.questToggles">
+          <label :class="$style.toggleRow">
+            <InputSwitch
+              :model-value="scanResult?.cvSaved"
+              :disabled="scanFormLoading"
+              @update:model-value="handleCvSavedToggle"
+            />
+            <TranslatedText trans-key="profile.me.company.scan-user-qr.toggle.cv-saved" />
+          </label>
+          <label :class="$style.toggleRow">
+            <InputSwitch
+              :model-value="scanResult?.questEntered"
+              :disabled="scanFormLoading"
+              @update:model-value="handleQuestEnteredToggle"
+            />
+            <TranslatedText trans-key="profile.me.company.scan-user-qr.toggle.quest-entered" />
+          </label>
+        </div>
+
         <form :class="$style.scanNote" @submit="handleScanFormSubmit">
           <label for="user-scan-note"><TranslatedText trans-key="resume.user.note" /></label>
           <textarea id="user-scan-note" v-model="scanFormData.note" name="user-scan-note" />
@@ -105,6 +124,7 @@
   } from "primevue/usetoast";
   import QrScanner from "qr-scanner";
   import PDialog from "primevue/dialog";
+  import InputSwitch from "primevue/inputswitch";
   import z from "zod";
   import {
     type Maybe,
@@ -113,6 +133,7 @@
     graphql,
   } from "~/graphql/client";
   import {
+    type CompanyScanUserQrRefineData,
     type PageProfileMeCompanyScanUserQrScanMutation,
   } from "~/graphql/client/graphql";
 
@@ -143,6 +164,9 @@
     isStarred: boolean,
     note: Maybe<string>,
     alreadyScanned: boolean,
+    cvSaved: boolean,
+    questEntered: boolean,
+    companyWantsQuest: boolean,
   };
 
   const selectedCamera = ref<string | null>(null);
@@ -174,6 +198,10 @@
             isStarred
             alreadyScanned
             note
+            cvSaved
+            questEntered
+            companyWantsQuest
+            deleted
             error
         }
     }
@@ -193,7 +221,12 @@
                 }
             }
             isStarred
+            alreadyScanned
             note
+            cvSaved
+            questEntered
+            companyWantsQuest
+            deleted
             error
         }
     }
@@ -235,6 +268,9 @@
         isStarred: Boolean(resp.isStarred),
         alreadyScanned: Boolean(resp.alreadyScanned),
         note: resp.note,
+        cvSaved: resp.cvSaved ?? true,
+        questEntered: resp.questEntered ?? false,
+        companyWantsQuest: resp.companyWantsQuest ?? false,
       };
 
       scanFormData.note = resp.note || "";
@@ -361,9 +397,7 @@
     await qrScanner?.start();
   };
 
-  const handleScanFormSubmit = async (e: Event) => {
-    e.preventDefault();
-
+  const runRefine = async (patch: CompanyScanUserQrRefineData) => {
     const user = scanResult.value?.user;
     if (!user) {
       return;
@@ -373,9 +407,7 @@
     try {
       const resp = await refineUserScanMutation({
         userUid: user.uid,
-        refineData: {
-          note: scanFormData.note,
-        },
+        refineData: patch,
       }).then((resp) => resp?.data?.scanUserQrRefine);
 
       if (resp?.error) {
@@ -387,6 +419,17 @@
         });
       }
 
+      if (true === resp?.deleted) {
+        toast.add({
+          severity: "info",
+          summary: "Scan discarded",
+          closable: true,
+          life: 3000,
+        });
+        scanResult.value = null;
+        return;
+      }
+
       {
         const user = resp?.user;
 
@@ -396,6 +439,9 @@
             isStarred: Boolean(resp.isStarred),
             alreadyScanned: scanResult.value?.alreadyScanned ?? false,
             note: resp.note,
+            cvSaved: resp.cvSaved ?? true,
+            questEntered: resp.questEntered ?? false,
+            companyWantsQuest: resp.companyWantsQuest ?? scanResult.value?.companyWantsQuest ?? false,
           };
         }
       }
@@ -404,48 +450,22 @@
     }
   };
 
+  const handleScanFormSubmit = async (e: Event) => {
+    e.preventDefault();
+    await runRefine({ note: scanFormData.note });
+  };
+
   const handleStarToggle = async (e: Event) => {
     e.preventDefault();
+    await runRefine({ isStarred: !scanResult.value?.isStarred });
+  };
 
-    const user = scanResult.value?.user;
-    if (!user) {
-      return;
-    }
+  const handleCvSavedToggle = async (value: boolean) => {
+    await runRefine({ cvSaved: value });
+  };
 
-    scanFormLoading.value = true;
-    try {
-      const resp = await refineUserScanMutation({
-        userUid: user.uid,
-        refineData: {
-          isStarred: !scanResult.value?.isStarred,
-        },
-      }).then((resp) => resp?.data?.scanUserQrRefine);
-
-
-      if (resp?.error) {
-        toast.add({
-          severity: "error",
-          summary: resp.error,
-          closable: true,
-          life: 3000,
-        });
-      }
-
-      {
-        const user = resp?.user;
-
-        if (user) {
-          scanResult.value = {
-            user,
-            isStarred: Boolean(resp.isStarred),
-            alreadyScanned: scanResult.value?.alreadyScanned ?? false,
-            note: resp.note,
-          };
-        }
-      }
-    } finally {
-      scanFormLoading.value = false;
-    }
+  const handleQuestEnteredToggle = async (value: boolean) => {
+    await runRefine({ questEntered: value });
   };
   </script>
 
@@ -494,6 +514,20 @@
     .scanNote {
       display: flex;
       flex-direction: column;
+    }
+
+    .questToggles {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin: .5rem 0 1rem;
+
+      .toggleRow {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        cursor: pointer;
+      }
     }
 
     :global(.p-dialog-footer) {

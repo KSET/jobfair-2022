@@ -5,6 +5,68 @@
     </h1>
 
     <div v-if="user" :class="$style.items">
+      <template v-if="!hasCompany">
+        <div :class="$style.item">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.quest.header" />
+            </h2>
+            <p>
+              <translated-text trans-key="profile.quest.intro.text" />
+            </p>
+          </div>
+        </div>
+
+        <div :class="$style.item">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.quest.points.header" />
+            </h2>
+            <div :class="$style.questTotal" v-text="user.questPoints ?? 0" />
+            <ul :class="$style.questBreakdown">
+              <li
+                v-for="type in QUEST_EVENT_TYPES"
+                :key="type"
+                :class="[$style.questBreakdownItem, { [$style.questBreakdownItemZero]: !questCountsByType[type] }]"
+              >
+                <translated-text
+                  :class="$style.questBreakdownLabel"
+                  :trans-key="`profile.quest.category.${type}`"
+                />
+                <span :class="$style.questBreakdownCount" v-text="questCountsByType[type] ?? 0" />
+                <span :class="$style.questBreakdownEach">
+                  {{ POINTS_PER_TYPE[type] }}
+                  <translated-text trans-key="profile.quest.points.each" />
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div :class="$style.item">
+          <div :class="$style.itemContent">
+            <h2 :class="$style.itemHeader">
+              <translated-text trans-key="profile.quest.rewards.header" />
+            </h2>
+            <p v-if="!questCompanies.length">
+              <translated-text trans-key="profile.quest.rewards.empty" />
+            </p>
+            <ul v-else :class="$style.questRewardList">
+              <li
+                v-for="company in questCompanies"
+                :key="company.uid"
+                :class="{ [$style.questRewardUnlocked]: appliedCompanyUidSet.has(company.uid) }"
+              >
+                <strong v-text="company.brandName" />
+                <span> - </span>
+                <em v-text="company.program?.quest?.prize ?? '-'" />
+                <i v-if="appliedCompanyUidSet.has(company.uid)" class="pi pi-check" />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </template>
+
       <div :class="$style.item">
         <div :class="$style.itemContent">
           <h2 :class="$style.itemHeader">
@@ -53,21 +115,6 @@
               />
             </div>
           </div>
-          <!-- <div :class="$style.itemActions">
-            <nuxt-link
-              :to="{ name: 'profile-me-cv' }"
-              class="ml-auto"
-            >
-              <p-button
-                class="p-button-secondary"
-                tabindex="-1"
-              >
-                <translated-text
-                  trans-key="profile.resume.update"
-                />
-              </p-button>
-            </nuxt-link>
-          </div> -->
         </div>
 
         <template v-if="isSignUpPossible">
@@ -805,6 +852,20 @@
     useCalendarStore,
   } from "~/store/calendar";
 
+  // Keep in sync with QUEST_POINTS_PER_EVENT_TYPE in backend/app/services/quest-service.ts.
+  const QUEST_EVENT_TYPES = [
+    "workshop", "talk", "panel", "fusion", "hot-talk", "debate",
+  ] as const;
+
+  const POINTS_PER_TYPE: Record<typeof QUEST_EVENT_TYPES[number], number> = {
+    workshop: 600,
+    talk: 200,
+    panel: 400,
+    fusion: 400,
+    "hot-talk": 400,
+    debate: 400,
+  };
+
   export default defineComponent({
     name: "PageProfileHome",
 
@@ -981,6 +1042,25 @@
           }
           return list.some((i) => i.signed) ? "signed" : "unsigned";
         }),
+        QUEST_EVENT_TYPES,
+        POINTS_PER_TYPE,
+        questCompanies: computed(() => resp?.data?.questCompanies ?? []),
+        questCountsByType: computed(() => {
+          const counts = Object.fromEntries(
+            QUEST_EVENT_TYPES.map((t) => [ t, 0 ]),
+          ) as Record<typeof QUEST_EVENT_TYPES[number], number>;
+
+          for (const scan of (userStore.user?.questScans ?? [])) {
+            if (scan.eventType in counts) {
+              counts[scan.eventType as keyof typeof counts] += 1;
+            }
+          }
+
+          return counts;
+        }),
+        appliedCompanyUidSet: computed(() => new Set(
+          (userStore.user?.questAppliedCompanies ?? []).map((c) => c.uid),
+        )),
         isApproved,
         isApprovedWithoutBooth,
         isApprovedWithEvents,
@@ -1207,6 +1287,77 @@
       &:hover {
         background-color: color.adjust($fer-dark-blue, $alpha: -.12);
       }
+    }
+  }
+
+  .questTotal {
+    margin: 0 0 1.25rem;
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: $fer-dark-blue;
+    opacity: 1;
+    line-height: 1;
+  }
+
+  .questBreakdown {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .25rem 1.25rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .questBreakdownItem {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: .5rem 0;
+    border-bottom: 1px solid rgba($fer-dark-blue, .08);
+    column-gap: .5rem;
+    row-gap: 0;
+  }
+
+  .questBreakdownItemZero {
+    .questBreakdownCount {
+      color: $fer-yellow;
+    }
+  }
+
+  .questBreakdownLabel {
+    font-size: .95rem;
+    font-weight: 500;
+  }
+
+  .questBreakdownCount {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: $fer-success;
+    line-height: 1;
+  }
+
+  .questBreakdownEach {
+    grid-column: 1 / -1;
+    font-size: .7rem;
+    opacity: .6;
+    margin-top: .125rem;
+  }
+
+  .questRewardList {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .questRewardUnlocked {
+    color: $fer-success;
+
+    :global(.pi-check) {
+      margin-left: .375rem;
     }
   }
 </style>

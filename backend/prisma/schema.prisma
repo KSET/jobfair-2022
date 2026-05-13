@@ -499,6 +499,8 @@ model CompanyApplication {
 
   cocktail ApplicationCocktail?
 
+  quest ApplicationQuest?
+
   /// @TypeGraphQL.omit(output: true, input: true)
   approval CompanyApplicationApproval?
 
@@ -734,6 +736,25 @@ model ApplicationCocktail {
   forApplicationId Int @unique
   /// @TypeGraphQL.omit(output: true, input: true)
   typeId           Int @unique
+}
+
+model ApplicationQuest {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id  Int    @id @default(autoincrement())
+  /// @TypeGraphQL.omit(input: true)
+  uid String @unique @default(cuid())
+
+  prize String
+
+  /// @TypeGraphQL.omit(input: true)
+  forApplication CompanyApplication @relation(fields: [forApplicationId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(input: true)
+  createdAt      DateTime @default(now())
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt      DateTime @updatedAt
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  forApplicationId Int @unique
 }
 
 model ApplicationCocktailType {
@@ -1048,6 +1069,9 @@ model CompanyScannedUser {
   note      String?
   isStarred Boolean @default(false)
 
+  cvSaved      Boolean @default(true)
+  questEntered Boolean @default(false)
+
   /// @TypeGraphQL.omit(input: true)
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// @TypeGraphQL.omit(output: true, input: true)
@@ -1165,6 +1189,8 @@ model GateGuardianLog {
 
   /// @TypeGraphQL.omit(input: true)
   scannedAt DateTime @default(now())
+
+  @@index([forUserId])
 }
 
 model Form {

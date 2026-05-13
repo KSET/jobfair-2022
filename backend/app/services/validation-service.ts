@@ -149,6 +149,11 @@ const companyCocktailValidation = z.object({
 });
 export const CompanyCocktailValidation = <T>(cocktail: T) => formatValidation(companyCocktailValidation, cocktail);
 
+const companyQuestValidation = z.object({
+  prize: z.string().trim().min(1).max(200),
+});
+export const CompanyQuestValidation = <T>(quest: T) => formatValidation(companyQuestValidation, quest);
+
 const companyApplicationValidation = z.object({
   signatories: z.array(companySignatoryValidation).min(1).max(5),
   contactPerson: companyContactPersonValidation,
@@ -156,6 +161,7 @@ const companyApplicationValidation = z.object({
   talk: z.nullable(companyTalkValidation),
   workshop: z.nullable(companyWorkshopValidation),
   fusion: z.nullable(companyFusionValidation),
+  quest: z.nullable(companyQuestValidation),
   wantsCocktail: z.boolean(),
   wantsPanel: z.boolean(),
   wantsQuest: z.boolean(),
@@ -167,6 +173,7 @@ const companyApplicationApprovedValidation = z.object({
   workshop: z.nullable(companyWorkshopValidation),
   fusion: z.nullable(companyFusionValidation),
   cocktail: z.nullable(companyCocktailValidation),
+  quest: z.nullable(companyQuestValidation),
   panel: z.array(companyPresenterValidation),
 });
 export const CompanyApplicationApprovedValidation = <T>(application: T) => formatValidation(companyApplicationApprovedValidation, application);

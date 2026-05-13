@@ -1958,7 +1958,9 @@ type Query {
   pressRelease(uid: String!): PressRelease
   pressReleases(cursor: PressReleaseWhereUniqueInput, distinct: [PressReleaseScalarFieldEnum!], orderBy: [PressReleaseOrderByWithRelationInput!], skip: Int, take: Int, where: PressReleaseWhereInput): [PressRelease!]!
   profile: User
-  questCompanies: [Company!]!
+  questApplicants(companyUid: String!, seasonUid: String!): [QuestApplicantEntry!]!
+  questCompanies(seasonUid: String): [Company!]!
+  questCompaniesWithStats(seasonUid: String!): [QuestCompanyStats!]!
   resume(uid: String!): Resume
   resumeFavourites: [String!]!
   resumeInterests(index: Int, query: String!): SearchResponseStringArray!
@@ -1988,8 +1990,19 @@ enum QueryMode {
   insensitive
 }
 
+type QuestApplicantEntry {
+  points: Int!
+  scannedAt: DateTimeISO!
+  user: User!
+}
+
 input QuestChooseInput {
   prize: String!
+}
+
+type QuestCompanyStats {
+  applicantCount: Int!
+  company: Company!
 }
 
 type QuestScan {

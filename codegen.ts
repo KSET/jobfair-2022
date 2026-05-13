@@ -33,6 +33,7 @@ export default {
     "./pages/profile/me/reservations/**/*.vue",
     "./pages/admin/season/*.vue",
     "./pages/admin/season/[season]/applications/approval.vue",
+    "./pages/admin/season/[season]/quest-applicants.vue",
     "./pages/participants.vue",
     "./pages/gate-guardian/**/*.vue",
     "./pages/admin/users/scanners.vue",

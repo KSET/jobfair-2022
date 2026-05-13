@@ -2537,7 +2537,9 @@ export type IQuery = {
   pressRelease?: Maybe<IPressRelease>;
   pressReleases: Array<IPressRelease>;
   profile?: Maybe<IUser>;
+  questApplicants: Array<IQuestApplicantEntry>;
   questCompanies: Array<ICompany>;
+  questCompaniesWithStats: Array<IQuestCompanyStats>;
   resume?: Maybe<IResume>;
   resumeFavourites: Array<Scalars['String']['output']>;
   resumeInterests: ISearchResponseStringArray;
@@ -2798,6 +2800,22 @@ export type IQueryPressReleasesArgs = {
 };
 
 
+export type IQueryQuestApplicantsArgs = {
+  companyUid: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryQuestCompaniesArgs = {
+  seasonUid?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type IQueryQuestCompaniesWithStatsArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
 export type IQueryResumeArgs = {
   uid: Scalars['String']['input'];
 };
@@ -2934,8 +2952,19 @@ export enum IQueryMode {
   Insensitive = 'insensitive'
 }
 
+export type IQuestApplicantEntry = {
+  points: Scalars['Int']['output'];
+  scannedAt: Scalars['DateTimeISO']['output'];
+  user: IUser;
+};
+
 export type IQuestChooseInput = {
   prize: Scalars['String']['input'];
+};
+
+export type IQuestCompanyStats = {
+  applicantCount: Scalars['Int']['output'];
+  company: ICompany;
 };
 
 export type IQuestScan = {
@@ -5425,6 +5454,35 @@ export type IPageAdminSeasonLiveVoteResults_DeleteCommentMutationVariables = Exa
 
 export type IPageAdminSeasonLiveVoteResults_DeleteCommentMutation = IPageAdminSeasonLiveVoteResults_DeleteCommentMutation_Mutation;
 
+export type IQuestCompaniesWithStatsForAdminQuery_questCompaniesWithStats_QuestCompanyStats_company_Company = { uid: string, brandName: string };
+
+export type IQuestCompaniesWithStatsForAdminQuery_questCompaniesWithStats_QuestCompanyStats = { applicantCount: number, company: IQuestCompaniesWithStatsForAdminQuery_questCompaniesWithStats_QuestCompanyStats_company_Company };
+
+export type IQuestCompaniesWithStatsForAdminQuery_Query = { questCompaniesWithStats: Array<IQuestCompaniesWithStatsForAdminQuery_questCompaniesWithStats_QuestCompanyStats> };
+
+
+export type IQuestCompaniesWithStatsForAdminQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+}>;
+
+
+export type IQuestCompaniesWithStatsForAdminQuery = IQuestCompaniesWithStatsForAdminQuery_Query;
+
+export type IQuestApplicantsQuery_questApplicants_QuestApplicantEntry_user_User = { uid: string, name: string, email: string, phone: string };
+
+export type IQuestApplicantsQuery_questApplicants_QuestApplicantEntry = { points: number, scannedAt: string | Date, user: IQuestApplicantsQuery_questApplicants_QuestApplicantEntry_user_User };
+
+export type IQuestApplicantsQuery_Query = { questApplicants: Array<IQuestApplicantsQuery_questApplicants_QuestApplicantEntry> };
+
+
+export type IQuestApplicantsQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+}>;
+
+
+export type IQuestApplicantsQuery = IQuestApplicantsQuery_Query;
+
 export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, component: string };
 
 export type IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company = { uid: string, legalName: string, brandName: string, ratings: Array<IPageAdminSeasonRatingsCompanies_DataQuery_season_Season_applications_CompanyApplication_forCompany_Company_ratings_UserCompanyComponentRatingComponentAverage> };
@@ -6241,7 +6299,9 @@ export type IResolversTypes = {
   PressReleaseWithFilesCreateInput: IPressReleaseWithFilesCreateInput;
   Query: ResolverTypeWrapper<{}>;
   QueryMode: IQueryMode;
+  QuestApplicantEntry: ResolverTypeWrapper<IQuestApplicantEntry>;
   QuestChooseInput: IQuestChooseInput;
+  QuestCompanyStats: ResolverTypeWrapper<IQuestCompanyStats>;
   QuestScan: ResolverTypeWrapper<IQuestScan>;
   ReservationItem: ResolverTypeWrapper<IReservationItem>;
   Resume: ResolverTypeWrapper<IResume>;
@@ -6561,7 +6621,9 @@ export type IResolversParentTypes = {
   PressReleaseWhereUniqueInput: IPressReleaseWhereUniqueInput;
   PressReleaseWithFilesCreateInput: IPressReleaseWithFilesCreateInput;
   Query: {};
+  QuestApplicantEntry: IQuestApplicantEntry;
   QuestChooseInput: IQuestChooseInput;
+  QuestCompanyStats: IQuestCompanyStats;
   QuestScan: IQuestScan;
   ReservationItem: IReservationItem;
   Resume: IResume;
@@ -7424,7 +7486,9 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   pressRelease?: Resolver<Maybe<IResolversTypes['PressRelease']>, ParentType, ContextType, RequireFields<IQueryPressReleaseArgs, 'uid'>>;
   pressReleases?: Resolver<Array<IResolversTypes['PressRelease']>, ParentType, ContextType, Partial<IQueryPressReleasesArgs>>;
   profile?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType>;
-  questCompanies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType>;
+  questApplicants?: Resolver<Array<IResolversTypes['QuestApplicantEntry']>, ParentType, ContextType, RequireFields<IQueryQuestApplicantsArgs, 'companyUid' | 'seasonUid'>>;
+  questCompanies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType, Partial<IQueryQuestCompaniesArgs>>;
+  questCompaniesWithStats?: Resolver<Array<IResolversTypes['QuestCompanyStats']>, ParentType, ContextType, RequireFields<IQueryQuestCompaniesWithStatsArgs, 'seasonUid'>>;
   resume?: Resolver<Maybe<IResolversTypes['Resume']>, ParentType, ContextType, RequireFields<IQueryResumeArgs, 'uid'>>;
   resumeFavourites?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   resumeInterests?: Resolver<IResolversTypes['SearchResponseStringArray'], ParentType, ContextType, RequireFields<IQueryResumeInterestsArgs, 'query'>>;
@@ -7447,6 +7511,19 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   userCompanyComponentRating?: Resolver<Maybe<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
   userCompanyComponentRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingsArgs, 'companyUid' | 'seasonUid'>>;
   users?: Resolver<Array<IResolversTypes['User']>, ParentType, ContextType, Partial<IQueryUsersArgs>>;
+};
+
+export type IQuestApplicantEntryResolvers<ContextType = any, ParentType extends IResolversParentTypes['QuestApplicantEntry'] = IResolversParentTypes['QuestApplicantEntry']> = {
+  points?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  scannedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  user?: Resolver<IResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IQuestCompanyStatsResolvers<ContextType = any, ParentType extends IResolversParentTypes['QuestCompanyStats'] = IResolversParentTypes['QuestCompanyStats']> = {
+  applicantCount?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  company?: Resolver<IResolversTypes['Company'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type IQuestScanResolvers<ContextType = any, ParentType extends IResolversParentTypes['QuestScan'] = IResolversParentTypes['QuestScan']> = {
@@ -7829,6 +7906,8 @@ export type IResolvers<ContextType = any> = {
   PasswordResetUseResponse?: IPasswordResetUseResponseResolvers<ContextType>;
   PressRelease?: IPressReleaseResolvers<ContextType>;
   Query?: IQueryResolvers<ContextType>;
+  QuestApplicantEntry?: IQuestApplicantEntryResolvers<ContextType>;
+  QuestCompanyStats?: IQuestCompanyStatsResolvers<ContextType>;
   QuestScan?: IQuestScanResolvers<ContextType>;
   ReservationItem?: IReservationItemResolvers<ContextType>;
   Resume?: IResumeResolvers<ContextType>;
@@ -9547,6 +9626,31 @@ export const PageAdminSeasonLiveVoteResults_Data = gql`
 export const PageAdminSeasonLiveVoteResults_DeleteComment = gql`
     mutation PageAdminSeasonLiveVoteResults_DeleteComment($commentId: Int!) {
   deleteLiveVoteComment(commentId: $commentId)
+}
+    `;
+export const QuestCompaniesWithStatsForAdmin = gql`
+    query QuestCompaniesWithStatsForAdmin($seasonUid: String!) {
+  questCompaniesWithStats(seasonUid: $seasonUid) {
+    company {
+      uid
+      brandName
+    }
+    applicantCount
+  }
+}
+    `;
+export const QuestApplicants = gql`
+    query QuestApplicants($seasonUid: String!, $companyUid: String!) {
+  questApplicants(seasonUid: $seasonUid, companyUid: $companyUid) {
+    user {
+      uid
+      name
+      email
+      phone
+    }
+    points
+    scannedAt
+  }
 }
     `;
 export const PageAdminSeasonRatingsCompanies_Data = gql`

@@ -254,6 +254,13 @@
           </li>
           <li>
             <nuxt-link
+              :to="{ name: 'admin-season-season-quest-applicants', params: { season: season.uid } }"
+            >
+              Quest statistika
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link
               :to="{ name: 'admin-season-season-applications-feedback', params: { season: season.uid } }"
             >
               Feedback

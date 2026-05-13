@@ -2535,7 +2535,9 @@ export type Query = {
   pressRelease?: Maybe<PressRelease>;
   pressReleases: Array<PressRelease>;
   profile?: Maybe<User>;
+  questApplicants: Array<QuestApplicantEntry>;
   questCompanies: Array<Company>;
+  questCompaniesWithStats: Array<QuestCompanyStats>;
   resume?: Maybe<Resume>;
   resumeFavourites: Array<Scalars['String']['output']>;
   resumeInterests: SearchResponseStringArray;
@@ -2796,6 +2798,22 @@ export type QueryPressReleasesArgs = {
 };
 
 
+export type QueryQuestApplicantsArgs = {
+  companyUid: Scalars['String']['input'];
+  seasonUid: Scalars['String']['input'];
+};
+
+
+export type QueryQuestCompaniesArgs = {
+  seasonUid?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryQuestCompaniesWithStatsArgs = {
+  seasonUid: Scalars['String']['input'];
+};
+
+
 export type QueryResumeArgs = {
   uid: Scalars['String']['input'];
 };
@@ -2932,8 +2950,19 @@ export enum QueryMode {
   Insensitive = 'insensitive'
 }
 
+export type QuestApplicantEntry = {
+  points: Scalars['Int']['output'];
+  scannedAt: Scalars['DateTimeISO']['output'];
+  user: User;
+};
+
 export type QuestChooseInput = {
   prize: Scalars['String']['input'];
+};
+
+export type QuestCompanyStats = {
+  applicantCount: Scalars['Int']['output'];
+  company: Company;
 };
 
 export type QuestScan = {
@@ -4682,6 +4711,21 @@ export type PageAdminSeasonLiveVoteResults_DeleteCommentMutationVariables = Exac
 
 export type PageAdminSeasonLiveVoteResults_DeleteCommentMutation = { deleteLiveVoteComment: boolean };
 
+export type QuestCompaniesWithStatsForAdminQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+}>;
+
+
+export type QuestCompaniesWithStatsForAdminQuery = { questCompaniesWithStats: Array<{ applicantCount: number, company: { uid: string, brandName: string } }> };
+
+export type QuestApplicantsQueryVariables = Exact<{
+  seasonUid: Scalars['String']['input'];
+  companyUid: Scalars['String']['input'];
+}>;
+
+
+export type QuestApplicantsQuery = { questApplicants: Array<{ points: number, scannedAt: string | Date, user: { uid: string, name: string, email: string, phone: string } }> };
+
 export type PageAdminSeasonRatingsCompanies_DataQueryVariables = Exact<{
   season: Scalars['String']['input'];
 }>;
@@ -4983,6 +5027,8 @@ export const SyncSummerInternshipsDocument = {"kind":"Document","definitions":[{
 export const LinkUnmatchedInternshipDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LinkUnmatchedInternship"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LinkUnmatchedInternshipInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"linkUnmatchedInternship"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"externalCompany"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodStart"}},{"kind":"Field","name":{"kind":"Name","value":"workingPeriodEnd"}},{"kind":"Field","name":{"kind":"Name","value":"places"}},{"kind":"Field","name":{"kind":"Name","value":"signed"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<LinkUnmatchedInternshipMutation, LinkUnmatchedInternshipMutationVariables>;
 export const PageAdminSeasonLiveVoteResults_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonLiveVoteResults_Data"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"liveVoteResults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"option"}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"liveVoteComments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"forUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonLiveVoteResults_DataQuery, PageAdminSeasonLiveVoteResults_DataQueryVariables>;
 export const PageAdminSeasonLiveVoteResults_DeleteCommentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageAdminSeasonLiveVoteResults_DeleteComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteLiveVoteComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"commentId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"commentId"}}}]}]}}]} as unknown as DocumentNode<PageAdminSeasonLiveVoteResults_DeleteCommentMutation, PageAdminSeasonLiveVoteResults_DeleteCommentMutationVariables>;
+export const QuestCompaniesWithStatsForAdminDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"QuestCompaniesWithStatsForAdmin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questCompaniesWithStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"company"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"applicantCount"}}]}}]}}]} as unknown as DocumentNode<QuestCompaniesWithStatsForAdminQuery, QuestCompaniesWithStatsForAdminQueryVariables>;
+export const QuestApplicantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"QuestApplicants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"questApplicants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"companyUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"companyUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"points"}},{"kind":"Field","name":{"kind":"Name","value":"scannedAt"}}]}}]}}]} as unknown as DocumentNode<QuestApplicantsQuery, QuestApplicantsQueryVariables>;
 export const PageAdminSeasonRatingsCompanies_DataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonRatingsCompanies_Data"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"averageRating"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonRatingsCompanies_DataQuery, PageAdminSeasonRatingsCompanies_DataQueryVariables>;
 export const PageAdminSeasonRatingsQrCodesDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonRatingsQrCodesData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"season"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"uid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"startsAt"}},{"kind":"Field","name":{"kind":"Name","value":"endsAt"}},{"kind":"Field","name":{"kind":"Name","value":"applications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"forCompany"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"legalName"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"approval"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"booth"}},{"kind":"Field","name":{"kind":"Name","value":"talkParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"workshopParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"fusionParticipants"}},{"kind":"Field","name":{"kind":"Name","value":"panel"}}]}}]}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonRatingsQrCodesDataQuery, PageAdminSeasonRatingsQrCodesDataQueryVariables>;
 export const PageAdminSeasonReservationsScannedDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageAdminSeasonReservationsScannedData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"season"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gateGuardianScanList"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"season"},"value":{"kind":"Variable","name":{"kind":"Name","value":"season"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"eventType"}},{"kind":"Field","name":{"kind":"Name","value":"eventId"}},{"kind":"Field","name":{"kind":"Name","value":"forUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"scannedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forCalendarItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"companies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forTalk"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}},{"kind":"Field","name":{"kind":"Name","value":"titleEn"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forWorkshop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"titleHr"}},{"kind":"Field","name":{"kind":"Name","value":"titleEn"}}]}},{"kind":"Field","name":{"kind":"Name","value":"forPanel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scannedAt"}}]}}]}}]} as unknown as DocumentNode<PageAdminSeasonReservationsScannedDataQuery, PageAdminSeasonReservationsScannedDataQueryVariables>;

@@ -10,6 +10,9 @@
         <strong>Ulaza</strong>: <em v-text="resp.season.entryCount" />
       </li>
       <li>
+        <strong>Bus</strong>: <em v-text="resp.season.busCount" />
+      </li>
+      <li>
         <strong>Firme skenirani QR</strong>: <em v-text="resp.season.companyScannedQRs" />
       </li>
     </ul>
@@ -55,7 +58,7 @@
 
       type QData = {
         resumes: { total: number, },
-        season: { entryCount: number, companyScannedCvs: number, companyScannedQRs: number, },
+        season: { entryCount: number, busCount: number, companyScannedCvs: number, companyScannedQRs: number, },
         gateGuardianScanList: {
           eventType: string,
           forUser: {
@@ -76,6 +79,7 @@
               }
               season(uid: $season) {
                 entryCount
+                busCount
                 companyScannedCvs
                 companyScannedQRs
               }

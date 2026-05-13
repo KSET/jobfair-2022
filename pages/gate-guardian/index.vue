@@ -305,6 +305,11 @@
             type: "ulaz",
             title: "ULAZ",
           },
+          {
+            uid: "",
+            type: "bus",
+            title: "BUS",
+          },
           ...data,
         ];
       });

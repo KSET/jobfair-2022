@@ -162,7 +162,7 @@ export class GateGuardianResolver {
       };
     }
 
-    if ("ulaz" === calendarItemType) {
+    if ("ulaz" === calendarItemType || "bus" === calendarItemType) {
       const currentSeason = await ctx.prisma.season.findFirst({
         where: {
           startsAt: {

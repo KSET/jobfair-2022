@@ -2353,6 +2353,7 @@ type Season {
   applicationsEditableUntil: DateTimeISO!
   applicationsFrom: DateTimeISO!
   applicationsUntil: DateTimeISO!
+  busCount: Int!
   calendar: [CalendarItem!]!
   companyComponentAverageRatings: [UserCompanyComponentRatingComponentAverage!]!
   companyScannedCvs: Int!

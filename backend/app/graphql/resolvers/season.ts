@@ -274,6 +274,23 @@ export class SeasonFieldResolver {
     });
   }
 
+  @FieldResolver(() => Int)
+  busCount(
+    @Root() season: Season,
+      @Ctx() ctx: Context,
+  ): GQLField<number> {
+    if (!ctx.user) {
+      return 0;
+    }
+
+    return ctx.prisma.gateGuardianLog.count({
+      where: {
+        forSeasonId: season.id!,
+        eventType: "bus",
+      },
+    });
+  }
+
 
   @FieldResolver(() => [UserCompanyComponentRatingComponentAverage])
   async companyComponentAverageRatings(
@@ -403,6 +420,13 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
   entryCount(select) {
     select.id = true;
     delete select.entryCount;
+
+    return select;
+  },
+
+  busCount(select) {
+    select.id = true;
+    delete select.busCount;
 
     return select;
   },

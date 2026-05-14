@@ -77,11 +77,23 @@
   import {
     useTranslationsStore,
   } from "~/store/translations";
+  import {
+    useUserStore,
+  } from "~/store/user";
+  import {
+    useJoinNowRoute,
+  } from "~/composables/useJoinNowRoute";
 
   const translationsStore = useTranslationsStore();
   const seasonsStore = useSeasonsStore();
+  const userStore = useUserStore();
+  const joinNowRoute = useJoinNowRoute();
   const confirm = useConfirm();
   const toast = useToast();
+
+  if (!userStore.isLoggedIn) {
+    await navigateTo(unref(joinNowRoute));
+  }
 
   const season = computed(() => seasonsStore.season!);
 

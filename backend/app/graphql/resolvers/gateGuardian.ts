@@ -237,6 +237,7 @@ export class GateGuardianResolver {
         forWorkshopId: true,
         forPanelId: true,
         forFusionId: true,
+        forOtherContentId: true,
         forSeasonId: true,
       },
     });
@@ -255,6 +256,7 @@ export class GateGuardianResolver {
       ?? calendarItem.forWorkshopId
       ?? calendarItem.forPanelId
       ?? calendarItem.forFusionId
+      ?? calendarItem.forOtherContentId
       ?? 0
       ;
 
@@ -267,6 +269,7 @@ export class GateGuardianResolver {
             calendarItem?.forWorkshopId,
             calendarItem?.forPanelId,
             calendarItem?.forFusionId,
+            calendarItem?.forOtherContentId,
             0,
           ].filter(Boolean),
         },

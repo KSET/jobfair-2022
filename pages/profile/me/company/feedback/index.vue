@@ -178,7 +178,10 @@
           // eslint-disable-next-line no-bitwise
           data.mostLiked = (data.mostLiked as unknown as string[]).reduce((acc, x) => acc | Number(x), 0);
 
-          const noEntry = Object.entries(data).filter(([ , val ]) => null === val);
+          const OPTIONAL_FIELDS = new Set([ "scanRating" ]);
+          const noEntry = Object.entries(data).filter(
+            ([ key, val ]) => null === val && !OPTIONAL_FIELDS.has(key),
+          );
 
           if (noEntry.length) {
             return toast.add({
@@ -196,6 +199,7 @@
                 updateCompanyApplicationFeedback(input: $data) {
                   applicationComments
                   applicationRating
+                  scanRating
                   attendanceRating
                   dateComments
                   dateRating

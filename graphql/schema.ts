@@ -778,6 +778,7 @@ export type ICompanyApplicationFeedback = {
   overallComment: Scalars['String']['output'];
   overallRating: Scalars['Int']['output'];
   recommended: Scalars['Int']['output'];
+  scanRating?: Maybe<Scalars['Int']['output']>;
   testimonial: Scalars['String']['output'];
   timeRating: Scalars['Int']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
@@ -796,6 +797,7 @@ export type ICompanyApplicationFeedbackCreateInput = {
   overallComment?: InputMaybe<Scalars['String']['input']>;
   overallRating: Scalars['Int']['input'];
   recommended: Scalars['Int']['input'];
+  scanRating?: InputMaybe<Scalars['Int']['input']>;
   testimonial?: InputMaybe<Scalars['String']['input']>;
   timeRating: Scalars['Int']['input'];
 };
@@ -4624,7 +4626,7 @@ export type IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image 
 
 export type IFrag_ApplicationPresenterFragment = { firstName: string, lastName: string, bioHr: string, bioEn: string, photo?: IFrag_ApplicationPresenterFragment_ApplicationPresenter_photo_Image | null };
 
-export type IFrag_AllFeedbackFragment = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
+export type IFrag_AllFeedbackFragment = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, scanRating?: number | null, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson = { name: string, email: string, phone: string };
 
@@ -4660,7 +4662,7 @@ export type IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipant
 
 export type IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval = { cocktail: boolean, quest: boolean, panel: boolean, talkParticipants: number, workshopParticipants: number, fusionParticipants: number, booth: boolean };
 
-export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
+export type IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, scanRating?: number | null, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
 export type IFrag_CompanyApplicationFragment = { booth?: string | null, wantsPanel: boolean, wantsCocktail: boolean, wantsQuest: boolean, contactPerson?: IFrag_CompanyApplicationFragment_CompanyApplication_contactPerson_CompanyApplicationContactPerson | null, talk?: IFrag_CompanyApplicationFragment_CompanyApplication_talk_ApplicationTalk | null, workshop?: IFrag_CompanyApplicationFragment_CompanyApplication_workshop_ApplicationWorkshop | null, fusion?: IFrag_CompanyApplicationFragment_CompanyApplication_fusion_ApplicationFusion | null, cocktail?: IFrag_CompanyApplicationFragment_CompanyApplication_cocktail_ApplicationCocktail | null, quest?: IFrag_CompanyApplicationFragment_CompanyApplication_quest_ApplicationQuest | null, internships: Array<IFrag_CompanyApplicationFragment_CompanyApplication_internships_ApplicationInternship>, panelParticipants: Array<IFrag_CompanyApplicationFragment_CompanyApplication_panelParticipants_ApplicationPresenter>, approval?: IFrag_CompanyApplicationFragment_CompanyApplication_approval_CompanyApplicationApproval | null, feedback?: IFrag_CompanyApplicationFragment_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
@@ -5174,7 +5176,7 @@ export type IProfileBaseDataQuery = IProfileBaseDataQuery_Query;
 
 export type IAdminFeedbackInfoQuery_companyApplications_CompanyApplication_forCompany_Company = { uid: string, brandName: string };
 
-export type IAdminFeedbackInfoQuery_companyApplications_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
+export type IAdminFeedbackInfoQuery_companyApplications_CompanyApplication_feedback_CompanyApplicationFeedback = { applicationComments: string, applicationRating: number, attendanceRating: number, dateComments: string, dateRating: number, experienceComments: string, foodRating: number, mostLiked: number, onsiteRating: number, overallComment: string, overallRating: number, recommended: number, scanRating?: number | null, testimonial: string, timeRating: number, createdAt: string | Date, updatedAt: string | Date };
 
 export type IAdminFeedbackInfoQuery_companyApplications_CompanyApplication = { forCompany?: IAdminFeedbackInfoQuery_companyApplications_CompanyApplication_forCompany_Company | null, feedback?: IAdminFeedbackInfoQuery_companyApplications_CompanyApplication_feedback_CompanyApplicationFeedback | null };
 
@@ -6999,6 +7001,7 @@ export type ICompanyApplicationFeedbackResolvers<ContextType = any, ParentType e
   overallComment?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   overallRating?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   recommended?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  scanRating?: Resolver<Maybe<IResolversTypes['Int']>, ParentType, ContextType>;
   testimonial?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   timeRating?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
@@ -8063,6 +8066,7 @@ export const Frag_AllFeedback = gql`
   overallComment
   overallRating
   recommended
+  scanRating
   testimonial
   timeRating
   createdAt

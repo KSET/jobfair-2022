@@ -693,6 +693,7 @@ type CompanyApplicationFeedback {
   overallComment: String!
   overallRating: Int!
   recommended: Int!
+  scanRating: Int
   testimonial: String!
   timeRating: Int!
   updatedAt: DateTimeISO!
@@ -711,6 +712,7 @@ input CompanyApplicationFeedbackCreateInput {
   overallComment: String
   overallRating: Int!
   recommended: Int!
+  scanRating: Int
   testimonial: String
   timeRating: Int!
 }

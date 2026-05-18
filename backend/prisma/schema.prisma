@@ -552,6 +552,7 @@ model CompanyApplicationFeedback {
   dateComments String @default("")
 
   applicationRating   Int
+  scanRating          Int?
   onsiteRating        Int
   foodRating          Int
   applicationComments String @default("")

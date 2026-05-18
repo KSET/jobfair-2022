@@ -357,6 +357,7 @@ export const companyApplicationFeedbackDate =
 
 export type FeedbackOrganisation = Pick<ICompanyApplicationFeedback,
   "applicationRating"
+  | "scanRating"
   | "onsiteRating"
   | "foodRating"
   | "applicationComments">;
@@ -369,6 +370,13 @@ export const companyApplicationFeedbackOrganisation =
           type: "number-range" as const,
           min: 1,
           max: 10,
+        },
+        scanRating: {
+          value: feedback?.scanRating ?? null,
+          type: "number-range" as const,
+          min: 1,
+          max: 10,
+          required: false,
         },
         onsiteRating: {
           value: feedback?.onsiteRating ?? null,

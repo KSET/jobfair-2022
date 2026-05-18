@@ -94,6 +94,7 @@ fragment frag_AllFeedback on CompanyApplicationFeedback {
     overallComment
     overallRating
     recommended
+    scanRating
     testimonial
     timeRating
     createdAt

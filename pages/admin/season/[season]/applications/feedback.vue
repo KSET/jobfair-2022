@@ -162,7 +162,7 @@
 
       const items: Record<string, (keyof Feedback)[]> = {
         date: [ "dateRating", "timeRating", "dateComments" ],
-        organisation: [ "applicationRating", "onsiteRating", "foodRating", "applicationComments" ],
+        organisation: [ "applicationRating", "scanRating", "onsiteRating", "foodRating", "applicationComments" ],
         experience: [ "attendanceRating", "mostLiked", "experienceComments" ],
         overall: [ "overallRating", "recommended", "overallComment", "testimonial" ],
       };
@@ -173,6 +173,7 @@
       const _bs = <T extends Record<keyof Omit<Feedback, "createdAt" | "updatedAt">, unknown>>(x: T) => x;
       const baseSummarized = _bs({
         applicationRating: [] as number[],
+        scanRating: [] as number[],
         attendanceRating: [] as number[],
         dateRating: [] as number[],
         foodRating: [] as number[],
@@ -243,7 +244,9 @@
                   break;
                 }
                 default: {
-                  acc[key].push(feedback[key]);
+                  if (null !== feedback[key] && undefined !== feedback[key]) {
+                    acc[key].push(feedback[key]);
+                  }
                 }
               }
             }

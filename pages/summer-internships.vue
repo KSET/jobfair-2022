@@ -110,7 +110,9 @@
   const seasonsStore = useSeasonsStore();
   const translationsStore = useTranslationsStore();
 
-  const participantsShown = computed(() => seasonsStore.areParticipantsShown);
+  if (!seasonsStore.areSummerInternshipsShown) {
+    throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
+  }
 
   const InternshipsQuery = useQuery<
     IInternshipsQuery,

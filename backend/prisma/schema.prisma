@@ -383,6 +383,9 @@ model Season {
   showSponsorsFrom  DateTime
   showSponsorsUntil DateTime
 
+  showSummerInternshipsFrom  DateTime?
+  showSummerInternshipsUntil DateTime?
+
   eventFrom  DateTime
   eventUntil DateTime
 

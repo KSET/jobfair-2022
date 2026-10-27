@@ -494,6 +494,12 @@ export class SeasonCreateInput {
   @Field()
     showSponsorsUntil: Date = null as unknown as Date;
 
+  @Field(() => Date, { nullable: true })
+    showSummerInternshipsFrom: Date | null = null;
+
+  @Field(() => Date, { nullable: true })
+    showSummerInternshipsUntil: Date | null = null;
+
   @Field()
     eventFrom: Date = null as unknown as Date;
 

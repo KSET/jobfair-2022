@@ -13,6 +13,8 @@ fragment frag_Season on Season {
     showPartnersUntil
     showSponsorsFrom
     showSponsorsUntil
+    showSummerInternshipsFrom
+    showSummerInternshipsUntil
     eventFrom
     eventUntil
     feedbackFrom

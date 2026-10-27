@@ -61,7 +61,7 @@ export const usePagesStore = defineStore(
           {
             name: "page.name.internships",
             to: { name: "summer-internships" },
-            if: () => seasonsStore.areParticipantsShown,
+            if: () => seasonsStore.areSummerInternshipsShown,
           },
           // {
           //   name: "page.name.contact",

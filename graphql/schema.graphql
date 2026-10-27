@@ -2390,6 +2390,8 @@ type Season {
   showPartnersUntil: DateTimeISO!
   showSponsorsFrom: DateTimeISO!
   showSponsorsUntil: DateTimeISO!
+  showSummerInternshipsFrom: DateTimeISO
+  showSummerInternshipsUntil: DateTimeISO
   startsAt: DateTimeISO!
   uid: String!
 }
@@ -2434,6 +2436,8 @@ input SeasonCreateInput {
   showPartnersUntil: DateTimeISO!
   showSponsorsFrom: DateTimeISO!
   showSponsorsUntil: DateTimeISO!
+  showSummerInternshipsFrom: DateTimeISO
+  showSummerInternshipsUntil: DateTimeISO
   startsAt: DateTimeISO!
 }
 
@@ -2467,6 +2471,8 @@ input SeasonOrderByWithRelationInput {
   showPartnersUntil: SortOrder
   showSponsorsFrom: SortOrder
   showSponsorsUntil: SortOrder
+  showSummerInternshipsFrom: SortOrderInput
+  showSummerInternshipsUntil: SortOrderInput
   sponsors: SponsorOrderByRelationAggregateInput
   startsAt: SortOrder
   uid: SortOrder
@@ -2497,6 +2503,8 @@ enum SeasonScalarFieldEnum {
   showPartnersUntil
   showSponsorsFrom
   showSponsorsUntil
+  showSummerInternshipsFrom
+  showSummerInternshipsUntil
   startsAt
   uid
 }
@@ -2520,6 +2528,8 @@ input SeasonUpdateInput {
   showPartnersUntil: DateTimeISO!
   showSponsorsFrom: DateTimeISO!
   showSponsorsUntil: DateTimeISO!
+  showSummerInternshipsFrom: DateTimeISO
+  showSummerInternshipsUntil: DateTimeISO
   startsAt: DateTimeISO!
   uid: String!
 }
@@ -2552,6 +2562,8 @@ input SeasonWhereInput {
   showPartnersUntil: DateTimeFilter
   showSponsorsFrom: DateTimeFilter
   showSponsorsUntil: DateTimeFilter
+  showSummerInternshipsFrom: DateTimeNullableFilter
+  showSummerInternshipsUntil: DateTimeNullableFilter
   sponsors: SponsorListRelationFilter
   startsAt: DateTimeFilter
   uid: StringFilter
@@ -2585,6 +2597,8 @@ input SeasonWhereUniqueInput {
   showPartnersUntil: DateTimeFilter
   showSponsorsFrom: DateTimeFilter
   showSponsorsUntil: DateTimeFilter
+  showSummerInternshipsFrom: DateTimeNullableFilter
+  showSummerInternshipsUntil: DateTimeNullableFilter
   sponsors: SponsorListRelationFilter
   startsAt: DateTimeFilter
   uid: String

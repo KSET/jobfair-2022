@@ -68,6 +68,10 @@ export const useSeasonsStore = defineStore(
         return areOpen("showParticipants", state.currentSeason);
       },
 
+      areSummerInternshipsShown(state) {
+        return areOpen("showSummerInternships", state.currentSeason);
+      },
+
       isSignUpPossible() {
         const { currentSeason } = this;
 

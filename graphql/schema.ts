@@ -3402,6 +3402,8 @@ export type ISeason = {
   showPartnersUntil: Scalars['DateTimeISO']['output'];
   showSponsorsFrom: Scalars['DateTimeISO']['output'];
   showSponsorsUntil: Scalars['DateTimeISO']['output'];
+  showSummerInternshipsFrom?: Maybe<Scalars['DateTimeISO']['output']>;
+  showSummerInternshipsUntil?: Maybe<Scalars['DateTimeISO']['output']>;
   startsAt: Scalars['DateTimeISO']['output'];
   uid: Scalars['String']['output'];
 };
@@ -3536,6 +3538,8 @@ export type ISeasonCreateInput = {
   showPartnersUntil: Scalars['DateTimeISO']['input'];
   showSponsorsFrom: Scalars['DateTimeISO']['input'];
   showSponsorsUntil: Scalars['DateTimeISO']['input'];
+  showSummerInternshipsFrom?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  showSummerInternshipsUntil?: InputMaybe<Scalars['DateTimeISO']['input']>;
   startsAt: Scalars['DateTimeISO']['input'];
 };
 
@@ -3569,6 +3573,8 @@ export type ISeasonOrderByWithRelationInput = {
   showPartnersUntil?: InputMaybe<ISortOrder>;
   showSponsorsFrom?: InputMaybe<ISortOrder>;
   showSponsorsUntil?: InputMaybe<ISortOrder>;
+  showSummerInternshipsFrom?: InputMaybe<ISortOrderInput>;
+  showSummerInternshipsUntil?: InputMaybe<ISortOrderInput>;
   sponsors?: InputMaybe<ISponsorOrderByRelationAggregateInput>;
   startsAt?: InputMaybe<ISortOrder>;
   uid?: InputMaybe<ISortOrder>;
@@ -3599,6 +3605,8 @@ export enum ISeasonScalarFieldEnum {
   ShowPartnersUntil = 'showPartnersUntil',
   ShowSponsorsFrom = 'showSponsorsFrom',
   ShowSponsorsUntil = 'showSponsorsUntil',
+  ShowSummerInternshipsFrom = 'showSummerInternshipsFrom',
+  ShowSummerInternshipsUntil = 'showSummerInternshipsUntil',
   StartsAt = 'startsAt',
   Uid = 'uid'
 }
@@ -3622,6 +3630,8 @@ export type ISeasonUpdateInput = {
   showPartnersUntil: Scalars['DateTimeISO']['input'];
   showSponsorsFrom: Scalars['DateTimeISO']['input'];
   showSponsorsUntil: Scalars['DateTimeISO']['input'];
+  showSummerInternshipsFrom?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  showSummerInternshipsUntil?: InputMaybe<Scalars['DateTimeISO']['input']>;
   startsAt: Scalars['DateTimeISO']['input'];
   uid: Scalars['String']['input'];
 };
@@ -3654,6 +3664,8 @@ export type ISeasonWhereInput = {
   showPartnersUntil?: InputMaybe<IDateTimeFilter>;
   showSponsorsFrom?: InputMaybe<IDateTimeFilter>;
   showSponsorsUntil?: InputMaybe<IDateTimeFilter>;
+  showSummerInternshipsFrom?: InputMaybe<IDateTimeNullableFilter>;
+  showSummerInternshipsUntil?: InputMaybe<IDateTimeNullableFilter>;
   sponsors?: InputMaybe<ISponsorListRelationFilter>;
   startsAt?: InputMaybe<IDateTimeFilter>;
   uid?: InputMaybe<IStringFilter>;
@@ -3687,6 +3699,8 @@ export type ISeasonWhereUniqueInput = {
   showPartnersUntil?: InputMaybe<IDateTimeFilter>;
   showSponsorsFrom?: InputMaybe<IDateTimeFilter>;
   showSponsorsUntil?: InputMaybe<IDateTimeFilter>;
+  showSummerInternshipsFrom?: InputMaybe<IDateTimeNullableFilter>;
+  showSummerInternshipsUntil?: InputMaybe<IDateTimeNullableFilter>;
   sponsors?: InputMaybe<ISponsorListRelationFilter>;
   startsAt?: InputMaybe<IDateTimeFilter>;
   uid?: InputMaybe<Scalars['String']['input']>;
@@ -4616,7 +4630,7 @@ export type IDeleteGalleryImageMutationVariables = Exact<{
 
 export type IDeleteGalleryImageMutation = IDeleteGalleryImageMutation_Mutation;
 
-export type IFrag_SeasonFragment = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
+export type IFrag_SeasonFragment = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, showSummerInternshipsFrom?: string | Date | null, showSummerInternshipsUntil?: string | Date | null, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
 export type IFrag_UserProfileFragment = { uid: string, name: string, firstName: string, lastName: string, email: string, phone: string, language: string, questPoints: number, roles: Array<ILoginMutation_login_AuthResponse_entity_User_roles_Role>, companies: Array<ILoginMutation_login_AuthResponse_entity_User_companies_Company>, questScans: Array<ILoginMutation_login_AuthResponse_entity_User_questScans_QuestScan>, questAppliedCompanies: Array<ILoginMutation_login_AuthResponse_entity_User_questAppliedCompanies_Company> };
 
@@ -4702,7 +4716,7 @@ export type IInitialDataQuery_profile_User = { uid: string, name: string, firstN
 
 export type IInitialDataQuery_allTranslationsFor_Translation = { key: string, value: string };
 
-export type IInitialDataQuery_currentSeason_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
+export type IInitialDataQuery_currentSeason_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, showSummerInternshipsFrom?: string | Date | null, showSummerInternshipsUntil?: string | Date | null, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
 export type IInitialDataQuery_Query = { profile?: IInitialDataQuery_profile_User | null, allTranslationsFor: Array<IInitialDataQuery_allTranslationsFor_Translation>, currentSeason?: IInitialDataQuery_currentSeason_Season | null };
 
@@ -4985,7 +4999,7 @@ export type IGalleryImagItemByUidQuery = IGalleryImagItemByUidQuery_Query;
 
 export type IAdminInitialDataQuery_industries_Industry = { name: string };
 
-export type IAdminInitialDataQuery_seasons_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
+export type IAdminInitialDataQuery_seasons_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, showSummerInternshipsFrom?: string | Date | null, showSummerInternshipsUntil?: string | Date | null, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
 export type IAdminInitialDataQuery_Query = { industries: Array<IAdminInitialDataQuery_industries_Industry>, seasons: Array<IAdminInitialDataQuery_seasons_Season> };
 
@@ -5164,7 +5178,7 @@ export type IProfileBaseDataQuery_calendar_CalendarItem = { uid: string, title?:
 
 export type IProfileBaseDataQuery_currentSeason_Season_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage = { component: string, averageRating: number };
 
-export type IProfileBaseDataQuery_currentSeason_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date, companyComponentAverageRatings: Array<IProfileBaseDataQuery_currentSeason_Season_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage> };
+export type IProfileBaseDataQuery_currentSeason_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, showSummerInternshipsFrom?: string | Date | null, showSummerInternshipsUntil?: string | Date | null, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date, companyComponentAverageRatings: Array<IProfileBaseDataQuery_currentSeason_Season_companyComponentAverageRatings_UserCompanyComponentRatingComponentAverage> };
 
 export type IProfileBaseDataQuery_Query = { questCompanies: Array<IProfileBaseDataQuery_questCompanies_Company>, booths: Array<IProfileBaseDataQuery_booths_Booth>, companyApplication?: IProfileBaseDataQuery_companyApplication_CompanyApplication | null, profile?: IProfileBaseDataQuery_profile_User | null, calendar: Array<IProfileBaseDataQuery_calendar_CalendarItem>, currentSeason?: IProfileBaseDataQuery_currentSeason_Season | null };
 
@@ -7674,6 +7688,8 @@ export type ISeasonResolvers<ContextType = any, ParentType extends IResolversPar
   showPartnersUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   showSponsorsFrom?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   showSponsorsUntil?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  showSummerInternshipsFrom?: Resolver<Maybe<IResolversTypes['DateTimeISO']>, ParentType, ContextType>;
+  showSummerInternshipsUntil?: Resolver<Maybe<IResolversTypes['DateTimeISO']>, ParentType, ContextType>;
   startsAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -7960,6 +7976,8 @@ export const Frag_Season = gql`
   showPartnersUntil
   showSponsorsFrom
   showSponsorsUntil
+  showSummerInternshipsFrom
+  showSummerInternshipsUntil
   eventFrom
   eventUntil
   feedbackFrom

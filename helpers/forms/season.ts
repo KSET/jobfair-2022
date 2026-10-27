@@ -73,6 +73,14 @@ export const seasonCreate =
         type: "datetime-local",
         value: new Date(season?.showSponsorsUntil || tomorrow()).toISOString(),
       },
+      showSummerInternshipsFrom: {
+        type: "datetime-local",
+        value: new Date(season?.showSummerInternshipsFrom || today()).toISOString(),
+      },
+      showSummerInternshipsUntil: {
+        type: "datetime-local",
+        value: new Date(season?.showSummerInternshipsUntil || tomorrow()).toISOString(),
+      },
       eventFrom: {
         type: "datetime-local",
         value: new Date(season?.eventFrom || today()).toISOString(),

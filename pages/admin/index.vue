@@ -382,6 +382,8 @@
                   showPartnersUntil
                   showSponsorsFrom
                   showSponsorsUntil
+                  showSummerInternshipsFrom
+                  showSummerInternshipsUntil
                   eventFrom
                   eventUntil
                   feedbackFrom

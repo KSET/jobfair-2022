@@ -4,7 +4,10 @@ import {
 } from "@generated/type-graphql";
 import {
   Ctx,
+  Field,
   FieldResolver,
+  InputType,
+  Int,
   Resolver,
   Root,
 } from "type-graphql";
@@ -14,6 +17,21 @@ import {
 import {
   Context,
 } from "../../types/apollo-context";
+import type {
+  ImageCrop,
+} from "../../services/image-service";
+
+@InputType()
+export class ImageCropInput implements ImageCrop {
+  @Field(() => Int)
+    x: number = 0;
+
+  @Field(() => Int)
+    y: number = 0;
+
+  @Field(() => Int)
+    size: number = 0;
+}
 
 @Resolver(() => Image)
 export class ImageFieldResolver {

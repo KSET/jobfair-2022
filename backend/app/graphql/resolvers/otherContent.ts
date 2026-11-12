@@ -43,6 +43,7 @@ import {
   transformSelect as transformSelectCalendarItem,
 } from "./calendarItem";
 import {
+  ImageCropInput,
   transformSelect as transformSelectPhoto,
 } from "./image";
 import {
@@ -158,6 +159,9 @@ class OtherContentPresenterInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
     photo: Promise<FileUpload> | null = null;
+
+  @Field(() => ImageCropInput, { nullable: true })
+    photoCrop: ImageCropInput | null = null;
 
   @Field(() => String, { nullable: true })
     existingPhotoUid: string | null = null;
@@ -299,6 +303,7 @@ export class OtherContentUpdateResolver {
               photoFile,
               ctx.user!,
               prisma,
+              { crop: presenter.photoCrop },
             );
 
             if (!photo) {

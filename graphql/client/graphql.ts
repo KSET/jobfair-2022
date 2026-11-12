@@ -1516,6 +1516,12 @@ export type ImageCountSponsorArgs = {
   where?: InputMaybe<SponsorWhereInput>;
 };
 
+export type ImageCropInput = {
+  size: Scalars['Int']['input'];
+  x: Scalars['Int']['input'];
+  y: Scalars['Int']['input'];
+};
+
 export type ImageNullableRelationFilter = {
   is?: InputMaybe<ImageWhereInput>;
   isNot?: InputMaybe<ImageWhereInput>;
@@ -2318,6 +2324,7 @@ export type OtherContentPresenterInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
+  photoCrop?: InputMaybe<ImageCropInput>;
 };
 
 export type OtherContentPresenterListRelationFilter = {
@@ -2433,6 +2440,7 @@ export type PresenterCreateInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
+  photoCrop?: InputMaybe<ImageCropInput>;
 };
 
 export type PressRelease = {

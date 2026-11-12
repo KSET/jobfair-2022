@@ -56,6 +56,14 @@
             v-else-if="previewSrc === 'archive'"
             :aria-label="previewName"
           />
+          <img
+            v-else-if="cropCircle"
+            :alt="previewName || 'Preview'"
+            :class="$style.circlePreview"
+            :src="previewSrc"
+            draggable="false"
+            @load="freeFileUrl(previewSrc)"
+          >
           <app-img
             v-else
             :alt="previewName || 'Preview'"
@@ -90,8 +98,8 @@
       <a
         v-if="'string' === typeof modelValue && modelValue"
         :class="[ $style.actionButton, $style.downloadButton]"
-        :href="modelValue"
-        download
+        :download="downloadUrl && fileName ? fileName : ''"
+        :href="downloadUrl || modelValue"
       >
         <i class="pi pi-download" />
       </a>
@@ -117,9 +125,23 @@
       type="file"
       @change="handleChange"
     >
+    <LazyClientOnly v-if="cropCircle">
+      <app-image-cropper
+        :file="pendingCropFile"
+        @cancel="handleCropCancel"
+        @confirm="handleCropConfirm"
+      />
+    </LazyClientOnly>
     <transition name="input-message">
       <small
-        v-if="visible.message"
+        v-if="rejectedType"
+        :class="[ $style.message, $style.rejected ]"
+        role="alert"
+      >
+        <translated-text trans-key="form.file.unsupportedType" />
+      </small>
+      <small
+        v-else-if="visible.message"
         :id="id.message"
         :class="$style.message"
       >
@@ -134,6 +156,7 @@
 <script lang="ts">
   import {
     computed,
+    defineAsyncComponent,
     defineComponent,
     reactive,
     ref,
@@ -153,6 +176,10 @@
   import IconFileArchive from "~icons/ant-design/file-zip-outlined";
   import AppImg from "~/components/util/app-img.vue";
   import useModelWrapper from "~/composables/useModelWrapper";
+  import {
+    setImageCrop,
+    type ImageCropResult,
+  } from "~/helpers/forms/image-crop";
 
   const zipMimeTypes = new Set([
     "application/zip",
@@ -160,8 +187,45 @@
     "application/x-7z-compressed",
   ]);
 
+  /** Same rules as the native `accept` attribute: MIME types, `type/*` wildcards and `.ext` suffixes. */
+  const matchesAccept = (file: File, accept: string | string[]) => {
+    const rules =
+      (Array.isArray(accept) ? accept : accept.split(","))
+        .map((rule) => rule.trim().toLowerCase())
+        .filter(Boolean)
+    ;
+
+    if (0 === rules.length) {
+      return true;
+    }
+
+    const name = file.name.toLowerCase();
+    const type = file.type.toLowerCase();
+
+    return rules.some((rule) => {
+      if (rule.startsWith(".")) {
+        return name.endsWith(rule);
+      }
+
+      if (rule.endsWith("/*")) {
+        return type.startsWith(rule.slice(0, -1));
+      }
+
+      return type === rule;
+    });
+  };
+
+  const supportsImageType = (type: string) => {
+    try {
+      return document.createElement("canvas").toDataURL(type).startsWith(`data:${ type }`);
+    } catch {
+      return false;
+    }
+  };
+
   export default defineComponent({
     components: {
+      AppImageCropper: defineAsyncComponent(() => import("~/components/util/form/app-image-cropper.vue")),
       AppImg,
       TranslatedText,
       IconUpload,
@@ -252,6 +316,18 @@
         type: Boolean,
         default: () => false,
       },
+
+      cropCircle: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+
+      downloadUrl: {
+        required: false,
+        type: String,
+        default: () => "",
+      },
     },
 
     emits: [ "update:modelValue" ],
@@ -277,18 +353,10 @@
 
       const previewSrc = ref("");
       const previewName = ref("");
-      const setPreviewSrc = (name: string, mimetype: string, file: File | string) => {
+      const setPreviewSrc = (name: string, mimetype: string, file: Blob | string) => {
         clearPreviewSrc();
 
         previewName.value = name;
-
-        const supportsImageType = (type: string) => {
-          try {
-            return document.createElement("canvas").toDataURL(type).startsWith(`data:${ type }`);
-          } catch {
-            return false;
-          }
-        };
 
         if (supportsImageType(mimetype.toLowerCase())) {
           previewSrc.value =
@@ -352,6 +420,7 @@
 
       const handleInputChange = (files?: FileList | null) => {
         if (!files || 0 === files.length) {
+          rejectedType.value = false;
           clearPreviewSrc();
         }
 
@@ -365,6 +434,30 @@
         } else {
           modelValue.value = file;
         }
+      };
+
+      const pendingCropFile = ref<File | null>(null);
+      const rejectedType = ref(false);
+
+      /** Drops (and some pickers) skip the native `accept` filter, so check it before using the files. */
+      const isAccepted = (files?: FileList | null) => {
+        const accepted = Array.from(files || []).every((file) => matchesAccept(file, props.accept as string | string[]));
+
+        rejectedType.value = !accepted;
+
+        return accepted;
+      };
+
+      const startCrop = (files?: FileList | null) => {
+        const [ file ] = files || [];
+
+        if (!props.cropCircle || props.multiple || !file || !file.type.startsWith("image/") || !supportsImageType(file.type.toLowerCase())) {
+          return false;
+        }
+
+        pendingCropFile.value = file;
+
+        return true;
       };
 
       return {
@@ -386,16 +479,50 @@
         previewSrc,
         previewName: computed(() => unref(previewName) || props.fileName),
         freeFileUrl,
+        pendingCropFile,
+        rejectedType,
         handleChange(event: Event) {
-          handleInputChange((event.target as HTMLInputElement)?.files);
+          const target = event.target as HTMLInputElement | null;
+
+          if (!isAccepted(target?.files)) {
+            target!.value = "";
+
+            return false;
+          }
+
+          if (startCrop(target?.files)) {
+            target!.value = "";
+
+            return false;
+          }
+
+          handleInputChange(target?.files);
 
           return false;
         },
         handleDrop(event: DragEvent) {
           isDragOver.value = false;
+
+          if (!isAccepted(event.dataTransfer?.files)) {
+            return false;
+          }
+
+          if (startCrop(event.dataTransfer?.files)) {
+            return false;
+          }
+
           handleInputChange(event.dataTransfer?.files);
 
           return false;
+        },
+        handleCropConfirm({ file, crop, preview }: ImageCropResult) {
+          pendingCropFile.value = null;
+          setImageCrop(file, crop);
+          setPreviewSrc(file.name, file.type, preview);
+          modelValue.value = file;
+        },
+        handleCropCancel() {
+          pendingCropFile.value = null;
         },
         clearInput() {
           handleInputChange(null);
@@ -502,6 +629,17 @@
           object-fit: contain;
         }
 
+        > .circlePreview {
+          flex: 1 1 0;
+          width: auto;
+          max-width: 100%;
+          height: auto;
+          min-height: 0;
+          object-fit: cover;
+          border-radius: 50%;
+          aspect-ratio: 1;
+        }
+
         .dropAreaPreviewText {
           line-height: 1;
           display: inline-block;
@@ -580,6 +718,11 @@
     }
 
     .input.invalid + .message {
+      opacity: 1;
+      color: $fer-error;
+    }
+
+    .message.rejected {
       opacity: 1;
       color: $fer-error;
     }

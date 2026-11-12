@@ -1343,6 +1343,12 @@ type ImageCount {
   Sponsor(where: SponsorWhereInput): Int!
 }
 
+input ImageCropInput {
+  size: Int!
+  x: Int!
+  y: Int!
+}
+
 input ImageNullableRelationFilter {
   is: ImageWhereInput
   isNot: ImageWhereInput
@@ -1741,6 +1747,7 @@ input OtherContentPresenterInput {
   firstName: String!
   lastName: String!
   photo: Upload
+  photoCrop: ImageCropInput
 }
 
 input OtherContentPresenterListRelationFilter {
@@ -1856,6 +1863,7 @@ input PresenterCreateInput {
   firstName: String!
   lastName: String!
   photo: Upload
+  photoCrop: ImageCropInput
 }
 
 type PressRelease {

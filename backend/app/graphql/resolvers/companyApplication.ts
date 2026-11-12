@@ -42,6 +42,7 @@ import {
 } from "graphql";
 import type {
   Prisma,
+  User,
 } from "@prisma/client";
 import {
   upperFirst,
@@ -127,6 +128,9 @@ import {
   PresenterCreateInput,
   transformSelect as transformSelectPresenter,
 } from "./companyPresenter";
+import type {
+  ImageCropInput,
+} from "./image";
 import {
   transformSelect as transformSelectFeedback,
 } from "./companyApplicationFeedback";
@@ -144,6 +148,65 @@ const photoExtensions = [
   ".jpg",
   ".png",
 ];
+
+const uploadPresenterPhoto =
+  async (
+    {
+      vat,
+      eventType,
+      file,
+      crop,
+      user,
+    }: {
+      vat: string,
+      eventType: string,
+      file: FileUpload,
+      crop: ImageCropInput | null | undefined,
+      user: User,
+    },
+  ): Promise<[ string, null ] | [ null, number ]> => {
+    if (
+      !photoMimeTypes.has(file.mimetype)
+      || !photoExtensions.some((ext) => file.filename.toLowerCase().endsWith(ext))
+    ) {
+      return [
+        `File must have extension: ${ photoExtensions.join(", ") }`,
+        null,
+      ];
+    }
+
+    const photo = await ImageService.uploadImage(
+      `company/${ vat }/${ eventType }/presenters` as ImageBase,
+      file,
+      user,
+      undefined,
+      { crop },
+    );
+
+    if (!photo) {
+      return [
+        "Something went wrong",
+        null,
+      ];
+    }
+
+    return [
+      null,
+      photo.id,
+    ];
+  }
+;
+
+const toPresenterCreate =
+  <T extends { photoCrop?: unknown, }>(presenter: T) => ({
+    ...omit([ "photoCrop" ], presenter),
+    photo: {
+      connect: {
+        id: 0,
+      },
+    },
+  })
+;
 
 @ObjectType()
 export class EventUserApplications {
@@ -762,50 +825,34 @@ export class CompanyApplicationAdminResolver {
 
       let talkPresenter;
       if (info.talk) {
-        talkPresenter = {
-          ...info.talk.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        talkPresenter = toPresenterCreate(info.talk.presenter);
 
         const photoFile = await info.talk.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "talk",
+            file: photoFile,
+            crop: info.talk.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "talk.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/talk/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "talk.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          talkPresenter.photo.connect.id = photo.id;
+          talkPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.talk?.presenters[0].photo) {
           talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
         } else {
@@ -822,50 +869,34 @@ export class CompanyApplicationAdminResolver {
 
       let workshopPresenter;
       if (info.workshop) {
-        workshopPresenter = {
-          ...info.workshop.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        workshopPresenter = toPresenterCreate(info.workshop.presenter);
 
         const photoFile = await info.workshop.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "workshop",
+            file: photoFile,
+            crop: info.workshop.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "workshop.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/workshop/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "workshop.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          workshopPresenter.photo.connect.id = photo.id;
+          workshopPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.workshop?.presenters[0].photo) {
           workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
         } else {
@@ -882,50 +913,34 @@ export class CompanyApplicationAdminResolver {
 
       let fusionPresenter;
       if (info.fusion) {
-        fusionPresenter = {
-          ...info.fusion.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        fusionPresenter = toPresenterCreate(info.fusion.presenter);
 
         const photoFile = await info.fusion.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "fusion",
+            file: photoFile,
+            crop: info.fusion.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "fusion.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/fusion/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "fusion.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          fusionPresenter.photo.connect.id = photo.id;
+          fusionPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.fusion?.presenters[0].photo) {
           fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
         } else {
@@ -1621,50 +1636,34 @@ export class CompanyApplicationCreateResolver {
 
       let talkPresenter;
       if (info.talk) {
-        talkPresenter = {
-          ...info.talk.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        talkPresenter = toPresenterCreate(info.talk.presenter);
 
         const photoFile = await info.talk.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "talk",
+            file: photoFile,
+            crop: info.talk.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "talk.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/talk/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "talk.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          talkPresenter.photo.connect.id = photo.id;
+          talkPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.talk?.presenters[0].photo) {
           talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
         } else {
@@ -1681,50 +1680,34 @@ export class CompanyApplicationCreateResolver {
 
       let workshopPresenter;
       if (info.workshop) {
-        workshopPresenter = {
-          ...info.workshop.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        workshopPresenter = toPresenterCreate(info.workshop.presenter);
 
         const photoFile = await info.workshop.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "workshop",
+            file: photoFile,
+            crop: info.workshop.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "workshop.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/workshop/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "workshop.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          workshopPresenter.photo.connect.id = photo.id;
+          workshopPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.workshop?.presenters[0].photo) {
           workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
         } else {
@@ -1741,50 +1724,34 @@ export class CompanyApplicationCreateResolver {
 
       let fusionPresenter;
       if (info.fusion) {
-        fusionPresenter = {
-          ...info.fusion.presenter,
-          photo: {
-            connect: {
-              id: 0,
-            },
-          },
-        };
+        fusionPresenter = toPresenterCreate(info.fusion.presenter);
 
         const photoFile = await info.fusion.presenter.photo;
 
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
+          const [
+            photoError,
+            photoId,
+          ] = await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType: "fusion",
+            file: photoFile,
+            crop: info.fusion.presenter.photoCrop,
+            user: ctx.user!,
+          });
+
+          if (photoError) {
             return {
               errors: [
                 {
                   field: "fusion.presenter.photo",
-                  message: `File must have extension: ${ photoExtensions.join(", ") }`,
+                  message: photoError,
                 },
               ],
             };
           }
 
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/fusion/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return {
-              errors: [
-                {
-                  field: "fusion.presenter.photo",
-                  message: "Something went wrong",
-                },
-              ],
-            };
-          }
-
-          fusionPresenter.photo.connect.id = photo.id;
+          fusionPresenter.photo.connect.id = photoId!;
         } else if (oldApplication?.fusion?.presenters[0].photo) {
           fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
         } else {
@@ -2452,36 +2419,17 @@ export class CompanyApplicationCreateResolver {
       async (
         eventType: string,
         photoFile: FileUpload | null,
+        photoCrop: ImageCropInput | null,
         oldPhoto: { id: number, } | null,
       ): Promise<[ string, null ] | [ null, number ]> => {
         if (photoFile) {
-          if (
-            !photoMimeTypes.has(photoFile?.mimetype)
-            || !photoExtensions.some((ext) => photoFile.filename.toLowerCase().endsWith(ext))
-          ) {
-            return [
-              `File must have extension: ${ photoExtensions.join(", ") }`,
-              null,
-            ];
-          }
-
-          const photo = await ImageService.uploadImage(
-            `company/${ info.vat }/${ eventType }/presenters` as ImageBase,
-            photoFile,
-            ctx.user!,
-          );
-
-          if (!photo) {
-            return [
-              "Something went wrong",
-              null,
-            ];
-          }
-
-          return [
-            null,
-            photo.id,
-          ];
+          return await uploadPresenterPhoto({
+            vat: info.vat,
+            eventType,
+            file: photoFile,
+            crop: photoCrop,
+            user: ctx.user!,
+          });
         }
 
         if (oldPhoto) {
@@ -2508,14 +2456,7 @@ export class CompanyApplicationCreateResolver {
 
         for (const presenter of presenters) {
           const i = presenters.indexOf(presenter);
-          const presenterCreate: PresenterCreate = {
-            ...presenter,
-            photo: {
-              connect: {
-                id: 0,
-              },
-            },
-          };
+          const presenterCreate: PresenterCreate = toPresenterCreate(presenter);
 
           const baseId = `${ eventName || id }.presenter.${ i }`;
 
@@ -2545,6 +2486,7 @@ export class CompanyApplicationCreateResolver {
           ] = await createPhoto(
             eventName || id,
             photoFile,
+            presenter.photoCrop,
             oldPhoto,
           );
 

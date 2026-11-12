@@ -2,6 +2,8 @@ import {
   createClient,
   ssrExchange,
   fetchExchange,
+  mapExchange,
+  makeOperation,
 } from "@urql/core";
 import {
   unref,
@@ -14,6 +16,9 @@ import {
 import {
   type Dict,
 } from "~/helpers/type";
+import {
+  withPhotoCrops,
+} from "~/helpers/forms/image-crop";
 
 const SSR_KEY = "__APP__URQL_DATA__";
 
@@ -42,6 +47,21 @@ export default defineNuxtPlugin((nuxt) => {
     url: `${ config.public.API_BASE }/graphql`,
     exchanges: [
       ssr,
+      mapExchange({
+        onOperation(operation) {
+          if ("mutation" !== operation.kind) {
+            return operation;
+          }
+
+          const variables = withPhotoCrops(operation.variables);
+
+          return (
+            variables === operation.variables
+              ? operation
+              : makeOperation(operation.kind, { ...operation, variables }, operation.context)
+          );
+        },
+      }),
       fetchExchange,
     ],
     fetchOptions: () => {

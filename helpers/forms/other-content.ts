@@ -79,6 +79,11 @@ export const otherContentPresenterCreate =
         ? presenter.photo.name
         : undefined
     ;
+    const photoOriginalUrl =
+      presenter?.photo && "object" === typeof presenter.photo
+        ? `/api/i/${ presenter.photo.uid }/original`
+        : ""
+    ;
     const photoMime =
       presenter?.photo && "object" === typeof presenter.photo
         ? presenter.photo.full?.mimeType
@@ -117,6 +122,10 @@ export const otherContentPresenterCreate =
         accept: "image/png,image/jpeg",
         type: "file" as const,
         required: false,
+        attrs: {
+          cropCircle: true,
+          downloadUrl: photoOriginalUrl,
+        },
       },
     };
   }

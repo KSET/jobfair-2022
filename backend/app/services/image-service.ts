@@ -1,6 +1,6 @@
 import {
-  Readable,
-} from "stream";
+  buffer as streamToBuffer,
+} from "node:stream/consumers";
 import {
   FileUpload,
 } from "graphql-upload";
@@ -14,6 +14,9 @@ import {
   extension as extensionFromMimeType,
 } from "mime-types";
 import sharp from "sharp";
+import {
+  clamp,
+} from "rambdax";
 import {
   BUCKET_NAME,
   minio,
@@ -42,12 +45,53 @@ type DimensionName = keyof typeof DimensionsLimit;
 
 const Transparent = { r: 255, g: 255, b: 255, alpha: 0 } as const;
 
+/** Square crop in source pixels, measured on the EXIF-oriented image (what browsers display). */
+export type ImageCrop = {
+  x: number,
+  y: number,
+  size: number,
+};
+
+type ImageRegion = {
+  left: number,
+  top: number,
+  width: number,
+  height: number,
+};
+
+/** Highest zoom the client cropper allows; keep in sync with MAX_ZOOM in app-image-cropper.vue. */
+const MAX_CROP_ZOOM = 4;
+
+const cropToRegion = async (input: Buffer, crop: ImageCrop): Promise<ImageRegion> => {
+  const metadata = await sharp(input).metadata();
+  const isRotated = 5 <= (metadata.orientation ?? 1);
+  const width = (isRotated ? metadata.height : metadata.width) ?? 0;
+  const height = (isRotated ? metadata.width : metadata.height) ?? 0;
+
+  if (!width || !height) {
+    throw new Error("Could not read image dimensions");
+  }
+
+  const shortSide = Math.min(width, height);
+  const size = clamp(Math.ceil(shortSide / MAX_CROP_ZOOM), shortSide, Math.floor(crop.size));
+
+  return {
+    left: clamp(0, width - size, Math.round(crop.x)),
+    top: clamp(0, height - size, Math.round(crop.y)),
+    width: size,
+    height: size,
+  };
+};
+
 export class ImageService {
   public static async uploadImage(
     base: ImageBase,
     fileInfo: FileUpload,
     user: User,
     prisma: Pick<typeof prismaClient, "image"> = prismaClient,
+    options: {
+      crop?: ImageCrop | null,
+    } = {},
   ) {
     const minioBase =
       (
@@ -104,42 +148,40 @@ export class ImageService {
       }
     ;
 
-    const sharpFor =
-      <Size extends string>(size: Size, mimeType: string) =>
-        (
-          !(size in DimensionsLimit)
-            ? null
-            : withOutputType(
-              sharp({
-                sequentialRead: true,
-                animated: true,
-              })
-                .resize({
-                  ...DimensionsLimit[size as DimensionName],
-                  fit: "inside",
-                  background: Transparent,
-                  withoutEnlargement: true,
-                })
-                .withMetadata({
-                  exif: {
-                    IFD0: {
-                      UploadedTo: "Job Fair",
-                      UploadedBy: `${ user.firstName } ${ user.lastName }`,
-                    },
-                  },
-                }),
-              mimeType,
-            )
-        ) as (Size extends DimensionName ? sharp.Sharp : null)
+    const resized =
+      (input: Buffer, size: DimensionName, mimeType: string, region: ImageRegion | null) =>
+        withOutputType(
+          (
+            region
+              ? sharp(input).rotate().extract(region)
+              : sharp(input, { animated: true })
+          )
+            .resize({
+              ...DimensionsLimit[size],
+              fit: "inside",
+              background: Transparent,
+              withoutEnlargement: true,
+            })
+            .withMetadata({
+              exif: {
+                IFD0: {
+                  UploadedTo: "Job Fair",
+                  UploadedBy: `${ user.firstName } ${ user.lastName }`,
+                },
+              },
+            }),
+          mimeType,
+        )
+          .toBuffer()
     ;
 
     const uploadToMinio =
-      async (name: string, mimeType: string, stream: string | Buffer | Readable) => {
+      async (name: string, mimeType: string, data: Buffer) => {
         const key = minioKeyFor(name, extensionFromMimeType(mimeType) || "bin");
         const { etag } = await minio.putObject(
           BUCKET_NAME,
           key,
-          stream,
+          data,
           {
             mimeType,
           },
@@ -153,39 +195,22 @@ export class ImageService {
       }
     ;
 
-    function variation<Name extends string>(name: Name, mimeType: string) {
-      return {
-        name,
-        mimeType,
-        modifier: sharpFor(name, mimeType),
-      };
-    }
-
-    const variations = [
-      variation("original", fileInfo.mimetype),
-      variation("full", fileInfo.mimetype),
-      variation("thumb", fileInfo.mimetype),
-    ] as const;
-
     try {
+      // Read once: sharp buffers stream input anyway, and every variation needs the full image.
+      const input = await streamToBuffer(fileInfo.createReadStream());
+      const region = options.crop ? await cropToRegion(input, options.crop) : null;
+      const mimeType = fileInfo.mimetype;
+
       const [
         minioOriginal,
         minioFull,
         minioThumb,
       ] =
-          await Promise.all(
-            variations
-              .map((v) =>
-                uploadToMinio(
-                  v.name,
-                  v.mimeType,
-                  v.modifier
-                    ? fileInfo.createReadStream().pipe(v.modifier)
-                    : fileInfo.createReadStream()
-                  ,
-                ),
-              ),
-          )
+          await Promise.all([
+            uploadToMinio("original", mimeType, input),
+            resized(input, "full", mimeType, region).then((data) => uploadToMinio("full", mimeType, data)),
+            resized(input, "thumb", mimeType, region).then((data) => uploadToMinio("thumb", mimeType, data)),
+          ])
       ;
 
       return prisma.image.create({

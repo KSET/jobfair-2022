@@ -1518,6 +1518,12 @@ export type IImageCountSponsorArgs = {
   where?: InputMaybe<ISponsorWhereInput>;
 };
 
+export type IImageCropInput = {
+  size: Scalars['Int']['input'];
+  x: Scalars['Int']['input'];
+  y: Scalars['Int']['input'];
+};
+
 export type IImageNullableRelationFilter = {
   is?: InputMaybe<IImageWhereInput>;
   isNot?: InputMaybe<IImageWhereInput>;
@@ -2320,6 +2326,7 @@ export type IOtherContentPresenterInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
+  photoCrop?: InputMaybe<IImageCropInput>;
 };
 
 export type IOtherContentPresenterListRelationFilter = {
@@ -2435,6 +2442,7 @@ export type IPresenterCreateInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
+  photoCrop?: InputMaybe<IImageCropInput>;
 };
 
 export type IPressRelease = {
@@ -6250,6 +6258,7 @@ export type IResolversTypes = {
   GateGuardianScanResponse: ResolverTypeWrapper<IGateGuardianScanResponse>;
   Image: ResolverTypeWrapper<IImage>;
   ImageCount: ResolverTypeWrapper<IImageCount>;
+  ImageCropInput: IImageCropInput;
   ImageNullableRelationFilter: IImageNullableRelationFilter;
   ImageRelationFilter: IImageRelationFilter;
   ImageVariation: ResolverTypeWrapper<IImageVariation>;
@@ -6576,6 +6585,7 @@ export type IResolversParentTypes = {
   GateGuardianScanResponse: IGateGuardianScanResponse;
   Image: IImage;
   ImageCount: IImageCount;
+  ImageCropInput: IImageCropInput;
   ImageNullableRelationFilter: IImageNullableRelationFilter;
   ImageRelationFilter: IImageRelationFilter;
   ImageVariation: IImageVariation;

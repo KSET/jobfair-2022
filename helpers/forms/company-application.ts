@@ -117,6 +117,10 @@ export const companyApplicationPresenterCreate =
           fileType: presenter?.photo?.full?.mimeType,
           accept: "image/png,image/jpeg",
           type: "file",
+          attrs: {
+            cropCircle: true,
+            downloadUrl: presenter?.photo?.uid ? `/api/i/${ presenter.photo.uid }/original` : "",
+          },
         },
       })
 ;

@@ -17,6 +17,7 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  ImageCropInput,
   transformSelect as transformSelectPhoto,
 } from "./image";
 
@@ -56,4 +57,7 @@ export class PresenterCreateInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
     photo: FileUpload | null = null;
+
+  @Field(() => ImageCropInput, { nullable: true })
+    photoCrop: ImageCropInput | null = null;
 }

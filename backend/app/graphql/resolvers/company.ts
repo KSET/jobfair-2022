@@ -1046,10 +1046,7 @@ export class AdminCompanyInfoMutationsResolver {
       return prisma.company.update({
         data: {
           members: {
-            disconnect: oldCompany.members.map(({ uid }) => ({
-              uid,
-            })),
-            connect: newMembers.map((uid) => ({
+            set: newMembers.map((uid) => ({
               uid,
             })),
           },

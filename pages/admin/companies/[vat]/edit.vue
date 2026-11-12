@@ -56,7 +56,7 @@
         <app-formgroup
           :errors="memberInfoErrors"
           :inputs="memberInfo"
-          :loading="isLoading"
+          :loading="isMembersLoading"
           @filter="handleFilter"
           @submit="handleMembersUpdate"
         >
@@ -78,7 +78,7 @@
               </a>
 
               <p-button
-                :loading="isLoading"
+                :loading="isMembersLoading"
                 class="p-button-secondary font-bold ml-auto"
                 type="submit"
               >
@@ -99,7 +99,6 @@
     reactive,
     ref,
   } from "vue";
-  // import { useDebounceFn } from "#imports";
   import {
     keys,
     map,
@@ -116,11 +115,14 @@
   import {
     useToast,
   } from "primevue/usetoast";
+  import {
+    useDebounceFn,
+  } from "#imports";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
-  import AppDropdown, {
-    type FilterEvent,
+  import type {
+    FilterEvent,
   } from "~/components/util/form/app-dropdown.vue";
   import {
     useIndustriesStore,
@@ -170,6 +172,7 @@
       const industriesOptions = computed(() => industriesStore.industries.map((x) => ({ label: x, value: x })));
 
       const isLoading = ref(false);
+      const isMembersLoading = ref(false);
 
       type QCompany = ICompany;
       type QIndustry = Pick<IIndustry, "name">;
@@ -243,9 +246,6 @@
         where: UserWhereInput,
       };
 
-      let userSearchHead = "dino";
-
-
       const company = reactive(res?.data?.company ?? {} as QCompany);
 
       industriesStore.setIndustries(res?.data?.industries);
@@ -262,12 +262,29 @@
       }) as Record<keyof typeof info | "entity", AuthError[]>);
       const resetErrors = () => keys(errors).forEach((key) => errors[key] = []);
 
-      const memberOptions = [ { label: "xyz", value: "zzz" } ];
-      const selectedMembers = reactive([]);
-      const dropdownModelTest = ref([] as string[]);
+      const initialMembers = res?.data?.company?.members ?? [];
+      const knownUsers = new Map<string, QUser>(initialMembers.map((user) => [ user.uid, user ]));
+      const rememberUsers = (users: QUser[]) => users.forEach((user) => knownUsers.set(user.uid, user));
 
-      const memberInfo = reactive(companyMembersEdit()());
-      const reloadUsers = async () => {
+      const memberInfo = reactive(companyMembersEdit(initialMembers)(initialMembers));
+      const selectedMemberUids = () => memberInfo.members.value as string[];
+
+      const setMemberOptions = (searchResults: QUser[]) => {
+        const optionUsers = new Map<string, QUser>();
+        for (const uid of selectedMemberUids()) {
+          const user = knownUsers.get(uid);
+          if (user) {
+            optionUsers.set(uid, user);
+          }
+        }
+        for (const user of searchResults) {
+          optionUsers.set(user.uid, user);
+        }
+        memberInfo.members.options = companyMembersEdit()([ ...optionUsers.values() ]).members.options;
+      };
+
+      let lastFetchedTerm = "";
+      const reloadUsers = async (userSearchHead: string) => {
         const usersQuery = useQuery<UserQueryData, UsesrQueryArgs>({
           query: gql`
             query UserInfo($where: UserWhereInput!) {
@@ -301,28 +318,37 @@
         });
 
         const resUsers = await usersQuery();
-        Object.assign(memberInfo, companyMembersEdit(res?.data?.company?.members)(resUsers?.data?.users));
+        const users = resUsers?.data?.users;
+        if (!users) {
+          return;
+        }
+
+        lastFetchedTerm = userSearchHead;
+        rememberUsers(users);
+        setMemberOptions(users);
       };
 
+      const debouncedReloadUsers = useDebounceFn((term: string) => {
+        void reloadUsers(term);
+      }, 300);
 
-      const handleFilter = async (ev: FilterEvent) => {
-        // I do not see why disabling is needed here
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (3 <= ev.value.length) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-          if (userSearchHead.substring(0, 3) === ev.value.substring(0, 3)) {
-            return;
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          userSearchHead = ev.value;
-          await reloadUsers();
+      const handleFilter = (ev: Pick<FilterEvent, "value">) => {
+        const term = String((ev as { value?: unknown, }).value ?? "").trim();
+        if (3 > term.length) {
+          return;
         }
+
+        if (lastFetchedTerm && term.toLowerCase().startsWith(lastFetchedTerm.toLowerCase())) {
+          return;
+        }
+
+        void debouncedReloadUsers(term);
       };
 
       const memberInfoErrors = reactive(mapObject(() => [] as AuthError[], {
         ...memberInfo,
         entity: "",
-      }) as Record<keyof typeof info | "entity", AuthError[]>);
+      }) as Record<keyof typeof memberInfo | "entity", AuthError[]>);
       const resetMemberInfoErrors = () => keys(memberInfoErrors).forEach((key) => memberInfoErrors[key] = []);
 
       return {
@@ -330,10 +356,8 @@
         info,
         errors,
         isLoading,
-        memberOptions,
-        selectedMembers,
+        isMembersLoading,
         handleFilter,
-        dropdownModelTest,
         memberInfo,
         memberInfoErrors,
         async handleUpdate() {
@@ -390,7 +414,7 @@
             Object.fromEntries,
           )(memberInfo);
 
-          isLoading.value = true;
+          isMembersLoading.value = true;
           const resp = await useMutation<{ updateCompanyMembersFor: ICreateCompanyResponse, }, IMutationUpdateCompanyMembersForArgs>(
             gql`
             mutation UpdateMembers($company: String!, $members: [String!]!) {
@@ -414,10 +438,10 @@
             company: res!.data!.company.uid,
             members: data.members,
           }).then((resp) => resp?.data?.updateCompanyMembersFor);
-          isLoading.value = false;
+          isMembersLoading.value = false;
 
           if (!resp) {
-            errors.entity.push({
+            memberInfoErrors.entity.push({
               message: "errors.somethingWentWrong",
             });
             return;
@@ -427,7 +451,7 @@
 
           if (errorList) {
             for (const error of errorList) {
-              errors[error.field as keyof typeof errors].push({
+              (memberInfoErrors[error.field as keyof typeof memberInfoErrors] ?? memberInfoErrors.entity).push({
                 message: error.message,
               });
             }
@@ -435,13 +459,16 @@
           }
 
           if (!resp.entity) {
-            errors.entity.push({
-              message: "Something went wrong",
+            memberInfoErrors.entity.push({
+              message: "errors.somethingWentWrong",
             });
             return;
           }
 
-          company.members = resp.entity.members;
+          const newMembers = resp.entity.members as QUser[];
+          company.members = newMembers;
+          rememberUsers(newMembers);
+          memberInfo.members.value = newMembers.map((member) => member.uid);
           return toast.add({
             severity: "success",
             summary: "Saved",

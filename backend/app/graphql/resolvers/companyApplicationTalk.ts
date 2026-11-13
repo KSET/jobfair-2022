@@ -16,6 +16,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   Dict,
   GQLField,
 } from "../../types/helpers";
@@ -83,6 +86,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationTalkFieldRes
   presenters(select) {
     select.presenters = {
       select: transformSelectPresenter(select.presenters as Record<string, unknown>),
+      orderBy: presenterOrderBy,
     };
 
     return select;
@@ -132,12 +136,6 @@ export class TalkCreateInputBase {
 
   @Field()
     language: string = "";
-}
-
-@InputType()
-export class TalkCreateInput extends TalkCreateInputBase {
-  @Field(() => PresenterCreateInput)
-    presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
 }
 
 @InputType()

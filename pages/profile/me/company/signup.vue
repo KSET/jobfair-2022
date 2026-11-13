@@ -158,36 +158,67 @@
             <template
               v-if="item.selected"
             >
-              <fieldset
+              <template
                 v-for="(form, formName) in item.forms"
                 :key="`${name}--${formName}`"
-                :class="$style.formFieldset"
               >
-                <legend>
-                  <translated-text :trans-key="`form.legend.${formName}`" />
-                </legend>
+                <template v-if="Array.isArray(form)">
+                  <fieldset
+                    v-for="(inputs, i) in form"
+                    :key="`${formName}__${objectKey(inputs)}`"
+                    :class="$style.formFieldset"
+                  >
+                    <legend>
+                      <translated-text :trans-key="`form.legend.${formName}`" />
+                      <span v-if="form.length > 1">&nbsp;{{ i + 1 }}</span>
+                    </legend>
 
-                <app-formgroup
-                  :class="$style.formContainer"
-                  :errors="item.errors[formName]"
-                  :inputs="form"
-                  :loading="isLoading"
-                  no-form
+                    <app-move-buttons
+                      v-if="form.length > 1"
+                      :count="form.length"
+                      :disabled="isLoading"
+                      :index="i"
+                      @move="moveForm(item, formName, i, $event)"
+                    />
+
+                    <app-formgroup
+                      :errors="item.errors[formName][i]"
+                      :inputs="inputs"
+                      :loading="isLoading"
+                      no-form
+                    />
+                  </fieldset>
+                </template>
+                <fieldset
+                  v-else
+                  :class="$style.formFieldset"
                 >
-                  <template #after>
-                    <div
-                      v-if="item.errors[formName].entity.length > 0"
-                      :class="$style.errorContainer"
-                    >
-                      <translated-text
-                        v-for="err in item.errors[formName].entity"
-                        :key="err.message"
-                        :trans-key="err.message"
-                      />
-                    </div>
-                  </template>
-                </app-formgroup>
-              </fieldset>
+                  <legend>
+                    <translated-text :trans-key="`form.legend.${formName}`" />
+                  </legend>
+
+                  <app-formgroup
+                    :class="$style.formContainer"
+                    :errors="item.errors[formName]"
+                    :inputs="form"
+                    :loading="isLoading"
+                    no-form
+                  >
+                    <template #after>
+                      <div
+                        v-if="item.errors[formName].entity.length > 0"
+                        :class="$style.errorContainer"
+                      >
+                        <translated-text
+                          v-for="err in item.errors[formName].entity"
+                          :key="err.message"
+                          :trans-key="err.message"
+                        />
+                      </div>
+                    </template>
+                  </app-formgroup>
+                </fieldset>
+              </template>
             </template>
           <!--          <input style="display: none;" type="submit">
           <div class="ml-auto -mt-3">
@@ -251,18 +282,21 @@
   import {
     companyApplicationContactPersonCreate,
     companyApplicationFusionCreate,
-    companyApplicationPresenterCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     companySignatoryCreate,
+    moveForm,
+    objectKey,
+    presenterForms,
+    toPresenterInput,
     type ContactPerson,
     type Fusion,
-    type Presenter,
     type Signatory,
     type Talk,
     type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
+  import AppMoveButtons from "~/components/util/form/app-move-buttons.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     // eslint-disable-next-line camelcase
@@ -298,6 +332,7 @@
       // AppCheckbox,
       TranslatedText,
       AppFormgroup,
+      AppMoveButtons,
       AppUserProfileContainer,
       Panel,
       Checkbox,
@@ -343,6 +378,12 @@
               entity: "",
             },
           ) as Record<keyof T | "entity", AuthError[]>
+      ;
+      const toFormErrors =
+        <T>(form: T | T[]) =>
+          Array.isArray(form)
+            ? form.map((f) => toErrors(f))
+            : toErrors(form)
       ;
 
       const requireHr = company.vat.startsWith("HR");
@@ -511,7 +552,7 @@
             errors:
               x.forms
                 ? map(
-                  toErrors,
+                  toFormErrors,
                   // @ts-ignore
                   x.forms,
                 )
@@ -527,11 +568,11 @@
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  resp?.companyApplication?.talk?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  resp?.companyApplication?.talk?.presenters,
+                  1,
+                  { requireHr },
+                ),
               },
               selected: Boolean(resp?.companyApplication?.talk),
             },
@@ -542,11 +583,11 @@
                 )({
                   requireHr,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  resp?.companyApplication?.workshop?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  resp?.companyApplication?.workshop?.presenters,
+                  1,
+                  { requireHr },
+                ),
               },
               selected: Boolean(resp?.companyApplication?.workshop),
             },
@@ -558,11 +599,11 @@
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  resp?.companyApplication?.fusion?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  resp?.companyApplication?.fusion?.presenters,
+                  1,
+                  { requireHr },
+                ),
               },
               selected: Boolean(resp?.companyApplication?.fusion),
             },
@@ -611,13 +652,17 @@
         signatories,
         addSignatory,
         removeSignatory,
+        objectKey,
+        moveForm,
         async handleFormSubmit() {
           const selectedObj = filter((item) => item.selected, items);
           for (const item of Object.values(items)) {
             if (item.errors) {
               for (const errors of Object.values(item.errors)) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                resetErrorsFor(errors as any);
+                for (const formErrors of (Array.isArray(errors) ? errors : [ errors ])) {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                  resetErrorsFor(formErrors as any);
+                }
               }
             }
           }
@@ -636,7 +681,7 @@
 
                   // @ts-ignore
                   ...toData<Talk>(selectedObj.talk.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.talk.forms!.presenter),
+                  presenter: selectedObj.talk.forms!.presenter.map(toPresenterInput),
                 }
                 : null,
             workshop:
@@ -645,7 +690,7 @@
 
                   // @ts-ignore
                   ...toData<Workshop>(selectedObj.workshop.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),
+                  presenter: selectedObj.workshop.forms!.presenter.map(toPresenterInput),
                 }
                 : null,
             fusion:
@@ -654,25 +699,13 @@
 
                   // @ts-ignore
                   ...toData<Fusion>(selectedObj.fusion.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.fusion.forms!.presenter),
+                  presenter: selectedObj.fusion.forms!.presenter.map(toPresenterInput),
                 }
                 : null,
             wantsCocktail: Boolean(selectedObj.cocktail),
             wantsPanel: Boolean(selectedObj.panel),
             wantsQuest: Boolean(selectedObj.quest),
           };
-
-          if ("string" === typeof info.workshop?.presenter?.photo) {
-            delete info.workshop.presenter.photo;
-          }
-
-          if ("string" === typeof info.talk?.presenter?.photo) {
-            delete info.talk.presenter.photo;
-          }
-
-          if ("string" === typeof info.fusion?.presenter?.photo) {
-            delete info.fusion.presenter.photo;
-          }
 
           isLoading.value = true;
           const resp = await useMutation(graphql(`
@@ -727,12 +760,12 @@
             resp
               .errors
               .map((err) => {
-                const [ form, part, input ] = err.field.split(".");
+                const [ form, part, input, ...rest ] = err.field.split(".");
 
                 if (!input) {
                   err.field = [ form, "errors", "info", part ].join(".");
                 } else {
-                  err.field = [ form, "errors", part, input ].join(".");
+                  err.field = [ form, "errors", part, input, ...rest ].join(".");
                 }
 
                 return err;

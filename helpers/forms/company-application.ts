@@ -11,6 +11,7 @@ import {
   type ICompanyApplicationContactPerson,
   type ICompanyApplicationFeedback,
   type IImage,
+  type IPresenterCreateInput,
 } from "~/graphql/schema";
 import {
   type InputEntry,
@@ -20,6 +21,7 @@ import {
 } from "~/store/translations";
 import {
   computed,
+  toRaw,
   unref,
 } from "#imports";
 
@@ -81,6 +83,69 @@ export type Presenter = Pick<IApplicationPresenter,
   }
     ) | null,
 };
+const presenterPhotoUrl = (uid: string) => `/api/i/${ uid }/full`;
+const presenterPhotoUidFrom = (url: string) => (/^\/api\/i\/([^/]+)\/full$/).exec(url)?.[1] ?? null;
+
+export const toPresenterInput =
+  (inputs: Record<keyof Presenter, InputEntry>): IPresenterCreateInput => {
+    const photo = inputs.photo.value;
+
+    return {
+      firstName: String(inputs.firstName.value),
+      lastName: String(inputs.lastName.value),
+      bioEn: String(inputs.bioEn.value),
+      bioHr: String(inputs.bioHr.value),
+      ...(
+        "string" === typeof photo
+          ? { existingPhotoUid: presenterPhotoUidFrom(photo) }
+          : { photo }
+      ),
+    };
+  }
+;
+
+export const moveItem = <T>(list: T[], from: number, to: number) => {
+  if (from === to || 0 > from || from >= list.length || 0 > to || to >= list.length) {
+    return;
+  }
+
+  const [ item ] = list.splice(from, 1);
+  list.splice(to, 0, item);
+};
+
+export const moveForm =
+  (
+    item: { forms: Record<string, unknown> | null, errors: Record<string, unknown> | null, },
+    formName: string,
+    from: number,
+    to: number,
+  ) => {
+    const forms = item.forms?.[formName];
+    const errors = item.errors?.[formName];
+
+    if (!Array.isArray(forms) || !Array.isArray(errors)) {
+      return;
+    }
+
+    moveItem(forms, from, to);
+    moveItem(errors, from, to);
+  }
+;
+
+const objectKeys = new WeakMap<object, number>();
+let lastObjectKey = 0;
+export const objectKey = (obj: object) => {
+  const raw = toRaw(obj);
+  let key = objectKeys.get(raw);
+
+  if (undefined === key) {
+    key = ++lastObjectKey;
+    objectKeys.set(raw, key);
+  }
+
+  return key;
+};
+
 export const companyApplicationPresenterCreate =
   <T extends Presenter>(presenter?: T | null) =>
     (
@@ -112,7 +177,7 @@ export const companyApplicationPresenterCreate =
           required: requireHr,
         },
         photo: {
-          value: presenter?.photo?.uid ? `/api/i/${ presenter.photo.uid }/full` : "",
+          value: presenter?.photo?.uid ? presenterPhotoUrl(presenter.photo.uid) : "",
           fileName: presenter?.photo?.name,
           fileType: presenter?.photo?.full?.mimeType,
           accept: "image/png,image/jpeg",
@@ -123,6 +188,19 @@ export const companyApplicationPresenterCreate =
           },
         },
       })
+;
+
+/** A form for every existing presenter, padded with empty forms up to `count` (at least one form). */
+export const presenterForms =
+  <T extends Presenter>(
+    presenters: T[] | null | undefined,
+    count: number | null | undefined,
+    options?: Parameters<ReturnType<typeof companyApplicationPresenterCreate>>[0],
+  ) =>
+    [
+      ...(presenters ?? []),
+      ...new Array<null>(Math.max(0, (count || 1) - (presenters?.length ?? 0))).fill(null),
+    ].map((p) => companyApplicationPresenterCreate(p)(options))
 ;
 
 export type Talk = Omit<IApplicationTalk,

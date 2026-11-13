@@ -668,15 +668,15 @@ type CompanyApplicationCount {
 input CompanyApplicationCreateInput {
   booth: String
   contactPerson: CompanyApplicationContactPersonCreateInput!
-  fusion: FusionCreateInput
+  fusion: FusionsCreateInput
   quest: QuestChooseInput
   signatories: [CompanySignatoryCreateInput!]!
-  talk: TalkCreateInput
+  talk: TalksCreateInput
   vat: String!
   wantsCocktail: Boolean!
   wantsPanel: Boolean!
   wantsQuest: Boolean!
-  workshop: WorkshopCreateInput
+  workshop: WorkshopsCreateInput
 }
 
 type CompanyApplicationFeedback {
@@ -1237,16 +1237,6 @@ input FloatFilter {
   lte: Float
   not: NestedFloatFilter
   notIn: [Float!]
-}
-
-input FusionCreateInput {
-  category: String!
-  descriptionEn: String!
-  descriptionHr: String!
-  language: String!
-  presenter: PresenterCreateInput!
-  titleEn: String!
-  titleHr: String!
 }
 
 input FusionsCreateInput {
@@ -1860,6 +1850,7 @@ input PasswordResetWhereInput {
 input PresenterCreateInput {
   bioEn: String!
   bioHr: String!
+  existingPhotoUid: String
   firstName: String!
   lastName: String!
   photo: Upload
@@ -2702,16 +2693,6 @@ type SyncResult {
   updatedCompanies: [String!]!
 }
 
-input TalkCreateInput {
-  category: String!
-  descriptionEn: String!
-  descriptionHr: String!
-  language: String!
-  presenter: PresenterCreateInput!
-  titleEn: String!
-  titleHr: String!
-}
-
 input TalksCreateInput {
   category: String!
   descriptionEn: String!
@@ -2968,18 +2949,6 @@ type VatData {
   address: String!
   legalName: String!
   vat: String!
-}
-
-input WorkshopCreateInput {
-  descriptionEn: String!
-  descriptionHr: String!
-  goal: String!
-  language: String!
-  notesEn: String!
-  notesHr: String!
-  presenter: PresenterCreateInput!
-  titleEn: String!
-  titleHr: String!
 }
 
 input WorkshopsCreateInput {

@@ -27,6 +27,9 @@ import {
   toSelect,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   Dict,
   GQLField,
   GQLResponse,
@@ -124,6 +127,7 @@ export const transformSelect = (select: Dict): Dict => {
     if (cwp !== undefined) {
       companiesInnerSelect.panelParticipants = {
         select: transformSelectPresenter((cwp.panelists as Dict) ?? {}),
+        orderBy: presenterOrderBy,
       };
     }
 
@@ -237,7 +241,7 @@ export class CompanyPanelUpdateResolver {
                   id: application.id,
                 };
               })
-              .filter(Boolean)
+              .filter((x): x is { id: number, } => null !== x)
           ,
         },
         forSeasonId: season.id,

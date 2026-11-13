@@ -12,6 +12,9 @@ import {
   Router,
 } from "../../../../helpers/route";
 import {
+  presenterOrderBy,
+} from "../../../../helpers/presenter";
+import {
   prisma,
 } from "../../../../providers/prisma";
 import {
@@ -93,12 +96,16 @@ const getCalendarItems = async ({
       },
       forTalk: {
         include: {
-          presenters: true,
+          presenters: {
+            orderBy: presenterOrderBy,
+          },
         },
       },
       forWorkshop: {
         include: {
-          presenters: true,
+          presenters: {
+            orderBy: presenterOrderBy,
+          },
         },
       },
     },

@@ -753,15 +753,15 @@ export type ICompanyApplicationCountPanelParticipantsArgs = {
 export type ICompanyApplicationCreateInput = {
   booth?: InputMaybe<Scalars['String']['input']>;
   contactPerson: ICompanyApplicationContactPersonCreateInput;
-  fusion?: InputMaybe<IFusionCreateInput>;
+  fusion?: InputMaybe<IFusionsCreateInput>;
   quest?: InputMaybe<IQuestChooseInput>;
   signatories: Array<ICompanySignatoryCreateInput>;
-  talk?: InputMaybe<ITalkCreateInput>;
+  talk?: InputMaybe<ITalksCreateInput>;
   vat: Scalars['String']['input'];
   wantsCocktail: Scalars['Boolean']['input'];
   wantsPanel: Scalars['Boolean']['input'];
   wantsQuest: Scalars['Boolean']['input'];
-  workshop?: InputMaybe<IWorkshopCreateInput>;
+  workshop?: InputMaybe<IWorkshopsCreateInput>;
 };
 
 export type ICompanyApplicationFeedback = {
@@ -1377,16 +1377,6 @@ export type IFloatFilter = {
   lte?: InputMaybe<Scalars['Float']['input']>;
   not?: InputMaybe<INestedFloatFilter>;
   notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
-};
-
-export type IFusionCreateInput = {
-  category: Scalars['String']['input'];
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  presenter: IPresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
 };
 
 export type IFusionsCreateInput = {
@@ -2439,6 +2429,7 @@ export type IPasswordResetWhereInput = {
 export type IPresenterCreateInput = {
   bioEn: Scalars['String']['input'];
   bioHr: Scalars['String']['input'];
+  existingPhotoUid?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
@@ -3804,16 +3795,6 @@ export type ISyncResult = {
   updatedCompanies: Array<Scalars['String']['output']>;
 };
 
-export type ITalkCreateInput = {
-  category: Scalars['String']['input'];
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  presenter: IPresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
-};
-
 export type ITalksCreateInput = {
   category: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
@@ -4147,18 +4128,6 @@ export type IVatData = {
   address: Scalars['String']['output'];
   legalName: Scalars['String']['output'];
   vat: Scalars['String']['output'];
-};
-
-export type IWorkshopCreateInput = {
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  goal: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  notesEn: Scalars['String']['input'];
-  notesHr: Scalars['String']['input'];
-  presenter: IPresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
 };
 
 export type IWorkshopsCreateInput = {
@@ -6245,7 +6214,6 @@ export type IResolversTypes = {
   FileWhereInput: IFileWhereInput;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FloatFilter: IFloatFilter;
-  FusionCreateInput: IFusionCreateInput;
   FusionsCreateInput: IFusionsCreateInput;
   GalleryImage: ResolverTypeWrapper<IGalleryImage>;
   GalleryImageCreateInput: IGalleryImageCreateInput;
@@ -6400,7 +6368,6 @@ export type IResolversTypes = {
   StringFilter: IStringFilter;
   StringNullableFilter: IStringNullableFilter;
   SyncResult: ResolverTypeWrapper<ISyncResult>;
-  TalkCreateInput: ITalkCreateInput;
   TalksCreateInput: ITalksCreateInput;
   Translation: ResolverTypeWrapper<ITranslation>;
   TranslationCreateInput: ITranslationCreateInput;
@@ -6430,7 +6397,6 @@ export type IResolversTypes = {
   UserWhereUniqueInput: IUserWhereUniqueInput;
   ValidateVatResponse: ResolverTypeWrapper<IValidateVatResponse>;
   VatData: ResolverTypeWrapper<IVatData>;
-  WorkshopCreateInput: IWorkshopCreateInput;
   WorkshopsCreateInput: IWorkshopsCreateInput;
 };
 
@@ -6572,7 +6538,6 @@ export type IResolversParentTypes = {
   FileWhereInput: IFileWhereInput;
   Float: Scalars['Float']['output'];
   FloatFilter: IFloatFilter;
-  FusionCreateInput: IFusionCreateInput;
   FusionsCreateInput: IFusionsCreateInput;
   GalleryImage: IGalleryImage;
   GalleryImageCreateInput: IGalleryImageCreateInput;
@@ -6719,7 +6684,6 @@ export type IResolversParentTypes = {
   StringFilter: IStringFilter;
   StringNullableFilter: IStringNullableFilter;
   SyncResult: ISyncResult;
-  TalkCreateInput: ITalkCreateInput;
   TalksCreateInput: ITalksCreateInput;
   Translation: ITranslation;
   TranslationCreateInput: ITranslationCreateInput;
@@ -6747,7 +6711,6 @@ export type IResolversParentTypes = {
   UserWhereUniqueInput: IUserWhereUniqueInput;
   ValidateVatResponse: IValidateVatResponse;
   VatData: IVatData;
-  WorkshopCreateInput: IWorkshopCreateInput;
   WorkshopsCreateInput: IWorkshopsCreateInput;
 };
 

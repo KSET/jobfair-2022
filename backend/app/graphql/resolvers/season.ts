@@ -36,6 +36,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   Context,
 } from "../../types/apollo-context";
 import {
@@ -373,6 +376,11 @@ export const transformSelect = transformSelectFor<SeasonFieldResolver>({
 
         (select.companies as Dict<Dict>).select[name] = {
           select: transformer(field),
+          ...(
+            "panelParticipants" === name
+              ? { orderBy: presenterOrderBy }
+              : {}
+          ),
         };
       }
     ;

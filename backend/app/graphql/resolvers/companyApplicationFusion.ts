@@ -16,6 +16,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   Dict,
   GQLField,
 } from "../../types/helpers";
@@ -86,6 +89,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationFusionFieldR
   presenters(select) {
     select.presenters = {
       select: transformSelectPresenter(select.presenters as Record<string, unknown>),
+      orderBy: presenterOrderBy,
     };
 
     return select;
@@ -135,12 +139,6 @@ export class FusionCreateInputBase {
 
   @Field()
     language: string = "";
-}
-
-@InputType()
-export class FusionCreateInput extends FusionCreateInputBase {
-  @Field(() => PresenterCreateInput)
-    presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
 }
 
 @InputType()

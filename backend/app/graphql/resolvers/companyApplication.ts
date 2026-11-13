@@ -62,6 +62,11 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  oldEventPresentersSelect,
+  oldPresentersSelect,
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   CompanyApplicationApprovedValidation,
   CompanyApplicationValidation,
 } from "../../services/validation-service";
@@ -91,17 +96,14 @@ import {
   captureError,
 } from "../../services/error-service";
 import {
-  TalkCreateInput,
   TalksCreateInput,
   transformSelect as transformSelectTalks,
 } from "./companyApplicationTalk";
 import {
   transformSelect as transformSelectWorkshops,
-  WorkshopCreateInput,
   WorkshopsCreateInput,
 } from "./companyApplicationWorkshop";
 import {
-  FusionCreateInput,
   FusionsCreateInput,
   transformSelect as transformSelectFusions,
 } from "./companyApplicationFusion";
@@ -149,64 +151,282 @@ const photoExtensions = [
   ".png",
 ];
 
-const uploadPresenterPhoto =
+class PresenterCreateError extends Error {
+  constructor(
+    public readonly field: string,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+type OldPresenter = {
+  photo: { id: number, uid: string, } | null,
+};
+
+type PresenterData = {
+  firstName: string,
+  lastName: string,
+  bioEn: string,
+  bioHr: string,
+  order: number,
+};
+
+type PresenterPlan = {
+  field: string,
+  data: PresenterData,
+  photo: { file: FileUpload, crop: ImageCropInput | null, } | { id: number, },
+};
+
+type PresenterCreate = PresenterData & {
+  photo: { connect: { id: number, }, },
+};
+
+/** The most presenters a save may send for an event: as many forms as the pages render. */
+const maxPresentersFor =
+  (approvedCount: number | null | undefined, oldPresenters: OldPresenter[]) =>
+    Math.max(1, approvedCount ?? 0, oldPresenters.length)
+;
+
+const plural = (count: number, word: string) => `${ count } ${ word }${ 1 === count ? "" : "s" }`;
+
+/**
+ * Checks an event's presenters without uploading anything, keeping list order in `order`.
+ * A presenter without a new upload keeps its photo through `existingPhotoUid`,
+ * which only resolves to photos of the event's previous presenters.
+ * Throws `PresenterCreateError` (field `entity` or `${ fieldBase }.${ index }.photo`).
+ */
+const planPresenters =
   async (
     {
-      vat,
-      eventType,
-      file,
-      crop,
-      user,
+      label,
+      fieldBase,
+      presenters,
+      oldPresenters,
+      minPresenters = 1,
+      maxPresenters,
     }: {
-      vat: string,
-      eventType: string,
-      file: FileUpload,
-      crop: ImageCropInput | null | undefined,
-      user: User,
+      label: string,
+      fieldBase: string,
+      presenters: PresenterCreateInput[],
+      oldPresenters: OldPresenter[],
+      minPresenters?: number,
+      maxPresenters: number,
     },
-  ): Promise<[ string, null ] | [ null, number ]> => {
-    if (
-      !photoMimeTypes.has(file.mimetype)
-      || !photoExtensions.some((ext) => file.filename.toLowerCase().endsWith(ext))
-    ) {
-      return [
-        `File must have extension: ${ photoExtensions.join(", ") }`,
-        null,
-      ];
+  ) => {
+    if (presenters.length < minPresenters) {
+      throw new PresenterCreateError("entity", `At least ${ plural(minPresenters, `${ label } presenter`) } required`);
     }
 
-    const photo = await ImageService.uploadImage(
-      `company/${ vat }/${ eventType }/presenters` as ImageBase,
-      file,
-      user,
-      undefined,
-      { crop },
-    );
-
-    if (!photo) {
-      return [
-        "Something went wrong",
-        null,
-      ];
+    if (presenters.length > maxPresenters) {
+      throw new PresenterCreateError("entity", `At most ${ plural(maxPresenters, `${ label } presenter`) } allowed`);
     }
 
-    return [
-      null,
-      photo.id,
-    ];
+    const plans: PresenterPlan[] = [];
+    /** Old photos already kept by an earlier presenter, so two presenters can't share one. */
+    const claimedPhotoIds = new Set<number>();
+
+    for (const [ i, presenter ] of presenters.entries()) {
+      const field = `${ fieldBase }.${ i }.photo`;
+      const file = await presenter.photo;
+      const data = {
+        firstName: presenter.firstName,
+        lastName: presenter.lastName,
+        bioEn: presenter.bioEn,
+        bioHr: presenter.bioHr,
+        order: i,
+      };
+
+      if (file) {
+        if (
+          !photoMimeTypes.has(file.mimetype)
+          || !photoExtensions.some((ext) => file.filename.toLowerCase().endsWith(ext))
+        ) {
+          throw new PresenterCreateError(field, `File must have extension: ${ photoExtensions.join(", ") }`);
+        }
+
+        plans.push({
+          field,
+          data,
+          photo: {
+            file,
+            crop: presenter.photoCrop,
+          },
+        });
+        continue;
+      }
+
+      const oldPhoto =
+        presenter.existingPhotoUid
+          ? oldPresenters.find((p) => p.photo?.uid === presenter.existingPhotoUid)?.photo
+          : null
+      ;
+
+      if (!oldPhoto || claimedPhotoIds.has(oldPhoto.id)) {
+        throw new PresenterCreateError(field, "Photo is required");
+      }
+
+      claimedPhotoIds.add(oldPhoto.id);
+
+      plans.push({
+        field,
+        data,
+        photo: {
+          id: oldPhoto.id,
+        },
+      });
+    }
+
+    return plans;
   }
 ;
 
-const toPresenterCreate =
-  <T extends { photoCrop?: unknown, }>(presenter: T) => ({
-    ...omit([ "photoCrop" ], presenter),
-    photo: {
-      connect: {
-        id: 0,
-      },
-    },
-  })
+/** Removes photos uploaded for a save that did not go through. */
+const deleteUploadedPhotos =
+  async (uids: string[], user: User) => {
+    await Promise.all(
+      uids.map((uid) =>
+        ImageService
+          .deleteImage(uid, user)
+          .catch((e) => {
+            captureError(e);
+            return false;
+          }),
+      ),
+    );
+  }
 ;
+
+/**
+ * Uploads the new photos of all planned events one at a time and returns the presenters' create data.
+ * If any upload fails, the photos already uploaded are deleted and a `PresenterCreateError` is thrown.
+ * `uploadedUids` lets the caller delete the photos when its own write fails.
+ */
+const createPresenters =
+  async <TPlans extends Partial<Record<string, PresenterPlan[]>>>(
+    plans: TPlans,
+    {
+      vat,
+      user,
+    }: {
+      vat: string,
+      user: User,
+    },
+  ) => {
+    const uploadedUids: string[] = [];
+    const create: Partial<Record<string, PresenterCreate[]>> = {};
+
+    for (const [ eventType, eventPlans ] of Object.entries(plans)) {
+      const presentersCreate: PresenterCreate[] = [];
+
+      for (const plan of eventPlans ?? []) {
+        if ("id" in plan.photo) {
+          presentersCreate.push({
+            ...plan.data,
+            photo: {
+              connect: {
+                id: plan.photo.id,
+              },
+            },
+          });
+          continue;
+        }
+
+        const image = await ImageService.uploadImage(
+          `company/${ vat }/${ eventType }/presenters` as ImageBase,
+          plan.photo.file,
+          user,
+          undefined,
+          { crop: plan.photo.crop },
+        ).catch((e: unknown) => {
+          captureError(e);
+          return null;
+        });
+
+        if (!image) {
+          await deleteUploadedPhotos(uploadedUids, user);
+          throw new PresenterCreateError(plan.field, "Something went wrong");
+        }
+
+        uploadedUids.push(image.uid);
+
+        presentersCreate.push({
+          ...plan.data,
+          photo: {
+            connect: {
+              id: image.id,
+            },
+          },
+        });
+      }
+
+      create[eventType] = presentersCreate;
+    }
+
+    return {
+      create: create as { [K in keyof TPlans]: PresenterCreate[] },
+      uploadedUids,
+    };
+  }
+;
+
+type ApplicationEvent = "talk" | "workshop" | "fusion";
+
+type OldApplicationPresenters =
+  Partial<Record<ApplicationEvent, { presenters: OldPresenter[], } | null>>
+  & {
+    approval?: Partial<Record<`${ ApplicationEvent }Participants`, number>> | null,
+  }
+;
+
+/** Validates every picked event's presenters, then uploads their photos. Events not picked get no presenters. */
+const toApplicationPresentersCreate =
+  async (
+    info: CompanyApplicationCreateInput,
+    oldApplication: OldApplicationPresenters | null,
+    user: User,
+  ) => {
+    const plans: Record<ApplicationEvent, PresenterPlan[]> = {
+      talk: [],
+      workshop: [],
+      fusion: [],
+    };
+
+    for (const eventType of [ "talk", "workshop", "fusion" ] as const) {
+      const event = info[eventType];
+
+      if (!event) {
+        continue;
+      }
+
+      const oldPresenters = oldApplication?.[eventType]?.presenters ?? [];
+
+      plans[eventType] = await planPresenters({
+        label: eventType,
+        fieldBase: `${ eventType }.presenter`,
+        presenters: event.presenter,
+        oldPresenters,
+        maxPresenters: maxPresentersFor(oldApplication?.approval?.[`${ eventType }Participants`], oldPresenters),
+      });
+    }
+
+    return createPresenters(plans, { vat: info.vat, user });
+  }
+;
+
+/** What `toApplicationPresentersCreate` needs of the application a save replaces. */
+const oldApplicationPresentersSelect = {
+  approval: {
+    select: {
+      talkParticipants: true,
+      workshopParticipants: true,
+      fusionParticipants: true,
+    },
+  },
+  talk: oldEventPresentersSelect,
+  workshop: oldEventPresentersSelect,
+  fusion: oldEventPresentersSelect,
+} as const;
 
 @ObjectType()
 export class EventUserApplications {
@@ -446,6 +666,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationFieldResolve
   panelParticipants(select) {
     select.panelParticipants = {
       select: transformSelectPresenter(select.panelParticipants as Dict),
+      orderBy: presenterOrderBy,
     };
 
     return select;
@@ -497,14 +718,14 @@ class CompanyApplicationCreateInput {
   @Field(() => String, { nullable: true })
     booth: string | null = null;
 
-  @Field(() => TalkCreateInput, { nullable: true })
-    talk: TalkCreateInput | null = null;
+  @Field(() => TalksCreateInput, { nullable: true })
+    talk: TalksCreateInput | null = null;
 
-  @Field(() => WorkshopCreateInput, { nullable: true })
-    workshop: WorkshopCreateInput | null = null;
+  @Field(() => WorkshopsCreateInput, { nullable: true })
+    workshop: WorkshopsCreateInput | null = null;
 
-  @Field(() => FusionCreateInput, { nullable: true })
-    fusion: FusionCreateInput | null = null;
+  @Field(() => FusionsCreateInput, { nullable: true })
+    fusion: FusionsCreateInput | null = null;
 
   @Field(() => QuestChooseInput, { nullable: true })
     quest: QuestChooseInput | null = null;
@@ -755,6 +976,39 @@ export class CompanyApplicationAdminResolver {
       };
     }
 
+    // Validate and upload presenter photos before the transaction, so slow uploads can't time it out
+    let presentersCreate: Awaited<ReturnType<typeof toApplicationPresentersCreate>>;
+    try {
+      presentersCreate = await toApplicationPresentersCreate(
+        info,
+        await ctx.prisma.companyApplication.findUnique({
+          where: {
+            forCompanyId_forSeasonId: {
+              forCompanyId: company.id,
+              forSeasonId: currentSeason.id,
+            },
+          },
+          select: oldApplicationPresentersSelect,
+        }),
+        ctx.user,
+      );
+    } catch (e) {
+      if (e instanceof PresenterCreateError) {
+        return {
+          errors: [
+            {
+              field: e.field,
+              message: e.message,
+            },
+          ],
+        };
+      }
+
+      throw e;
+    }
+
+    // `uploadedUids` are deleted again if the transaction fails
+    const { create: presenters, uploadedUids } = presentersCreate;
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
@@ -767,53 +1021,9 @@ export class CompanyApplicationAdminResolver {
         select: {
           id: true,
 
-          talk: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-
-          workshop: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-
-          fusion: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
+          talk: oldEventPresentersSelect,
+          workshop: oldEventPresentersSelect,
+          fusion: oldEventPresentersSelect,
 
           quest: {
             select: {
@@ -822,138 +1032,6 @@ export class CompanyApplicationAdminResolver {
           },
         },
       });
-
-      let talkPresenter;
-      if (info.talk) {
-        talkPresenter = toPresenterCreate(info.talk.presenter);
-
-        const photoFile = await info.talk.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "talk",
-            file: photoFile,
-            crop: info.talk.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "talk.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          talkPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.talk?.presenters[0].photo) {
-          talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "talk.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
-
-      let workshopPresenter;
-      if (info.workshop) {
-        workshopPresenter = toPresenterCreate(info.workshop.presenter);
-
-        const photoFile = await info.workshop.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "workshop",
-            file: photoFile,
-            crop: info.workshop.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "workshop.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          workshopPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.workshop?.presenters[0].photo) {
-          workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "workshop.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
-
-      let fusionPresenter;
-      if (info.fusion) {
-        fusionPresenter = toPresenterCreate(info.fusion.presenter);
-
-        const photoFile = await info.fusion.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "fusion",
-            file: photoFile,
-            crop: info.fusion.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "fusion.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          fusionPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.fusion?.presenters[0].photo) {
-          fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "fusion.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
 
       const chosen = {
         booth: booths.find((booth) => booth.key === info.booth)?.name,
@@ -1008,9 +1086,7 @@ export class CompanyApplicationAdminResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   }
                   : undefined
@@ -1027,9 +1103,7 @@ export class CompanyApplicationAdminResolver {
                       info.workshop,
                     ),
                     presenters: {
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   }
                   : undefined
@@ -1054,9 +1128,7 @@ export class CompanyApplicationAdminResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   }
                   : undefined
@@ -1086,6 +1158,7 @@ export class CompanyApplicationAdminResolver {
             workshop: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -1095,6 +1168,7 @@ export class CompanyApplicationAdminResolver {
             talk: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -1105,6 +1179,7 @@ export class CompanyApplicationAdminResolver {
             fusion: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -1175,9 +1250,7 @@ export class CompanyApplicationAdminResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   },
                   update: {
@@ -1203,9 +1276,7 @@ export class CompanyApplicationAdminResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   },
                 },
@@ -1223,9 +1294,7 @@ export class CompanyApplicationAdminResolver {
                       info.workshop,
                     ),
                     presenters: {
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   },
                   update: {
@@ -1243,9 +1312,7 @@ export class CompanyApplicationAdminResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   },
                 },
@@ -1271,9 +1338,7 @@ export class CompanyApplicationAdminResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   },
                   update: {
@@ -1299,9 +1364,7 @@ export class CompanyApplicationAdminResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   },
                 },
@@ -1336,6 +1399,7 @@ export class CompanyApplicationAdminResolver {
           workshop: {
             include: {
               presenters: {
+                orderBy: presenterOrderBy,
                 include: {
                   photo: true,
                 },
@@ -1345,6 +1409,7 @@ export class CompanyApplicationAdminResolver {
           talk: {
             include: {
               presenters: {
+                orderBy: presenterOrderBy,
                 include: {
                   photo: true,
                 },
@@ -1355,6 +1420,7 @@ export class CompanyApplicationAdminResolver {
           fusion: {
             include: {
               presenters: {
+                orderBy: presenterOrderBy,
                 include: {
                   photo: true,
                 },
@@ -1377,8 +1443,9 @@ export class CompanyApplicationAdminResolver {
       }
 
       return entity;
-    }).catch((err) => {
+    }).catch(async (err) => {
       captureError(err);
+      await deleteUploadedPhotos(uploadedUids, ctx.user!);
 
       return {
         errors: [
@@ -1567,6 +1634,39 @@ export class CompanyApplicationCreateResolver {
       }
     }
 
+    // Validate and upload presenter photos before the transaction, so slow uploads can't time it out
+    let presentersCreate: Awaited<ReturnType<typeof toApplicationPresentersCreate>>;
+    try {
+      presentersCreate = await toApplicationPresentersCreate(
+        info,
+        await ctx.prisma.companyApplication.findUnique({
+          where: {
+            forCompanyId_forSeasonId: {
+              forCompanyId: company.id,
+              forSeasonId: currentSeason.id,
+            },
+          },
+          select: oldApplicationPresentersSelect,
+        }),
+        ctx.user,
+      );
+    } catch (e) {
+      if (e instanceof PresenterCreateError) {
+        return {
+          errors: [
+            {
+              field: e.field,
+              message: e.message,
+            },
+          ],
+        };
+      }
+
+      throw e;
+    }
+
+    // `uploadedUids` are deleted again if the transaction fails
+    const { create: presenters, uploadedUids } = presentersCreate;
     const entity = await ctx.prisma.$transaction(async (prisma) => {
       const oldApplication = await prisma.companyApplication.findUnique({
         where: {
@@ -1578,53 +1678,9 @@ export class CompanyApplicationCreateResolver {
         select: {
           id: true,
 
-          talk: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-
-          workshop: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-
-          fusion: {
-            select: {
-              id: true,
-              presenters: {
-                select: {
-                  id: true,
-                  photo: {
-                    select: {
-                      id: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
+          talk: oldEventPresentersSelect,
+          workshop: oldEventPresentersSelect,
+          fusion: oldEventPresentersSelect,
 
           quest: {
             select: {
@@ -1633,138 +1689,6 @@ export class CompanyApplicationCreateResolver {
           },
         },
       });
-
-      let talkPresenter;
-      if (info.talk) {
-        talkPresenter = toPresenterCreate(info.talk.presenter);
-
-        const photoFile = await info.talk.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "talk",
-            file: photoFile,
-            crop: info.talk.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "talk.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          talkPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.talk?.presenters[0].photo) {
-          talkPresenter.photo.connect.id = oldApplication.talk.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "talk.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
-
-      let workshopPresenter;
-      if (info.workshop) {
-        workshopPresenter = toPresenterCreate(info.workshop.presenter);
-
-        const photoFile = await info.workshop.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "workshop",
-            file: photoFile,
-            crop: info.workshop.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "workshop.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          workshopPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.workshop?.presenters[0].photo) {
-          workshopPresenter.photo.connect.id = oldApplication.workshop.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "workshop.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
-
-      let fusionPresenter;
-      if (info.fusion) {
-        fusionPresenter = toPresenterCreate(info.fusion.presenter);
-
-        const photoFile = await info.fusion.presenter.photo;
-
-        if (photoFile) {
-          const [
-            photoError,
-            photoId,
-          ] = await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType: "fusion",
-            file: photoFile,
-            crop: info.fusion.presenter.photoCrop,
-            user: ctx.user!,
-          });
-
-          if (photoError) {
-            return {
-              errors: [
-                {
-                  field: "fusion.presenter.photo",
-                  message: photoError,
-                },
-              ],
-            };
-          }
-
-          fusionPresenter.photo.connect.id = photoId!;
-        } else if (oldApplication?.fusion?.presenters[0].photo) {
-          fusionPresenter.photo.connect.id = oldApplication.fusion.presenters[0].photo.id;
-        } else {
-          return {
-            errors: [
-              {
-                field: "fusion.presenter.photo",
-                message: "Photo is required",
-              },
-            ],
-          };
-        }
-      }
 
       const chosen = {
         booth: booths.find((booth) => booth.key === info.booth)?.name,
@@ -1819,9 +1743,7 @@ export class CompanyApplicationCreateResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   }
                   : undefined
@@ -1838,9 +1760,7 @@ export class CompanyApplicationCreateResolver {
                       info.workshop,
                     ),
                     presenters: {
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   }
                   : undefined
@@ -1865,9 +1785,7 @@ export class CompanyApplicationCreateResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   }
                   : undefined
@@ -1897,6 +1815,7 @@ export class CompanyApplicationCreateResolver {
             workshop: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -1906,6 +1825,7 @@ export class CompanyApplicationCreateResolver {
             talk: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -1916,6 +1836,7 @@ export class CompanyApplicationCreateResolver {
             fusion: {
               include: {
                 presenters: {
+                  orderBy: presenterOrderBy,
                   include: {
                     photo: true,
                   },
@@ -2003,9 +1924,7 @@ export class CompanyApplicationCreateResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   },
                   update: {
@@ -2031,9 +1950,7 @@ export class CompanyApplicationCreateResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...talkPresenter as NonNullable<typeof talkPresenter>,
-                      },
+                      create: presenters.talk,
                     },
                   },
                 },
@@ -2051,9 +1968,7 @@ export class CompanyApplicationCreateResolver {
                       info.workshop,
                     ),
                     presenters: {
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   },
                   update: {
@@ -2071,9 +1986,7 @@ export class CompanyApplicationCreateResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...workshopPresenter as NonNullable<typeof workshopPresenter>,
-                      },
+                      create: presenters.workshop,
                     },
                   },
                 },
@@ -2099,9 +2012,7 @@ export class CompanyApplicationCreateResolver {
                       },
                     },
                     presenters: {
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   },
                   update: {
@@ -2127,9 +2038,7 @@ export class CompanyApplicationCreateResolver {
                           },
                         }
                         : undefined,
-                      create: {
-                        ...fusionPresenter as NonNullable<typeof fusionPresenter>,
-                      },
+                      create: presenters.fusion,
                     },
                   },
                 },
@@ -2164,6 +2073,7 @@ export class CompanyApplicationCreateResolver {
           workshop: {
             include: {
               presenters: {
+                orderBy: presenterOrderBy,
                 include: {
                   photo: true,
                 },
@@ -2173,6 +2083,7 @@ export class CompanyApplicationCreateResolver {
           talk: {
             include: {
               presenters: {
+                orderBy: presenterOrderBy,
                 include: {
                   photo: true,
                 },
@@ -2198,8 +2109,9 @@ export class CompanyApplicationCreateResolver {
     }, {
       maxWait: 10000,
       timeout: 20000,
-    }).catch((err) => {
+    }).catch(async (err) => {
       captureError(err);
+      await deleteUploadedPhotos(uploadedUids, ctx.user!);
 
       return {
         errors: [
@@ -2289,64 +2201,11 @@ export class CompanyApplicationCreateResolver {
         id: true,
         applications: {
           select: {
-            talk: {
-              select: {
-                id: true,
-                presenters: {
-                  select: {
-                    id: true,
-                    photo: {
-                      select: {
-                        id: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            talk: oldEventPresentersSelect,
+            workshop: oldEventPresentersSelect,
+            fusion: oldEventPresentersSelect,
 
-            workshop: {
-              select: {
-                id: true,
-                presenters: {
-                  select: {
-                    id: true,
-                    photo: {
-                      select: {
-                        id: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-
-            fusion: {
-              select: {
-                id: true,
-                presenters: {
-                  select: {
-                    id: true,
-                    photo: {
-                      select: {
-                        id: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-
-            panelParticipants: {
-              select: {
-                id: true,
-                photo: {
-                  select: {
-                    id: true,
-                  },
-                },
-              },
-            },
+            panelParticipants: oldPresentersSelect,
 
             approval: true,
           },
@@ -2404,390 +2263,83 @@ export class CompanyApplicationCreateResolver {
 
     const data: Prisma.CompanyApplicationUpdateArgs["data"] = {};
 
-    class PresenterCreateError extends Error {
-      constructor(
-        public readonly field: string,
-        message: string,
-      ) {
-        super(message);
-      }
-    }
+    const approvedEvents = [
+      [ "talk", approval.talkParticipants ],
+      [ "workshop", approval.workshopParticipants ],
+      [ "fusion", approval.fusionParticipants ],
+    ] as const;
 
-    type PresenterCreate = NonNullable<NonNullable<NonNullable<NonNullable<Prisma.CompanyApplicationUpdateArgs["data"]["workshop"]>["create"]>["presenters"]>["create"]>;
+    // Validate every event's presenters before anything is uploaded
+    const presenterPlans: Partial<Record<ApplicationEvent | "panel", PresenterPlan[]>> = {};
 
-    const createPhoto =
-      async (
-        eventType: string,
-        photoFile: FileUpload | null,
-        photoCrop: ImageCropInput | null,
-        oldPhoto: { id: number, } | null,
-      ): Promise<[ string, null ] | [ null, number ]> => {
-        if (photoFile) {
-          return await uploadPresenterPhoto({
-            vat: info.vat,
-            eventType,
-            file: photoFile,
-            crop: photoCrop,
-            user: ctx.user!,
-          });
+    try {
+      for (const [ id, minPresenters ] of approvedEvents) {
+        if (0 >= minPresenters) {
+          continue;
         }
 
-        if (oldPhoto) {
-          return [
-            null,
-            oldPhoto.id,
-          ];
-        }
+        const entry = info[id];
 
-        return [
-          "Photo is required",
-          null,
-        ];
-      }
-    ;
-
-    const createPresenters =
-      async <T extends keyof typeof application>(
-        id: T,
-        presenters: PresenterCreateInput[],
-        eventName?: string,
-      ): Promise<PresenterCreate> => {
-        const presentersCreate: PresenterCreate = [];
-
-        for (const presenter of presenters) {
-          const i = presenters.indexOf(presenter);
-          const presenterCreate: PresenterCreate = toPresenterCreate(presenter);
-
-          const baseId = `${ eventName || id }.presenter.${ i }`;
-
-          const photoFile = await presenter.photo;
-          const oldApplication = application[id];
-          const oldPhotoPresenters =
-            (
-              oldApplication
-              && "presenters" in oldApplication
-            )
-              ? oldApplication.presenters[i]?.photo
-              : null
-          ;
-          const oldPhotoEntries =
-            (
-              oldApplication
-              && Array.isArray(oldApplication)
-            )
-              ? oldApplication[i]?.photo
-              : null
-          ;
-          const oldPhoto = oldPhotoPresenters || oldPhotoEntries;
-
-          const [
-            err,
-            photoId,
-          ] = await createPhoto(
-            eventName || id,
-            photoFile,
-            presenter.photoCrop,
-            oldPhoto,
-          );
-
-          if (err) {
-            throw new PresenterCreateError(
-              `${ baseId }.photo`,
-              err,
-            );
-          }
-
-          presenterCreate.photo = {
-            connect: {
-              id: photoId!,
-            },
-          };
-
-          presentersCreate.push(presenterCreate);
-        }
-
-        return presentersCreate;
-      };
-
-    if (0 < approval.talkParticipants) {
-      const id = "talk" as const;
-      const minPresenters = approval.talkParticipants;
-
-      const entry = info[id]!;
-
-      if (!entry) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `${ upperFirst(id) } required`,
-            },
-          ],
-        };
-      }
-
-      if (entry.presenter.length < minPresenters) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `At least ${ minPresenters } ${ id } presenters required`,
-            },
-          ],
-        };
-      }
-
-      try {
-        const presentersCreate: PresenterCreate = await createPresenters(
-          id,
-          entry.presenter,
-        );
-
-        data[id] = {
-          update: {
-            ...omit(
-              [
-                "presenter",
-                "category",
-              ],
-              entry,
-            ),
-            category: {
-              connect: {
-                forSeasonId_name: {
-                  name: entry.category,
-                  forSeasonId: currentSeason.id,
-                },
-              },
-            },
-            presenters: {
-              deleteMany: {
-                id: {
-                  in: application[id]?.presenters?.map((p) => p.id) || [],
-                },
-              },
-              create: presentersCreate,
-            },
-          },
-        };
-      } catch (e) {
-        if (e instanceof PresenterCreateError) {
+        if (!entry) {
           return {
             errors: [
               {
-                field: e.field,
-                message: e.message,
+                field: "entity",
+                message: `${ upperFirst(id) } required`,
               },
             ],
           };
         }
 
-        throw e;
-      }
-    }
+        const oldPresenters = application[id]?.presenters ?? [];
 
-    if (0 < approval.workshopParticipants) {
-      const id = "workshop" as const;
-      const minPresenters = approval.workshopParticipants;
-
-      const entry = info[id]!;
-
-      if (!entry) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `${ upperFirst(id) } required`,
-            },
-          ],
-        };
+        presenterPlans[id] = await planPresenters({
+          label: id,
+          fieldBase: `${ id }.presenter`,
+          presenters: entry.presenter,
+          oldPresenters,
+          minPresenters,
+          maxPresenters: maxPresentersFor(minPresenters, oldPresenters),
+        });
       }
 
-      if (entry.presenter.length < minPresenters) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `At least ${ minPresenters } ${ id } presenters required`,
-            },
-          ],
-        };
-      }
+      if (approval.panel) {
+        const id = "panel" as const;
 
-      try {
-        const presentersCreate: PresenterCreate = await createPresenters(
-          id,
-          entry.presenter,
-        );
+        const entry = info[id];
 
-        data[id] = {
-          update: {
-            ...omit(
-              [
-                "presenter",
-              ],
-              entry,
-            ),
-            presenters: {
-              deleteMany: {
-                id: {
-                  in: application[id]?.presenters?.map((p) => p.id) || [],
-                },
-              },
-              create: presentersCreate,
-            },
-          },
-        };
-      } catch (e) {
-        if (e instanceof PresenterCreateError) {
+        if (!entry) {
           return {
             errors: [
               {
-                field: e.field,
-                message: e.message,
+                field: "entity",
+                message: `${ upperFirst(id) } required`,
               },
             ],
           };
         }
 
-        throw e;
+        presenterPlans[id] = await planPresenters({
+          label: id,
+          fieldBase: id,
+          presenters: entry,
+          oldPresenters: application.panelParticipants,
+          maxPresenters: maxPresentersFor(null, application.panelParticipants),
+        });
       }
-    }
-
-    if (0 < approval.fusionParticipants) {
-      const id = "fusion" as const;
-      const minPresenters = approval.fusionParticipants;
-
-      const entry = info[id]!;
-
-      if (!entry) {
+    } catch (e) {
+      if (e instanceof PresenterCreateError) {
         return {
           errors: [
             {
-              field: "entity",
-              message: `${ upperFirst(id) } required`,
+              field: e.field,
+              message: e.message,
             },
           ],
         };
       }
 
-      if (entry.presenter.length < minPresenters) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `At least ${ minPresenters } ${ id } presenters required`,
-            },
-          ],
-        };
-      }
-
-      try {
-        const presentersCreate: PresenterCreate = await createPresenters(
-          id,
-          entry.presenter,
-        );
-
-        data[id] = {
-          update: {
-            ...omit(
-              [
-                "presenter",
-                "category",
-              ],
-              entry,
-            ),
-            category: {
-              connect: {
-                forSeasonId_name: {
-                  name: entry.category,
-                  forSeasonId: currentSeason.id,
-                },
-              },
-            },
-            presenters: {
-              deleteMany: {
-                id: {
-                  in: application[id]?.presenters?.map((p) => p.id) || [],
-                },
-              },
-              create: presentersCreate,
-            },
-          },
-        };
-      } catch (e) {
-        if (e instanceof PresenterCreateError) {
-          return {
-            errors: [
-              {
-                field: e.field,
-                message: e.message,
-              },
-            ],
-          };
-        }
-
-        throw e;
-      }
-    }
-
-    if (approval.panel) {
-      const id = "panel" as const;
-      const minPresenters = 1;
-
-      const entry = info[id];
-
-      if (!entry) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `${ upperFirst(id) } required`,
-            },
-          ],
-        };
-      }
-
-      if (entry.length < minPresenters) {
-        return {
-          errors: [
-            {
-              field: "entity",
-              message: `At least ${ minPresenters } ${ id } presenters required`,
-            },
-          ],
-        };
-      }
-
-      try {
-        const presentersCreate: PresenterCreate = await createPresenters(
-          "panelParticipants" as const,
-          entry,
-          "panel",
-        );
-
-        data.panelParticipants = {
-          deleteMany: {
-            id: {
-              in: application.panelParticipants.map((p) => p.id) || [],
-            },
-          },
-          create: presentersCreate,
-        };
-      } catch (e) {
-        if (e instanceof PresenterCreateError) {
-          return {
-            errors: [
-              {
-                field: e.field,
-                message: e.message,
-              },
-            ],
-          };
-        }
-
-        throw e;
-      }
+      throw e;
     }
 
     if (approval.cocktail) {
@@ -2862,6 +2414,97 @@ export class CompanyApplicationCreateResolver {
       };
     }
 
+    let presenters: Awaited<ReturnType<typeof createPresenters<typeof presenterPlans>>>;
+
+    try {
+      presenters = await createPresenters(presenterPlans, { vat: info.vat, user });
+    } catch (e) {
+      if (e instanceof PresenterCreateError) {
+        return {
+          errors: [
+            {
+              field: e.field,
+              message: e.message,
+            },
+          ],
+        };
+      }
+
+      throw e;
+    }
+
+    const replacePresenters =
+      (oldPresenters: { id: number, }[] | undefined, create: PresenterCreate[]) => ({
+        deleteMany: {
+          id: {
+            in: oldPresenters?.map((p) => p.id) ?? [],
+          },
+        },
+        create,
+      })
+    ;
+
+    const connectCategory =
+      (name: string) => ({
+        connect: {
+          forSeasonId_name: {
+            name,
+            forSeasonId: currentSeason.id,
+          },
+        },
+      })
+    ;
+
+    if (presenters.create.talk && info.talk) {
+      data.talk = {
+        update: {
+          ...omit(
+            [
+              "presenter",
+              "category",
+            ],
+            info.talk,
+          ),
+          category: connectCategory(info.talk.category),
+          presenters: replacePresenters(application.talk?.presenters, presenters.create.talk),
+        },
+      };
+    }
+
+    if (presenters.create.workshop && info.workshop) {
+      data.workshop = {
+        update: {
+          ...omit(
+            [
+              "presenter",
+            ],
+            info.workshop,
+          ),
+          presenters: replacePresenters(application.workshop?.presenters, presenters.create.workshop),
+        },
+      };
+    }
+
+    if (presenters.create.fusion && info.fusion) {
+      data.fusion = {
+        update: {
+          ...omit(
+            [
+              "presenter",
+              "category",
+            ],
+            info.fusion,
+          ),
+          category: connectCategory(info.fusion.category),
+          presenters: replacePresenters(application.fusion?.presenters, presenters.create.fusion),
+        },
+      };
+    }
+
+    if (presenters.create.panel) {
+      data.panelParticipants = replacePresenters(application.panelParticipants, presenters.create.panel);
+    }
+
     const entity = await ctx.prisma.companyApplication.update({
       data,
       where: {
@@ -2871,6 +2514,7 @@ export class CompanyApplicationCreateResolver {
         workshop: {
           include: {
             presenters: {
+              orderBy: presenterOrderBy,
               include: {
                 photo: true,
               },
@@ -2880,6 +2524,7 @@ export class CompanyApplicationCreateResolver {
         talk: {
           include: {
             presenters: {
+              orderBy: presenterOrderBy,
               include: {
                 photo: true,
               },
@@ -2890,6 +2535,7 @@ export class CompanyApplicationCreateResolver {
         fusion: {
           include: {
             presenters: {
+              orderBy: presenterOrderBy,
               include: {
                 photo: true,
               },
@@ -2898,6 +2544,7 @@ export class CompanyApplicationCreateResolver {
           },
         },
         panelParticipants: {
+          orderBy: presenterOrderBy,
           include: {
             photo: true,
           },
@@ -2910,6 +2557,9 @@ export class CompanyApplicationCreateResolver {
         quest: true,
         internships: true,
       },
+    }).catch(async (e: unknown) => {
+      await deleteUploadedPhotos(presenters.uploadedUids, user);
+      throw e;
     });
 
     if (entity) {

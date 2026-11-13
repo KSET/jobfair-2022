@@ -24,6 +24,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   transformSelect as transformSelectTalk,
 } from "./companyApplicationTalk";
 import {
@@ -246,6 +249,7 @@ export const transformSelect = transformSelectFor<CompanyProgramFieldResolver>({
   panelParticipants: withApplications((select) => {
     select.applications.select.panelParticipants = {
       select: transformSelectPresenter(select.panelParticipants as Dict),
+      orderBy: presenterOrderBy,
     };
     select.applications.select.approval.select.panel = true;
 

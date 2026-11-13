@@ -751,15 +751,15 @@ export type CompanyApplicationCountPanelParticipantsArgs = {
 export type CompanyApplicationCreateInput = {
   booth?: InputMaybe<Scalars['String']['input']>;
   contactPerson: CompanyApplicationContactPersonCreateInput;
-  fusion?: InputMaybe<FusionCreateInput>;
+  fusion?: InputMaybe<FusionsCreateInput>;
   quest?: InputMaybe<QuestChooseInput>;
   signatories: Array<CompanySignatoryCreateInput>;
-  talk?: InputMaybe<TalkCreateInput>;
+  talk?: InputMaybe<TalksCreateInput>;
   vat: Scalars['String']['input'];
   wantsCocktail: Scalars['Boolean']['input'];
   wantsPanel: Scalars['Boolean']['input'];
   wantsQuest: Scalars['Boolean']['input'];
-  workshop?: InputMaybe<WorkshopCreateInput>;
+  workshop?: InputMaybe<WorkshopsCreateInput>;
 };
 
 export type CompanyApplicationFeedback = {
@@ -1375,16 +1375,6 @@ export type FloatFilter = {
   lte?: InputMaybe<Scalars['Float']['input']>;
   not?: InputMaybe<NestedFloatFilter>;
   notIn?: InputMaybe<Array<Scalars['Float']['input']>>;
-};
-
-export type FusionCreateInput = {
-  category: Scalars['String']['input'];
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  presenter: PresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
 };
 
 export type FusionsCreateInput = {
@@ -2437,6 +2427,7 @@ export type PasswordResetWhereInput = {
 export type PresenterCreateInput = {
   bioEn: Scalars['String']['input'];
   bioHr: Scalars['String']['input'];
+  existingPhotoUid?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   photo?: InputMaybe<Scalars['Upload']['input']>;
@@ -3802,16 +3793,6 @@ export type SyncResult = {
   updatedCompanies: Array<Scalars['String']['output']>;
 };
 
-export type TalkCreateInput = {
-  category: Scalars['String']['input'];
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  presenter: PresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
-};
-
 export type TalksCreateInput = {
   category: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
@@ -4145,18 +4126,6 @@ export type VatData = {
   address: Scalars['String']['output'];
   legalName: Scalars['String']['output'];
   vat: Scalars['String']['output'];
-};
-
-export type WorkshopCreateInput = {
-  descriptionEn: Scalars['String']['input'];
-  descriptionHr: Scalars['String']['input'];
-  goal: Scalars['String']['input'];
-  language: Scalars['String']['input'];
-  notesEn: Scalars['String']['input'];
-  notesHr: Scalars['String']['input'];
-  presenter: PresenterCreateInput;
-  titleEn: Scalars['String']['input'];
-  titleHr: Scalars['String']['input'];
 };
 
 export type WorkshopsCreateInput = {

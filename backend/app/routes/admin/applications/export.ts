@@ -4,6 +4,9 @@ import {
   AuthRouter,
 } from "../../../helpers/route";
 import {
+  presenterOrderBy,
+} from "../../../helpers/presenter";
+import {
   Role,
 } from "../../../helpers/auth";
 import {
@@ -60,6 +63,7 @@ router.getRaw("/", async (req, res) => {
             },
           },
           presenters: {
+            orderBy: presenterOrderBy,
             select: {
               firstName: true,
               lastName: true,
@@ -84,6 +88,7 @@ router.getRaw("/", async (req, res) => {
           language: true,
           goal: true,
           presenters: {
+            orderBy: presenterOrderBy,
             select: {
               firstName: true,
               lastName: true,
@@ -107,6 +112,7 @@ router.getRaw("/", async (req, res) => {
           descriptionHr: true,
           language: true,
           presenters: {
+            orderBy: presenterOrderBy,
             select: {
               firstName: true,
               lastName: true,

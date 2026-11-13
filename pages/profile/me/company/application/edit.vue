@@ -34,13 +34,21 @@
             >
               <fieldset
                 v-for="(inputs, i) in form"
-                :key="`${formName}__${i}`"
+                :key="`${formName}__${objectKey(inputs)}`"
                 :class="$style.formFieldset"
               >
                 <legend>
                   <translated-text :trans-key="`form.legend.${formName}`" />
                   <span v-if="form.length > 1">&nbsp;{{ i + 1 }}</span>
                 </legend>
+
+                <app-move-buttons
+                  v-if="form.length > 1"
+                  :count="form.length"
+                  :disabled="isLoading"
+                  :index="i"
+                  @move="moveForm(item, formName, i, $event)"
+                />
 
                 <app-formgroup
                   :errors="item.errors[formName][i]"
@@ -125,23 +133,25 @@
   import {
     companyApplicationCocktailCreate,
     companyApplicationFusionCreate,
-    companyApplicationPresenterCreate,
     companyApplicationQuestCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
+    moveForm,
+    objectKey,
+    presenterForms,
+    toPresenterInput,
     type Fusion,
-    type Presenter,
     type Talk,
     type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup, {
     type InputEntry,
   } from "~/components/util/form/app-formgroup.vue";
+  import AppMoveButtons from "~/components/util/form/app-move-buttons.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     EditApprovedCompanyApplication,
     type ICompanyApplicationApproval,
-    type ICurrentCompanyApplicationQuery,
     type IEditApprovedCompanyApplicationMutation,
     type IEditApprovedCompanyApplicationMutationVariables,
   } from "~/graphql/schema";
@@ -184,6 +194,7 @@
     components: {
       TranslatedText,
       AppFormgroup,
+      AppMoveButtons,
       AppUserProfileContainer,
       Panel,
     },
@@ -221,16 +232,6 @@
       const companyApplication = resp.companyApplication!;
       const { approval } = companyApplication;
 
-      const extendTo =
-        <T>(
-          arr: T[] | undefined | null,
-          len: number,
-          ): (T | null)[] => [
-            ...(arr || []),
-            ...new Array<null>(Math.max(0, len - (arr?.length || 0))).fill(null),
-          ]
-      ;
-
       const form =
         <T extends Record<string, unknown>>(x: T) => ({
           forms: x,
@@ -251,21 +252,11 @@
             requireHr,
             categories: talkCategoriesStore.talkCategories,
           }),
-          presenter:
-            extendTo(
-              companyApplication.talk?.presenters,
-              approval?.talkParticipants || 1,
-            )
-              .map(
-                (p) =>
-                  companyApplicationPresenterCreate(
-                    p,
-                  )({
-                    requireHr,
-                  })
-                ,
-              )
-          ,
+          presenter: presenterForms(
+            companyApplication.talk?.presenters,
+            approval?.talkParticipants,
+            { requireHr },
+          ),
         }),
         [FormFor.Workshop]: form({
           info: companyApplicationWorkshopCreate(
@@ -273,21 +264,11 @@
           )({
             requireHr,
           }),
-          presenter:
-            extendTo(
-              companyApplication.workshop?.presenters,
-              approval?.workshopParticipants || 1,
-            )
-              .map(
-                (p) =>
-                  companyApplicationPresenterCreate(
-                    p,
-                  )({
-                    requireHr,
-                  })
-                ,
-              )
-          ,
+          presenter: presenterForms(
+            companyApplication.workshop?.presenters,
+            approval?.workshopParticipants,
+            { requireHr },
+          ),
         }),
         [FormFor.Fusion]: form({
           info: companyApplicationFusionCreate(
@@ -296,21 +277,11 @@
             requireHr,
             categories: talkCategoriesStore.talkCategories,
           }),
-          presenter:
-            extendTo(
-              companyApplication.fusion?.presenters,
-              approval?.fusionParticipants || 1,
-            )
-              .map(
-                (p) =>
-                  companyApplicationPresenterCreate(
-                    p,
-                  )({
-                    requireHr,
-                  })
-                ,
-              )
-          ,
+          presenter: presenterForms(
+            companyApplication.fusion?.presenters,
+            approval?.fusionParticipants,
+            { requireHr },
+          ),
         }),
         [FormFor.Cocktail]: form({
           info: companyApplicationCocktailCreate(
@@ -325,16 +296,7 @@
           )(),
         }),
         [FormFor.Panel]: form({
-          presenter: extendTo<NonNullable<ICurrentCompanyApplicationQuery["companyApplication"]>["panelParticipants"][0]>(
-            companyApplication.panelParticipants,
-            1,
-          ).map(
-            (x) =>
-              companyApplicationPresenterCreate(
-                x,
-              )()
-            ,
-          ),
+          presenter: presenterForms(companyApplication.panelParticipants, 1),
         }),
       };
 
@@ -373,6 +335,8 @@
         items,
         booths,
         booth,
+        objectKey,
+        moveForm,
         async handleFormSubmit() {
           for (const item of Object.values(items)) {
             if (item.errors) {
@@ -391,21 +355,21 @@
               items[FormFor.Talk]
                 ? {
                   ...toData<Talk>(items[FormFor.Talk].forms.info),
-                  presenter: items[FormFor.Talk].forms.presenter?.map((p) => toData<Presenter>(p)),
+                  presenter: items[FormFor.Talk].forms.presenter?.map(toPresenterInput),
                 }
                 : null,
             workshop:
               items[FormFor.Workshop]
                 ? {
                   ...toData<Workshop>(items[FormFor.Workshop].forms.info),
-                  presenter: items[FormFor.Workshop].forms.presenter?.map((p) => toData<Presenter>(p)),
+                  presenter: items[FormFor.Workshop].forms.presenter?.map(toPresenterInput),
                 }
                 : null,
             fusion:
               items[FormFor.Fusion]
                 ? {
                   ...toData<Fusion>(items[FormFor.Fusion].forms.info),
-                  presenter: items[FormFor.Fusion].forms.presenter?.map((p) => toData<Presenter>(p)),
+                  presenter: items[FormFor.Fusion].forms.presenter?.map(toPresenterInput),
                 }
                 : null,
             cocktail:
@@ -418,35 +382,9 @@
                 : null,
             panel:
               items[FormFor.Panel]
-                ? [
-                  toData(items[FormFor.Panel].forms.presenter[0]),
-                ]
+                ? items[FormFor.Panel].forms.presenter.map(toPresenterInput)
                 : [],
           };
-
-          for (const presenter of (info[FormFor.Talk]?.presenter || [])) {
-            if ("string" === typeof presenter.photo) {
-              delete presenter.photo;
-            }
-          }
-
-          for (const presenter of (info[FormFor.Workshop]?.presenter || [])) {
-            if ("string" === typeof presenter.photo) {
-              delete presenter.photo;
-            }
-          }
-
-          for (const presenter of (info[FormFor.Fusion]?.presenter || [])) {
-            if ("string" === typeof presenter?.photo) {
-              delete presenter.photo;
-            }
-          }
-
-          for (const presenter of (info[FormFor.Panel] || [])) {
-            if ("string" === typeof presenter.photo) {
-              delete presenter.photo;
-            }
-          }
 
           isLoading.value = true;
           const resp = await useMutation<IEditApprovedCompanyApplicationMutation, IEditApprovedCompanyApplicationMutationVariables>(EditApprovedCompanyApplication)({

@@ -152,36 +152,67 @@
           <template
             v-if="item.selected"
           >
-            <fieldset
+            <template
               v-for="(form, formName) in item.forms"
               :key="`${name}--${formName}`"
-              :class="$style.formFieldset"
             >
-              <legend>
-                <translated-text :trans-key="`form.legend.${formName}`" />
-              </legend>
+              <template v-if="Array.isArray(form)">
+                <fieldset
+                  v-for="(inputs, i) in form"
+                  :key="`${formName}__${objectKey(inputs)}`"
+                  :class="$style.formFieldset"
+                >
+                  <legend>
+                    <translated-text :trans-key="`form.legend.${formName}`" />
+                    <span v-if="form.length > 1">&nbsp;{{ i + 1 }}</span>
+                  </legend>
 
-              <app-formgroup
-                :class="$style.formContainer"
-                :errors="item.errors[formName]"
-                :inputs="form"
-                :loading="isLoading"
-                no-form
+                  <app-move-buttons
+                    v-if="form.length > 1"
+                    :count="form.length"
+                    :disabled="isLoading"
+                    :index="i"
+                    @move="moveForm(item, formName, i, $event)"
+                  />
+
+                  <app-formgroup
+                    :errors="item.errors[formName][i]"
+                    :inputs="inputs"
+                    :loading="isLoading"
+                    no-form
+                  />
+                </fieldset>
+              </template>
+              <fieldset
+                v-else
+                :class="$style.formFieldset"
               >
-                <template #after>
-                  <div
-                    v-if="item.errors[formName].entity.length > 0"
-                    :class="$style.errorContainer"
-                  >
-                    <translated-text
-                      v-for="err in item.errors[formName].entity"
-                      :key="err.message"
-                      :trans-key="err.message"
-                    />
-                  </div>
-                </template>
-              </app-formgroup>
-            </fieldset>
+                <legend>
+                  <translated-text :trans-key="`form.legend.${formName}`" />
+                </legend>
+
+                <app-formgroup
+                  :class="$style.formContainer"
+                  :errors="item.errors[formName]"
+                  :inputs="form"
+                  :loading="isLoading"
+                  no-form
+                >
+                  <template #after>
+                    <div
+                      v-if="item.errors[formName].entity.length > 0"
+                      :class="$style.errorContainer"
+                    >
+                      <translated-text
+                        v-for="err in item.errors[formName].entity"
+                        :key="err.message"
+                        :trans-key="err.message"
+                      />
+                    </div>
+                  </template>
+                </app-formgroup>
+              </fieldset>
+            </template>
           </template>
         </Panel>
         <Panel
@@ -281,11 +312,14 @@
   import {
     companyApplicationContactPersonCreate,
     companyApplicationFusionCreate,
-    companyApplicationPresenterCreate,
     companyApplicationQuestCreate,
     companyApplicationTalkCreate,
     companyApplicationWorkshopCreate,
     companySignatoryCreate,
+    moveForm,
+    objectKey,
+    presenterForms,
+    toPresenterInput,
     type ContactPerson,
     type Fusion,
     type Presenter,
@@ -295,6 +329,7 @@
     type Workshop,
   } from "~/helpers/forms/company-application";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
+  import AppMoveButtons from "~/components/util/form/app-move-buttons.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
   import {
     graphql,
@@ -318,6 +353,7 @@
     components: {
       TranslatedText,
       AppFormgroup,
+      AppMoveButtons,
       AppMaxWidthContainer,
       Panel,
       Checkbox,
@@ -346,7 +382,7 @@
         message: string,
       };
       const toErrors =
-        <T>(form: T) =>
+        <T>(form: T): Record<keyof T | "entity", AuthError[]> =>
           mapObject(
             () => [] as AuthError[],
             {
@@ -355,6 +391,12 @@
             },
           ) as Record<keyof T | "entity", AuthError[]>
       ;
+      const toFormErrors =
+        <T>(form: T | T[]) =>
+          Array.isArray(form)
+            ? form.map((f) => toErrors(f))
+            : toErrors(form)
+      ;
 
       const company = resp?.companyApplicationFor?.forCompany;
       const application = resp?.companyApplicationFor;
@@ -362,6 +404,8 @@
       const panelParticipants = application?.panelParticipants || [];
 
       const requireHr = company?.vat.startsWith("HR");
+
+      const approval = application?.approval;
 
       const contactPersonCreateForm = companyApplicationContactPersonCreate(resp?.companyApplicationFor?.contactPerson)();
       const contactPerson = reactive({
@@ -423,7 +467,7 @@
             errors:
               x.forms
                 ? map(
-                  toErrors,
+                  toFormErrors,
                   // @ts-ignore
                   x.forms,
                 )
@@ -439,11 +483,11 @@
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  application?.talk?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  application?.talk?.presenters,
+                  approval?.talkParticipants,
+                  { requireHr },
+                ),
               },
               selected: Boolean(application?.talk),
             },
@@ -454,11 +498,11 @@
                 )({
                   requireHr,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  application?.workshop?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  application?.workshop?.presenters,
+                  approval?.workshopParticipants,
+                  { requireHr },
+                ),
               },
               selected: Boolean(application?.workshop),
             },
@@ -470,11 +514,11 @@
                   requireHr,
                   categories: talkCategoriesStore.talkCategories,
                 }),
-                presenter: companyApplicationPresenterCreate(
-                  application?.fusion?.presenters[0],
-                )({
-                  requireHr,
-                }),
+                presenter: presenterForms(
+                  application?.fusion?.presenters,
+                  approval?.fusionParticipants,
+                  { requireHr },
+                ),
               },
               selected: Boolean(application?.fusion),
             },
@@ -525,6 +569,8 @@
         signatories,
         addSignatory,
         removeSignatory,
+        objectKey,
+        moveForm,
         async handleDelete() {
           if (!confirm("Are you sure you want to delete this application?")) {
             return;
@@ -566,12 +612,25 @@
           for (const item of Object.values(items)) {
             if (item.errors) {
               for (const errors of Object.values(item.errors)) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                resetErrorsFor(errors as any);
+                for (const formErrors of (Array.isArray(errors) ? errors : [ errors ])) {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                  resetErrorsFor(formErrors as any);
+                }
               }
             }
           }
           resetErrorsFor(contactPerson.errors.info);
+
+          const sentPresenterIndexes: Record<string, number[]> = {};
+          const presentersToSend = (event: string, forms: Record<keyof Presenter, InputEntry>[]) => {
+            const isEmpty = (inputs: Record<keyof Presenter, InputEntry>) => Object.values(inputs).every((input) => !input.value);
+            const filled = forms.map((_, i) => i).filter((i) => !isEmpty(forms[i]));
+            const indexes = 0 < filled.length ? filled : [ 0 ];
+
+            sentPresenterIndexes[event] = indexes;
+
+            return indexes.map((i) => toPresenterInput(forms[i]));
+          };
 
           // eslint-disable-next-line camelcase
           const info: IPageAdminSeasonApplicationsCompanyEdit_UpsertApplicationMutationVariables["info"] = {
@@ -584,7 +643,7 @@
                 ? {
                   // @ts-ignore
                   ...toData<Talk>(selectedObj.talk.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.talk.forms!.presenter),
+                  presenter: presentersToSend("talk", selectedObj.talk.forms!.presenter),
                 }
                 : null,
             workshop:
@@ -592,7 +651,7 @@
                 ? {
                   // @ts-ignore
                   ...toData<Workshop>(selectedObj.workshop.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.workshop.forms!.presenter),
+                  presenter: presentersToSend("workshop", selectedObj.workshop.forms!.presenter),
                 }
                 : null,
             fusion:
@@ -600,7 +659,7 @@
                 ? {
                   // @ts-ignore
                   ...toData<Fusion>(selectedObj.fusion.forms!.info),
-                  presenter: toData<Presenter>(selectedObj.fusion.forms!.presenter),
+                  presenter: presentersToSend("fusion", selectedObj.fusion.forms!.presenter),
                 }
                 : null,
             quest:
@@ -611,18 +670,6 @@
             wantsPanel: Boolean(selectedObj.panel),
             wantsQuest: Boolean(selectedObj.quest),
           };
-
-          if ("string" === typeof info.workshop?.presenter?.photo) {
-            delete info.workshop.presenter.photo;
-          }
-
-          if ("string" === typeof info.talk?.presenter?.photo) {
-            delete info.talk.presenter.photo;
-          }
-
-          if ("string" === typeof info.fusion?.presenter?.photo) {
-            delete info.fusion.presenter.photo;
-          }
 
           isLoading.value = true;
           const resp = await useMutation(graphql(/* GraphQL */`
@@ -682,12 +729,15 @@
             resp
               .errors
               .map((err) => {
-                const [ form, part, input ] = err.field.split(".");
+                const [ form, part, input, ...rest ] = err.field.split(".");
 
                 if (!input) {
                   err.field = [ form, "errors", "info", part ].join(".");
+                } else if ("presenter" === part && sentPresenterIndexes[form]) {
+                  const formIndex = sentPresenterIndexes[form][Number(input)] ?? input;
+                  err.field = [ form, "errors", part, formIndex, ...rest ].join(".");
                 } else {
-                  err.field = [ form, "errors", part, input ].join(".");
+                  err.field = [ form, "errors", part, input, ...rest ].join(".");
                 }
 
                 return err;

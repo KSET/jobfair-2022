@@ -60,4 +60,7 @@ export class PresenterCreateInput {
 
   @Field(() => ImageCropInput, { nullable: true })
     photoCrop: ImageCropInput | null = null;
+
+  @Field(() => String, { nullable: true })
+    existingPhotoUid: string | null = null;
 }

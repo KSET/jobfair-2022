@@ -15,6 +15,9 @@ import {
   transformSelectFor,
 } from "../helpers/resolver";
 import {
+  presenterOrderBy,
+} from "../../helpers/presenter";
+import {
   Dict,
   GQLField,
 } from "../../types/helpers";
@@ -75,6 +78,7 @@ export const transformSelect = transformSelectFor<CompanyApplicationWorkshopFiel
   presenters(select) {
     select.presenters = {
       select: transformSelectPresenter(select.presenters as Record<string, unknown>),
+      orderBy: presenterOrderBy,
     };
 
     return select;
@@ -122,12 +126,6 @@ class WorkshopCreateInputBase {
 
   @Field()
     language: string = "";
-}
-
-@InputType()
-export class WorkshopCreateInput extends WorkshopCreateInputBase {
-  @Field(() => PresenterCreateInput)
-    presenter: PresenterCreateInput = null as unknown as PresenterCreateInput;
 }
 
 @InputType()

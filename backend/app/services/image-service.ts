@@ -213,7 +213,7 @@ export class ImageService {
           ])
       ;
 
-      return prisma.image.create({
+      return await prisma.image.create({
         data: {
           name: fileInfo.filename,
           uploader: {

@@ -1019,6 +1019,34 @@ export type ICompanyProgram = {
   workshop?: Maybe<IApplicationWorkshop>;
 };
 
+export type ICompanyRecheckApplyInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  legalName?: InputMaybe<Scalars['String']['input']>;
+  storedAddress: Scalars['String']['input'];
+  storedLegalName: Scalars['String']['input'];
+  uid: Scalars['String']['input'];
+};
+
+export type ICompanyRecheckApplyResult = {
+  error?: Maybe<Scalars['String']['output']>;
+  uid: Scalars['String']['output'];
+  updated: Scalars['Boolean']['output'];
+};
+
+export type ICompanyRecheckResult = {
+  addressChanged: Scalars['Boolean']['output'];
+  apiAddress?: Maybe<Scalars['String']['output']>;
+  apiLegalName?: Maybe<Scalars['String']['output']>;
+  brandName: Scalars['String']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  legalNameChanged: Scalars['Boolean']['output'];
+  status: Scalars['String']['output'];
+  storedAddress: Scalars['String']['output'];
+  storedLegalName: Scalars['String']['output'];
+  uid: Scalars['String']['output'];
+  vat: Scalars['String']['output'];
+};
+
 export type ICompanyRelationFilter = {
   is?: InputMaybe<ICompanyWhereInput>;
   isNot?: InputMaybe<ICompanyWhereInput>;
@@ -1685,6 +1713,7 @@ export type ILiveVoteWhereInput = {
 
 export type IMutation = {
   addCompanyMember?: Maybe<Scalars['String']['output']>;
+  applyCompaniesVatData: Array<ICompanyRecheckApplyResult>;
   approveCompanyApplications: Array<ICompanyApplicationApproval>;
   checkPasswordReset?: Maybe<IUser>;
   createCocktailType?: Maybe<IApplicationCocktailType>;
@@ -1759,6 +1788,11 @@ export type IMutation = {
 
 export type IMutationAddCompanyMemberArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type IMutationApplyCompaniesVatDataArgs = {
+  updates: Array<ICompanyRecheckApplyInput>;
 };
 
 
@@ -2541,6 +2575,7 @@ export type IQuery = {
   questApplicants: Array<IQuestApplicantEntry>;
   questCompanies: Array<ICompany>;
   questCompaniesWithStats: Array<IQuestCompanyStats>;
+  recheckCompaniesVatData: Array<ICompanyRecheckResult>;
   resume?: Maybe<IResume>;
   resumeFavourites: Array<Scalars['String']['output']>;
   resumeInterests: ISearchResponseStringArray;
@@ -2814,6 +2849,11 @@ export type IQueryQuestCompaniesArgs = {
 
 export type IQueryQuestCompaniesWithStatsArgs = {
   seasonUid: Scalars['String']['input'];
+};
+
+
+export type IQueryRecheckCompaniesVatDataArgs = {
+  uids: Array<Scalars['String']['input']>;
 };
 
 
@@ -5763,11 +5803,13 @@ export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQueryVariables
 
 export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery = IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_Query;
 
+export type IPageParticipants_BaseQuery_participants_Company_industry_Industry = { name: string };
+
 export type IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image = { thumbUrl: string, fullUrl: string };
 
 export type IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage = { averageRating: number, ratingCount?: number | null, component: string };
 
-export type IPageParticipants_BaseQuery_participants_Company = { uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, rasterLogo?: IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image | null, ratings: Array<IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
+export type IPageParticipants_BaseQuery_participants_Company = { uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, industry?: IPageParticipants_BaseQuery_participants_Company_industry_Industry | null, rasterLogo?: IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image | null, ratings: Array<IPageParticipants_BaseQuery_participants_Company_ratings_UserCompanyComponentRatingComponentAverage> };
 
 export type IPageParticipants_BaseQuery_Query = { participants: Array<IPageParticipants_BaseQuery_participants_Company> };
 
@@ -6170,6 +6212,9 @@ export type IResolversTypes = {
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ResolverTypeWrapper<ICompanyProgram>;
+  CompanyRecheckApplyInput: ICompanyRecheckApplyInput;
+  CompanyRecheckApplyResult: ResolverTypeWrapper<ICompanyRecheckApplyResult>;
+  CompanyRecheckResult: ResolverTypeWrapper<ICompanyRecheckResult>;
   CompanyRelationFilter: ICompanyRelationFilter;
   CompanyScalarFieldEnum: ICompanyScalarFieldEnum;
   CompanyScanUserQrRefineData: ICompanyScanUserQrRefineData;
@@ -6496,6 +6541,9 @@ export type IResolversParentTypes = {
   CompanyPanelUpdateInput: ICompanyPanelUpdateInput;
   CompanyPanelWhereInput: ICompanyPanelWhereInput;
   CompanyProgram: ICompanyProgram;
+  CompanyRecheckApplyInput: ICompanyRecheckApplyInput;
+  CompanyRecheckApplyResult: ICompanyRecheckApplyResult;
+  CompanyRecheckResult: ICompanyRecheckResult;
   CompanyRelationFilter: ICompanyRelationFilter;
   CompanyScanUserQrRefineData: ICompanyScanUserQrRefineData;
   CompanyScanUserQrResponse: ICompanyScanUserQrResponse;
@@ -7037,6 +7085,28 @@ export type ICompanyProgramResolvers<ContextType = any, ParentType extends IReso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ICompanyRecheckApplyResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyRecheckApplyResult'] = IResolversParentTypes['CompanyRecheckApplyResult']> = {
+  error?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  updated?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ICompanyRecheckResultResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyRecheckResult'] = IResolversParentTypes['CompanyRecheckResult']> = {
+  addressChanged?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  apiAddress?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  apiLegalName?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  brandName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  error?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType>;
+  legalNameChanged?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
+  status?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  storedAddress?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  storedLegalName?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  uid?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  vat?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ICompanyScanUserQrResponseResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyScanUserQrResponse'] = IResolversParentTypes['CompanyScanUserQrResponse']> = {
   alreadyScanned?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   companyWantsQuest?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
@@ -7278,6 +7348,7 @@ export type ILiveVoteResultResolvers<ContextType = any, ParentType extends IReso
 
 export type IMutationResolvers<ContextType = any, ParentType extends IResolversParentTypes['Mutation'] = IResolversParentTypes['Mutation']> = {
   addCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationAddCompanyMemberArgs, 'email'>>;
+  applyCompaniesVatData?: Resolver<Array<IResolversTypes['CompanyRecheckApplyResult']>, ParentType, ContextType, RequireFields<IMutationApplyCompaniesVatDataArgs, 'updates'>>;
   approveCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType, RequireFields<IMutationApproveCompanyApplicationsArgs, 'companies' | 'season'>>;
   checkPasswordReset?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IMutationCheckPasswordResetArgs, 'token'>>;
   createCocktailType?: Resolver<Maybe<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, RequireFields<IMutationCreateCocktailTypeArgs, 'season' | 'type'>>;
@@ -7479,6 +7550,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   questApplicants?: Resolver<Array<IResolversTypes['QuestApplicantEntry']>, ParentType, ContextType, RequireFields<IQueryQuestApplicantsArgs, 'companyUid' | 'seasonUid'>>;
   questCompanies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType, Partial<IQueryQuestCompaniesArgs>>;
   questCompaniesWithStats?: Resolver<Array<IResolversTypes['QuestCompanyStats']>, ParentType, ContextType, RequireFields<IQueryQuestCompaniesWithStatsArgs, 'seasonUid'>>;
+  recheckCompaniesVatData?: Resolver<Array<IResolversTypes['CompanyRecheckResult']>, ParentType, ContextType, RequireFields<IQueryRecheckCompaniesVatDataArgs, 'uids'>>;
   resume?: Resolver<Maybe<IResolversTypes['Resume']>, ParentType, ContextType, RequireFields<IQueryResumeArgs, 'uid'>>;
   resumeFavourites?: Resolver<Array<IResolversTypes['String']>, ParentType, ContextType>;
   resumeInterests?: Resolver<IResolversTypes['SearchResponseStringArray'], ParentType, ContextType, RequireFields<IQueryResumeInterestsArgs, 'query'>>;
@@ -7856,6 +7928,8 @@ export type IResolvers<ContextType = any> = {
   CompanyPanel?: ICompanyPanelResolvers<ContextType>;
   CompanyPanelCount?: ICompanyPanelCountResolvers<ContextType>;
   CompanyProgram?: ICompanyProgramResolvers<ContextType>;
+  CompanyRecheckApplyResult?: ICompanyRecheckApplyResultResolvers<ContextType>;
+  CompanyRecheckResult?: ICompanyRecheckResultResolvers<ContextType>;
   CompanyScanUserQrResponse?: ICompanyScanUserQrResponseResolvers<ContextType>;
   CompanyScannedUser?: ICompanyScannedUserResolvers<ContextType>;
   CompanySignatory?: ICompanySignatoryResolvers<ContextType>;
@@ -9956,6 +10030,9 @@ export const PageParticipants_Base = gql`
     descriptionEn
     descriptionHr
     logoHidden
+    industry {
+      name
+    }
     rasterLogo {
       thumbUrl
       fullUrl

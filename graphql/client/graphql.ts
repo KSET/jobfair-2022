@@ -1017,6 +1017,34 @@ export type CompanyProgram = {
   workshop?: Maybe<ApplicationWorkshop>;
 };
 
+export type CompanyRecheckApplyInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  legalName?: InputMaybe<Scalars['String']['input']>;
+  storedAddress: Scalars['String']['input'];
+  storedLegalName: Scalars['String']['input'];
+  uid: Scalars['String']['input'];
+};
+
+export type CompanyRecheckApplyResult = {
+  error?: Maybe<Scalars['String']['output']>;
+  uid: Scalars['String']['output'];
+  updated: Scalars['Boolean']['output'];
+};
+
+export type CompanyRecheckResult = {
+  addressChanged: Scalars['Boolean']['output'];
+  apiAddress?: Maybe<Scalars['String']['output']>;
+  apiLegalName?: Maybe<Scalars['String']['output']>;
+  brandName: Scalars['String']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  legalNameChanged: Scalars['Boolean']['output'];
+  status: Scalars['String']['output'];
+  storedAddress: Scalars['String']['output'];
+  storedLegalName: Scalars['String']['output'];
+  uid: Scalars['String']['output'];
+  vat: Scalars['String']['output'];
+};
+
 export type CompanyRelationFilter = {
   is?: InputMaybe<CompanyWhereInput>;
   isNot?: InputMaybe<CompanyWhereInput>;
@@ -1683,6 +1711,7 @@ export type LiveVoteWhereInput = {
 
 export type Mutation = {
   addCompanyMember?: Maybe<Scalars['String']['output']>;
+  applyCompaniesVatData: Array<CompanyRecheckApplyResult>;
   approveCompanyApplications: Array<CompanyApplicationApproval>;
   checkPasswordReset?: Maybe<User>;
   createCocktailType?: Maybe<ApplicationCocktailType>;
@@ -1757,6 +1786,11 @@ export type Mutation = {
 
 export type MutationAddCompanyMemberArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type MutationApplyCompaniesVatDataArgs = {
+  updates: Array<CompanyRecheckApplyInput>;
 };
 
 
@@ -2539,6 +2573,7 @@ export type Query = {
   questApplicants: Array<QuestApplicantEntry>;
   questCompanies: Array<Company>;
   questCompaniesWithStats: Array<QuestCompanyStats>;
+  recheckCompaniesVatData: Array<CompanyRecheckResult>;
   resume?: Maybe<Resume>;
   resumeFavourites: Array<Scalars['String']['output']>;
   resumeInterests: SearchResponseStringArray;
@@ -2812,6 +2847,11 @@ export type QueryQuestCompaniesArgs = {
 
 export type QueryQuestCompaniesWithStatsArgs = {
   seasonUid: Scalars['String']['input'];
+};
+
+
+export type QueryRecheckCompaniesVatDataArgs = {
+  uids: Array<Scalars['String']['input']>;
 };
 
 
@@ -4864,7 +4904,7 @@ export type PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery = { liveV
 export type PageParticipants_BaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PageParticipants_BaseQuery = { participants: Array<{ uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, rasterLogo?: { thumbUrl: string, fullUrl: string } | null, ratings: Array<{ averageRating: number, ratingCount?: number | null, component: string }> }> };
+export type PageParticipants_BaseQuery = { participants: Array<{ uid: string, website: string, brandName: string, descriptionEn: string, descriptionHr: string, logoHidden: boolean, industry?: { name: string } | null, rasterLogo?: { thumbUrl: string, fullUrl: string } | null, ratings: Array<{ averageRating: number, ratingCount?: number | null, component: string }> }> };
 
 export type PageParticipants_RatingsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5041,7 +5081,7 @@ export const PageLiveVoteSeasonIndex_DeleteCommentDocument = {"kind":"Document",
 export const PageLiveVoteSeasonIndex_SubmitCommentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageLiveVoteSeasonIndex_SubmitComment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"comment"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createLiveVoteComment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"comment"},"value":{"kind":"Variable","name":{"kind":"Name","value":"comment"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"comment"}}]}}]}}]} as unknown as DocumentNode<PageLiveVoteSeasonIndex_SubmitCommentMutation, PageLiveVoteSeasonIndex_SubmitCommentMutationVariables>;
 export const PageLiveVoteSeasonIndex_SubmitVoteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageLiveVoteSeasonIndex_SubmitVote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"vote"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createLiveVote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"vote"},"value":{"kind":"Variable","name":{"kind":"Name","value":"vote"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"option"}}]}}]}}]} as unknown as DocumentNode<PageLiveVoteSeasonIndex_SubmitVoteMutation, PageLiveVoteSeasonIndex_SubmitVoteMutationVariables>;
 export const PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResults"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"liveVoteResults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"seasonUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seasonUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"option"}},{"kind":"Field","name":{"kind":"Name","value":"voteCount"}}]}}]}}]} as unknown as DocumentNode<PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery, PageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQueryVariables>;
-export const PageParticipants_BaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageParticipants_Base"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionEn"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionHr"}},{"kind":"Field","name":{"kind":"Name","value":"logoHidden"}},{"kind":"Field","name":{"kind":"Name","value":"rasterLogo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thumbUrl"}},{"kind":"Field","name":{"kind":"Name","value":"fullUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"averageRating"}},{"kind":"Field","name":{"kind":"Name","value":"ratingCount"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]} as unknown as DocumentNode<PageParticipants_BaseQuery, PageParticipants_BaseQueryVariables>;
+export const PageParticipants_BaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageParticipants_Base"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionEn"}},{"kind":"Field","name":{"kind":"Name","value":"descriptionHr"}},{"kind":"Field","name":{"kind":"Name","value":"logoHidden"}},{"kind":"Field","name":{"kind":"Name","value":"industry"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rasterLogo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"thumbUrl"}},{"kind":"Field","name":{"kind":"Name","value":"fullUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"averageRating"}},{"kind":"Field","name":{"kind":"Name","value":"ratingCount"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]} as unknown as DocumentNode<PageParticipants_BaseQuery, PageParticipants_BaseQueryVariables>;
 export const PageParticipants_RatingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PageParticipants_Ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"brandName"}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"averageRating"}},{"kind":"Field","name":{"kind":"Name","value":"ratingCount"}},{"kind":"Field","name":{"kind":"Name","value":"component"}}]}}]}}]}}]} as unknown as DocumentNode<PageParticipants_RatingsQuery, PageParticipants_RatingsQueryVariables>;
 export const PageProfileMeCompanyScanUserQrScanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageProfileMeCompanyScanUserQrScan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scanUserQr"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"resume"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cv"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"isStarred"}},{"kind":"Field","name":{"kind":"Name","value":"alreadyScanned"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"cvSaved"}},{"kind":"Field","name":{"kind":"Name","value":"questEntered"}},{"kind":"Field","name":{"kind":"Name","value":"companyWantsQuest"}},{"kind":"Field","name":{"kind":"Name","value":"deleted"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<PageProfileMeCompanyScanUserQrScanMutation, PageProfileMeCompanyScanUserQrScanMutationVariables>;
 export const PageProfileMeCompanyScanUserQrRefineQrScanDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PageProfileMeCompanyScanUserQrRefineQrScan"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"refineData"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CompanyScanUserQrRefineData"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scanUserQrRefine"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userUid"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userUid"}}},{"kind":"Argument","name":{"kind":"Name","value":"refineData"},"value":{"kind":"Variable","name":{"kind":"Name","value":"refineData"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uid"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"resume"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cv"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"isStarred"}},{"kind":"Field","name":{"kind":"Name","value":"alreadyScanned"}},{"kind":"Field","name":{"kind":"Name","value":"note"}},{"kind":"Field","name":{"kind":"Name","value":"cvSaved"}},{"kind":"Field","name":{"kind":"Name","value":"questEntered"}},{"kind":"Field","name":{"kind":"Name","value":"companyWantsQuest"}},{"kind":"Field","name":{"kind":"Name","value":"deleted"}},{"kind":"Field","name":{"kind":"Name","value":"error"}}]}}]}}]} as unknown as DocumentNode<PageProfileMeCompanyScanUserQrRefineQrScanMutation, PageProfileMeCompanyScanUserQrRefineQrScanMutationVariables>;

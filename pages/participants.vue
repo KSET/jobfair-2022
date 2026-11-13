@@ -36,26 +36,61 @@
       <translated-text trans-key="participants.text" />
     </p>
 
-    <div :class="$style.companyGrid">
-      <div
-        v-for="participant in participants"
-        :key="participant.uid"
-        :class="$style.companyContainer"
+    <nav :class="$style.industryNav">
+      <a
+        v-for="group in participantGroups"
+        :key="group.id"
+        :href="`#${ group.id }`"
+        class="p-button p-button-outlined p-button-sm"
       >
-        <NuxtLink
-          :to="{ name: 'company-uid', params: { uid: participant.uid } }"
+        <template v-if="group.name !== null">
+          {{ group.name }}
+        </template>
+        <translated-text v-else-if="noIndustryHasKey" :trans-key="NO_INDUSTRY_KEY" />
+        <template v-else>
+          {{ noIndustryFallback }}
+        </template>
+        &nbsp;({{ group.participants.length }})
+      </a>
+    </nav>
+
+    <section
+      v-for="group in participantGroups"
+      :id="group.id"
+      :key="group.id"
+      :class="$style.industrySection"
+    >
+      <h2>
+        <template v-if="group.name !== null">
+          {{ group.name }}
+        </template>
+        <translated-text v-else-if="noIndustryHasKey" :trans-key="NO_INDUSTRY_KEY" />
+        <template v-else>
+          {{ noIndustryFallback }}
+        </template>
+      </h2>
+
+      <div :class="$style.companyGrid">
+        <div
+          v-for="participant in group.participants"
+          :key="participant.uid"
+          :class="$style.companyContainer"
         >
-          <AppImg
-            :alt="`${participant.brandName} logo`"
-            :lazy-src="participant.rasterLogo?.thumbUrl"
-            :src="participant.rasterLogo?.fullUrl ?? ''"
-            :title="participant.titleText"
-            aspect-ratio="1.78"
-            contain
-          />
-        </NuxtLink>
+          <NuxtLink
+            :to="{ name: 'company-uid', params: { uid: participant.uid } }"
+          >
+            <AppImg
+              :alt="`${participant.brandName} logo`"
+              :lazy-src="participant.rasterLogo?.thumbUrl"
+              :src="participant.rasterLogo?.fullUrl ?? ''"
+              :title="participant.titleText"
+              aspect-ratio="1.78"
+              contain
+            />
+          </NuxtLink>
+        </div>
       </div>
-    </div>
+    </section>
   </app-max-width-container>
 </template>
 
@@ -95,7 +130,7 @@
   const participantsShown = computed(() => seasonsStore.areParticipantsShown);
   const eventOngoing = computed(() => seasonsStore.isEventOngoing);
 
-  if (!participantsShown) {
+  if (!participantsShown.value) {
     throw createError({ statusCode: 404, statusMessage: "Page Not Found" });
   }
 
@@ -134,6 +169,9 @@
             descriptionEn
             descriptionHr
             logoHidden
+            industry {
+              name
+            }
             rasterLogo {
                 thumbUrl
                 fullUrl
@@ -152,12 +190,86 @@
       .then((x) => x.map(withTitleText))
   ;
 
+  type Participant = (typeof participants)[number];
+
+  type ParticipantGroup = {
+    id: string,
+    name: string | null,
+    participants: Participant[],
+  };
+
+  const NO_INDUSTRY_KEY = "participants.industry.none";
+  const NO_INDUSTRY_ID = "industry--none";
+  const INDUSTRY_SORT_LOCALE = "hr";
+
+  const noIndustryHasKey = computed(() => translationsStore.hasTranslation(NO_INDUSTRY_KEY) || translationsStore.isEditable);
+  const noIndustryFallback = computed(() => (Language.HR === translationsStore.currentLanguage ? "Ostalo" : "Other"));
+
+  const industrySlug = (name: string) =>
+    name
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036F]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+  ;
+
+  const participantGroups = computed(() => {
+    const byIndustry = new Map<string | null, Participant[]>();
+    for (const participant of participants) {
+      const name = participant.industry?.name?.trim() || null;
+      const group = byIndustry.get(name);
+
+      if (group) {
+        group.push(participant);
+      } else {
+        byIndustry.set(name, [ participant ]);
+      }
+    }
+
+    const usedIds = new Set<string>([ NO_INDUSTRY_ID ]);
+    const uniqueId = (name: string, index: number) => {
+      const base = `industry-${ industrySlug(name) || index }`;
+      let id = base;
+      for (let n = 2; usedIds.has(id); n++) {
+        id = `${ base }-${ n }`;
+      }
+      usedIds.add(id);
+      return id;
+    };
+
+    const groups: ParticipantGroup[] =
+      [ ...byIndustry.entries() ]
+        .filter((entry): entry is [ string, Participant[] ] => null !== entry[0])
+        .sort(([ a ], [ b ]) => a.localeCompare(b, INDUSTRY_SORT_LOCALE))
+        .map(([ name, list ], index) => ({
+          id: uniqueId(name, index),
+          name,
+          participants: list,
+        }))
+    ;
+
+    const withoutIndustry = byIndustry.get(null);
+    if (withoutIndustry?.length) {
+      groups.push({
+        id: NO_INDUSTRY_ID,
+        name: null,
+        participants: withoutIndustry,
+      });
+    }
+
+    return groups;
+  });
+
   const toTop10 = (
     participants: {
       uid: string,
       brandName: string,
       ratings: {
         averageRating: number,
+        ratingCount?: number | null,
         component: string,
       }[],
     }[],
@@ -174,7 +286,7 @@
           uid: x.uid,
           brandName: x.brandName,
           rating: rating.averageRating,
-          ratingCount: rating.ratingCount,
+          ratingCount: rating.ratingCount ?? 0,
         };
       })
       .filter(Boolean)
@@ -201,16 +313,26 @@
     `),
   });
 
+  const refreshTop10 = async () => {
+    const res = await ratingsQuery().then((res) => res?.data);
+
+    if (!res) {
+      return;
+    }
+
+    top10.value = toTop10(res.participants);
+  };
+
+  let ratingsInterval: ReturnType<typeof setInterval> | undefined;
+
   onMounted(() => {
-    setInterval((async () => {
-      const res = await ratingsQuery().then((res) => res?.data);
+    ratingsInterval = setInterval(() => {
+      void refreshTop10();
+    }, 8000 + Math.random() * 6000);
+  });
 
-      if (!res) {
-        return;
-      }
-
-      top10.value = toTop10(participants);
-    }) as unknown as () => void, 8000 + Math.random() * 6000);
+  onBeforeUnmount(() => {
+    clearInterval(ratingsInterval);
   });
 
   const formatNumber = (x: number) => x.toLocaleString(translationsStore.currentLanguageIso, {
@@ -221,6 +343,18 @@
 
 <style lang="scss" module>
   @import "assets/styles/include";
+
+  .industryNav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 2rem;
+  }
+
+  .industrySection {
+    margin-bottom: 2.5rem;
+    scroll-margin-top: calc(#{$nav-height} + 1rem);
+  }
 
   .companyGrid {
     display: grid;

@@ -66,6 +66,11 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <nuxt-link :to="{ name: 'admin-companies-recheck' }">
+            Provjera podataka (VIES)
+          </nuxt-link>
+        </dd>
       </dl>
     </div>
 

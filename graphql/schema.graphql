@@ -889,6 +889,34 @@ type CompanyProgram {
   workshop: ApplicationWorkshop
 }
 
+input CompanyRecheckApplyInput {
+  address: String
+  legalName: String
+  storedAddress: String!
+  storedLegalName: String!
+  uid: String!
+}
+
+type CompanyRecheckApplyResult {
+  error: String
+  uid: String!
+  updated: Boolean!
+}
+
+type CompanyRecheckResult {
+  addressChanged: Boolean!
+  apiAddress: String
+  apiLegalName: String
+  brandName: String!
+  error: String
+  legalNameChanged: Boolean!
+  status: String!
+  storedAddress: String!
+  storedLegalName: String!
+  uid: String!
+  vat: String!
+}
+
 input CompanyRelationFilter {
   is: CompanyWhereInput
   isNot: CompanyWhereInput
@@ -1490,6 +1518,7 @@ input LiveVoteWhereInput {
 
 type Mutation {
   addCompanyMember(email: String!): String
+  applyCompaniesVatData(updates: [CompanyRecheckApplyInput!]!): [CompanyRecheckApplyResult!]!
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   checkPasswordReset(token: String!): User
   createCocktailType(season: String!, type: String!): ApplicationCocktailType
@@ -1962,6 +1991,7 @@ type Query {
   questApplicants(companyUid: String!, seasonUid: String!): [QuestApplicantEntry!]!
   questCompanies(seasonUid: String): [Company!]!
   questCompaniesWithStats(seasonUid: String!): [QuestCompanyStats!]!
+  recheckCompaniesVatData(uids: [String!]!): [CompanyRecheckResult!]!
   resume(uid: String!): Resume
   resumeFavourites: [String!]!
   resumeInterests(index: Int, query: String!): SearchResponseStringArray!

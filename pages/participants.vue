@@ -71,24 +71,32 @@
       </h2>
 
       <div :class="$style.companyGrid">
-        <div
+        <NuxtLink
           v-for="participant in group.participants"
           :key="participant.uid"
-          :class="$style.companyContainer"
+          :aria-label="participant.brandName"
+          :class="$style.companyTile"
+          :title="participant.titleText"
+          :to="{ name: 'company-uid', params: { uid: participant.uid } }"
         >
-          <NuxtLink
-            :to="{ name: 'company-uid', params: { uid: participant.uid } }"
+          <img
+            v-if="participant.rasterLogo?.fullUrl"
+            :ref="(el) => registerLogo(participant.uid, el)"
+            :alt="`${participant.brandName} logo`"
+            :class="$style.companyLogo"
+            :src="participant.rasterLogo.fullUrl"
+            :style="logoStyle(participant.uid)"
+            decoding="async"
+            draggable="false"
+            loading="lazy"
+            @load="registerLogo(participant.uid, $event.target)"
           >
-            <AppImg
-              :alt="`${participant.brandName} logo`"
-              :lazy-src="participant.rasterLogo?.thumbUrl"
-              :src="participant.rasterLogo?.fullUrl ?? ''"
-              :title="participant.titleText"
-              aspect-ratio="1.78"
-              contain
-            />
-          </NuxtLink>
-        </div>
+          <span
+            v-else
+            :class="$style.companyName"
+            v-text="participant.brandName"
+          />
+        </NuxtLink>
       </div>
     </section>
   </app-max-width-container>
@@ -110,7 +118,6 @@
     useQuery,
     createError,
   } from "#imports";
-  import AppImg from "~/components/util/app-img.vue";
   import {
     graphql,
   } from "~/graphql/client";
@@ -263,6 +270,34 @@
     return groups;
   });
 
+  const LOGO_BASE_HEIGHT = 120;
+  const LOGO_MAX_HEIGHT = 110;
+  const LOGO_MIN_HEIGHT = 36;
+
+  const logoRatios = ref<Record<string, number>>({});
+
+  const registerLogo = (uid: string, el: unknown) => {
+    if (!(el instanceof HTMLImageElement) || !el.complete || !el.naturalHeight) {
+      return;
+    }
+
+    const ratio = el.naturalWidth / el.naturalHeight;
+    if (logoRatios.value[uid] !== ratio) {
+      logoRatios.value[uid] = ratio;
+    }
+  };
+
+  const logoStyle = (uid: string) => {
+    const ratio = logoRatios.value[uid];
+    if (!ratio) {
+      return undefined;
+    }
+
+    const height = Math.min(LOGO_MAX_HEIGHT, Math.max(LOGO_MIN_HEIGHT, LOGO_BASE_HEIGHT / Math.sqrt(ratio)));
+
+    return { height: `${ height.toFixed(1) }px` };
+  };
+
   const toTop10 = (
     participants: {
       uid: string,
@@ -358,14 +393,42 @@
 
   .companyGrid {
     display: grid;
-    gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+    @include media(sm) {
+      gap: .75rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
-  .companyContainer {
+  .companyTile {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    height: 160px;
+    padding: 1rem;
+    text-decoration: none;
+
+    @include media(sm) {
+      height: 120px;
+      padding: .5rem;
+    }
+  }
+
+  .companyLogo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: 60px;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .companyName {
+    font-weight: 600;
+    text-align: center;
+    color: $fer-dark-blue;
   }
 
   .top10Table {

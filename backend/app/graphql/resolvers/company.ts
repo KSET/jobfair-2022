@@ -49,8 +49,8 @@ import {
   CompanyValidation,
 } from "../../services/validation-service";
 import {
-  AuthService,
-} from "../../services/auth-service";
+  UserService,
+} from "../../services/user-service";
 import {
   CompanyService,
 } from "../../services/company-service";
@@ -737,7 +737,7 @@ export class CompanyInfoMutationsResolver {
     const companyUid = company.uid;
 
     const error = await ctx.prisma.$transaction(async (prisma) => {
-      const newMember = await AuthService.findUserByEmail(newMemberEmail, { id: true }, prisma);
+      const newMember = await UserService.findByEmail(newMemberEmail, { id: true }, prisma);
 
       if (!newMember) {
         throw new Error("User does not exist");
@@ -788,7 +788,7 @@ export class CompanyInfoMutationsResolver {
 
     const companyUid = company.uid;
 
-    const member = await AuthService.findUserByEmail(newMemberEmail, { id: true });
+    const member = await UserService.findByEmail(newMemberEmail, { id: true });
 
     if (!member) {
       return "User does not exist";

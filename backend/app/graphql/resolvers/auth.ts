@@ -38,6 +38,9 @@ import {
   AuthService,
 } from "../../services/auth-service";
 import {
+  UserService,
+} from "../../services/user-service";
+import {
   RegisterValidation,
 } from "../../services/validation-service";
 import {
@@ -233,7 +236,7 @@ export class AuthResolver {
       @Info() gqlResolveInfo: GraphQLResolveInfo,
       @Arg("info") data: UserRegisterInput,
   ): Promise<AuthResponse> {
-    data.email = data.email.trim().toLowerCase();
+    data.email = UserService.normalizeEmail(data.email);
     data.phone = data.phone.replaceAll(" ", "");
 
     // Validate data
@@ -256,14 +259,13 @@ export class AuthResolver {
 
     // Check that the user doesn't already exist
     {
-      const exists = await ctx.prisma.user.findUnique({
-        where: {
-          email: data.email,
-        },
-        select: {
+      const exists = await UserService.findByEmail(
+        data.email,
+        {
           id: true,
         },
-      });
+        ctx.prisma,
+      );
 
       if (exists) {
         return {

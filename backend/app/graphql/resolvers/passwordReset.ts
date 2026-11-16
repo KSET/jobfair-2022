@@ -46,6 +46,9 @@ import {
   PasswordService,
 } from "../../services/password-service";
 import {
+  UserService,
+} from "../../services/user-service";
+import {
   hasAtLeastRole,
   Role,
 } from "../../helpers/auth";
@@ -92,23 +95,22 @@ export class PasswordResetMutationResolver {
     @Ctx() ctx: Context,
       @Arg("identifier") identifierRaw: string,
   ): GQLResponse<string> {
-    const identifier = identifierRaw.trim().toLowerCase();
+    const identifier = UserService.normalizeEmail(identifierRaw);
     const {
       user,
       reset,
     } = await ctx.prisma.$transaction(async (prisma) => {
-      const user = await prisma.user.findFirst({
-        where: {
-          email: identifier,
-        },
-        select: {
+      const user = await UserService.findByEmail(
+        identifier,
+        {
           id: true,
           firstName: true,
           lastName: true,
           email: true,
           language: true,
         },
-      });
+        prisma,
+      );
 
       if (!user) {
         return {

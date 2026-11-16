@@ -21,6 +21,7 @@ model User {
   id        Int      @id @default(autoincrement())
   /// @TypeGraphQL.omit(input: true)
   uid       String   @unique @default(cuid())
+  // Lowercase + trimmed, enforced by CHECK in migration 20261116120000
   email     String   @unique
   firstName String
   lastName  String

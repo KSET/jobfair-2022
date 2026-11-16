@@ -46,6 +46,9 @@ import {
   PasswordService,
 } from "../../services/password-service";
 import {
+  UserService,
+} from "../../services/user-service";
+import {
   EventsService,
 } from "../../services/events-service";
 import {
@@ -418,7 +421,7 @@ export class UserProfileResolver {
       };
     }
 
-    data.email = data.email.trim().toLowerCase();
+    data.email = UserService.normalizeEmail(data.email);
 
     // Validate data
     {
@@ -433,14 +436,13 @@ export class UserProfileResolver {
 
     // Check email
     {
-      const otherEmailUser = await ctx.prisma.user.findUnique({
-        where: {
-          email: data.email,
-        },
-        select: {
+      const otherEmailUser = await UserService.findByEmail(
+        data.email,
+        {
           uid: true,
         },
-      });
+        ctx.prisma,
+      );
 
       if (otherEmailUser && ctx.user.uid !== otherEmailUser.uid) {
         return {
@@ -565,7 +567,7 @@ export class UserEditResolver {
       return null;
     }
 
-    data.email = data.email.trim().toLowerCase();
+    data.email = UserService.normalizeEmail(data.email);
 
     // Validate data
     {
@@ -580,14 +582,13 @@ export class UserEditResolver {
 
     // Check email
     {
-      const otherEmailUser = await ctx.prisma.user.findUnique({
-        where: {
-          email: data.email,
-        },
-        select: {
+      const otherEmailUser = await UserService.findByEmail(
+        data.email,
+        {
           uid: true,
         },
-      });
+        ctx.prisma,
+      );
 
       if (otherEmailUser && uid !== otherEmailUser.uid) {
         return {

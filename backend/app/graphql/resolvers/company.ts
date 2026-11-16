@@ -49,6 +49,9 @@ import {
   CompanyValidation,
 } from "../../services/validation-service";
 import {
+  AuthService,
+} from "../../services/auth-service";
+import {
   CompanyService,
 } from "../../services/company-service";
 import {
@@ -734,11 +737,7 @@ export class CompanyInfoMutationsResolver {
     const companyUid = company.uid;
 
     const error = await ctx.prisma.$transaction(async (prisma) => {
-      const newMember = await prisma.user.findFirst({
-        where: {
-          email: newMemberEmail,
-        },
-      });
+      const newMember = await AuthService.findUserByEmail(newMemberEmail, { id: true }, prisma);
 
       if (!newMember) {
         throw new Error("User does not exist");
@@ -748,7 +747,7 @@ export class CompanyInfoMutationsResolver {
         data: {
           members: {
             connect: {
-              email: newMemberEmail,
+              id: newMember.id,
             },
           },
         },
@@ -789,11 +788,17 @@ export class CompanyInfoMutationsResolver {
 
     const companyUid = company.uid;
 
+    const member = await AuthService.findUserByEmail(newMemberEmail, { id: true });
+
+    if (!member) {
+      return "User does not exist";
+    }
+
     const entity = await ctx.prisma.company.update({
       data: {
         members: {
           disconnect: {
-            email: newMemberEmail,
+            id: member.id,
           },
         },
       },

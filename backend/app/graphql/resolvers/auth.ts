@@ -82,6 +82,25 @@ type QSessionUser = Assign<SessionUser, {
   sessionId: string,
 }>;
 
+async function startUserSession(ctx: Context, userId: SessionUser["id"]): Promise<unknown> {
+  const regenerateError = await new Promise((resolve) => ctx.session.regenerate(resolve));
+
+  if (regenerateError) {
+    return regenerateError;
+  }
+
+  ctx.session = ctx.req.session as Context["session"];
+
+  ctx.session.user = {
+    id: userId,
+    ip: ctx.req.ip,
+    userAgent: ctx.req.headers["user-agent"] ?? "unknown",
+    loggedInAt: new Date(),
+  };
+
+  return new Promise((resolve) => ctx.session.save(resolve));
+}
+
 @ObjectType()
 class Session implements QSessionUser {
   @Field(() => Int)
@@ -160,24 +179,38 @@ export class AuthResolver {
       };
     }
 
-    ctx.session.user = {
-      id: user.id,
-      ip: ctx.req.ip,
-      userAgent: ctx.req.headers["user-agent"] ?? "unknown",
-      loggedInAt: new Date(),
+    const internalError: AuthResponse = {
+      errors: [
+        {
+          field: "user",
+          message: "Something went wrong",
+        },
+      ],
     };
 
-    const userData = await ctx.prisma.user.findFirst({
+    const userData = await ctx.prisma.user.findUnique({
       where: {
         id: user.id,
       },
       select: toSelect(gqlResolveInfo, transformSelect),
-    }) as unknown as User;
+    });
+
+    if (!userData) {
+      console.error("Authenticated user not found", user.id);
+      return internalError;
+    }
+
+    const sessionError = await startUserSession(ctx, user.id);
+
+    if (sessionError) {
+      console.error("Session start error", sessionError);
+      return internalError;
+    }
 
     void EventsService.logEvent("user:login", user.id);
 
     return {
-      entity: userData,
+      entity: userData as unknown as User,
     };
   }
 
@@ -200,7 +233,7 @@ export class AuthResolver {
       @Info() gqlResolveInfo: GraphQLResolveInfo,
       @Arg("info") data: UserRegisterInput,
   ): Promise<AuthResponse> {
-    data.email = data.email.toLowerCase();
+    data.email = data.email.trim().toLowerCase();
     data.phone = data.phone.replaceAll(" ", "");
 
     // Validate data
@@ -254,20 +287,12 @@ export class AuthResolver {
       select: userSelect,
     }) as unknown as User;
 
-    // Log the user in
-    ctx.session.user = {
-      id: user.id!,
-      ip: ctx.req.ip,
-      userAgent: ctx.req.headers["user-agent"] ?? "unknown",
-      loggedInAt: new Date(),
-    };
-
     void EventsService.logEvent("user:register", user.id);
 
-    const sessionSaveError = await new Promise((resolve) => ctx.session.save(resolve));
+    const sessionError = await startUserSession(ctx, user.id!);
 
-    if (sessionSaveError) {
-      console.error("Session save error", sessionSaveError);
+    if (sessionError) {
+      console.error("Session start error", sessionError);
     }
 
     return {

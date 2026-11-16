@@ -4,6 +4,8 @@ import {
 import argon2 from "argon2";
 
 export class PasswordService {
+  private static emptyHashPromise: Promise<string> | null = null;
+
   static hashPassword(password: string) {
     return argon2.hash(password, {
       type: argon2.argon2id,
@@ -14,19 +16,34 @@ export class PasswordService {
   }
 
   static async comparePasswords(password: string, hash: string | undefined | null) {
-    const emptyHash = await PasswordService.emptyHash;
+    if (!hash) {
+      await argon2
+        .verify(await PasswordService.emptyHash, password)
+        .catch(() => false)
+      ;
+
+      return false;
+    }
 
     return (
       argon2
-        .verify(
-          hash ?? emptyHash,
-          password,
-        )
+        .verify(hash, password)
         .catch(() => false)
     );
   }
 
   static get emptyHash() {
-    return PasswordService.hashPassword("");
+    if (!PasswordService.emptyHashPromise) {
+      PasswordService.emptyHashPromise =
+        PasswordService
+          .hashPassword("")
+          .catch((e) => {
+            PasswordService.emptyHashPromise = null;
+            throw e;
+          })
+      ;
+    }
+
+    return PasswordService.emptyHashPromise;
   }
 }

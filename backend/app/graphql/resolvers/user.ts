@@ -418,6 +418,8 @@ export class UserProfileResolver {
       };
     }
 
+    data.email = data.email.trim().toLowerCase();
+
     // Validate data
     {
       const { errors } = await ProfileValidation(data);
@@ -562,6 +564,8 @@ export class UserEditResolver {
     if (!hasAtLeastRole(Role.Admin, ctx.user)) {
       return null;
     }
+
+    data.email = data.email.trim().toLowerCase();
 
     // Validate data
     {

@@ -32,7 +32,16 @@
     >
       <template #header>
         <div :class="$style.tableHeader">
-          <p-button icon="pi pi-external-link" label="Export" @click="exportCSV()" />
+          <span :class="$style.exportButtons">
+            <p-button icon="pi pi-external-link" label="Export" @click="exportCSV()" />
+            <p-button
+              :disabled="exporting"
+              :label="exporting ? `Exporting ${ exportProgress }` : 'Export all'"
+              icon="pi pi-download"
+              severity="secondary"
+              @click="exportAll()"
+            />
+          </span>
 
           <span :class="$style.searchWrapper">
             <i class="pi pi-search" />
@@ -103,6 +112,7 @@
     ref,
     unref,
     useAsyncData,
+    useNuxtApp,
     useQuery,
     useThrottleFn,
     watch,
@@ -258,6 +268,62 @@
 
       const dt = ref<DataTable | null>(null);
 
+      const exporting = ref(false);
+      const exportProgress = ref("");
+      const EXPORT_PAGE_SIZE = 200;
+      const EXPORT_CONCURRENCY = 4;
+
+      const exportQuery = gql`
+        query ExportData(
+          $page: Int!,
+          $perPage: Int!,
+          $orderBy: [EventLogOrderByWithRelationInput!]
+        ) {
+          eventLog(page: $page, perPage: $perPage, where: "", orderBy: $orderBy) {
+            totalRecords
+            records {
+              id
+              name
+              date
+              data
+              user {
+                name
+                email
+              }
+            }
+          }
+        }
+      `;
+
+      const fetchExportPage = async (page: number) => {
+        const resp = await useNuxtApp().$urql
+          .query<QData, {
+            page: number,
+            perPage: number,
+            orderBy: IEventLogOrderByWithRelationInput[],
+          }>(
+            exportQuery,
+            {
+              page,
+              perPage: EXPORT_PAGE_SIZE,
+              orderBy: [ { id: ISortOrder.Desc } ],
+            },
+          )
+          .toPromise();
+
+        if (resp?.error || !resp?.data?.eventLog) {
+          throw new Error(resp?.error?.message ?? `Failed to fetch page ${ page }`);
+        }
+
+        return resp.data.eventLog;
+      };
+
+      const csvCell = (value: unknown) => {
+        const str = null === value || undefined === value ? "" : String(value);
+
+        return `"${ str.replaceAll('"', '""') }"`;
+      };
+
       return {
         perPage,
         curPage,
@@ -266,6 +332,8 @@
         sort: orderBy,
         eventLog,
         eventLogLoading,
+        exporting,
+        exportProgress,
         onPage(event: DataTablePageEvent) {
           curPage.value = event.page + 1;
         },
@@ -321,6 +389,87 @@
 
           $dt.exportCSV();
         },
+        async exportAll() {
+          if (exporting.value) {
+            return;
+          }
+
+          exporting.value = true;
+          exportProgress.value = "0%";
+
+          try {
+            const first = await fetchExportPage(1);
+            const total = first.totalRecords;
+            const totalPages = Math.max(1, Math.ceil(total / EXPORT_PAGE_SIZE));
+
+            const records: QEventLog[] = [ ...first.records ];
+            let done = 1;
+            exportProgress.value = `${ Math.round((done / totalPages) * 100) }%`;
+
+            const remaining: number[] = [];
+            for (let p = 2; p <= totalPages; p++) {
+              remaining.push(p);
+            }
+
+            const pageResults: Record<number, QEventLog[]> = {};
+
+            const worker = async () => {
+              for (;;) {
+                const p = remaining.shift();
+                if (undefined === p) {
+                  return;
+                }
+                const chunk = await fetchExportPage(p);
+                pageResults[p] = chunk.records;
+                done += 1;
+                exportProgress.value = `${ Math.round((done / totalPages) * 100) }%`;
+              }
+            };
+
+            await Promise.all(
+              Array.from({ length: Math.min(EXPORT_CONCURRENCY, remaining.length) }, () => worker()),
+            );
+
+            for (let p = 2; p <= totalPages; p++) {
+              if (pageResults[p]) {
+                records.push(...pageResults[p]);
+              }
+            }
+
+            const header = [ "#", "Ime eventa", "Datum", "Korisnik", "Podatci" ];
+            const lines = [ header.map(csvCell).join(",") ];
+
+            for (const event of records) {
+              const userInfo = event.user ? `${ event.user.name } <${ event.user.email }>` : "";
+              lines.push([
+                csvCell(event.id),
+                csvCell(event.name),
+                csvCell(new Date(event.date).toISOString()),
+                csvCell(userInfo),
+                csvCell(event.data),
+              ].join(","));
+            }
+
+            const bom = String.fromCharCode(0xFEFF); // Excel-friendly UTF-8 BOM
+            const csv = bom + lines.join("\r\n");
+            const blob = new Blob([ csv ], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const stamp = new Date().toISOString().replaceAll(/[:.]/g, "-");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `event-log-all-${ stamp }.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          } catch (e) {
+            console.error("Export all failed", e);
+            alert(`Export all failed: ${ e instanceof Error ? e.message : String(e) }`);
+          } finally {
+            exporting.value = false;
+            exportProgress.value = "";
+          }
+        },
       };
     },
   });
@@ -360,6 +509,16 @@
       flex-direction: column;
       align-items: stretch;
       gap: 0.75rem;
+    }
+  }
+
+  .exportButtons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media (max-width: 768px) {
+      width: 100%;
     }
   }
 

@@ -215,6 +215,7 @@ model Industry {
   /// @TypeGraphQL.omit(output: true, input: true)
   id      Int       @id @default(autoincrement())
   name    String    @unique
+  nameEn  String    @default("")
   /// @TypeGraphQL.omit(output: true, input: true)
   company Company[]
 }

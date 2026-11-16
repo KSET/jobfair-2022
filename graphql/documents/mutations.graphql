@@ -114,15 +114,17 @@ mutation ValidateVat($vat: String!) {
     }
 }
 
-mutation CreateIndustry($name: String!) {
-    createIndustry(name: $name) {
+mutation CreateIndustry($name: String!, $nameEn: String) {
+    createIndustry(name: $name, nameEn: $nameEn) {
         name
+        nameEn
     }
 }
 
-mutation RenameIndustry($oldName: String!, $newName: String!) {
-    renameIndustry(oldName: $oldName, newName: $newName) {
+mutation UpdateIndustry($name: String!, $data: UpdateIndustryInput!) {
+    updateIndustry(name: $name, data: $data) {
         name
+        nameEn
     }
 }
 

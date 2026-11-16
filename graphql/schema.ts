@@ -1606,6 +1606,7 @@ export type IImageWhereInput = {
 export type IIndustry = {
   _count?: Maybe<IIndustryCount>;
   name: Scalars['String']['output'];
+  nameEn: Scalars['String']['output'];
 };
 
 export type IIndustryCount = {
@@ -1619,11 +1620,13 @@ export type IIndustryCountCompanyArgs = {
 
 export type IIndustryOrderByWithRelationInput = {
   name?: InputMaybe<ISortOrder>;
+  nameEn?: InputMaybe<ISortOrder>;
 };
 
 export enum IIndustryScalarFieldEnum {
   Id = 'id',
-  Name = 'name'
+  Name = 'name',
+  NameEn = 'nameEn'
 }
 
 export type IIndustryWhereInput = {
@@ -1631,6 +1634,7 @@ export type IIndustryWhereInput = {
   NOT?: InputMaybe<Array<IIndustryWhereInput>>;
   OR?: InputMaybe<Array<IIndustryWhereInput>>;
   name?: InputMaybe<IStringFilter>;
+  nameEn?: InputMaybe<IStringFilter>;
 };
 
 export type IIndustryWhereUniqueInput = {
@@ -1638,6 +1642,7 @@ export type IIndustryWhereUniqueInput = {
   NOT?: InputMaybe<Array<IIndustryWhereInput>>;
   OR?: InputMaybe<Array<IIndustryWhereInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  nameEn?: InputMaybe<IStringFilter>;
 };
 
 export type IIntFilter = {
@@ -1752,7 +1757,6 @@ export type IMutation = {
   registerCompany?: Maybe<ICreateCompanyResponse>;
   removeCompanyMember?: Maybe<Scalars['String']['output']>;
   renameCocktailType: IApplicationCocktailType;
-  renameIndustry?: Maybe<IIndustry>;
   renameTalkCategory?: Maybe<IApplicationTalkCategory>;
   requestPasswordReset: Scalars['String']['output'];
   requestPasswordResetFor: Scalars['String']['output'];
@@ -1771,6 +1775,7 @@ export type IMutation = {
   updateCompanyMembersFor?: Maybe<ICreateCompanyResponse>;
   updateCompanyPanel?: Maybe<ICompanyPanel>;
   updateEventReservation?: Maybe<IEventReservationResponse>;
+  updateIndustry?: Maybe<IIndustry>;
   updateOtherContent?: Maybe<IOtherContent>;
   updatePassword?: Maybe<IUpdatePasswordResponse>;
   updatePressRelease?: Maybe<ICreatePressReleaseResponse>;
@@ -1832,6 +1837,7 @@ export type IMutationCreateGalleryImageArgs = {
 
 export type IMutationCreateIndustryArgs = {
   name: Scalars['String']['input'];
+  nameEn?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1995,12 +2001,6 @@ export type IMutationRenameCocktailTypeArgs = {
 };
 
 
-export type IMutationRenameIndustryArgs = {
-  newName: Scalars['String']['input'];
-  oldName: Scalars['String']['input'];
-};
-
-
 export type IMutationRenameTalkCategoryArgs = {
   newName: Scalars['String']['input'];
   oldName: Scalars['String']['input'];
@@ -2098,6 +2098,12 @@ export type IMutationUpdateCompanyPanelArgs = {
 
 export type IMutationUpdateEventReservationArgs = {
   input: IEventReservationUpdateInput;
+};
+
+
+export type IMutationUpdateIndustryArgs = {
+  data: IUpdateIndustryInput;
+  name: Scalars['String']['input'];
 };
 
 
@@ -3907,6 +3913,11 @@ export type IUnmatchedInternship = {
   workingPeriodStart: Scalars['DateTimeISO']['output'];
 };
 
+export type IUpdateIndustryInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  nameEn?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type IUpdatePasswordResponse = {
   entity?: Maybe<IUser>;
   errors?: Maybe<Array<IFieldError>>;
@@ -4373,30 +4384,31 @@ export type IValidateVatMutationVariables = Exact<{
 
 export type IValidateVatMutation = IValidateVatMutation_Mutation;
 
-export type ICreateIndustryMutation_createIndustry_Industry = { name: string };
+export type ICreateIndustryMutation_createIndustry_Industry = { name: string, nameEn: string };
 
 export type ICreateIndustryMutation_Mutation = { createIndustry?: ICreateIndustryMutation_createIndustry_Industry | null };
 
 
 export type ICreateIndustryMutationVariables = Exact<{
   name: Scalars['String']['input'];
+  nameEn?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type ICreateIndustryMutation = ICreateIndustryMutation_Mutation;
 
-export type IRenameIndustryMutation_renameIndustry_Industry = { name: string };
+export type IUpdateIndustryMutation_updateIndustry_Industry = { name: string, nameEn: string };
 
-export type IRenameIndustryMutation_Mutation = { renameIndustry?: IRenameIndustryMutation_renameIndustry_Industry | null };
+export type IUpdateIndustryMutation_Mutation = { updateIndustry?: IUpdateIndustryMutation_updateIndustry_Industry | null };
 
 
-export type IRenameIndustryMutationVariables = Exact<{
-  oldName: Scalars['String']['input'];
-  newName: Scalars['String']['input'];
+export type IUpdateIndustryMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  data: IUpdateIndustryInput;
 }>;
 
 
-export type IRenameIndustryMutation = IRenameIndustryMutation_Mutation;
+export type IUpdateIndustryMutation = IUpdateIndustryMutation_Mutation;
 
 export type ICreateTalkCategoryMutation_createTalkCategory_ApplicationTalkCategory = { name: string };
 
@@ -4835,7 +4847,7 @@ export type ICompanyInfoQueryVariables = Exact<{
 
 export type ICompanyInfoQuery = ICompanyInfoQuery_Query;
 
-export type IIndustriesQuery_industries_Industry = { name: string };
+export type IIndustriesQuery_industries_Industry = { name: string, nameEn: string };
 
 export type IIndustriesQuery_Query = { industries: Array<IIndustriesQuery_industries_Industry> };
 
@@ -5014,7 +5026,7 @@ export type IGalleryImagItemByUidQueryVariables = Exact<{
 
 export type IGalleryImagItemByUidQuery = IGalleryImagItemByUidQuery_Query;
 
-export type IAdminInitialDataQuery_industries_Industry = { name: string };
+export type IAdminInitialDataQuery_industries_Industry = { name: string, nameEn: string };
 
 export type IAdminInitialDataQuery_seasons_Season = { uid: string, name: string, startsAt: string | Date, endsAt: string | Date, applicationsFrom: string | Date, applicationsUntil: string | Date, applicationsEditableFrom: string | Date, applicationsEditableUntil: string | Date, showParticipantsFrom: string | Date, showParticipantsUntil: string | Date, showPartnersFrom: string | Date, showPartnersUntil: string | Date, showSponsorsFrom: string | Date, showSponsorsUntil: string | Date, showSummerInternshipsFrom?: string | Date | null, showSummerInternshipsUntil?: string | Date | null, eventFrom: string | Date, eventUntil: string | Date, feedbackFrom: string | Date, feedbackUntil: string | Date, scheduleFrom: string | Date, scheduleUntil: string | Date };
 
@@ -5047,7 +5059,7 @@ export type IAdminCompanyApplicationQueryVariables = Exact<{
 
 export type IAdminCompanyApplicationQuery = IAdminCompanyApplicationQuery_Query;
 
-export type IAdminCompanyApplicationsQuery_industries_Industry = { name: string };
+export type IAdminCompanyApplicationsQuery_industries_Industry = { name: string, nameEn: string };
 
 export type IAdminCompanyApplicationsQuery_talkCategories_ApplicationTalkCategory = { name: string };
 
@@ -5803,7 +5815,7 @@ export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQueryVariables
 
 export type IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery = IPageLiveVoteSeasonViewLiveVoteResults_LiveVoteResultsQuery_Query;
 
-export type IPageParticipants_BaseQuery_participants_Company_industry_Industry = { name: string };
+export type IPageParticipants_BaseQuery_participants_Company_industry_Industry = { name: string, nameEn: string };
 
 export type IPageParticipants_BaseQuery_participants_Company_rasterLogo_Image = { thumbUrl: string, fullUrl: string };
 
@@ -6422,6 +6434,7 @@ export type IResolversTypes = {
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
   UnmatchedInternship: ResolverTypeWrapper<IUnmatchedInternship>;
+  UpdateIndustryInput: IUpdateIndustryInput;
   UpdatePasswordResponse: ResolverTypeWrapper<IUpdatePasswordResponse>;
   UpdateProfileResponse: ResolverTypeWrapper<IUpdateProfileResponse>;
   Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
@@ -6740,6 +6753,7 @@ export type IResolversParentTypes = {
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
   UnmatchedInternship: IUnmatchedInternship;
+  UpdateIndustryInput: IUpdateIndustryInput;
   UpdatePasswordResponse: IUpdatePasswordResponse;
   UpdateProfileResponse: IUpdateProfileResponse;
   Upload: Scalars['Upload']['output'];
@@ -7313,6 +7327,7 @@ export type IImageVariationCountResolvers<ContextType = any, ParentType extends 
 export type IIndustryResolvers<ContextType = any, ParentType extends IResolversParentTypes['Industry'] = IResolversParentTypes['Industry']> = {
   _count?: Resolver<Maybe<IResolversTypes['IndustryCount']>, ParentType, ContextType>;
   name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  nameEn?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7387,7 +7402,6 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   registerCompany?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationRegisterCompanyArgs, 'info'>>;
   removeCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationRemoveCompanyMemberArgs, 'email'>>;
   renameCocktailType?: Resolver<IResolversTypes['ApplicationCocktailType'], ParentType, ContextType, RequireFields<IMutationRenameCocktailTypeArgs, 'newCocktailType' | 'oldCocktailType' | 'season'>>;
-  renameIndustry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType, RequireFields<IMutationRenameIndustryArgs, 'newName' | 'oldName'>>;
   renameTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationRenameTalkCategoryArgs, 'newName' | 'oldName' | 'season'>>;
   requestPasswordReset?: Resolver<IResolversTypes['String'], ParentType, ContextType, RequireFields<IMutationRequestPasswordResetArgs, 'identifier'>>;
   requestPasswordResetFor?: Resolver<IResolversTypes['String'], ParentType, ContextType, RequireFields<IMutationRequestPasswordResetForArgs, 'uid'>>;
@@ -7406,6 +7420,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   updateCompanyMembersFor?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyMembersForArgs, 'company' | 'members'>>;
   updateCompanyPanel?: Resolver<Maybe<IResolversTypes['CompanyPanel']>, ParentType, ContextType, RequireFields<IMutationUpdateCompanyPanelArgs, 'input'>>;
   updateEventReservation?: Resolver<Maybe<IResolversTypes['EventReservationResponse']>, ParentType, ContextType, RequireFields<IMutationUpdateEventReservationArgs, 'input'>>;
+  updateIndustry?: Resolver<Maybe<IResolversTypes['Industry']>, ParentType, ContextType, RequireFields<IMutationUpdateIndustryArgs, 'data' | 'name'>>;
   updateOtherContent?: Resolver<Maybe<IResolversTypes['OtherContent']>, ParentType, ContextType, RequireFields<IMutationUpdateOtherContentArgs, 'input'>>;
   updatePassword?: Resolver<Maybe<IResolversTypes['UpdatePasswordResponse']>, ParentType, ContextType, RequireFields<IMutationUpdatePasswordArgs, 'currentPassword' | 'newPassword' | 'newPasswordRepeat'>>;
   updatePressRelease?: Resolver<Maybe<IResolversTypes['CreatePressReleaseResponse']>, ParentType, ContextType, RequireFields<IMutationUpdatePressReleaseArgs, 'info' | 'uid'>>;
@@ -8457,16 +8472,18 @@ export const ValidateVat = gql`
 }
     `;
 export const CreateIndustry = gql`
-    mutation CreateIndustry($name: String!) {
-  createIndustry(name: $name) {
+    mutation CreateIndustry($name: String!, $nameEn: String) {
+  createIndustry(name: $name, nameEn: $nameEn) {
     name
+    nameEn
   }
 }
     `;
-export const RenameIndustry = gql`
-    mutation RenameIndustry($oldName: String!, $newName: String!) {
-  renameIndustry(oldName: $oldName, newName: $newName) {
+export const UpdateIndustry = gql`
+    mutation UpdateIndustry($name: String!, $data: UpdateIndustryInput!) {
+  updateIndustry(name: $name, data: $data) {
     name
+    nameEn
   }
 }
     `;
@@ -8868,6 +8885,7 @@ export const Industries = gql`
     query Industries {
   industries {
     name
+    nameEn
   }
 }
     `;
@@ -9016,6 +9034,7 @@ export const AdminInitialData = gql`
     query AdminInitialData {
   industries {
     name
+    nameEn
   }
   seasons(orderBy: {endsAt: desc}) {
     ...frag_Season
@@ -9051,6 +9070,7 @@ export const AdminCompanyApplications = gql`
     query AdminCompanyApplications($season: String!) {
   industries {
     name
+    nameEn
   }
   talkCategories(where: {forSeason: {is: {uid: {equals: $season}}}}) {
     name
@@ -10032,6 +10052,7 @@ export const PageParticipants_Base = gql`
     logoHidden
     industry {
       name
+      nameEn
     }
     rasterLogo {
       thumbUrl

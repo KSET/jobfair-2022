@@ -169,7 +169,7 @@
       const industriesStore = useIndustriesStore();
       const toast = useToast();
 
-      const industriesOptions = computed(() => industriesStore.industries.map((x) => ({ label: x, value: x })));
+      const industriesOptions = computed(() => industriesStore.industryOptions);
 
       const isLoading = ref(false);
       const isMembersLoading = ref(false);
@@ -178,7 +178,7 @@
       type QIndustry = Pick<IIndustry, "name">;
       type QUser = Pick<IUser, "uid" | "name" | "email">;
       type QueryData = {
-        industries: Pick<IIndustry, "name">[],
+        industries: Pick<IIndustry, "name" | "nameEn">[],
         company: QCompany & {
           industry: QIndustry,
           rasterLogo: Pick<IImage, "name" | "uid"> & {
@@ -231,6 +231,7 @@
 
           industries {
               name
+              nameEn
           }
         }
         `,

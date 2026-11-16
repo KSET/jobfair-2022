@@ -438,6 +438,7 @@ query CompanyInfo($uid: String!) {
 query Industries {
     industries {
         name
+        nameEn
     }
 }
 
@@ -570,6 +571,7 @@ query GalleryImagItemByUid($uid: String!) {
 query AdminInitialData {
     industries {
         name
+        nameEn
     }
     seasons(orderBy: { endsAt: desc }) {
         ...frag_Season
@@ -601,6 +603,7 @@ query AdminCompanyApplication($company: String!, $season: String!) {
 query AdminCompanyApplications($season: String!) {
     industries {
         name
+        nameEn
     }
     talkCategories(where: { forSeason: { is: { uid: { equals: $season } } } }) {
         name

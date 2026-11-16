@@ -10,6 +10,12 @@
           placeholder="Nova industrija"
           :class="$style.createInput"
         />
+        <InputText
+          v-model="newIndustryEn"
+          :disabled="isLoading"
+          placeholder="Engleski naziv (opcionalno)"
+          :class="$style.createInput"
+        />
         <p-button
           type="submit"
           :disabled="isLoading || !newIndustry.trim()"
@@ -21,7 +27,7 @@
     </div>
 
     <DataTable
-      :value="industriesData"
+      :value="industriesStore.industryEntries"
       :loading="isLoading"
       data-key="name"
       row-hover
@@ -32,7 +38,16 @@
           <editable-field
             :disabled="isLoading"
             :model-value="data.name"
-            @save="handleIndustryEdit(data.name, $event)"
+            @save="handleIndustryUpdate(data.name, { name: $event })"
+          />
+        </template>
+      </Column>
+      <Column field="nameEn" header="Naziv (EN)" sortable>
+        <template #body="{ data }">
+          <editable-field
+            :disabled="isLoading"
+            :model-value="data.nameEn"
+            @save="handleIndustryUpdate(data.name, { nameEn: $event })"
           />
         </template>
       </Column>
@@ -58,6 +73,9 @@
   import {
     useIndustriesStore,
   } from "~/store/industries";
+  import {
+    type IUpdateIndustryInput,
+  } from "~/graphql/schema";
 
   export default defineComponent({
     name: "PageAdminIndustries",
@@ -79,19 +97,15 @@
 
       await industriesStore.fetchIndustries();
 
-      const industriesData = computed(() => {
-        return industriesStore.industries.map((industry) => ({
-          name: industry,
-        }));
-      });
-
       const isLoading = ref(false);
       const newIndustry = ref("");
+      const newIndustryEn = ref("");
 
       return {
-        industriesData,
+        industriesStore,
         isLoading,
         newIndustry,
+        newIndustryEn,
 
         async handleIndustrySubmit() {
           if (!newIndustry.value.trim()) {
@@ -99,33 +113,41 @@
           }
 
           isLoading.value = true;
-          const resp = await industriesStore.createIndustry(newIndustry.value);
+          const resp = await industriesStore.createIndustry(newIndustry.value, newIndustryEn.value);
           if (!resp) {
             toast.add({
               severity: "error",
               summary: "Greška",
-              detail: "Greška pri kreiranju industrije. Pokušajte ponovo.",
+              detail: "Greška pri kreiranju industrije. Provjerite da naziv i engleski naziv već ne postoje.",
               life: 3000,
             });
           } else {
-            await industriesStore.fetchIndustries();
             newIndustry.value = "";
+            newIndustryEn.value = "";
           }
           isLoading.value = false;
         },
 
-        async handleIndustryEdit(oldName: string, newName: string) {
+        async handleIndustryUpdate(name: string, data: IUpdateIndustryInput) {
+          if ("string" === typeof data.name && !data.name.trim()) {
+            toast.add({
+              severity: "error",
+              summary: "Greška",
+              detail: "Naziv industrije ne može biti prazan.",
+              life: 3000,
+            });
+            return;
+          }
+
           isLoading.value = true;
-          const resp = await industriesStore.renameIndustry(oldName, newName);
+          const resp = await industriesStore.updateIndustry(name, data);
           if (!resp) {
             toast.add({
               severity: "error",
               summary: "Greška",
-              detail: "Greška pri preimenovanju industrije. Pokušajte ponovo.",
+              detail: "Greška pri spremanju industrije. Naziv ili engleski naziv možda već postoji. Pokušajte ponovo.",
               life: 3000,
             });
-          } else {
-            await industriesStore.fetchIndustries();
           }
           isLoading.value = false;
         },

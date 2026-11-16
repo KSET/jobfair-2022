@@ -1416,6 +1416,7 @@ input ImageWhereInput {
 type Industry {
   _count: IndustryCount
   name: String!
+  nameEn: String!
 }
 
 type IndustryCount {
@@ -1424,11 +1425,13 @@ type IndustryCount {
 
 input IndustryOrderByWithRelationInput {
   name: SortOrder
+  nameEn: SortOrder
 }
 
 enum IndustryScalarFieldEnum {
   id
   name
+  nameEn
 }
 
 input IndustryWhereInput {
@@ -1436,6 +1439,7 @@ input IndustryWhereInput {
   NOT: [IndustryWhereInput!]
   OR: [IndustryWhereInput!]
   name: StringFilter
+  nameEn: StringFilter
 }
 
 input IndustryWhereUniqueInput {
@@ -1443,6 +1447,7 @@ input IndustryWhereUniqueInput {
   NOT: [IndustryWhereInput!]
   OR: [IndustryWhereInput!]
   name: String
+  nameEn: StringFilter
 }
 
 input IntFilter {
@@ -1525,7 +1530,7 @@ type Mutation {
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
   createGalleryImage(info: GalleryImageCreateInput!): CreateGalleryImageResponse
-  createIndustry(name: String!): Industry
+  createIndustry(name: String!, nameEn: String): Industry
   createLiveVote(seasonUid: String!, vote: String!): LiveVote
   createLiveVoteComment(comment: String!, seasonUid: String!): LiveVoteComment
   createNews(info: NewsCreateInput!): NewsCreateResponse
@@ -1557,7 +1562,6 @@ type Mutation {
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   removeCompanyMember(email: String!): String
   renameCocktailType(newCocktailType: String!, oldCocktailType: String!, season: String!): ApplicationCocktailType!
-  renameIndustry(newName: String!, oldName: String!): Industry
   renameTalkCategory(newName: String!, oldName: String!, season: String!): ApplicationTalkCategory
   requestPasswordReset(identifier: String!): String!
   requestPasswordResetFor(uid: String!): String!
@@ -1576,6 +1580,7 @@ type Mutation {
   updateCompanyMembersFor(company: String!, members: [String!]!): CreateCompanyResponse
   updateCompanyPanel(input: CompanyPanelUpdateInput!): CompanyPanel
   updateEventReservation(input: EventReservationUpdateInput!): EventReservationResponse
+  updateIndustry(data: UpdateIndustryInput!, name: String!): Industry
   updateOtherContent(input: OtherContentUpdateInput!): OtherContent
   updatePassword(currentPassword: String!, newPassword: String!, newPasswordRepeat: String!): UpdatePasswordResponse
   updatePressRelease(info: PressReleaseWithFilesCreateInput!, uid: String!): CreatePressReleaseResponse
@@ -2793,6 +2798,11 @@ type UnmatchedInternship {
   signed: Boolean
   workingPeriodEnd: DateTimeISO!
   workingPeriodStart: DateTimeISO!
+}
+
+input UpdateIndustryInput {
+  name: String
+  nameEn: String
 }
 
 type UpdatePasswordResponse {

@@ -114,6 +114,9 @@
     useTranslationsStore,
   } from "~/store/translations";
   import {
+    industryDisplayName,
+  } from "~/store/industries";
+  import {
     computed,
     useQuery,
     createError,
@@ -178,6 +181,7 @@
             logoHidden
             industry {
               name
+              nameEn
             }
             rasterLogo {
                 thumbUrl
@@ -207,7 +211,6 @@
 
   const NO_INDUSTRY_KEY = "participants.industry.none";
   const NO_INDUSTRY_ID = "industry--none";
-  const INDUSTRY_SORT_LOCALE = "hr";
 
   const noIndustryHasKey = computed(() => translationsStore.hasTranslation(NO_INDUSTRY_KEY) || translationsStore.isEditable);
   const noIndustryFallback = computed(() => (Language.HR === translationsStore.currentLanguage ? "Ostalo" : "Other"));
@@ -223,16 +226,25 @@
       .replace(/^-+|-+$/g, "")
   ;
 
+  type IndustryBucket = {
+    idName: string,
+    participants: Participant[],
+  };
+
   const participantGroups = computed(() => {
-    const byIndustry = new Map<string | null, Participant[]>();
+    const byIndustry = new Map<string | null, IndustryBucket>();
     for (const participant of participants) {
       const name = participant.industry?.name?.trim() || null;
-      const group = byIndustry.get(name);
+      const key = name ? industryDisplayName({ name, nameEn: participant.industry?.nameEn }, translationsStore.currentLanguage) : null;
+      const group = byIndustry.get(key);
 
       if (group) {
-        group.push(participant);
+        group.participants.push(participant);
       } else {
-        byIndustry.set(name, [ participant ]);
+        byIndustry.set(key, {
+          idName: name ?? "",
+          participants: [ participant ],
+        });
       }
     }
 
@@ -249,16 +261,16 @@
 
     const groups: ParticipantGroup[] =
       [ ...byIndustry.entries() ]
-        .filter((entry): entry is [ string, Participant[] ] => null !== entry[0])
-        .sort(([ a ], [ b ]) => a.localeCompare(b, INDUSTRY_SORT_LOCALE))
-        .map(([ name, list ], index) => ({
-          id: uniqueId(name, index),
-          name,
-          participants: list,
+        .filter((entry): entry is [ string, IndustryBucket ] => null !== entry[0])
+        .sort(([ a ], [ b ]) => a.localeCompare(b, translationsStore.currentLanguageIso))
+        .map(([ displayName, bucket ], index) => ({
+          id: uniqueId(bucket.idName, index),
+          name: displayName,
+          participants: bucket.participants,
         }))
     ;
 
-    const withoutIndustry = byIndustry.get(null);
+    const withoutIndustry = byIndustry.get(null)?.participants;
     if (withoutIndustry?.length) {
       groups.push({
         id: NO_INDUSTRY_ID,

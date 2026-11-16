@@ -137,7 +137,7 @@
       const stage = ref(Stage.CheckVat);
       const isLoading = ref(false);
 
-      const industriesOptions = computed(() => industriesStore.industries.map((x) => ({ label: x, value: x })));
+      const industriesOptions = computed(() => industriesStore.industryOptions);
 
       const info_ = companyCreate()(industriesOptions);
       const info = reactive({
@@ -199,7 +199,7 @@
             info.address.value = respInfo.address;
             info.legalName.value = respInfo.legalName;
             await industriesStore.fetchIndustries();
-            info.industry.value = unref(industriesOptions)[0]?.label || "";
+            info.industry.value = unref(industriesOptions)[0]?.value || "";
           } finally {
             isLoading.value = false;
           }

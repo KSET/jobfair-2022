@@ -110,6 +110,9 @@
   import {
     companyCreate,
   } from "~/helpers/forms/company";
+  import {
+    useIndustriesStore,
+  } from "~/store/industries";
   import useTitle from "~/composables/useTitle";
   import {
     useMutation,
@@ -162,7 +165,7 @@
       const [ { vat } ] = userValue.companies;
 
       type QData = {
-        industries: Pick<IIndustry, "name">[],
+        industries: Pick<IIndustry, "name" | "nameEn">[],
         company: ICompany & {
           rasterLogo: Pick<IImage, "name" | "uid"> & {
             full: Pick<IImageVariation, "mimeType">,
@@ -179,6 +182,7 @@
             query Company($vat: String!) {
                 industries {
                     name
+                    nameEn
                 }
                 company(vat: $vat) {
                     uid
@@ -249,7 +253,9 @@
         }
       `);
 
-      const industries = (resp?.data?.industries || []).map((x) => ({ label: x.name, value: x.name }));
+      const industriesStore = useIndustriesStore();
+      industriesStore.setIndustries(resp?.data?.industries);
+      const industries = computed(() => industriesStore.industryOptions);
       const members = ref(resp?.data?.company?.members || []);
       const newMember = reactive({
         email: "",

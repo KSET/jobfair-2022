@@ -52,6 +52,13 @@
             </nuxt-link>
           </strong>
         </dd>
+        <dd>
+          <strong>
+            <nuxt-link :to="{ name: 'admin-users-faculty-mapper' }">
+              Mapiranje fakulteta
+            </nuxt-link>
+          </strong>
+        </dd>
       </dl>
     </div>
 

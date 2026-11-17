@@ -1526,6 +1526,7 @@ type Mutation {
   applyCompaniesVatData(updates: [CompanyRecheckApplyInput!]!): [CompanyRecheckApplyResult!]!
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   checkPasswordReset(token: String!): User
+  clearFaculty(from: String!): Int!
   createCocktailType(season: String!, type: String!): ApplicationCocktailType
   createCompanyApplication(info: CompanyApplicationCreateInput!): CreateCompanyApplicationResponse
   createCompanyApplicationFor(company: String!, info: CompanyApplicationCreateInput!, season: String!): CreateCompanyApplicationResponse
@@ -1560,6 +1561,7 @@ type Mutation {
   logout: Boolean!
   register(info: UserRegisterInput!): AuthResponse!
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
+  remapFaculty(from: String!, to: String!): Int!
   removeCompanyMember(email: String!): String
   renameCocktailType(newCocktailType: String!, oldCocktailType: String!, season: String!): ApplicationCocktailType!
   renameTalkCategory(newName: String!, oldName: String!, season: String!): ApplicationTalkCategory
@@ -2015,6 +2017,7 @@ type Query {
   talkCategories(cursor: ApplicationTalkCategoryWhereUniqueInput, distinct: [ApplicationTalkCategoryScalarFieldEnum!], orderBy: [ApplicationTalkCategoryOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationTalkCategoryWhereInput): [ApplicationTalkCategory!]!
   translation(where: TranslationWhereUniqueInput!): Translation
   translations(cursor: TranslationWhereUniqueInput, distinct: [TranslationScalarFieldEnum!], orderBy: [TranslationOrderByWithRelationInput!], skip: Int, take: Int, where: TranslationWhereInput): [Translation!]!
+  unmappedFaculties: [UnmappedFaculty!]!
   user(uid: String!): User
   userCompanyComponentRating(companyUid: String!, component: String!, seasonUid: String!): UserCompanyComponentRating
   userCompanyComponentRatings(companyUid: String!, seasonUid: String!): [UserCompanyComponentRating!]!
@@ -2788,6 +2791,11 @@ input TranslationWhereUniqueInput {
   key_language: TranslationKeyLanguageCompoundUniqueInput
   language: StringFilter
   value: StringFilter
+}
+
+type UnmappedFaculty {
+  count: Int!
+  name: String!
 }
 
 type UnmatchedInternship {

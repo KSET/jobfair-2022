@@ -10,6 +10,25 @@ export const formatDate = (dateStr: string | Date): string => {
   return `${ day }. ${ month }. ${ year }.`;
 };
 
+export const formatDateTimeForExport = (dateStr: string | Date): string => {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Zagreb",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(new Date(dateStr))
+      .map((p) => [ p.type, p.value ]),
+  );
+
+  return `${ parts.year }-${ parts.month }-${ parts.day } ${ parts.hour }:${ parts.minute }:${ parts.second }`;
+};
+
 export const parseDate = (formattedDate: string): Date => {
   const [
     day,

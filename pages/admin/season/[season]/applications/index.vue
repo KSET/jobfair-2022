@@ -82,10 +82,14 @@
           <div :class="$style.tableHeader">
             <div :class="$style.buttonGroup">
               <p-button
-                v-tooltip.bottom="isMobile ? 'Export CSV' : ''"
                 icon="pi pi-external-link"
-                :label="isMobile ? '' : 'Export'"
+                label="Export"
                 @click="exportCSV"
+              />
+              <p-button
+                icon="pi pi-palette"
+                label="Export (Illustrator)"
+                @click="exportIllustratorCSV"
               />
               <p-button
                 icon="pi pi-plus"
@@ -257,7 +261,6 @@
     useRoute,
     ref,
     unref,
-    onMounted,
   } from "#imports";
   import {
     useIndustriesStore,
@@ -271,6 +274,13 @@
     type IAdminCompanyApplicationsQuery,
     type IAdminCompanyApplicationsQueryVariables,
   } from "~/graphql/schema";
+  import {
+    downloadCsv,
+    downloadIllustratorCsv,
+  } from "~/helpers/csv";
+  import {
+    formatDateTimeForExport,
+  } from "~/helpers/date";
 
   export default defineComponent({
     name: "PageAdminSeasonApplications",
@@ -319,15 +329,6 @@
             hasFusion: Boolean(a.fusion),
           })),
       );
-
-      const isMobile = ref(false);
-
-      onMounted(() => {
-        isMobile.value = 768 > window.innerWidth;
-        window.addEventListener("resize", () => {
-          isMobile.value = 768 > window.innerWidth;
-        });
-      });
 
       const statistics = {
         company: {
@@ -409,80 +410,83 @@
         return false;
       });
 
+      const buildExport = () => {
+        // Rows as currently filtered/sorted in the table
+        const apps = (unref(dt) as unknown as { processedData?: unknown[], } | null)?.processedData ?? unref(companyApplications);
+        if (!apps?.length) {
+          return null;
+        }
+
+        const headers = [
+          "Brand Name",
+          "Legal Name",
+          "Application Time",
+          "Contact Name",
+          "Contact Email",
+          "Contact Phone",
+          "Industry",
+          "Booth",
+          "Talk",
+          "Talk Category",
+          "Workshop",
+          "Fusion",
+          "Fusion Category",
+          "Cocktail",
+          "Cocktail Name",
+          "Cocktail Type",
+          "Panel",
+          "Quest",
+          "Signatories",
+        ];
+
+        type CompanyApp = NonNullable<IAdminCompanyApplicationsQuery["companyApplications"]>[number];
+        const rows = (apps as CompanyApp[]).map((app) => [
+          app.forCompany?.brandName ?? "",
+          app.forCompany?.legalName ?? "",
+          formatDateTimeForExport(app.createdAt as string),
+          app.contactPerson?.name ?? "",
+          app.contactPerson?.email ?? "",
+          app.contactPerson?.phone ?? "",
+          app.forCompany?.industry?.name ?? "",
+          app.booth ? ((unref(booths) as Record<string, string>)[app.booth] ?? app.booth) : "",
+          app.talk?.titleEn ?? "",
+          app.talk?.category?.name ?? "",
+          app.workshop?.titleEn ?? "",
+          app.fusion?.titleEn ?? "",
+          app.fusion?.category?.name ?? "",
+          app.wantsCocktail ? "YES" : "",
+          app.cocktail?.name ?? "",
+          app.cocktail?.type?.type ?? "",
+          app.wantsPanel ? "YES" : "",
+          app.wantsQuest ? "YES" : "",
+          (app.forCompany?.signatories ?? []).map((s: { fullName: string, function: string, }) => `${ s.fullName } (${ s.function })`).join("; "),
+        ]);
+
+        return { headers, rows };
+      };
+
       return {
         statistics,
         booths,
         companyApplications,
         filters,
         dt,
-        isMobile,
         expandedRows,
         exportCSV() {
-          const apps = unref(companyApplications);
-          if (!apps?.length) {
+          const data = buildExport();
+          if (!data) {
             return;
           }
 
-          const headers = [
-            "Brand Name",
-            "Legal Name",
-            "Application Time",
-            "Contact Name",
-            "Contact Email",
-            "Contact Phone",
-            "Industry",
-            "Booth",
-            "Talk",
-            "Talk Category",
-            "Workshop",
-            "Fusion",
-            "Fusion Category",
-            "Cocktail",
-            "Cocktail Name",
-            "Cocktail Type",
-            "Panel",
-            "Quest",
-            "Signatories",
-          ];
+          downloadCsv(data.headers, data.rows, "prijave.csv");
+        },
+        exportIllustratorCSV() {
+          const data = buildExport();
+          if (!data) {
+            return;
+          }
 
-          const escapeCsv = (val: string) => {
-            if (val.includes(",") || val.includes('"') || val.includes("\n")) {
-              return `"${ val.replace(/"/g, '""') }"`;
-            }
-            return val;
-          };
-
-          type CompanyApp = NonNullable<IAdminCompanyApplicationsQuery["companyApplications"]>[number];
-          const rows = (apps as CompanyApp[]).map((app) => [
-            app.forCompany?.brandName ?? "",
-            app.forCompany?.legalName ?? "",
-            new Date(app.createdAt as string).toLocaleString(),
-            app.contactPerson?.name ?? "",
-            app.contactPerson?.email ?? "",
-            app.contactPerson?.phone ?? "",
-            app.forCompany?.industry?.name ?? "",
-            app.booth ? ((unref(booths) as Record<string, string>)[app.booth] ?? app.booth) : "",
-            app.talk?.titleEn ?? "",
-            app.talk?.category?.name ?? "",
-            app.workshop?.titleEn ?? "",
-            app.fusion?.titleEn ?? "",
-            app.fusion?.category?.name ?? "",
-            app.wantsCocktail ? "YES" : "",
-            app.cocktail?.name ?? "",
-            app.cocktail?.type?.type ?? "",
-            app.wantsPanel ? "YES" : "",
-            app.wantsQuest ? "YES" : "",
-            (app.forCompany?.signatories ?? []).map((s: { fullName: string, function: string }) => `${ s.fullName } (${ s.function })`).join("; "),
-          ].map((v) => escapeCsv(String(v))));
-
-          const csv = [ headers.map((h) => escapeCsv(h)).join(","), ...rows.map((r) => r.join(",")) ].join("\n");
-          const blob = new Blob([ `\uFEFF${ csv }` ], { type: "text/csv;charset=utf-8;" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "prijave.csv";
-          link.click();
-          URL.revokeObjectURL(url);
+          downloadIllustratorCsv(data.headers, data.rows, "prijave.csv");
         },
         expandAll() {
           expandedRows.value = unref(companyApplications).reduce((acc: Record<string, boolean>, p) => {
@@ -562,8 +566,9 @@
     @media (max-width: 768px) {
       width: 100%;
 
+      // Two per row: exports, then expand/collapse
       > button {
-        flex: 1;
+        flex: 1 1 calc(50% - .25rem);
       }
     }
   }

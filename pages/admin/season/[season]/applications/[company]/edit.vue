@@ -140,7 +140,7 @@
           v-for="(item, name) in items"
           :key="name"
           :class="$style.panel"
-          :collapsed="item.forms ? !item.selected : true"
+          :collapsed="(item.forms || (name === 'cocktail' && cocktail)) ? !item.selected : true"
         >
           <template #header>
             <strong>
@@ -213,6 +213,16 @@
                 </app-formgroup>
               </fieldset>
             </template>
+            <fieldset
+              v-if="name === 'cocktail' && cocktail"
+              :class="$style.formFieldset"
+            >
+              <legend>Cocktail</legend>
+              <p><strong>Name:</strong> {{ cocktail.name }}</p>
+              <p v-if="cocktail.type?.type">
+                <strong>Type:</strong> {{ cocktail.type.type }}
+              </p>
+            </fieldset>
           </template>
         </Panel>
         <Panel
@@ -566,6 +576,7 @@
         company,
         contactPerson,
         panelParticipants,
+        cocktail: application?.cocktail ?? null,
         signatories,
         addSignatory,
         removeSignatory,

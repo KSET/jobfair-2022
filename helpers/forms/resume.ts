@@ -19,6 +19,9 @@ import {
   today,
   yesterday,
 } from "~/helpers/date";
+import {
+  facultyDropdownInput,
+} from "~/helpers/forms/faculty";
 
 type Maybe<T> = T | null | undefined;
 
@@ -83,12 +86,7 @@ type ResumeFaculty = ConditionalPick<IResumeFaculty, Primitive>;
 export const resumeFacultyCreate =
   <T extends ResumeFaculty>(resume: Maybe<T>): Record<keyof Omit<ResumeFaculty, "specialization">, InputEntry> =>
     ({
-      name: {
-        value: resume?.name || "",
-        type: "text",
-        placeholder: "Fakultet elektrotehnike i računarstva",
-        required: false,
-      },
+      name: facultyDropdownInput(resume?.name || "", { required: false }),
       module: {
         value: resume?.module || "",
         type: "text",

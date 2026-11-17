@@ -56,6 +56,9 @@ import {
   ResumeValidation,
 } from "../../services/validation-service";
 import {
+  isFaculty,
+} from "../../shared/faculties";
+import {
   FileService,
   MinioBase,
 } from "../../services/file-service";
@@ -681,7 +684,25 @@ export class ResumeModifyResolver {
       return Promise.resolve(null);
     }
 
-    const validation = await ResumeValidation(info);
+    const submittedFacultyName = info.faculty?.name;
+    const storedFacultyName =
+      submittedFacultyName && !isFaculty(submittedFacultyName)
+        ? (await ctx.prisma.resumeFaculty.findFirst({
+          where: {
+            forResume: {
+              user: {
+                id: user.id,
+              },
+            },
+          },
+          select: {
+            name: true,
+          },
+        }))?.name
+        : undefined
+    ;
+
+    const validation = await ResumeValidation(info, storedFacultyName);
 
     if (!validation.success) {
       return {

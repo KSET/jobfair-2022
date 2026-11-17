@@ -2,6 +2,7 @@
 .docker
 .output
 backend
+!backend/app/shared
 node_modules
 .idea
 .git

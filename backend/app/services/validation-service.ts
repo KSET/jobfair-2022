@@ -5,6 +5,9 @@ import {
 import {
   type ZodTypeDef,
 } from "zod/lib/types";
+import {
+  isFaculty,
+} from "../shared/faculties";
 
 export const PASSWORD_LENGTH_MIN = 8 as const;
 export const PASSWORD_LENGTH_MAX = 99 as const;
@@ -190,7 +193,32 @@ const resumeFacultyValidation = z.union([
     module: z.string().length(0),
   }),
 ]);
-export const ResumeFacultyValidation = <T>(faculty: T) => formatValidation(resumeFacultyValidation, faculty);
+
+const withFacultyCheck =
+  async (
+    validation: Promise<{ success: boolean, errors: { field: string, message: string, }[], }>,
+    field: string,
+    name: unknown,
+    storedName?: string | null,
+  ) => {
+    const { errors } = await validation;
+    const allErrors = [ ...errors ];
+
+    if ("string" === typeof name && name && !isFaculty(name) && name !== storedName) {
+      allErrors.push({ field, message: "errors.faculty.selectFromList" });
+    }
+
+    return {
+      success: 0 === allErrors.length,
+      errors: allErrors,
+    };
+  }
+;
+
+export const ResumeFacultyValidation =
+  <T extends { name?: unknown, }>(faculty: T, storedName?: string | null) =>
+    withFacultyCheck(formatValidation(resumeFacultyValidation, faculty), "name", faculty?.name, storedName)
+;
 
 const resumeTechnologyValidation = z.object({
   name: z.string().min(1),
@@ -251,7 +279,10 @@ const resumeValidation = z.object({
     z.string().length(0),
   ]),
 });
-export const ResumeValidation = <T>(resume: T) => formatValidation(resumeValidation, resume);
+export const ResumeValidation =
+  <T extends { faculty?: { name?: unknown, } | null, }>(resume: T, storedFacultyName?: string | null) =>
+    withFacultyCheck(formatValidation(resumeValidation, resume), "faculty.name", resume?.faculty?.name, storedFacultyName)
+;
 
 const newsValidation = z.object({
   lang: z.string().min(1),

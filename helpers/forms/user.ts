@@ -15,6 +15,9 @@ import {
   LanguageISO,
   LanguageToName,
 } from "~/store/translations";
+import {
+  facultyDropdownInput,
+} from "~/helpers/forms/faculty";
 
 type Profile = Omit<IUser,
   "uid"
@@ -74,11 +77,7 @@ export const userRegister =
     (): Record<keyof UserRegister, InputEntry> =>
       ({
         ...userProfileEdit(user),
-        faculty: {
-          value: "",
-          type: "text",
-          placeholder: "Fakultet elektrotehnike i računarstva",
-        },
+        faculty: facultyDropdownInput(""),
         password: {
           value: "",
           type: "password",

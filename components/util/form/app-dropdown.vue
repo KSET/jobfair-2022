@@ -61,18 +61,30 @@
         :aria-required="orNone(required)"
         :class="{
           [$style.input]: true,
+          [$style.wrapLabel]: wrap,
           ['invalid']: invalid,
         }"
         :disabled="disabled"
         :filter="!noFilter"
+        :filter-fields="filterFields"
         :input-id="id.input"
         :name="name"
         :options="options"
+        :panel-class="wrap ? $style.wrapPanel : undefined"
         :placeholder="orNone(placeholder)"
         :required="required"
+        :show-clear="clearable && Boolean(input)"
         option-label="label"
         option-value="value"
       />
+      <input
+        v-if="required"
+        :class="$style.requiredProxy"
+        :value="hasValue ? '1' : ''"
+        aria-hidden="true"
+        required
+        tabindex="-1"
+      >
       <template #placeholder>
         <select
           v-model="input"
@@ -88,6 +100,13 @@
           :name="name"
           :required="required"
         >
+          <option
+            v-if="!isMultiple"
+            :selected="orNone(!input)"
+            disabled
+            value=""
+            v-text="placeholder || ''"
+          />
           <option
             v-for="option in options"
             :key="`${option.value}$${option.label}`"
@@ -120,6 +139,7 @@
     reactive,
     ref,
     unref,
+    type PropType,
   } from "vue";
   import type {
     MultiSelectFilterEvent,
@@ -210,6 +230,24 @@
         required: true,
         type: Array as AppOptionsProp,
       },
+
+      filterFields: {
+        required: false,
+        type: Array as PropType<string[]>,
+        default: undefined,
+      },
+
+      wrap: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+
+      clearable: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
     },
 
     emits: {
@@ -221,7 +259,14 @@
       const uniqueId = useId().replace(":", "_");
       const slotExists = useReactiveSlots("message", "label");
 
-      const input = useModelWrapper(props, emit)("modelValue");
+      const isMultiple = computed(() => props.multiple || Array.isArray(props.modelValue));
+      const model = useModelWrapper(props, emit)("modelValue");
+      const input = computed({
+        get: () => model.value,
+        set: (val) => {
+          model.value = val ?? (isMultiple.value ? [] : "");
+        },
+      });
 
       const inputId = computed(() => `input-${ uniqueId }-${ props.name }`);
 
@@ -239,7 +284,8 @@
         labelTranslated: ref(""),
         elseNone,
         orNone,
-        isMultiple: computed(() => props.multiple || Array.isArray(props.modelValue)),
+        isMultiple,
+        hasValue: computed(() => (Array.isArray(props.modelValue) ? 0 < props.modelValue.length : Boolean(props.modelValue))),
       };
     },
   });
@@ -292,6 +338,22 @@
       }
     }
 
+    .requiredProxy {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      pointer-events: none;
+      opacity: 0;
+      border: 0;
+    }
+
+    .wrapLabel :global(.p-dropdown-label) {
+      white-space: normal;
+    }
+
     .fallbackSelect {
       @extend %input-template;
 
@@ -335,6 +397,15 @@
           opacity: 0;
         }
       }
+    }
+  }
+
+  .wrapPanel {
+    width: min-content;
+    max-width: 100%;
+
+    :global(.p-dropdown-item) {
+      white-space: normal;
     }
   }
 </style>

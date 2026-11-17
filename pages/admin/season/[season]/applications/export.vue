@@ -16,6 +16,15 @@
         @click="downloadVector"
       />
     </div>
+
+    <h2>Export slika predavača</h2>
+
+    <div class="mb-3">
+      <p-button
+        label="Preuzmi slike predavača"
+        @click="downloadPresenterPhotos"
+      />
+    </div>
   </app-max-width-container>
 </template>
 
@@ -41,6 +50,9 @@
         },
         downloadVector() {
           window.open(`${ apiBase }/admin/logos/${ seasonUid }/export/vector.zip`);
+        },
+        downloadPresenterPhotos() {
+          window.open(`${ apiBase }/admin/presenters/${ seasonUid }/export/photos.zip`);
         },
       };
     },

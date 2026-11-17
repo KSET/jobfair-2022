@@ -1,5 +1,4 @@
 import JSZip from "jszip";
-import contentDisposition from "content-disposition";
 import {
   AuthRouter,
 } from "../../../../helpers/route";
@@ -12,12 +11,17 @@ import {
 import {
   QrCodeService,
 } from "../../../../services/qr-service";
+import {
+  safeName,
+  sendZip,
+  uniqueZipPaths,
+} from "../../../../helpers/export";
 
 const router = new AuthRouter({
   role: Role.Admin,
 });
 
-const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: string }> => {
+const buildZip = async (season: string): Promise<{ zip: JSZip, filename: string, }> => {
   const [ seasonRecord, applications ] = await Promise.all([
     prisma.season.findUnique({
       where: { uid: season },
@@ -46,15 +50,13 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
     }),
   ]);
 
-  const seasonName = seasonRecord?.name ?? season;
+  const seasonName = safeName(seasonRecord?.name ?? season, 60, "season");
   const zip = new JSZip();
+  const zipPath = uniqueZipPaths();
 
-  const folders = {
-    booth: zip.folder("booth")!,
-    talk: zip.folder("talk")!,
-    workshop: zip.folder("workshop")!,
-    fusion: zip.folder("fusion")!,
-  };
+  for (const folder of [ "booth", "talk", "workshop", "fusion" ]) {
+    zip.folder(folder);
+  }
 
   for (const app of applications) {
     const company = app.forCompany;
@@ -86,29 +88,21 @@ const buildZip = async (season: string): Promise<{ buffer: Buffer; filename: str
         "color.logo": "#fff",
         text: company.brandName,
       });
-      folders[type].file(`${ company.brandName } - ${ type } - ${ seasonName }.svg`, svg);
+      zip.file(zipPath(type, `${ safeName(company.brandName, 100, "company") } - ${ type } - ${ seasonName }`, "svg"), svg);
     }
   }
 
   return {
-    buffer: await zip.generateAsync({ type: "nodebuffer" }),
+    zip,
     filename: `qr-codes - ${ seasonName }.zip`,
   };
 };
 
 router.getRaw("/qr-codes.zip", async (req, res) => {
   const { season } = req.params as { season: string };
-  const { buffer, filename } = await buildZip(season);
+  const { zip, filename } = await buildZip(season);
 
-  res
-    .header("content-type", "application/zip")
-    .header("cache-control", "no-cache")
-    .header("pragma", "no-store, private, no-cache, max-age=0, must-revalidate")
-    .header("expires", "-1")
-    .header("content-disposition", contentDisposition(filename))
-  ;
-
-  return res.end(buffer);
+  await sendZip(res, zip, filename);
 });
 
 export default router;

@@ -16,9 +16,9 @@ import {
   BoothsService,
 } from "../../../services/booths-service";
 import {
-  BUCKET_NAME,
-  minio,
-} from "../../../providers/minio";
+  loadObject,
+  mapWithConcurrency,
+} from "../../../helpers/export";
 
 const router = new AuthRouter({
   role: Role.Admin,
@@ -149,50 +149,18 @@ router.getRaw("/", async (req, res) => {
 
   const workbook = new ExcelJS.Workbook();
 
-  const imagePromises =
+  const photos =
     applications
-      .flatMap((app) => {
-        const ret = [];
-
-        if (app.talk) {
-          ret.push(...app.talk.presenters.map((x) => x.photo!));
-        }
-
-        if (app.workshop) {
-          ret.push(...app.workshop.presenters.map((x) => x.photo!));
-        }
-
-        if (app.fusion) {
-          ret.push(...app.fusion.presenters.map((x) => x.photo!));
-        }
-
-        return ret;
-      })
-      .map(async (image) => {
-        const minioFile = await minio.getObject(BUCKET_NAME, image.full.minioKey);
-
-        const buff: Buffer | null = await new Promise((resolve) => {
-          const parts: Buffer[] = [];
-          minioFile.on("data", (data: Buffer) => {
-            parts.push(data);
-          });
-
-          minioFile.on("end", () => {
-            resolve(Buffer.concat(parts));
-          });
-
-          minioFile.on("error", () => {
-            resolve(null);
-          });
-        });
-
-        return [
-          image.uid,
-          `data:${ image.full.mimeType };base64,${ buff?.toString("base64") || "" }`,
-        ] as const;
-      })
+      .flatMap((app) => [ app.talk, app.workshop, app.fusion ])
+      .flatMap((event) => event?.presenters ?? [])
+      .flatMap(({ photo }) => photo ? [ photo ] : [])
   ;
-  const images = new Map(await Promise.all(imagePromises));
+  const loadedPhotos = await mapWithConcurrency(photos, 8, async (photo) => {
+    const buff = await loadObject(photo.full.minioKey);
+
+    return buff ? [ [ photo.uid, `data:${ photo.full.mimeType };base64,${ buff.toString("base64") }` ] as const ] : [];
+  });
+  const images = new Map(loadedPhotos.flat());
 
   {
     const worksheet = workbook.addWorksheet("Prijave");
@@ -314,8 +282,15 @@ router.getRaw("/", async (req, res) => {
           return;
         }
 
+        const base64 = images.get(photo.uid);
+
+        if (!base64) {
+          row.getCell(cellName).value = "(slika nedostaje)";
+          return;
+        }
+
         const id = workbook.addImage({
-          base64: images.get(photo.uid)!,
+          base64,
           extension: "image/png" === photo.full.mimeType ? "png" : "jpeg",
         });
         const cell = row.getCell(cellName);

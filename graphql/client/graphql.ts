@@ -656,6 +656,22 @@ export type Company = {
   website: Scalars['String']['output'];
 };
 
+export type CompanyAccountManager = {
+  company: Company;
+  createdAt: Scalars['DateTimeISO']['output'];
+  season: Season;
+  user: User;
+};
+
+export type CompanyAccountManagerWhereInput = {
+  AND?: InputMaybe<Array<CompanyAccountManagerWhereInput>>;
+  NOT?: InputMaybe<Array<CompanyAccountManagerWhereInput>>;
+  OR?: InputMaybe<Array<CompanyAccountManagerWhereInput>>;
+  company?: InputMaybe<CompanyRelationFilter>;
+  season?: InputMaybe<SeasonRelationFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+};
+
 export type CompanyApplication = {
   _count?: Maybe<CompanyApplicationCount>;
   approval?: Maybe<CompanyApplicationApproval>;
@@ -894,6 +910,7 @@ export type CompanyApplicationWhereUniqueInput = {
 export type CompanyCount = {
   UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
+  accountManagers: Scalars['Int']['output'];
   applications: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   members: Scalars['Int']['output'];
@@ -910,6 +927,11 @@ export type CompanyCountUserCompanyComponentRatingAveragesViewArgs = {
 
 export type CompanyCountUserCompanyComponentRatingsArgs = {
   where?: InputMaybe<UserCompanyComponentRatingWhereInput>;
+};
+
+
+export type CompanyCountAccountManagersArgs = {
+  where?: InputMaybe<CompanyAccountManagerWhereInput>;
 };
 
 
@@ -1719,6 +1741,7 @@ export type Mutation = {
   applyCompaniesVatData: Array<CompanyRecheckApplyResult>;
   approveCompanyApplications: Array<CompanyApplicationApproval>;
   checkPasswordReset?: Maybe<User>;
+  clearFaculty: Scalars['Int']['output'];
   createCocktailType?: Maybe<ApplicationCocktailType>;
   createCompanyApplication?: Maybe<CreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<CreateCompanyApplicationResponse>;
@@ -1733,6 +1756,7 @@ export type Mutation = {
   createSponsor: CreateSponsorResponse;
   createTalkCategory?: Maybe<ApplicationTalkCategory>;
   deleteCalendarItem: Scalars['Boolean']['output'];
+  deleteCompanyAccountManagersForSeason: Scalars['Int']['output'];
   deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
   deleteGalleryImage: Scalars['Boolean']['output'];
@@ -1753,6 +1777,7 @@ export type Mutation = {
   logout: Scalars['Boolean']['output'];
   register: AuthResponse;
   registerCompany?: Maybe<CreateCompanyResponse>;
+  remapFaculty: Scalars['Int']['output'];
   removeCompanyMember?: Maybe<Scalars['String']['output']>;
   renameCocktailType: ApplicationCocktailType;
   renameTalkCategory?: Maybe<ApplicationTalkCategory>;
@@ -1763,6 +1788,7 @@ export type Mutation = {
   resumeSetIsFavourite: Scalars['Boolean']['output'];
   scanUserQr?: Maybe<CompanyScanUserQrResponse>;
   scanUserQrRefine?: Maybe<CompanyScanUserQrResponse>;
+  setCompanyAccountManagers?: Maybe<Array<CompanyAccountManager>>;
   swapGalleryImageOrder: Scalars['Boolean']['output'];
   swapPartnerOrder: Scalars['Boolean']['output'];
   swapSponsorOrder: Scalars['Boolean']['output'];
@@ -1791,6 +1817,7 @@ export type Mutation = {
 
 export type MutationAddCompanyMemberArgs = {
   email: Scalars['String']['input'];
+  vat?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1807,6 +1834,11 @@ export type MutationApproveCompanyApplicationsArgs = {
 
 export type MutationCheckPasswordResetArgs = {
   token: Scalars['String']['input'];
+};
+
+
+export type MutationClearFacultyArgs = {
+  from: Scalars['String']['input'];
 };
 
 
@@ -1886,6 +1918,11 @@ export type MutationCreateTalkCategoryArgs = {
 
 export type MutationDeleteCalendarItemArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteCompanyAccountManagersForSeasonArgs = {
+  season: Scalars['String']['input'];
 };
 
 
@@ -1987,8 +2024,15 @@ export type MutationRegisterCompanyArgs = {
 };
 
 
+export type MutationRemapFacultyArgs = {
+  from: Scalars['String']['input'];
+  to: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveCompanyMemberArgs = {
   email: Scalars['String']['input'];
+  vat?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2040,6 +2084,13 @@ export type MutationScanUserQrArgs = {
 export type MutationScanUserQrRefineArgs = {
   refineData: CompanyScanUserQrRefineData;
   userUid: Scalars['String']['input'];
+};
+
+
+export type MutationSetCompanyAccountManagersArgs = {
+  company: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+  users: Array<Scalars['String']['input']>;
 };
 
 
@@ -2534,6 +2585,7 @@ export type PressReleaseWithFilesCreateInput = {
 };
 
 export type Query = {
+  accountManagerUsers: Array<User>;
   allGalleryImages: Array<GalleryImage>;
   allNews: Array<News>;
   allTranslationsFor: Array<Translation>;
@@ -2547,6 +2599,7 @@ export type Query = {
   cocktailTypes: Array<ApplicationCocktailType>;
   companies: Array<Company>;
   company?: Maybe<Company>;
+  companyAccountManagers: Array<CompanyAccountManager>;
   companyApplication?: Maybe<CompanyApplication>;
   companyApplicationFor?: Maybe<CompanyApplication>;
   companyApplications?: Maybe<Array<CompanyApplication>>;
@@ -2598,6 +2651,7 @@ export type Query = {
   talkCategories: Array<ApplicationTalkCategory>;
   translation?: Maybe<Translation>;
   translations: Array<Translation>;
+  unmappedFaculties: Array<UnmappedFaculty>;
   user?: Maybe<User>;
   userCompanyComponentRating?: Maybe<UserCompanyComponentRating>;
   userCompanyComponentRatings: Array<UserCompanyComponentRating>;
@@ -2663,6 +2717,11 @@ export type QueryCompaniesArgs = {
 
 export type QueryCompanyArgs = {
   vat: Scalars['String']['input'];
+};
+
+
+export type QueryCompanyAccountManagersArgs = {
+  season?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3459,6 +3518,7 @@ export type SeasonCount = {
   UserCompanyComponentRatings: Scalars['Int']['output'];
   calendar: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
+  companyAccountManagers: Scalars['Int']['output'];
   entryLog: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   gateGuardianLog: Scalars['Int']['output'];
@@ -3505,6 +3565,11 @@ export type SeasonCountCalendarArgs = {
 
 export type SeasonCountCompaniesArgs = {
   where?: InputMaybe<CompanyApplicationWhereInput>;
+};
+
+
+export type SeasonCountCompanyAccountManagersArgs = {
+  where?: InputMaybe<CompanyAccountManagerWhereInput>;
 };
 
 
@@ -3901,6 +3966,11 @@ export type TranslationWhereUniqueInput = {
   value?: InputMaybe<StringFilter>;
 };
 
+export type UnmappedFaculty = {
+  count: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type UnmatchedInternship = {
   description: Scalars['String']['output'];
   externalCompany: Scalars['String']['output'];
@@ -3987,6 +4057,7 @@ export type UserCount = {
   LiveVoteComment: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
+  accountManagedCompanies: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   events: Scalars['Int']['output'];
   files: Scalars['Int']['output'];
@@ -4019,6 +4090,11 @@ export type UserCountNewsArgs = {
 
 export type UserCountUserCompanyComponentRatingsArgs = {
   where?: InputMaybe<UserCompanyComponentRatingWhereInput>;
+};
+
+
+export type UserCountAccountManagedCompaniesArgs = {
+  where?: InputMaybe<CompanyAccountManagerWhereInput>;
 };
 
 

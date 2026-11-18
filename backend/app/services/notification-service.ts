@@ -73,6 +73,14 @@ export type NotificationEvent =
       },
     },
   }
+  | {
+    event: "account manager added member",
+    data: {
+      company: Pick<Company, "uid" | "vat" | "brandName">,
+      accountManager: Pick<User, "firstName" | "lastName" | "email">,
+      member: Pick<User, "firstName" | "lastName" | "email">,
+    },
+  }
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   | never;
 
@@ -94,6 +102,7 @@ type NotificationEventObject = ObjectFromEntrySet<NotificationEvent>;
 const EVENT_HANDLERS = {
   "new company": [],
   "new application": [],
+  "account manager added member": [],
 } satisfies NotificationEventObject as NotificationEventObject;
 
 export class NotificationService {
@@ -124,6 +133,10 @@ if (SLACK_WEBHOOK_URL) {
       },
     ),
   );
+
+  EVENT_HANDLERS["account manager added member"].push((data) =>
+    SlackNotificationService.notifyOfAccountManagerAddedMember(data.company, data.accountManager, data.member),
+  );
 }
 
 const MATTERMOST_WEBHOOK_URL = process.env.MATTERMOST_WEBHOOK_URL || null;
@@ -143,5 +156,9 @@ if (MATTERMOST_WEBHOOK_URL) {
       data.contactPerson,
       data.chosen,
     ),
+  );
+
+  EVENT_HANDLERS["account manager added member"].push((data) =>
+    MattermostNotificationService.notifyOfAccountManagerAddedMember(data.company, data.accountManager, data.member),
   );
 }

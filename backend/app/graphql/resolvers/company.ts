@@ -62,6 +62,11 @@ import {
   Role,
 } from "../../helpers/auth";
 import {
+  canActForCompany,
+  companyAccessForMemberEdit,
+  restrictMembersSelectForAccountManager,
+} from "../../helpers/company-access";
+import {
   toSelect,
   transformSelectFor,
 } from "../helpers/resolver";
@@ -573,10 +578,9 @@ export class CompanyInfoMutationsResolver {
 
     info.vat = info.vat.trim().toUpperCase();
 
-    const [ company ] = ctx.user.companies;
-    const isInCompany = company?.vat === info.vat;
+    const access = await canActForCompany(ctx.prisma, ctx.user, { vat: info.vat }, { allowAccountManager: true, requireApproved: true });
 
-    if (!isInCompany && !hasAtLeastRole(Role.Admin, ctx.user)) {
+    if (!access) {
       return {
         errors: [
           {
@@ -637,7 +641,7 @@ export class CompanyInfoMutationsResolver {
     let vectorLogoData;
     if (info.vectorLogo) {
       const vectorLogo = await FileService.uploadFile(
-        `company/${ company.vat }/logo/vector` as MinioBase,
+        `company/${ access.company.vat }/logo/vector` as MinioBase,
         vectorLogoFile!,
         ctx.user,
       );
@@ -663,7 +667,7 @@ export class CompanyInfoMutationsResolver {
     let rasterLogoData;
     if (info.rasterLogo) {
       const rasterLogo = await ImageService.uploadImage(
-        `company/${ company.vat }/logo/raster` as ImageBase,
+        `company/${ access.company.vat }/logo/raster` as ImageBase,
         rasterLogoFile!,
         ctx.user,
       );
@@ -723,27 +727,58 @@ export class CompanyInfoMutationsResolver {
   async addCompanyMember(
     @Ctx() ctx: Context,
       @Arg("email", () => String) newMemberEmail: string,
+      @Arg("vat", () => String, { nullable: true }) vat?: string | null,
   ): GQLResponse<string, "nullable"> {
     if (!ctx.user) {
       return null;
     }
 
-    const [ company ] = ctx.user.companies;
+    const access = await companyAccessForMemberEdit(ctx.prisma, ctx.user, vat);
 
-    if (!company && !hasAtLeastRole(Role.Admin, ctx.user)) {
+    if (!access) {
       return "You can not edit the company";
     }
 
-    const companyUid = company.uid;
+    const actor = ctx.user;
+    const isAccountManagerAccess = "account-manager" === access.via;
 
-    const error = await ctx.prisma.$transaction(async (prisma) => {
-      const newMember = await UserService.findByEmail(newMemberEmail, { id: true }, prisma);
+    const result = await ctx.prisma.$transaction(async (prisma) => {
+      const newMember = await UserService.findByEmail(
+        newMemberEmail,
+        {
+          id: true,
+          uid: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          roles: {
+            select: {
+              name: true,
+            },
+          },
+          companies: {
+            select: {
+              id: true,
+            },
+          },
+        },
+        prisma,
+      );
 
       if (!newMember) {
         throw new Error("User does not exist");
       }
 
-      return prisma.company.update({
+      if (isAccountManagerAccess) {
+        const isStaff = newMember.roles.some((role) => String(Role.AccountManager) === role.name || String(Role.Admin) === role.name);
+        const isInOtherCompany = newMember.companies.some((company) => company.id !== access.company.id);
+
+        if (newMember.id === actor.id || isStaff || isInOtherCompany) {
+          throw new Error("You can not add this user");
+        }
+      }
+
+      const company = await prisma.company.update({
         data: {
           members: {
             connect: {
@@ -752,21 +787,41 @@ export class CompanyInfoMutationsResolver {
           },
         },
         where: {
-          uid: companyUid,
+          id: access.company.id,
         },
         select: {
           id: true,
         },
       }).catch(() => null);
-    }).then(() => "").catch((e) => (e as Error)?.message);
 
-    if (error) {
-      return error;
+      if (!company) {
+        throw new Error("Company not found");
+      }
+
+      return newMember;
+    }).then((member) => ({ member, error: "" })).catch((e) => ({ member: null, error: (e as Error)?.message || "Something went wrong" }));
+
+    if (!result.member) {
+      return result.error;
     }
 
-    void EventsService.logEvent("user:company:members:add", ctx.user.id, {
+    void EventsService.logEvent("user:company:members:add", actor.id, {
       email: newMemberEmail,
+      member: result.member.uid,
+      company: access.company.uid,
+      via: access.via,
     });
+
+    if (isAccountManagerAccess) {
+      void NotificationService.notify(
+        "account manager added member",
+        {
+          company: access.company,
+          accountManager: actor,
+          member: result.member,
+        },
+      );
+    }
 
     return "";
   }
@@ -775,20 +830,19 @@ export class CompanyInfoMutationsResolver {
   async removeCompanyMember(
     @Ctx() ctx: Context,
       @Arg("email", () => String) newMemberEmail: string,
+      @Arg("vat", () => String, { nullable: true }) vat?: string | null,
   ): GQLResponse<string, "nullable"> {
     if (!ctx.user) {
       return null;
     }
 
-    const [ company ] = ctx.user.companies;
+    const access = await companyAccessForMemberEdit(ctx.prisma, ctx.user, vat);
 
-    if (!company && !hasAtLeastRole(Role.Admin, ctx.user)) {
+    if (!access) {
       return "You can not edit the company";
     }
 
-    const companyUid = company.uid;
-
-    const member = await UserService.findByEmail(newMemberEmail, { id: true });
+    const member = await UserService.findByEmail(newMemberEmail, { id: true, uid: true });
 
     if (!member) {
       return "User does not exist";
@@ -803,7 +857,7 @@ export class CompanyInfoMutationsResolver {
         },
       },
       where: {
-        uid: companyUid,
+        id: access.company.id,
       },
       select: {
         id: true,
@@ -816,6 +870,9 @@ export class CompanyInfoMutationsResolver {
 
     void EventsService.logEvent("user:company:members:remove", ctx.user.id, {
       email: newMemberEmail,
+      member: member.uid,
+      company: access.company.uid,
+      via: access.via,
     });
 
     return "";
@@ -926,7 +983,7 @@ export class CompanyListResolver {
   }
 
   @Query(() => Company, { nullable: true })
-  company(
+  async company(
   @Ctx() ctx: Context,
     @Info() info: GraphQLResolveInfo,
     @Arg("vat") vat: string,
@@ -935,19 +992,24 @@ export class CompanyListResolver {
       return null;
     }
 
-    if (
-      !ctx.user.companies.some((company) => company.vat === vat)
-      && !hasAtLeastRole(Role.Admin, ctx.user)
-    ) {
+    const access = await canActForCompany(ctx.prisma, ctx.user, { vat }, { allowAccountManager: true, requireApproved: true });
+
+    if (!access) {
       return null;
+    }
+
+    const select = toSelect<Prisma.CompanySelect>(info, transformSelect);
+
+    if ("account-manager" === access.via) {
+      restrictMembersSelectForAccountManager(select);
     }
 
     return ctx.prisma.company.findUnique({
       where: {
-        vat,
+        id: access.company.id,
       },
 
-      select: toSelect(info, transformSelect),
+      select,
     });
   }
 

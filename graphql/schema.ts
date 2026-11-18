@@ -658,6 +658,22 @@ export type ICompany = {
   website: Scalars['String']['output'];
 };
 
+export type ICompanyAccountManager = {
+  company: ICompany;
+  createdAt: Scalars['DateTimeISO']['output'];
+  season: ISeason;
+  user: IUser;
+};
+
+export type ICompanyAccountManagerWhereInput = {
+  AND?: InputMaybe<Array<ICompanyAccountManagerWhereInput>>;
+  NOT?: InputMaybe<Array<ICompanyAccountManagerWhereInput>>;
+  OR?: InputMaybe<Array<ICompanyAccountManagerWhereInput>>;
+  company?: InputMaybe<ICompanyRelationFilter>;
+  season?: InputMaybe<ISeasonRelationFilter>;
+  user?: InputMaybe<IUserRelationFilter>;
+};
+
 export type ICompanyApplication = {
   _count?: Maybe<ICompanyApplicationCount>;
   approval?: Maybe<ICompanyApplicationApproval>;
@@ -896,6 +912,7 @@ export type ICompanyApplicationWhereUniqueInput = {
 export type ICompanyCount = {
   UserCompanyComponentRatingAveragesView: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
+  accountManagers: Scalars['Int']['output'];
   applications: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   members: Scalars['Int']['output'];
@@ -912,6 +929,11 @@ export type ICompanyCountUserCompanyComponentRatingAveragesViewArgs = {
 
 export type ICompanyCountUserCompanyComponentRatingsArgs = {
   where?: InputMaybe<IUserCompanyComponentRatingWhereInput>;
+};
+
+
+export type ICompanyCountAccountManagersArgs = {
+  where?: InputMaybe<ICompanyAccountManagerWhereInput>;
 };
 
 
@@ -1721,6 +1743,7 @@ export type IMutation = {
   applyCompaniesVatData: Array<ICompanyRecheckApplyResult>;
   approveCompanyApplications: Array<ICompanyApplicationApproval>;
   checkPasswordReset?: Maybe<IUser>;
+  clearFaculty: Scalars['Int']['output'];
   createCocktailType?: Maybe<IApplicationCocktailType>;
   createCompanyApplication?: Maybe<ICreateCompanyApplicationResponse>;
   createCompanyApplicationFor?: Maybe<ICreateCompanyApplicationResponse>;
@@ -1735,6 +1758,7 @@ export type IMutation = {
   createSponsor: ICreateSponsorResponse;
   createTalkCategory?: Maybe<IApplicationTalkCategory>;
   deleteCalendarItem: Scalars['Boolean']['output'];
+  deleteCompanyAccountManagersForSeason: Scalars['Int']['output'];
   deleteCompanyApplicationFor: Scalars['Boolean']['output'];
   deleteCompanyPanel: Scalars['Boolean']['output'];
   deleteGalleryImage: Scalars['Boolean']['output'];
@@ -1755,6 +1779,7 @@ export type IMutation = {
   logout: Scalars['Boolean']['output'];
   register: IAuthResponse;
   registerCompany?: Maybe<ICreateCompanyResponse>;
+  remapFaculty: Scalars['Int']['output'];
   removeCompanyMember?: Maybe<Scalars['String']['output']>;
   renameCocktailType: IApplicationCocktailType;
   renameTalkCategory?: Maybe<IApplicationTalkCategory>;
@@ -1765,6 +1790,7 @@ export type IMutation = {
   resumeSetIsFavourite: Scalars['Boolean']['output'];
   scanUserQr?: Maybe<ICompanyScanUserQrResponse>;
   scanUserQrRefine?: Maybe<ICompanyScanUserQrResponse>;
+  setCompanyAccountManagers?: Maybe<Array<ICompanyAccountManager>>;
   swapGalleryImageOrder: Scalars['Boolean']['output'];
   swapPartnerOrder: Scalars['Boolean']['output'];
   swapSponsorOrder: Scalars['Boolean']['output'];
@@ -1793,6 +1819,7 @@ export type IMutation = {
 
 export type IMutationAddCompanyMemberArgs = {
   email: Scalars['String']['input'];
+  vat?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1809,6 +1836,11 @@ export type IMutationApproveCompanyApplicationsArgs = {
 
 export type IMutationCheckPasswordResetArgs = {
   token: Scalars['String']['input'];
+};
+
+
+export type IMutationClearFacultyArgs = {
+  from: Scalars['String']['input'];
 };
 
 
@@ -1888,6 +1920,11 @@ export type IMutationCreateTalkCategoryArgs = {
 
 export type IMutationDeleteCalendarItemArgs = {
   uid: Scalars['String']['input'];
+};
+
+
+export type IMutationDeleteCompanyAccountManagersForSeasonArgs = {
+  season: Scalars['String']['input'];
 };
 
 
@@ -1989,8 +2026,15 @@ export type IMutationRegisterCompanyArgs = {
 };
 
 
+export type IMutationRemapFacultyArgs = {
+  from: Scalars['String']['input'];
+  to: Scalars['String']['input'];
+};
+
+
 export type IMutationRemoveCompanyMemberArgs = {
   email: Scalars['String']['input'];
+  vat?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2042,6 +2086,13 @@ export type IMutationScanUserQrArgs = {
 export type IMutationScanUserQrRefineArgs = {
   refineData: ICompanyScanUserQrRefineData;
   userUid: Scalars['String']['input'];
+};
+
+
+export type IMutationSetCompanyAccountManagersArgs = {
+  company: Scalars['String']['input'];
+  season: Scalars['String']['input'];
+  users: Array<Scalars['String']['input']>;
 };
 
 
@@ -2536,6 +2587,7 @@ export type IPressReleaseWithFilesCreateInput = {
 };
 
 export type IQuery = {
+  accountManagerUsers: Array<IUser>;
   allGalleryImages: Array<IGalleryImage>;
   allNews: Array<INews>;
   allTranslationsFor: Array<ITranslation>;
@@ -2549,6 +2601,7 @@ export type IQuery = {
   cocktailTypes: Array<IApplicationCocktailType>;
   companies: Array<ICompany>;
   company?: Maybe<ICompany>;
+  companyAccountManagers: Array<ICompanyAccountManager>;
   companyApplication?: Maybe<ICompanyApplication>;
   companyApplicationFor?: Maybe<ICompanyApplication>;
   companyApplications?: Maybe<Array<ICompanyApplication>>;
@@ -2600,6 +2653,7 @@ export type IQuery = {
   talkCategories: Array<IApplicationTalkCategory>;
   translation?: Maybe<ITranslation>;
   translations: Array<ITranslation>;
+  unmappedFaculties: Array<IUnmappedFaculty>;
   user?: Maybe<IUser>;
   userCompanyComponentRating?: Maybe<IUserCompanyComponentRating>;
   userCompanyComponentRatings: Array<IUserCompanyComponentRating>;
@@ -2665,6 +2719,11 @@ export type IQueryCompaniesArgs = {
 
 export type IQueryCompanyArgs = {
   vat: Scalars['String']['input'];
+};
+
+
+export type IQueryCompanyAccountManagersArgs = {
+  season?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3461,6 +3520,7 @@ export type ISeasonCount = {
   UserCompanyComponentRatings: Scalars['Int']['output'];
   calendar: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
+  companyAccountManagers: Scalars['Int']['output'];
   entryLog: Scalars['Int']['output'];
   favouriteResumes: Scalars['Int']['output'];
   gateGuardianLog: Scalars['Int']['output'];
@@ -3507,6 +3567,11 @@ export type ISeasonCountCalendarArgs = {
 
 export type ISeasonCountCompaniesArgs = {
   where?: InputMaybe<ICompanyApplicationWhereInput>;
+};
+
+
+export type ISeasonCountCompanyAccountManagersArgs = {
+  where?: InputMaybe<ICompanyAccountManagerWhereInput>;
 };
 
 
@@ -3903,6 +3968,11 @@ export type ITranslationWhereUniqueInput = {
   value?: InputMaybe<IStringFilter>;
 };
 
+export type IUnmappedFaculty = {
+  count: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type IUnmatchedInternship = {
   description: Scalars['String']['output'];
   externalCompany: Scalars['String']['output'];
@@ -3989,6 +4059,7 @@ export type IUserCount = {
   LiveVoteComment: Scalars['Int']['output'];
   News: Scalars['Int']['output'];
   UserCompanyComponentRatings: Scalars['Int']['output'];
+  accountManagedCompanies: Scalars['Int']['output'];
   companies: Scalars['Int']['output'];
   events: Scalars['Int']['output'];
   files: Scalars['Int']['output'];
@@ -4021,6 +4092,11 @@ export type IUserCountNewsArgs = {
 
 export type IUserCountUserCompanyComponentRatingsArgs = {
   where?: InputMaybe<IUserCompanyComponentRatingWhereInput>;
+};
+
+
+export type IUserCountAccountManagedCompaniesArgs = {
+  where?: InputMaybe<ICompanyAccountManagerWhereInput>;
 };
 
 
@@ -6196,6 +6272,8 @@ export type IResolversTypes = {
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailChooseInput: ICocktailChooseInput;
   Company: ResolverTypeWrapper<ICompany>;
+  CompanyAccountManager: ResolverTypeWrapper<ICompanyAccountManager>;
+  CompanyAccountManagerWhereInput: ICompanyAccountManagerWhereInput;
   CompanyApplication: ResolverTypeWrapper<ICompanyApplication>;
   CompanyApplicationApproval: ResolverTypeWrapper<ICompanyApplicationApproval>;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
@@ -6433,6 +6511,7 @@ export type IResolversTypes = {
   TranslationScalarFieldEnum: ITranslationScalarFieldEnum;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmappedFaculty: ResolverTypeWrapper<IUnmappedFaculty>;
   UnmatchedInternship: ResolverTypeWrapper<IUnmatchedInternship>;
   UpdateIndustryInput: IUpdateIndustryInput;
   UpdatePasswordResponse: ResolverTypeWrapper<IUpdatePasswordResponse>;
@@ -6527,6 +6606,8 @@ export type IResolversParentTypes = {
   CalendarUpdateInput: ICalendarUpdateInput;
   CocktailChooseInput: ICocktailChooseInput;
   Company: ICompany;
+  CompanyAccountManager: ICompanyAccountManager;
+  CompanyAccountManagerWhereInput: ICompanyAccountManagerWhereInput;
   CompanyApplication: ICompanyApplication;
   CompanyApplicationApproval: ICompanyApplicationApproval;
   CompanyApplicationApprovedEditInput: ICompanyApplicationApprovedEditInput;
@@ -6752,6 +6833,7 @@ export type IResolversParentTypes = {
   TranslationOrderByWithRelationInput: ITranslationOrderByWithRelationInput;
   TranslationWhereInput: ITranslationWhereInput;
   TranslationWhereUniqueInput: ITranslationWhereUniqueInput;
+  UnmappedFaculty: IUnmappedFaculty;
   UnmatchedInternship: IUnmatchedInternship;
   UpdateIndustryInput: IUpdateIndustryInput;
   UpdatePasswordResponse: IUpdatePasswordResponse;
@@ -6986,6 +7068,14 @@ export type ICompanyResolvers<ContextType = any, ParentType extends IResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ICompanyAccountManagerResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyAccountManager'] = IResolversParentTypes['CompanyAccountManager']> = {
+  company?: Resolver<IResolversTypes['Company'], ParentType, ContextType>;
+  createdAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
+  season?: Resolver<IResolversTypes['Season'], ParentType, ContextType>;
+  user?: Resolver<IResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ICompanyApplicationResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyApplication'] = IResolversParentTypes['CompanyApplication']> = {
   _count?: Resolver<Maybe<IResolversTypes['CompanyApplicationCount']>, ParentType, ContextType>;
   approval?: Resolver<Maybe<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType>;
@@ -7060,6 +7150,7 @@ export type ICompanyApplicationFeedbackResolvers<ContextType = any, ParentType e
 export type ICompanyCountResolvers<ContextType = any, ParentType extends IResolversParentTypes['CompanyCount'] = IResolversParentTypes['CompanyCount']> = {
   UserCompanyComponentRatingAveragesView?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountUserCompanyComponentRatingAveragesViewArgs>>;
   UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountUserCompanyComponentRatingsArgs>>;
+  accountManagers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountAccountManagersArgs>>;
   applications?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountApplicationsArgs>>;
   favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountFavouriteResumesArgs>>;
   members?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ICompanyCountMembersArgs>>;
@@ -7366,6 +7457,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   applyCompaniesVatData?: Resolver<Array<IResolversTypes['CompanyRecheckApplyResult']>, ParentType, ContextType, RequireFields<IMutationApplyCompaniesVatDataArgs, 'updates'>>;
   approveCompanyApplications?: Resolver<Array<IResolversTypes['CompanyApplicationApproval']>, ParentType, ContextType, RequireFields<IMutationApproveCompanyApplicationsArgs, 'companies' | 'season'>>;
   checkPasswordReset?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IMutationCheckPasswordResetArgs, 'token'>>;
+  clearFaculty?: Resolver<IResolversTypes['Int'], ParentType, ContextType, RequireFields<IMutationClearFacultyArgs, 'from'>>;
   createCocktailType?: Resolver<Maybe<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, RequireFields<IMutationCreateCocktailTypeArgs, 'season' | 'type'>>;
   createCompanyApplication?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationArgs, 'info'>>;
   createCompanyApplicationFor?: Resolver<Maybe<IResolversTypes['CreateCompanyApplicationResponse']>, ParentType, ContextType, RequireFields<IMutationCreateCompanyApplicationForArgs, 'company' | 'info' | 'season'>>;
@@ -7380,6 +7472,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   createSponsor?: Resolver<IResolversTypes['CreateSponsorResponse'], ParentType, ContextType, RequireFields<IMutationCreateSponsorArgs, 'info' | 'season'>>;
   createTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationCreateTalkCategoryArgs, 'name' | 'season'>>;
   deleteCalendarItem?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCalendarItemArgs, 'uid'>>;
+  deleteCompanyAccountManagersForSeason?: Resolver<IResolversTypes['Int'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyAccountManagersForSeasonArgs, 'season'>>;
   deleteCompanyApplicationFor?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyApplicationForArgs, 'company' | 'season'>>;
   deleteCompanyPanel?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteCompanyPanelArgs, 'uid'>>;
   deleteGalleryImage?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationDeleteGalleryImageArgs, 'uid'>>;
@@ -7400,6 +7493,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   logout?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType>;
   register?: Resolver<IResolversTypes['AuthResponse'], ParentType, ContextType, RequireFields<IMutationRegisterArgs, 'info'>>;
   registerCompany?: Resolver<Maybe<IResolversTypes['CreateCompanyResponse']>, ParentType, ContextType, RequireFields<IMutationRegisterCompanyArgs, 'info'>>;
+  remapFaculty?: Resolver<IResolversTypes['Int'], ParentType, ContextType, RequireFields<IMutationRemapFacultyArgs, 'from' | 'to'>>;
   removeCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationRemoveCompanyMemberArgs, 'email'>>;
   renameCocktailType?: Resolver<IResolversTypes['ApplicationCocktailType'], ParentType, ContextType, RequireFields<IMutationRenameCocktailTypeArgs, 'newCocktailType' | 'oldCocktailType' | 'season'>>;
   renameTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationRenameTalkCategoryArgs, 'newName' | 'oldName' | 'season'>>;
@@ -7410,6 +7504,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   resumeSetIsFavourite?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationResumeSetIsFavouriteArgs, 'isFavourite' | 'uid'>>;
   scanUserQr?: Resolver<Maybe<IResolversTypes['CompanyScanUserQrResponse']>, ParentType, ContextType, RequireFields<IMutationScanUserQrArgs, 'userUid'>>;
   scanUserQrRefine?: Resolver<Maybe<IResolversTypes['CompanyScanUserQrResponse']>, ParentType, ContextType, RequireFields<IMutationScanUserQrRefineArgs, 'refineData' | 'userUid'>>;
+  setCompanyAccountManagers?: Resolver<Maybe<Array<IResolversTypes['CompanyAccountManager']>>, ParentType, ContextType, RequireFields<IMutationSetCompanyAccountManagersArgs, 'company' | 'season' | 'users'>>;
   swapGalleryImageOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapGalleryImageOrderArgs, 'orderA' | 'orderB'>>;
   swapPartnerOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapPartnerOrderArgs, 'orderA' | 'orderB' | 'season'>>;
   swapSponsorOrder?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationSwapSponsorOrderArgs, 'orderA' | 'orderB' | 'season'>>;
@@ -7520,6 +7615,7 @@ export type IPressReleaseResolvers<ContextType = any, ParentType extends IResolv
 };
 
 export type IQueryResolvers<ContextType = any, ParentType extends IResolversParentTypes['Query'] = IResolversParentTypes['Query']> = {
+  accountManagerUsers?: Resolver<Array<IResolversTypes['User']>, ParentType, ContextType>;
   allGalleryImages?: Resolver<Array<IResolversTypes['GalleryImage']>, ParentType, ContextType>;
   allNews?: Resolver<Array<IResolversTypes['News']>, ParentType, ContextType, Partial<IQueryAllNewsArgs>>;
   allTranslationsFor?: Resolver<Array<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IQueryAllTranslationsForArgs, 'language'>>;
@@ -7533,6 +7629,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   cocktailTypes?: Resolver<Array<IResolversTypes['ApplicationCocktailType']>, ParentType, ContextType, Partial<IQueryCocktailTypesArgs>>;
   companies?: Resolver<Array<IResolversTypes['Company']>, ParentType, ContextType, Partial<IQueryCompaniesArgs>>;
   company?: Resolver<Maybe<IResolversTypes['Company']>, ParentType, ContextType, RequireFields<IQueryCompanyArgs, 'vat'>>;
+  companyAccountManagers?: Resolver<Array<IResolversTypes['CompanyAccountManager']>, ParentType, ContextType, Partial<IQueryCompanyAccountManagersArgs>>;
   companyApplication?: Resolver<Maybe<IResolversTypes['CompanyApplication']>, ParentType, ContextType>;
   companyApplicationFor?: Resolver<Maybe<IResolversTypes['CompanyApplication']>, ParentType, ContextType, RequireFields<IQueryCompanyApplicationForArgs, 'company' | 'season'>>;
   companyApplications?: Resolver<Maybe<Array<IResolversTypes['CompanyApplication']>>, ParentType, ContextType, Partial<IQueryCompanyApplicationsArgs>>;
@@ -7584,6 +7681,7 @@ export type IQueryResolvers<ContextType = any, ParentType extends IResolversPare
   talkCategories?: Resolver<Array<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, Partial<IQueryTalkCategoriesArgs>>;
   translation?: Resolver<Maybe<IResolversTypes['Translation']>, ParentType, ContextType, RequireFields<IQueryTranslationArgs, 'where'>>;
   translations?: Resolver<Array<IResolversTypes['Translation']>, ParentType, ContextType, Partial<IQueryTranslationsArgs>>;
+  unmappedFaculties?: Resolver<Array<IResolversTypes['UnmappedFaculty']>, ParentType, ContextType>;
   user?: Resolver<Maybe<IResolversTypes['User']>, ParentType, ContextType, RequireFields<IQueryUserArgs, 'uid'>>;
   userCompanyComponentRating?: Resolver<Maybe<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingArgs, 'companyUid' | 'component' | 'seasonUid'>>;
   userCompanyComponentRatings?: Resolver<Array<IResolversTypes['UserCompanyComponentRating']>, ParentType, ContextType, RequireFields<IQueryUserCompanyComponentRatingsArgs, 'companyUid' | 'seasonUid'>>;
@@ -7763,6 +7861,7 @@ export type ISeasonCountResolvers<ContextType = any, ParentType extends IResolve
   UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountUserCompanyComponentRatingsArgs>>;
   calendar?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCalendarArgs>>;
   companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCompaniesArgs>>;
+  companyAccountManagers?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountCompanyAccountManagersArgs>>;
   entryLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountEntryLogArgs>>;
   favouriteResumes?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountFavouriteResumesArgs>>;
   gateGuardianLog?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<ISeasonCountGateGuardianLogArgs>>;
@@ -7809,6 +7908,12 @@ export type ITranslationResolvers<ContextType = any, ParentType extends IResolve
   language?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<IResolversTypes['DateTimeISO'], ParentType, ContextType>;
   value?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IUnmappedFacultyResolvers<ContextType = any, ParentType extends IResolversParentTypes['UnmappedFaculty'] = IResolversParentTypes['UnmappedFaculty']> = {
+  count?: Resolver<IResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<IResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -7885,6 +7990,7 @@ export type IUserCountResolvers<ContextType = any, ParentType extends IResolvers
   LiveVoteComment?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountLiveVoteCommentArgs>>;
   News?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountNewsArgs>>;
   UserCompanyComponentRatings?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountUserCompanyComponentRatingsArgs>>;
+  accountManagedCompanies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountAccountManagedCompaniesArgs>>;
   companies?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountCompaniesArgs>>;
   events?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountEventsArgs>>;
   files?: Resolver<IResolversTypes['Int'], ParentType, ContextType, Partial<IUserCountFilesArgs>>;
@@ -7934,6 +8040,7 @@ export type IResolvers<ContextType = any> = {
   CalendarEvent?: ICalendarEventResolvers<ContextType>;
   CalendarItem?: ICalendarItemResolvers<ContextType>;
   Company?: ICompanyResolvers<ContextType>;
+  CompanyAccountManager?: ICompanyAccountManagerResolvers<ContextType>;
   CompanyApplication?: ICompanyApplicationResolvers<ContextType>;
   CompanyApplicationApproval?: ICompanyApplicationApprovalResolvers<ContextType>;
   CompanyApplicationContactPerson?: ICompanyApplicationContactPersonResolvers<ContextType>;
@@ -8009,6 +8116,7 @@ export type IResolvers<ContextType = any> = {
   Sponsor?: ISponsorResolvers<ContextType>;
   SyncResult?: ISyncResultResolvers<ContextType>;
   Translation?: ITranslationResolvers<ContextType>;
+  UnmappedFaculty?: IUnmappedFacultyResolvers<ContextType>;
   UnmatchedInternship?: IUnmatchedInternshipResolvers<ContextType>;
   UpdatePasswordResponse?: IUpdatePasswordResponseResolvers<ContextType>;
   UpdateProfileResponse?: IUpdateProfileResponseResolvers<ContextType>;

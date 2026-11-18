@@ -62,6 +62,33 @@
           </span>
         </template>
       </Column>
+      <Column>
+        <template #header>
+          <translated-text trans-key="admin.account-managers.column.managers" />
+        </template>
+        <template #body="{ data }">
+          <ul
+            v-if="accountManagersByVat[data.vat]?.length"
+            :class="$style.managerList"
+          >
+            <li
+              v-for="manager in accountManagersByVat[data.vat]"
+              :key="manager.uid"
+              v-tooltip.top="manager.email"
+              v-text="manager.name"
+            />
+          </ul>
+          <span v-else>
+            /
+          </span>
+          <nuxt-link
+            v-if="currentSeasonUid"
+            :to="{ name: 'admin-season-season-account-managers', params: { season: currentSeasonUid } }"
+          >
+            <translated-text trans-key="admin.account-managers.manage" />
+          </nuxt-link>
+        </template>
+      </Column>
       <Column body-style="text-align: center; overflow: visible" header-style="width: 4rem; text-align: center">
         <template #body="{ data }">
           <nuxt-link :to="{ name: 'admin-companies-vat-edit', params: { vat: data.vat } }">
@@ -88,12 +115,16 @@
   import InputText from "primevue/inputtext";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
+    computed,
     defineComponent,
     useQuery,
     ref,
     unref,
   } from "#imports";
   import useTitle from "~/composables/useTitle";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
   import {
     type ICompany,
     type IIndustry,
@@ -128,8 +159,14 @@
         industry: QIndustry,
         members: QMember[],
       };
+      type QAccountManager = {
+        user: Pick<IUser, "uid" | "name" | "email">,
+        company: Pick<ICompany, "vat">,
+        season: { uid: string, name: string, },
+      };
       type QData = {
         companies: QCompany[],
+        companyAccountManagers: QAccountManager[],
       };
       type QArgs = never;
       const resp = await useQuery<QData, QArgs>({
@@ -147,6 +184,20 @@
                     uid
                     name
                     email
+                }
+            }
+            companyAccountManagers {
+                user {
+                    uid
+                    name
+                    email
+                }
+                company {
+                    vat
+                }
+                season {
+                    uid
+                    name
                 }
             }
           }
@@ -216,6 +267,14 @@
 
       const companies = resp?.companies || [];
 
+      const seasonsStore = useSeasonsStore();
+      const accountManagersByVat: Record<string, QAccountManager["user"][]> = {};
+      for (const link of resp?.companyAccountManagers ?? []) {
+        const list = accountManagersByVat[link.company.vat] ?? [];
+        list.push(link.user);
+        accountManagersByVat[link.company.vat] = list;
+      }
+
       const exportHeaders = [
         "VAT",
         "Brand Name",
@@ -242,6 +301,8 @@
 
       return {
         companies,
+        accountManagersByVat,
+        currentSeasonUid: computed(() => seasonsStore.currentSeason?.uid ?? null),
         filters,
         dt,
         exportCSV() {
@@ -266,6 +327,12 @@
 </script>
 
 <style lang="scss" module>
+  .managerList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   .tableHeader {
     display: flex;
     justify-content: space-between;

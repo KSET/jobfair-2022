@@ -25,7 +25,7 @@ export type AuthConfig = {
 const roleToPriority: Record<Role, number> = {
   [Role.Student]: 0,
   [Role.Company]: 0,
-  [Role.AccountManager]: 5,
+  [Role.AccountManager]: 1,
   [Role.PR]: 5,
   [Role.Scanner]: 10,
   [Role.Admin]: Infinity,

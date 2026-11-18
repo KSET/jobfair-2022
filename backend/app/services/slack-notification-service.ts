@@ -100,6 +100,35 @@ export default class SlackNotificationService {
     });
   }
 
+  static notifyOfAccountManagerAddedMember(
+    company: Pick<Company, "brandName" | "vat">,
+    accountManager: Pick<User, "firstName" | "lastName" | "email">,
+    member: Pick<User, "firstName" | "lastName" | "email">,
+  ) {
+    const text = `
+*ACCOUNT MANAGER DODAO ČLANA*
+-------------------------
+  - Poduzeće: ${ company.brandName } (${ company.vat })
+  - Account manager: <mailto:${ accountManager.email }|${ accountManager.firstName } ${ accountManager.lastName }>
+  - Novi član: <mailto:${ member.email }|${ member.firstName } ${ member.lastName }>
+
+<https://jobfair.fer.unizg.hr/admin/companies/${ company.vat }/edit|Link na firmu>
+-------------------------
+`;
+
+    const channel =
+      ("production" === process.env.NODE_ENV)
+        ? "#prijave"
+        : "#prijave-test"
+    ;
+
+    return this.sendPayload({
+      username: "Job Fair Firmatizator",
+      channel,
+      text,
+    });
+  }
+
   private static sendPayload(
     {
       text,

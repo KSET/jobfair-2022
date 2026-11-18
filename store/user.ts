@@ -52,6 +52,10 @@ export const useUserStore = defineStore(
         return state.user?.roles.some(({ name }) => "scanner" === name) ?? false;
       },
 
+      isAccountManager(state) {
+        return state.user?.roles.some(({ name }) => "account-manager" === name) ?? false;
+      },
+
       company(state): Company | null {
         return state.user?.companies?.[0] || null;
       },

@@ -89,6 +89,34 @@
         </app-formgroup>
       </div>
     </LazyClientOnly>
+
+    <div class="mt-8">
+      <h1>
+        <translated-text trans-key="admin.account-managers.company.title" />
+      </h1>
+      <ul v-if="accountManagers.length > 0">
+        <li
+          v-for="link of accountManagers"
+          :key="link.user.uid"
+        >
+          <span v-text="link.user.name" />
+          -
+          <span v-text="link.user.email" />
+          (<span v-text="link.season.name" />)
+        </li>
+      </ul>
+      <p v-else>
+        <em>
+          <translated-text trans-key="admin.account-managers.company.none" />
+        </em>
+      </p>
+      <nuxt-link
+        v-if="accountManagersSeasonUid"
+        :to="{ name: 'admin-season-season-account-managers', params: { season: accountManagersSeasonUid } }"
+      >
+        <translated-text trans-key="admin.account-managers.manage" />
+      </nuxt-link>
+    </div>
   </app-max-width-container>
 </template>
 
@@ -118,6 +146,9 @@
   import {
     useDebounceFn,
   } from "#imports";
+  import {
+    useSeasonsStore,
+  } from "~/store/seasons";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import AppFormgroup from "~/components/util/form/app-formgroup.vue";
   import TranslatedText from "~/components/TranslatedText.vue";
@@ -167,6 +198,7 @@
       const route = useRoute();
       const companyStore = useCompanyStore();
       const industriesStore = useIndustriesStore();
+      const seasonsStore = useSeasonsStore();
       const toast = useToast();
 
       const industriesOptions = computed(() => industriesStore.industryOptions);
@@ -177,8 +209,14 @@
       type QCompany = ICompany;
       type QIndustry = Pick<IIndustry, "name">;
       type QUser = Pick<IUser, "uid" | "name" | "email">;
+      type QAccountManager = {
+        user: QUser,
+        company: Pick<ICompany, "vat">,
+        season: { uid: string, name: string, },
+      };
       type QueryData = {
         industries: Pick<IIndustry, "name" | "nameEn">[],
+        companyAccountManagers: QAccountManager[],
         company: QCompany & {
           industry: QIndustry,
           rasterLogo: Pick<IImage, "name" | "uid"> & {
@@ -233,12 +271,33 @@
               name
               nameEn
           }
+
+          companyAccountManagers {
+            user {
+              uid
+              name
+              email
+            }
+            company {
+              vat
+            }
+            season {
+              uid
+              name
+            }
+          }
         }
         `,
         variables: {
           vat: route.params.vat as string,
         },
       })();
+
+      const accountManagers =
+        (res?.data?.companyAccountManagers ?? [])
+          .filter((link) => link.company.vat === route.params.vat)
+      ;
+      const accountManagersSeasonUid = computed(() => seasonsStore.currentSeason?.uid ?? accountManagers[0]?.season.uid ?? null);
 
       type UserQueryData = {
         users: QUser[],
@@ -354,6 +413,8 @@
 
       return {
         company,
+        accountManagers,
+        accountManagersSeasonUid,
         info,
         errors,
         isLoading,

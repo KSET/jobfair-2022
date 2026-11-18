@@ -81,6 +81,9 @@ model User {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   LiveVoteComment LiveVoteComment[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  accountManagedCompanies CompanyAccountManager[]
 }
 
 model Session {
@@ -193,6 +196,28 @@ model Company {
 
   /// @TypeGraphQL.omit(output: true, input: true)
   signatories CompanySignatory[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  accountManagers CompanyAccountManager[]
+}
+
+model CompanyAccountManager {
+  /// @TypeGraphQL.omit(output: true, input: true)
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  userId    Int
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  companyId Int
+  season    Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  /// @TypeGraphQL.omit(output: true, input: true)
+  seasonId  Int
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, companyId, seasonId])
+  @@index([companyId, seasonId])
 }
 
 model CompanySignatory {
@@ -441,6 +466,9 @@ model Season {
   /// @TypeGraphQL.omit(output: true, input: true)
   LiveVoteComment         LiveVoteComment[]
   ApplicationCocktailType ApplicationCocktailType[]
+
+  /// @TypeGraphQL.omit(output: true, input: true)
+  companyAccountManagers CompanyAccountManager[]
 }
 
 model Sponsor {

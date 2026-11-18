@@ -161,6 +161,36 @@ Informacije o komponentama u info kartici (mali sivi \`(i)\` pored imena bota)
     });
   }
 
+  static notifyOfAccountManagerAddedMember(
+    company: Pick<Company, "brandName" | "vat">,
+    accountManager: Pick<User, "firstName" | "lastName" | "email">,
+    member: Pick<User, "firstName" | "lastName" | "email">,
+  ) {
+    const text = `
+# ACCOUNT MANAGER DODAO ČLANA
+-------------------------
+| - | - |
+|----|----|
+| Poduzeće | ${ company.brandName } (${ company.vat }) |
+| Account manager | ${ accountManager.firstName } ${ accountManager.lastName } (${ accountManager.email }) |
+| Novi član | ${ member.firstName } ${ member.lastName } (${ member.email }) |
+
+[Link na firmu :house:](${ PUBLIC_BASE_URL }/admin/companies/${ company.vat }/edit)
+`;
+
+    const channel =
+      IS_PRODUCTION
+        ? "#prijave"
+        : "#prijave-test"
+    ;
+
+    return this.sendPayload({
+      username: "Job Fair Firmatizator",
+      channel,
+      text,
+    });
+  }
+
   private static sendPayload(
     {
       text,

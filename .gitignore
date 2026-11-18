@@ -111,3 +111,6 @@ docker-compose.*.override.yml
 # GraphQL artefacts
 # graphql/schema.ts
 # graphql/client/
+
+.claude/worktrees/
+.claude/settings.local.json

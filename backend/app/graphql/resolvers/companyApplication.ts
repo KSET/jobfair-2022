@@ -75,6 +75,9 @@ import {
   Role,
 } from "../../helpers/auth";
 import {
+  canActForCompany,
+} from "../../helpers/company-access";
+import {
   NotificationService,
 } from "../../services/notification-service";
 import {
@@ -820,6 +823,34 @@ export class CompanyApplicationInfoResolver {
   }
 }
 
+const adminOrAccountManagerAccess =
+  async (
+    ctx: Context,
+    companyUid: string,
+    seasonUid: string,
+  ) => {
+    const access = await canActForCompany(
+      ctx.prisma,
+      ctx.user,
+      {
+        uid: companyUid,
+      },
+      {
+        seasonUid,
+        allowAccountManager: true,
+        requireApproved: true,
+        allowMember: false,
+      },
+    );
+
+    if (!access || "member" === access.via) {
+      return null;
+    }
+
+    return access;
+  }
+;
+
 
 @Resolver(() => CompanyApplication)
 export class CompanyApplicationAdminResolver {
@@ -860,17 +891,29 @@ export class CompanyApplicationAdminResolver {
   }
 
   @Query(() => CompanyApplication, { nullable: true })
-  companyApplicationFor(
+  async companyApplicationFor(
   @Ctx() ctx: Context,
     @Arg("company") companyUid: string,
     @Arg("season") seasonUid: string,
     @Info() info: GraphQLResolveInfo,
   ) {
-    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+    const access = await adminOrAccountManagerAccess(ctx, companyUid, seasonUid);
+
+    if (!access) {
       return null;
     }
 
-    return ctx.prisma.companyApplication.findFirst({
+    const isAccountManagerAccess = "account-manager" === access.via;
+    const select = toSelect<Prisma.CompanyApplicationSelect>(info, transformSelect);
+    const forCompanySelect = select.forCompany as { select?: Prisma.CompanySelect, } | undefined;
+    const hideMembers = isAccountManagerAccess && Boolean(forCompanySelect?.select?.members);
+
+    if (hideMembers && forCompanySelect?.select) {
+      delete forCompanySelect.select.members;
+      forCompanySelect.select.uid = true;
+    }
+
+    const application = await ctx.prisma.companyApplication.findFirst({
       where: {
         forSeason: {
           uid: seasonUid,
@@ -879,8 +922,18 @@ export class CompanyApplicationAdminResolver {
           uid: companyUid,
         },
       },
-      select: toSelect(info, transformSelect),
-    });
+      select,
+    }) as CompanyApplication | null;
+
+    if (isAccountManagerAccess && application?.feedback) {
+      application.feedback = null;
+    }
+
+    if (hideMembers && application?.forCompany) {
+      application.forCompany.members = [];
+    }
+
+    return application;
   }
 
   @Mutation(() => Boolean)
@@ -914,7 +967,9 @@ export class CompanyApplicationAdminResolver {
       @Arg("company") companyUid: string,
       @Arg("info") info: CompanyApplicationCreateInput,
   ): Promise<CreateCompanyApplicationResponse | null> {
-    if (!hasAtLeastRole(Role.Admin, ctx.user)) {
+    const access = await adminOrAccountManagerAccess(ctx, companyUid, seasonUid);
+
+    if (!access) {
       return null;
     }
 
@@ -926,9 +981,89 @@ export class CompanyApplicationAdminResolver {
       };
     }
 
+    if (!info.signatories || 1 > info.signatories.length) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "At least 1 signatory required",
+          },
+        ],
+      };
+    }
+
+    if (5 < info.signatories.length) {
+      return {
+        errors: [
+          {
+            field: "signatories",
+            message: "Maximum 5 signatories allowed",
+          },
+        ],
+      };
+    }
+
+    const isAccountManagerAccess = "account-manager" === access.via;
+
+    if (isAccountManagerAccess) {
+      const existing = await ctx.prisma.companyApplication.findFirst({
+        where: {
+          forSeason: {
+            uid: seasonUid,
+          },
+          forCompanyId: access.company.id,
+        },
+        select: {
+          booth: true,
+          wantsCocktail: true,
+          wantsPanel: true,
+          wantsQuest: true,
+          talk: {
+            select: {
+              id: true,
+            },
+          },
+          workshop: {
+            select: {
+              id: true,
+            },
+          },
+          fusion: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+
+      const eventsChanged =
+        !existing
+        || Boolean(info.talk) !== Boolean(existing.talk)
+        || Boolean(info.workshop) !== Boolean(existing.workshop)
+        || Boolean(info.fusion) !== Boolean(existing.fusion)
+        || (existing.wantsQuest && !info.quest)
+      ;
+
+      if (eventsChanged) {
+        return {
+          errors: [
+            {
+              field: "entity",
+              message: "Account managers can not change the selected options",
+            },
+          ],
+        };
+      }
+
+      info.booth = existing.booth;
+      info.wantsCocktail = existing.wantsCocktail;
+      info.wantsPanel = existing.wantsPanel;
+      info.wantsQuest = existing.wantsQuest;
+    }
+
     const booths = await BoothsService.fetchBooths();
 
-    if (!booths.some((booth) => info.booth === booth.key)) {
+    if (!isAccountManagerAccess && null !== (info.booth ?? null) && !booths.some((booth) => info.booth === booth.key)) {
       return {
         errors: [
           {
@@ -956,12 +1091,26 @@ export class CompanyApplicationAdminResolver {
       };
     }
 
+    if (info.vat.trim().toUpperCase() !== company.vat.trim().toUpperCase()) {
+      return {
+        errors: [
+          {
+            field: "vat",
+            message: "VAT does not match the company",
+          },
+        ],
+      };
+    }
+
+    info.vat = company.vat;
+
     const currentSeason = await ctx.prisma.season.findFirst({
       where: {
         uid: seasonUid,
       },
       select: {
         id: true,
+        endsAt: true,
       },
     });
 
@@ -971,6 +1120,17 @@ export class CompanyApplicationAdminResolver {
           {
             field: "entity",
             message: "Season is closed",
+          },
+        ],
+      };
+    }
+
+    if (isAccountManagerAccess && currentSeason.endsAt < new Date()) {
+      return {
+        errors: [
+          {
+            field: "entity",
+            message: "Season has ended",
           },
         ],
       };
@@ -990,7 +1150,7 @@ export class CompanyApplicationAdminResolver {
           },
           select: oldApplicationPresentersSelect,
         }),
-        ctx.user,
+        ctx.user!,
       );
     } catch (e) {
       if (e instanceof PresenterCreateError) {
@@ -1145,7 +1305,7 @@ export class CompanyApplicationAdminResolver {
             },
             forCompany: {
               connect: {
-                vat: info.vat,
+                id: company.id,
               },
             },
             forSeason: {
@@ -1385,7 +1545,7 @@ export class CompanyApplicationAdminResolver {
               : deleteIf(oldApplication.quest),
           forCompany: {
             connect: {
-              vat: info.vat,
+              id: company.id,
             },
           },
           forSeason: {

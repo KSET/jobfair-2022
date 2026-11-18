@@ -225,6 +225,13 @@
               Ljetne prakse API
             </nuxt-link>
           </li>
+          <li>
+            <nuxt-link
+              :to="{ name: 'admin-season-season-account-managers', params: { season: season.uid } }"
+            >
+              <translated-text trans-key="admin.account-managers.link" />
+            </nuxt-link>
+          </li>
         </ul>
 
         <h2>Event</h2>

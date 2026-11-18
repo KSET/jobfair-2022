@@ -583,6 +583,22 @@ type Company {
   website: String!
 }
 
+type CompanyAccountManager {
+  company: Company!
+  createdAt: DateTimeISO!
+  season: Season!
+  user: User!
+}
+
+input CompanyAccountManagerWhereInput {
+  AND: [CompanyAccountManagerWhereInput!]
+  NOT: [CompanyAccountManagerWhereInput!]
+  OR: [CompanyAccountManagerWhereInput!]
+  company: CompanyRelationFilter
+  season: SeasonRelationFilter
+  user: UserRelationFilter
+}
+
 type CompanyApplication {
   _count: CompanyApplicationCount
   approval: CompanyApplicationApproval
@@ -811,6 +827,7 @@ input CompanyApplicationWhereUniqueInput {
 type CompanyCount {
   UserCompanyComponentRatingAveragesView(where: UserCompanyComponentRatingAveragesViewWhereInput): Int!
   UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
+  accountManagers(where: CompanyAccountManagerWhereInput): Int!
   applications(where: CompanyApplicationWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   members(where: UserWhereInput): Int!
@@ -1522,7 +1539,7 @@ input LiveVoteWhereInput {
 }
 
 type Mutation {
-  addCompanyMember(email: String!): String
+  addCompanyMember(email: String!, vat: String): String
   applyCompaniesVatData(updates: [CompanyRecheckApplyInput!]!): [CompanyRecheckApplyResult!]!
   approveCompanyApplications(companies: [ApproveCompanyApplicationsInput!]!, season: String!): [CompanyApplicationApproval!]!
   checkPasswordReset(token: String!): User
@@ -1541,6 +1558,7 @@ type Mutation {
   createSponsor(info: SponsorCreateInput!, season: String!): CreateSponsorResponse!
   createTalkCategory(name: String!, season: String!): ApplicationTalkCategory
   deleteCalendarItem(uid: String!): Boolean!
+  deleteCompanyAccountManagersForSeason(season: String!): Int!
   deleteCompanyApplicationFor(company: String!, season: String!): Boolean!
   deleteCompanyPanel(uid: String!): Boolean!
   deleteGalleryImage(uid: String!): Boolean!
@@ -1562,7 +1580,7 @@ type Mutation {
   register(info: UserRegisterInput!): AuthResponse!
   registerCompany(info: CreateCompanyInput!): CreateCompanyResponse
   remapFaculty(from: String!, to: String!): Int!
-  removeCompanyMember(email: String!): String
+  removeCompanyMember(email: String!, vat: String): String
   renameCocktailType(newCocktailType: String!, oldCocktailType: String!, season: String!): ApplicationCocktailType!
   renameTalkCategory(newName: String!, oldName: String!, season: String!): ApplicationTalkCategory
   requestPasswordReset(identifier: String!): String!
@@ -1572,6 +1590,7 @@ type Mutation {
   resumeSetIsFavourite(isFavourite: Boolean!, uid: String!): Boolean!
   scanUserQr(userUid: String!): CompanyScanUserQrResponse
   scanUserQrRefine(refineData: CompanyScanUserQrRefineData!, userUid: String!): CompanyScanUserQrResponse
+  setCompanyAccountManagers(company: String!, season: String!, users: [String!]!): [CompanyAccountManager!]
   swapGalleryImageOrder(orderA: Int!, orderB: Int!): Boolean!
   swapPartnerOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
   swapSponsorOrder(orderA: Int!, orderB: Int!, season: String!): Boolean!
@@ -1953,6 +1972,7 @@ input PressReleaseWithFilesCreateInput {
 }
 
 type Query {
+  accountManagerUsers: [User!]!
   allGalleryImages: [GalleryImage!]!
   allNews(filter: NewsFilter): [News!]!
   allTranslationsFor(language: String!): [Translation!]!
@@ -1966,6 +1986,7 @@ type Query {
   cocktailTypes(cursor: ApplicationCocktailTypeWhereUniqueInput, distinct: [ApplicationCocktailTypeScalarFieldEnum!], orderBy: [ApplicationCocktailTypeOrderByWithRelationInput!], skip: Int, take: Int, where: ApplicationCocktailTypeWhereInput): [ApplicationCocktailType!]!
   companies(cursor: CompanyWhereUniqueInput, distinct: [CompanyScalarFieldEnum!], orderBy: [CompanyOrderByWithRelationInput!], skip: Int, take: Int, where: CompanyWhereInput): [Company!]!
   company(vat: String!): Company
+  companyAccountManagers(season: String): [CompanyAccountManager!]!
   companyApplication: CompanyApplication
   companyApplicationFor(company: String!, season: String!): CompanyApplication
   companyApplications(cursor: CompanyApplicationWhereUniqueInput, distinct: [CompanyApplicationScalarFieldEnum!], orderBy: [CompanyApplicationOrderByWithRelationInput!], season: String, skip: Int, take: Int, where: CompanyApplicationWhereInput): [CompanyApplication!]
@@ -2441,6 +2462,7 @@ type SeasonCount {
   UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
   calendar(where: CalendarItemWhereInput): Int!
   companies(where: CompanyApplicationWhereInput): Int!
+  companyAccountManagers(where: CompanyAccountManagerWhereInput): Int!
   entryLog(where: EntryResumeLogWhereInput): Int!
   favouriteResumes(where: FavouriteResumeWhereInput): Int!
   gateGuardianLog(where: GateGuardianLogWhereInput): Int!
@@ -2887,6 +2909,7 @@ type UserCount {
   LiveVoteComment(where: LiveVoteCommentWhereInput): Int!
   News(where: NewsWhereInput): Int!
   UserCompanyComponentRatings(where: UserCompanyComponentRatingWhereInput): Int!
+  accountManagedCompanies(where: CompanyAccountManagerWhereInput): Int!
   companies(where: CompanyWhereInput): Int!
   events(where: EventLogWhereInput): Int!
   files(where: FileWhereInput): Int!

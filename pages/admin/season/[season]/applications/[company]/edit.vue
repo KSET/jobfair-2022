@@ -6,9 +6,9 @@
     <h1>Uredi prijavu</h1>
 
     <div :class="$style.companyInfo">
-      <h2 v-text="company.brandName" />
-      <h3 v-text="company.legalName" />
-      <h3 v-text="company.vat" />
+      <h2 v-text="company?.brandName" />
+      <h3 v-text="company?.legalName" />
+      <h3 v-text="company?.vat" />
     </div>
 
     <form
@@ -128,6 +128,7 @@
                     :id="category.key"
                     v-model="booth"
                     :value="category"
+                    :disabled="accountManager"
                     name="booth"
                   />
                   {{ category.name }}
@@ -147,7 +148,7 @@
               <translated-text :trans-key="`company-signup.form.${name}`" />
             </strong>
 
-            <Checkbox v-model="item.selected" binary />
+            <Checkbox v-model="item.selected" :disabled="accountManager" binary />
           </template>
           <template
             v-if="item.selected"
@@ -260,6 +261,7 @@
 
       <div class="flex mt-3">
         <p-button
+          v-if="!accountManager"
           :loading="isLoading"
           class="font-bold"
           type="button"
@@ -370,13 +372,33 @@
       RadioButton,
     },
 
-    async setup() {
+    props: {
+      companyUid: {
+        type: String,
+        required: false,
+        default: null,
+      },
+
+      seasonUid: {
+        type: String,
+        required: false,
+        default: null,
+      },
+
+      accountManager: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+    },
+
+    async setup(props) {
       const toast = useToast();
       const route = useRoute();
       const talkCategoriesStore = useTalkCategoriesStore();
 
-      const companyUid = route.params.company as string;
-      const seasonUid = route.params.season as string;
+      const companyUid = props.companyUid ?? route.params.company as string;
+      const seasonUid = props.seasonUid ?? route.params.season as string;
 
       const isLoading = ref(false);
 
@@ -554,7 +576,7 @@
 
       talkCategoriesStore.setTalkCategories(resp?.talkCategories);
 
-      const booth = ref(booths.find((booth) => booth.key === application?.booth) || booths[0]);
+      const booth = ref<(typeof booths)[number] | null>(booths.find((booth) => booth.key === application?.booth) ?? null);
       const toData =
         <T>(info: Record<keyof T, InputEntry>) =>
           pipe(
@@ -565,7 +587,8 @@
       ;
       const resetErrorsFor = <T>(errors: Record<keyof T | "entity", AuthError[]>) => keys(errors).forEach((key) => errors[key] = []);
 
-      const { vat } = (company!);
+      // No application (e.g. an AM whose company lost approval) renders the not-found state instead of throwing
+      const vat = company?.vat ?? "";
 
       return {
         applicationFound: Boolean(application),
@@ -648,7 +671,7 @@
             vat,
             contactPerson: toData<ContactPerson>(contactPerson.forms.info),
             signatories: signatories.value.map((sig) => toData<Signatory>(sig.forms)),
-            booth: unref(booth).key,
+            booth: unref(booth)?.key ?? null,
             talk:
               selectedObj.talk
                 ? {

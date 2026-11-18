@@ -67,6 +67,23 @@
           </div>
         </div>
 
+        <div v-if="isAccountManager || isAdmin" :class="$style.overlayPanelAdminContainer">
+          <small :class="$style.overlayPanelLabel">
+            <translated-text trans-key="account-manager.nav.label" />
+          </small>
+          <div>
+            <ul :class="$style.overlayPanelItems">
+              <li>
+                <nuxt-link :to="{ name: 'account-manager' }">
+                  <translated-text
+                    trans-key="account-manager.nav.home"
+                  />
+                </nuxt-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div>
           <ul :class="$style.overlayPanelItems">
             <li>
@@ -182,6 +199,7 @@
         isOverlayPanelOpen,
         user: computed(() => userStore.user),
         isAdmin: computed(() => userStore.isAdmin),
+        isAccountManager: computed(() => userStore.isAccountManager),
         op$,
       };
     },

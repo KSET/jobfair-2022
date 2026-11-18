@@ -128,6 +128,11 @@ button[data-pd-ripple="true"] {
   color: #00003f;
 }
 
+.p-column-filter-menu-button:not(.p-column-filter-menu-button-active),
+.p-column-filter-menu-button:not(.p-column-filter-menu-button-active):hover {
+  color: #00003f;
+}
+
 html, body {
   font-family: var(--font-family);
 }

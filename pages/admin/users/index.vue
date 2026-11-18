@@ -49,6 +49,29 @@
         </template>
         <Column field="name" header="Ime" sortable style="min-width: 3em;" />
         <Column field="email" header="Email" sortable style="min-width: 3em;" />
+        <Column
+          field="roleNames"
+          header="Uloge"
+          :show-filter-match-modes="false"
+          :show-filter-operator="false"
+          :show-add-button="false"
+          style="min-width: 10em;"
+        >
+          <template #filter="{ filterModel }">
+            <MultiSelect
+              v-model="filterModel.value"
+              :options="roleOptions"
+              placeholder="Odaberi uloge"
+              display="chip"
+              class="p-column-filter"
+              :class="$style.roleSelect"
+            />
+          </template>
+          <template #body="{ data }">
+            <span v-if="data.roleNames.length > 0" v-text="data.roleNames.join(', ')" />
+            <span v-else>/</span>
+          </template>
+        </Column>
         <Column data-type="date" field="createdAt" header="Registriran" sortable>
           <template #body="{ data }">
             <app-time :time="data.createdAt" />
@@ -100,8 +123,10 @@
   import Column from "primevue/column";
   import {
     FilterMatchMode,
+    FilterService,
   } from "primevue/api";
   import InputText from "primevue/inputtext";
+  import MultiSelect from "primevue/multiselect";
   import AppMaxWidthContainer from "~/components/AppMaxWidthContainer.vue";
   import {
     defineComponent,
@@ -127,6 +152,7 @@
       DataTable,
       Column,
       InputText,
+      MultiSelect,
     },
 
     async setup() {
@@ -139,9 +165,10 @@
       };
       type QData = {
         users: QUser[],
+        roles: Pick<IRole, "name">[],
       };
       type QArgs = never;
-      const users = await useQuery<QData, QArgs>({
+      const resp = await useQuery<QData, QArgs>({
         query: gql`
           query Data {
             users {
@@ -159,16 +186,30 @@
               }
               createdAt
             }
+            roles {
+              name
+            }
           }
         `,
-      })()
-        .then((resp) => resp?.data?.users || [])
-        .then(sortBy<QUser>((u) => new Date(u.createdAt as string)))
-        .then(map<QUser, QUser & { isStudent: boolean, }>((x) => Object.assign(x, {
+      })().then((resp) => resp?.data);
+
+      const users =
+        map<QUser, QUser & { isStudent: boolean, hasResume: boolean, roleNames: string[], }>((x) => Object.assign(x, {
           isStudent: 0 === (x.companies?.length ?? 0),
           hasResume: Boolean(x.resume),
-        })))
+          roleNames: x.roles.map((r) => r.name),
+        }))(sortBy<QUser>((u) => new Date(u.createdAt as string))(resp?.users || []))
       ;
+
+      const roleOptions = (resp?.roles ?? []).map((r) => r.name).sort();
+
+      FilterService.register("$roles", (value: string[] | null | undefined, filter: string[] | null | undefined) => {
+        if (!filter || 0 === filter.length) {
+          return true;
+        }
+
+        return filter.some((role) => (value ?? []).includes(role));
+      });
 
       const adminCount = users.reduce((acc, u) => acc + Number(u.roles.some((r) => "admin" === r.name)), 0);
       const studentCount = users.reduce((acc, u) => acc + Number(u.isStudent), 0) - adminCount;
@@ -183,6 +224,7 @@
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         isStudent: { value: null, matchMode: FilterMatchMode.EQUALS },
         hasResume: { value: null, matchMode: FilterMatchMode.EQUALS },
+        roleNames: { value: null, matchMode: "$roles" },
       });
 
       const dt = ref<DataTable | null>(null);
@@ -190,6 +232,7 @@
       return {
         dt,
         users,
+        roleOptions,
         stats,
         filters,
         exportCSV() {
@@ -219,6 +262,10 @@
       align-items: stretch;
       gap: 0.75rem;
     }
+  }
+
+  .roleSelect {
+    min-width: 14rem;
   }
 
   .searchWrapper {

@@ -1783,6 +1783,7 @@ export type IMutation = {
   removeCompanyMember?: Maybe<Scalars['String']['output']>;
   renameCocktailType: IApplicationCocktailType;
   renameTalkCategory?: Maybe<IApplicationTalkCategory>;
+  reportMissingTranslations: Scalars['Boolean']['output'];
   requestPasswordReset: Scalars['String']['output'];
   requestPasswordResetFor: Scalars['String']['output'];
   resumeEntryScan?: Maybe<IResume>;
@@ -2049,6 +2050,11 @@ export type IMutationRenameTalkCategoryArgs = {
   newName: Scalars['String']['input'];
   oldName: Scalars['String']['input'];
   season: Scalars['String']['input'];
+};
+
+
+export type IMutationReportMissingTranslationsArgs = {
+  keys: Array<Scalars['String']['input']>;
 };
 
 
@@ -4394,6 +4400,16 @@ export type IUpdateTranslationMutationVariables = Exact<{
 
 
 export type IUpdateTranslationMutation = IUpdateTranslationMutation_Mutation;
+
+export type IReportMissingTranslationsMutation_Mutation = { reportMissingTranslations: boolean };
+
+
+export type IReportMissingTranslationsMutationVariables = Exact<{
+  keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type IReportMissingTranslationsMutation = IReportMissingTranslationsMutation_Mutation;
 
 export type IUpdateProfileMutation_updateProfile_UpdateProfileResponse_errors_FieldError = { field: string, message: string };
 
@@ -7497,6 +7513,7 @@ export type IMutationResolvers<ContextType = any, ParentType extends IResolversP
   removeCompanyMember?: Resolver<Maybe<IResolversTypes['String']>, ParentType, ContextType, RequireFields<IMutationRemoveCompanyMemberArgs, 'email'>>;
   renameCocktailType?: Resolver<IResolversTypes['ApplicationCocktailType'], ParentType, ContextType, RequireFields<IMutationRenameCocktailTypeArgs, 'newCocktailType' | 'oldCocktailType' | 'season'>>;
   renameTalkCategory?: Resolver<Maybe<IResolversTypes['ApplicationTalkCategory']>, ParentType, ContextType, RequireFields<IMutationRenameTalkCategoryArgs, 'newName' | 'oldName' | 'season'>>;
+  reportMissingTranslations?: Resolver<IResolversTypes['Boolean'], ParentType, ContextType, RequireFields<IMutationReportMissingTranslationsArgs, 'keys'>>;
   requestPasswordReset?: Resolver<IResolversTypes['String'], ParentType, ContextType, RequireFields<IMutationRequestPasswordResetArgs, 'identifier'>>;
   requestPasswordResetFor?: Resolver<IResolversTypes['String'], ParentType, ContextType, RequireFields<IMutationRequestPasswordResetForArgs, 'uid'>>;
   resumeEntryScan?: Resolver<Maybe<IResolversTypes['Resume']>, ParentType, ContextType, RequireFields<IMutationResumeEntryScanArgs, 'userUid'>>;
@@ -8521,6 +8538,11 @@ export const UpdateTranslation = gql`
     value
     language
   }
+}
+    `;
+export const ReportMissingTranslations = gql`
+    mutation ReportMissingTranslations($keys: [String!]!) {
+  reportMissingTranslations(keys: $keys)
 }
     `;
 export const UpdateProfile = gql`

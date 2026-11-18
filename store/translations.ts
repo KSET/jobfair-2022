@@ -19,10 +19,13 @@ import {
   capitalize,
 } from "~/helpers/string";
 import {
+  type IReportMissingTranslationsMutation,
+  type IReportMissingTranslationsMutationVariables,
   type ITranslationsForQuery,
   type ITranslationsForQueryVariables,
   type IUpdateTranslationMutation,
   type IUpdateTranslationMutationVariables,
+  ReportMissingTranslations,
   TranslationsFor,
   UpdateTranslation,
 } from "~/graphql/schema";
@@ -30,6 +33,9 @@ import {
   useMutation,
   useQuery,
 } from "~/composables/useQuery";
+import {
+  useUserStore,
+} from "~/store/user";
 
 export enum Language {
   EN = "en_US",
@@ -53,12 +59,62 @@ const cookieLanguage = () => useCookie<Language>(
 
 export type Translations = Partial<Record<Language, Record<string, string>>>;
 
+const MISSING_REPORT_DELAY_MS = 2000;
+const MISSING_REPORT_BATCH_SIZE = 50;
+const MISSING_KEY_MAX_LENGTH = 200;
+const TRANSLATION_KEY_FORMAT = /^[\w-]+(?:\.[\w-]+)+$/;
+const reportedMissingKeys = new Set<string>();
+const pendingMissingKeys = new Set<string>();
+let missingReportTimer: ReturnType<typeof setTimeout> | null = null;
+
+const flushMissingTranslations = () => {
+  missingReportTimer = null;
+  const keys = Array.from(pendingMissingKeys);
+  pendingMissingKeys.clear();
+
+  for (let i = 0; i < keys.length; i += MISSING_REPORT_BATCH_SIZE) {
+    void useMutation<IReportMissingTranslationsMutation, IReportMissingTranslationsMutationVariables>(ReportMissingTranslations)({
+      keys: keys.slice(i, i + MISSING_REPORT_BATCH_SIZE),
+    }).catch(() => null);
+  }
+};
+
+const isReportableKey = (key: string) => MISSING_KEY_MAX_LENGTH >= key.length && TRANSLATION_KEY_FORMAT.test(key);
+
+const queueMissingTranslation = (key: string) => {
+  if (!import.meta.client || reportedMissingKeys.has(key) || !isReportableKey(key)) {
+    return;
+  }
+
+  const userStore = useUserStore();
+  if (!userStore.isAdmin && !userStore.isAccountManager) {
+    return;
+  }
+
+  reportedMissingKeys.add(key);
+  pendingMissingKeys.add(key);
+
+  if (!missingReportTimer) {
+    missingReportTimer = setTimeout(
+      () => {
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(flushMissingTranslations, { timeout: MISSING_REPORT_DELAY_MS });
+        } else {
+          flushMissingTranslations();
+        }
+      },
+      MISSING_REPORT_DELAY_MS,
+    );
+  }
+};
+
 export const useTranslationsStore = defineStore(
   "translations",
   {
     state: () => ({
       translations: {} as Translations,
       translationsLoading: {} as Partial<Record<Language, Record<string, boolean>>>,
+      translationsLoaded: {} as Partial<Record<Language, boolean>>,
       isEditable: false,
       isLoading: false,
       currentLanguage: Language.HR,
@@ -75,10 +131,14 @@ export const useTranslationsStore = defineStore(
         return (key: string, language?: Language) => {
           const translations = state.translations[language ?? state.currentLanguage];
 
+          if (!translations) {
+            return false;
+          }
+
           return (
-            translations
+            state.isEditable
               ? key in translations
-              : false
+              : Boolean(translations[key])
           );
         };
       },
@@ -127,6 +187,17 @@ export const useTranslationsStore = defineStore(
     },
 
     actions: {
+      reportIfMissing(key: string) {
+        const language = this.currentLanguage;
+        const translations = this.translations[language];
+
+        if (!this.translationsLoaded[language] || !translations || key in translations) {
+          return;
+        }
+
+        queueMissingTranslation(key);
+      },
+
       setLanguageFromCookie() {
         this.currentLanguage = cookieLanguage().value || Language.HR;
       },
@@ -200,6 +271,7 @@ export const useTranslationsStore = defineStore(
         this.translationsLoading[lang] = Object.fromEntries(
           translationList.map((x) => [ x.key, false ]),
         );
+        this.translationsLoaded[lang] = 0 < translationList.length;
 
         return this.translations;
       },

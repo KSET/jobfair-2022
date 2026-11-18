@@ -2,6 +2,10 @@
   <app-max-width-container :class="$style.container">
     <h1>Prijevodi</h1>
 
+    <p v-if="missingCount > 0">
+      <strong>Nedostaje: {{ missingCount }}</strong>
+    </p>
+
     <table style="width: 100%; table-layout: fixed;">
       <thead>
         <tr>
@@ -30,7 +34,7 @@
           </td>
         </tr>
         <tr
-          v-for="(translation, key) in translations"
+          v-for="key in orderedKeys"
           :key="key"
         >
           <td class="text-right">
@@ -40,21 +44,24 @@
             <div
               :class="$style.text"
               :contenteditable="!isLoading"
-              @blur="saveTranslation(key, 'hr_HR', translation.hr_HR)"
-              @input.capture="translation.hr_HR = $event.target.innerText"
-              v-text="translation.hr_HR || ''"
+              :style="!translations[key].hr_HR ? [{
+                borderColor: 'red',
+              }] : undefined"
+              @blur="saveTranslation(key, 'hr_HR', translations[key].hr_HR)"
+              @input.capture="translations[key].hr_HR = $event.target.innerText"
+              v-text="translations[key].hr_HR || ''"
             />
           </td>
           <td>
             <div
               :class="$style.text"
               :contenteditable="!isLoading"
-              :style="!translation.en_US ? [{
+              :style="!translations[key].en_US ? [{
                 borderColor: 'red',
               }] : undefined"
-              @blur="saveTranslation(key, 'en_US', translation.en_US)"
-              @input.capture="translation.en_US = $event.target.innerText"
-              v-text="translation.en_US || ''"
+              @blur="saveTranslation(key, 'en_US', translations[key].en_US)"
+              @input.capture="translations[key].en_US = $event.target.innerText"
+              v-text="translations[key].en_US || ''"
             />
           </td>
         </tr>
@@ -65,6 +72,7 @@
 
 <script lang="ts">
   import {
+    computed,
     defineComponent,
     reactive,
     ref,
@@ -134,6 +142,13 @@
       ;
 
       const translations = transformTranslations(resp?.data?.translations || []);
+      const isMissing = (key: string) => !translations[key]?.[Language.HR] || !translations[key]?.[Language.EN];
+      const allKeys = Object.keys(translations);
+      const orderedKeys = ref([
+        ...allKeys.filter(isMissing),
+        ...allKeys.filter((key) => !isMissing(key)),
+      ]);
+      const missingCount = computed(() => orderedKeys.value.filter(isMissing).length);
       const isLoading = ref(false);
       const newTranslation = reactive({
         key: "",
@@ -145,6 +160,8 @@
       return {
         isLoading,
         translations,
+        orderedKeys,
+        missingCount,
         newTranslation,
         async saveTranslation(key: string, language: Language, value: MaybeRef<string>) {
           const oldValue = translationsStore.translation(key, language);
@@ -192,6 +209,9 @@
               [Language.HR]: hr,
               [Language.EN]: en,
             };
+            if (!orderedKeys.value.includes(key)) {
+              orderedKeys.value.unshift(key);
+            }
             await translationsStore.fetchTranslations();
             resetNewTranslation();
           } catch {

@@ -1583,6 +1583,7 @@ type Mutation {
   removeCompanyMember(email: String!, vat: String): String
   renameCocktailType(newCocktailType: String!, oldCocktailType: String!, season: String!): ApplicationCocktailType!
   renameTalkCategory(newName: String!, oldName: String!, season: String!): ApplicationTalkCategory
+  reportMissingTranslations(keys: [String!]!): Boolean!
   requestPasswordReset(identifier: String!): String!
   requestPasswordResetFor(uid: String!): String!
   resumeEntryScan(userUid: String!): Resume

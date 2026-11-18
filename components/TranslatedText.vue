@@ -17,6 +17,7 @@
     defineComponent,
     unref,
     watch,
+    watchEffect,
     useRuntimeConfig,
   } from "#imports";
   import {
@@ -71,6 +72,10 @@
           immediate: true,
         },
       );
+
+      if (import.meta.client) {
+        watchEffect(() => translationsStore.reportIfMissing(props.transKey));
+      }
 
       return {
         translatedText,

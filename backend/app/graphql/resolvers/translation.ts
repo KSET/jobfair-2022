@@ -21,6 +21,12 @@ import {
 import {
   EventsService,
 } from "../../services/events-service";
+import {
+  isAccountManager,
+} from "../../helpers/company-access";
+import {
+  TranslationService,
+} from "../../services/translation-service";
 
 export {
   FindManyTranslationResolver,
@@ -48,6 +54,26 @@ export class TranslationsResolver {
         language,
       },
     });
+  }
+
+  @Mutation(() => Boolean)
+  reportMissingTranslations(
+  @Ctx() ctx: Context,
+    @Arg("keys", () => [ String ]) keys: string[],
+  ) {
+    const { user } = ctx;
+    const canReport =
+      hasAtLeastRole(Role.Admin, user)
+      || isAccountManager(user)
+    ;
+
+    if (!canReport) {
+      return false;
+    }
+
+    TranslationService.recordMissingKeys(keys);
+
+    return true;
   }
 
   @Mutation(() => Translation, { nullable: true })

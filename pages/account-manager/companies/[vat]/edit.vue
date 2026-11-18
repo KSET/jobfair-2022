@@ -49,8 +49,23 @@
     </app-formgroup>
 
     <h2 class="mt-6">
-      <translated-text trans-key="account-manager.company.add-member.title" />
+      <translated-text trans-key="profile.about-company.add-members" />
     </h2>
+    <ul class="mb-5">
+      <li v-for="member in members" :key="member.uid">
+        <div :class="$style.companyMember">
+          <strong v-text="member.name" /> - <em v-text="member.email" />
+          |
+          <p-button
+            class="p-button-text p-button-danger"
+            :loading="removingUid === member.uid"
+            :disabled="null !== removingUid"
+            icon="pi pi-trash"
+            @click="handleRemoveMember(member)"
+          />
+        </div>
+      </li>
+    </ul>
     <form class="flex flex-column" style="max-width: 30em;" @submit.prevent="handleAddMember">
       <app-input
         v-model="newMember.email"
@@ -66,38 +81,9 @@
         class="p-button-secondary mt-2"
         type="submit"
       >
-        <translated-text trans-key="account-manager.company.add-member.submit" />
+        <translated-text trans-key="form.save" />
       </p-button>
     </form>
-
-    <h2 class="mt-6">
-      <translated-text trans-key="account-manager.company.members.title" />
-    </h2>
-    <p v-if="0 === members.length">
-      <em>
-        <translated-text trans-key="account-manager.company.members.empty" />
-      </em>
-    </p>
-    <ul v-else :class="$style.memberList">
-      <li
-        v-for="member in members"
-        :key="member.uid"
-      >
-        <span>
-          <strong v-text="member.name" />
-          &lt;<span v-text="member.email" />&gt;
-        </span>
-        <p-button
-          :loading="removingUid === member.uid"
-          :disabled="null !== removingUid"
-          class="p-button-danger p-button-text p-button-sm"
-          icon="pi pi-times"
-          @click="handleRemoveMember(member)"
-        >
-          <translated-text trans-key="account-manager.company.members.remove" />
-        </p-button>
-      </li>
-    </ul>
   </app-max-width-container>
 </template>
 
@@ -431,23 +417,6 @@
 
   .container {
 
-    .memberList {
-      display: flex;
-      flex-direction: column;
-      max-width: 40em;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      gap: .25rem;
-
-      li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-    }
-
     .form {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -483,6 +452,18 @@
         @include media(lg) {
           grid-column: initial;
         }
+      }
+    }
+
+    .companyMember {
+      display: flex;
+      align-items: center;
+      gap: .4em;
+
+      button {
+        width: 1.5em;
+        height: 1.5em;
+        padding: 0;
       }
     }
   }

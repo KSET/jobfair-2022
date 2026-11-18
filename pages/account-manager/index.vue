@@ -38,10 +38,14 @@
         :header="company.brandName"
       >
         <div :class="$style.toolbar">
-          <nuxt-link :to="{ name: 'account-manager-companies-vat-edit', params: { vat: company.vat } }">
-            <p-button class="p-button-outlined" icon="pi pi-pencil">
+          <nuxt-link
+            :to="{ name: 'account-manager-companies-vat-edit', params: { vat: company.vat } }"
+            class="p-button p-button-outlined"
+          >
+            <i class="pi pi-pencil p-button-icon p-button-icon-left" />
+            <span class="p-button-label">
               <translated-text trans-key="account-manager.company.edit-link" />
-            </p-button>
+            </span>
           </nuxt-link>
 
           <!-- TODO UC 38 milestones: real data per company once milestones exist in the schema -->
@@ -253,6 +257,10 @@
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1rem;
+
+    > :global(.p-button) {
+      flex-shrink: 0;
+    }
   }
 
   .milestones {

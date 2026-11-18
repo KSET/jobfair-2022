@@ -21,13 +21,17 @@
       </label>
 
       <p-button
-        class="p-button-danger p-button-outlined"
-        icon="pi pi-trash"
-        :loading="isDeleting"
-        :disabled="0 === links.length"
+        class="p-button-danger p-button-outlined ml-auto"
+        :disabled="isDeleting || 0 === links.length"
         @click="handleDeleteAll"
       >
-        <translated-text trans-key="admin.account-managers.delete-all" />
+        <i
+          :class="isDeleting ? 'pi-spin pi-spinner' : 'pi-trash'"
+          class="pi p-button-icon p-button-icon-left"
+        />
+        <span class="p-button-label">
+          <translated-text trans-key="admin.account-managers.delete-all" />
+        </span>
       </p-button>
     </div>
 
@@ -42,10 +46,6 @@
       :value="rows"
       data-key="uid"
       row-hover
-      paginator
-      paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-      :rows="50"
-      :rows-per-page-options="[10,20,50,100]"
       responsive-layout="scroll"
     >
       <template #empty>
@@ -71,13 +71,21 @@
           <MultiSelect
             v-model="data.selected"
             :options="managers"
-            option-label="name"
+            option-label="email"
             option-value="uid"
             display="chip"
             filter
+            :filter-fields="['email', 'name']"
             :disabled="data.isSaving"
             :class="$style.multiSelect"
-          />
+          >
+            <template #option="{ option }">
+              <span>{{ option.name }} &lt;{{ option.email }}&gt;</span>
+            </template>
+            <template #chip="{ value }">
+              <span class="p-multiselect-token-label">{{ managerLabel(value) }}</span>
+            </template>
+          </MultiSelect>
         </template>
       </Column>
 
@@ -263,6 +271,11 @@
         managerMap.set(user.uid, user);
       }
       const managers = [ ...managerMap.values() ].sort((a, b) => a.name.localeCompare(b.name));
+      const managerLabel = (uid: string) => {
+        const manager = managerMap.get(uid);
+
+        return manager ? `${ manager.name } <${ manager.email }>` : uid;
+      };
 
       const selectedFor = (companyUid: string) =>
         links.value
@@ -373,6 +386,7 @@
       return {
         seasonName,
         managers,
+        managerLabel,
         rows,
         links,
         byManager,
@@ -456,6 +470,10 @@
     flex-wrap: wrap;
     margin-bottom: 1rem;
     gap: 1rem;
+
+    > :global(.p-button) {
+      flex-shrink: 0;
+    }
   }
 
   .toggle {
